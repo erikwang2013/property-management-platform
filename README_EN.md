@@ -85,6 +85,13 @@ property-management-platform/
 | `erikwang2013/poster-php` | Sensitive operation verification |
 | `phpoffice/phpspreadsheet` | Excel export |
 | `barryvdh/laravel-dompdf` | PDF export |
+| `hg/apidoc` | API documentation auto-generation |
+
+### API Documentation
+
+Start services and access auto-generated apidoc:
+- **Admin**: `http://localhost:8787/apidoc` — 7 groups (Common/Dashboard/System/Core/Aux/Advanced/Extensions)
+- **Service**: `http://localhost:8788/apidoc` — 9 groups (Public/Home/Fee/Repair/Feedback/Parking/Activity/Profile/Extensions)
 
 ### Frontend
 - **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart — PC-style web dashboard

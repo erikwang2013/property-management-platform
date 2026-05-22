@@ -82,6 +82,15 @@ Prometheus 监控指标。
 #### GET /api/docs
 OpenAPI 文档。
 
+### 在线 API 文档（apidoc）
+
+启动服务后访问 `hg/apidoc` 自动生成的交互式文档：
+
+| 端 | 地址 | 分组 |
+|----|------|------|
+| 管理端 | `http://localhost:8787/apidoc` | 7组（通用/仪表盘/系统管理/核心/辅助/高级/扩展） |
+| 业主端 | `http://localhost:8788/apidoc` | 9组（公开/首页/费用/报修/反馈/停车/活动/个人/扩展） |
+
 ---
 
 ### 管理端接口 — 需认证 (Bearer Token)

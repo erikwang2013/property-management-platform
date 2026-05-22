@@ -286,4 +286,5 @@
 | 限流保护 | Redis 滑动窗口，登录10次/分钟，注册5次/分钟 |
 | 验证码 | 点击式中文验证码，登录/注册强制 |
 | 软删除 | 业主、小区、房产、公告支持软删除 |
-| 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations，默认中文、降级英文 |
+| 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations |
+| API 文档 | `hg/apidoc` 自动生成，管理端7分组 + 业主端9分组，按功能模块组织 |

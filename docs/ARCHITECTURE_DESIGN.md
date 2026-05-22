@@ -292,7 +292,18 @@ cd admin && php vendor/bin/phpunit    # 管理端: 60 tests, 164 assertions
 cd service && php vendor/bin/phpunit  # 业务端: 18 tests, 45 assertions, 100% pass
 ```
 
-## 13. 统一响应格式
+## 13. API 文档（hg/apidoc）
+
+基于控制器注解自动生成，按功能分组。`/apidoc/config` 端点返回完整配置。
+
+| 端 | 分组 | 说明 |
+|----|------|------|
+| 管理端 | 7组 | 通用/仪表盘/系统管理/核心/辅助/高级/扩展 |
+| 业主端 | 9组 | 公开/首页/费用/报修/反馈/停车/活动/个人/扩展 |
+
+通用定义块：`pagination`（分页）、`searchParams`（搜索筛选）、`dateRange`（日期范围）、`passwordConfirm`（密码确认）。
+
+## 14. 统一响应格式
 
 ```json
 {

@@ -41,6 +41,7 @@
 | 文件管理 | 上传 + Excel/PDF 导出（敏感数据脱敏）|
 | 安全管理 | 18 层纵深防御 + security.txt |
 | 运维监控 | 健康检查 + Prometheus 指标 + API 文档 |
+| API 文档 | `hg/apidoc` 自动生成，admin 7分组 + service 9分组，按功能模块组织 |
 | 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations + HarmonyOS 资源限定符 |
 
 ## 跨功能特性
