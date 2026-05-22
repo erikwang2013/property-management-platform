@@ -14,6 +14,9 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * @Apidoc\Group("repair")
+ */
 class RepairController extends BaseController
 {
     /**

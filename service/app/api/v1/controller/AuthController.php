@@ -17,6 +17,9 @@ use support\Response;
 use support\Redis;
 use Erikwang2013\Jwt\JWTFactory;
 
+/**
+ * @Apidoc\Group("public")
+ */
 class AuthController extends BaseController
 {
     public function login(Request $request): Response

@@ -20,6 +20,9 @@ use app\model\AdminRole;
 use app\model\SystemConfig;
 use support\Request;
 
+/**
+ * @Apidoc\Group("dashboard")
+ */
 class ExportController extends BaseController
 {
     /**

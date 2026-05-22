@@ -16,6 +16,9 @@ use support\Response;
 use support\Db;
 use InvalidArgumentException;
 
+/**
+ * @Apidoc\Group("fee")
+ */
 class FeeController extends BaseController
 {
     /**

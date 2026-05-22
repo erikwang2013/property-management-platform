@@ -14,6 +14,9 @@ use support\Redis;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("dashboard")
+ */
 class DashboardController extends BaseController
 {
     /**

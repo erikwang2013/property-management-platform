@@ -15,6 +15,9 @@ use app\model\Room;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("home")
+ */
 class HomeController extends BaseController
 {
     public function index(Request $request): Response

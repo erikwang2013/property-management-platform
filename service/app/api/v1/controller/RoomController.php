@@ -13,6 +13,9 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * @Apidoc\Group("home")
+ */
 class RoomController extends BaseController
 {
     /**

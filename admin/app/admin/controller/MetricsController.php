@@ -18,6 +18,9 @@ use Throwable;
  * Prometheus 指标端点
  * GET /metrics
  */
+/**
+ * @Apidoc\Group("dashboard")
+ */
 class MetricsController
 {
     public function index(Request $request): Response

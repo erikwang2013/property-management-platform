@@ -18,6 +18,9 @@ use Erikwang2013\Jwt\JWT;
 use Erikwang2013\Jwt\JWTFactory;
 use Throwable;
 
+/**
+ * @Apidoc\Group("common")
+ */
 class AuthController
 {
     private static ?JWT $jwt = null;

@@ -13,6 +13,9 @@ use support\Response;
 use support\Db;
 use InvalidArgumentException;
 
+/**
+ * @Apidoc\Group("feedback")
+ */
 class ComplaintController extends BaseController
 {
     /**

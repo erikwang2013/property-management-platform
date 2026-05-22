@@ -11,6 +11,9 @@ use app\common\SnowflakeService;
 use app\model\Community;
 use support\Request;
 
+/**
+ * @Apidoc\Group("property-core")
+ */
 class CommunityController extends BaseController
 {
     /**

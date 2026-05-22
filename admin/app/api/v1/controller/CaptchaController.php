@@ -11,6 +11,9 @@ use support\Request;
 use support\Response;
 use Throwable;
 
+/**
+ * @Apidoc\Group("common")
+ */
 class CaptchaController
 {
     /**

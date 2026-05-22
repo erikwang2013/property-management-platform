@@ -13,6 +13,9 @@ use support\Db;
 use support\Redis;
 use Throwable;
 
+/**
+ * @Apidoc\Group("dashboard")
+ */
 class HealthController
 {
     public function index(Request $request): Response

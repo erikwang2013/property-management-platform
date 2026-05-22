@@ -11,6 +11,9 @@ use app\model\OperationLog;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("system")
+ */
 class LogController extends BaseController
 {
     public function index(Request $request): Response

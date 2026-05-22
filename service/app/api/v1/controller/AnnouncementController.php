@@ -13,6 +13,9 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * @Apidoc\Group("feedback")
+ */
 class AnnouncementController extends BaseController
 {
     /**

@@ -11,6 +11,9 @@ use app\model\SystemConfig;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("system")
+ */
 class ConfigController extends BaseController
 {
     public function index(Request $request): Response

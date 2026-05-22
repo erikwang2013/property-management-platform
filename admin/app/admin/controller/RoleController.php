@@ -10,6 +10,9 @@ namespace app\admin\controller;
 use app\model\AdminRole;
 use support\Request;
 
+/**
+ * @Apidoc\Group("system")
+ */
 class RoleController extends BaseController
 {
     /**

@@ -12,6 +12,9 @@ use app\common\EncryptionService;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("system")
+ */
 class UserController extends BaseController
 {
     /**

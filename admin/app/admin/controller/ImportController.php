@@ -12,6 +12,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use support\Request;
 use support\Response;
 
+/**
+ * @Apidoc\Group("dashboard")
+ */
 class ImportController extends BaseController
 {
     public function users(Request $request): Response
