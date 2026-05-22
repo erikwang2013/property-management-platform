@@ -287,3 +287,6 @@
 | 验证码 | 点击式中文验证码，登录/注册强制 |
 | 软删除 | 业主、小区、房产、公告支持软删除 |
 | 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations，默认中文、降级英文 |
+| 测试 | TDD 流程，PHPUnit 78个测试/209断言，service 100%通过，flutter analyze 零问题 |
+| Flutter Web | 10个页面（登录/首页/费用/报修/个人中心），PC桌面风格，GetX 状态管理 |
+| HarmonyOS | 完整项目骨架，ArkTS 服务层 + 认证 + 登录/首页，@ohos.net.http |

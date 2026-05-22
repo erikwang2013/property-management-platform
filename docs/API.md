@@ -277,6 +277,130 @@ OpenAPI 文档。
 | PUT | /admin/announcement/{hashid} | 更新 |
 | DELETE | /admin/announcement/{hashid} | 删除 |
 
+#### 停车管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/parking-space | 列表 (?community_id=) |
+| POST | /admin/parking-space | 创建车位 |
+| PUT | /admin/parking-space/{hashid} | 更新 |
+| DELETE | /admin/parking-space/{hashid} | 删除 |
+| GET | /admin/parking-vehicle | 列表 (?owner_id=&space_id=) |
+| POST | /admin/parking-vehicle | 创建车辆 |
+| PUT | /admin/parking-vehicle/{hashid} | 更新 |
+| DELETE | /admin/parking-vehicle/{hashid} | 删除 |
+| GET | /admin/parking-record | 停车记录 (?vehicle_id=&date_start=&date_end=) |
+
+#### 设备管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/equipment | 列表 (?community_id=&category=&status=) |
+| POST | /admin/equipment | 创建 |
+| PUT | /admin/equipment/{hashid} | 更新 |
+| DELETE | /admin/equipment/{hashid} | 删除 |
+| GET | /admin/equipment-maintenance | 维保记录 (?equipment_id=) |
+| POST | /admin/equipment-maintenance | 创建维保 |
+
+#### 投诉处理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/complaint | 列表 (?type=&status=) |
+| GET | /admin/complaint/{hashid} | 详情 |
+| PUT | /admin/complaint/{id}/handle | 处理（{ handler_remark }） |
+| POST | /admin/complaint/{id}/visit | 回访（{ visitor_remark }） |
+
+#### 访客审批
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/visitor | 列表 (?status=) |
+| PUT | /admin/visitor/{id}/approve | 审批通过 |
+
+#### 合同管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/contract | 列表 (?contract_type=&status=) |
+| POST | /admin/contract | 创建 |
+| PUT | /admin/contract/{hashid} | 更新 |
+| DELETE | /admin/contract/{hashid} | 删除 |
+
+#### 财务管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/finance-income | 收入列表 (?income_type=&date_start=&date_end=) |
+| POST | /admin/finance-income | 登记收入 |
+| GET | /admin/finance-expense | 支出列表 |
+| POST | /admin/finance-expense | 登记支出 |
+| GET | /admin/finance/statistics | 月度收支统计 (?year=) |
+
+#### 物业面板
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/dashboard/property | 物业统计（应收/入住率/报修/投诉/收支趋势） |
+| POST | /admin/export/property-excel | 物业数据 Excel 导出（{ type: owners|bills }） |
+
+#### 安保巡逻
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/security-patrol | 列表 (?community_id=) |
+| POST | /admin/security-patrol | 创建路线 |
+| GET | /admin/patrol-record | 记录 (?patrol_id=&staff_id=) |
+| POST | /admin/patrol-record | 创建记录 |
+
+#### 保洁管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/cleaning-area | 区域列表 |
+| POST | /admin/cleaning-area | 创建区域 |
+| GET | /admin/cleaning-record | 记录 (?area_id=) |
+| POST | /admin/cleaning-record | 创建记录 |
+
+#### 绿化管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/green-area | 区域列表 |
+| POST | /admin/green-area | 创建区域 |
+| GET | /admin/green-maintenance | 养护记录 (?area_id=) |
+| POST | /admin/green-maintenance | 创建记录 |
+
+#### 社区活动
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/activity | 列表 (?status=) |
+| POST | /admin/activity | 创建活动 |
+| PUT | /admin/activity/{hashid} | 更新 |
+| DELETE | /admin/activity/{hashid} | 删除 |
+| GET | /admin/activity-signup | 报名列表 (?activity_id=) |
+| PUT | /admin/activity-signup/{id}/checkin | 签到 |
+
+#### 能耗管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/energy-meter | 仪表列表 (?room_id=&meter_type=) |
+| POST | /admin/energy-meter | 创建仪表 |
+| GET | /admin/energy-record | 抄表记录 (?meter_id=&date_start=&date_end=) |
+| POST | /admin/energy-record | 创建记录 |
+
+#### 员工管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/staff | 列表 (?community_id=&status=) |
+| POST | /admin/staff | 创建 |
+| PUT | /admin/staff/{hashid} | 更新 |
+| DELETE | /admin/staff/{hashid} | 删除 |
+| POST | /admin/staff/batch/status | 批量启禁用 |
+
 ---
 
 ## 业务端 API (service :8788)
@@ -392,6 +516,32 @@ OpenAPI 文档。
 |------|------|------|
 | GET | /service/announcements | 公告列表 (?category=) |
 | GET | /service/announcement/{hashid} | 公告详情 |
+
+#### 停车
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /service/parking/vehicles | 我的车辆 |
+| GET | /service/parking/spaces | 我的车位 |
+| GET | /service/parking/records | 停车记录 |
+
+#### 访客
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /service/visitors | 我的访客预约 |
+| POST | /service/visitor | 创建预约（生成通行码） |
+| PUT | /service/visitor/{hashid} | 修改预约 |
+| DELETE | /service/visitor/{hashid} | 取消预约 |
+
+#### 社区活动
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /service/activities | 活动列表 (?status=) |
+| GET | /service/activity/{hashid} | 活动详情 |
+| POST | /service/activity/{hashid}/signup | 报名参加 |
+| POST | /service/activity/{hashid}/cancel | 取消报名 |
 
 #### 个人信息
 

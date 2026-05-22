@@ -292,7 +292,62 @@ cd admin && php vendor/bin/phpunit    # 管理端: 60 tests, 164 assertions
 cd service && php vendor/bin/phpunit  # 业务端: 18 tests, 45 assertions, 100% pass
 ```
 
-## 13. 统一响应格式
+## 13. 前端架构
+
+### Flutter Web（PC 桌面风格）
+
+```
+apps/flutter/lib/
+├── main.dart                    # 入口，初始化 ApiService + AuthService
+├── app.dart                     # GetMaterialApp，路由表 + 主题 + i18n
+├── config/
+│   ├── api_config.dart          # API 端点常量（指向 service :8788）
+│   └── theme.dart               # Material 3 主题（Ant Design 色系）
+├── services/
+│   ├── api_service.dart         # Dio 单例 + JWT 拦截器 + 401 自动刷新
+│   ├── auth_service.dart        # 登录/登出/Token 持久化
+│   └── storage_service.dart     # shared_preferences 封装
+├── i18n/
+│   └── messages.dart            # GetX Translations（101键，zh_CN/en）
+├── pages/
+│   ├── login/                   # PC 风格登录页（居中 Card + 表单验证）
+│   ├── home/                    # 仪表盘（4个 StatCard + 公告列表）
+│   ├── fee/                     # 账单列表 / 详情 / 缴费弹窗
+│   ├── repair/                  # 报修列表 / 提交 / 详情 + 评价
+│   └── profile/                 # 个人信息 / 修改密码 / 退出
+└── widgets/
+    └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
+```
+
+### HarmonyOS 移动端
+
+```
+apps/harmonyos/entry/src/main/ets/
+├── services/
+│   ├── ApiService.ets           # @ohos.net.http 封装，Bearer Token
+│   └── AuthService.ets          # 登录/登出（Preference 持久化）
+├── model/
+│   └── Models.ets               # TypeScript 接口定义
+├── pages/
+│   ├── LoginPage.ets            # 手机号 + 密码登录
+│   └── HomePage.ets             # 仪表盘（统计卡片 + 公告列表）
+└── resources/
+    ├── base/element/string.json # 中文资源
+    └── en_US/element/string.json# 英文资源
+```
+
+### 技术选型
+
+| 层 | Flutter Web | HarmonyOS |
+|----|------------|-----------|
+| 状态管理 | GetX | @State + @Prop |
+| HTTP | Dio + JWT 拦截器 | @ohos.net.http |
+| 持久化 | shared_preferences | @ohos.data.preferences |
+| 图表 | fl_chart | Web 组件 + ECharts |
+| 国际化 | GetX Translations | resource 限定符 |
+| 路由 | GetX named routes | router.pushUrl/replaceUrl |
+
+## 14. 统一响应格式
 
 ```json
 {

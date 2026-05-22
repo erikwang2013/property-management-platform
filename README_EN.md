@@ -53,13 +53,26 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
-## Feature Modules
+## Project Scale
 
-| Batch | Modules | Admin | Owner Portal |
-|-------|---------|-------|-------------|
-| Batch 1 | Community, Building, Room, Owner, Tenant, Fee, Repair, Announcement | Full CRUD | View/Pay/Repair/Rate |
-| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance | Full CRUD + Approval | Reserve/Submit/View |
-| Batch 3 | Security Patrol, Cleaning, Green, Activity, Energy, Staff | Full CRUD | View/Sign Up |
+| Layer | Count | Details |
+|-------|-------|---------|
+| Database Tables | 35 | All `erik_` prefix, BIGINT non-auto-increment PK |
+| PHP Models | 33 | With encryptable field encryption |
+| Admin Controllers | 25+ | General admin + 22 property business modules |
+| Service Controllers | 11 | Complete owner-facing API |
+| API Routes | 66+ | admin 45 + service 21 |
+| Flutter Pages | 10 | Login/Home/Fee(3)/Repair(3)/Profile/Announcements |
+| HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
+| Tests | 18/18 passing | 45 assertions, 100% pass rate |
+
+## Feature Modules (22 Modules)
+
+| Batch | Modules | Status |
+|-------|---------|--------|
+| Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Repair, Announcement (10) | ✅ Complete |
+| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance + Dashboard + Export (8) | ✅ Complete |
+| Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
 
 ## Tech Stack
 
