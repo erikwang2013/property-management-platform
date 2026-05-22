@@ -373,7 +373,39 @@ SLA规则匹配 → 定时检查超时 → 自动升级 → 罚款记录
 ### 集团管理
 集团 → 小区关联 → 跨小区数据汇总（房产/业主/收费/报修）
 
-## 15. 统一响应格式
+## 15. API 文档
+
+使用 `hg/apidoc` 从控制器注解自动生成接口文档，按功能分组。
+
+**管理端** (`http://localhost:8787/apidoc`): 7组 — 通用/仪表盘/系统管理/核心业务/辅助业务/高级功能/扩展功能
+
+**业务端** (`http://localhost:8788/apidoc`): 9组 — 公开接口/首页/费用/报修/反馈/停车/活动/个人/扩展
+
+### 注解规范
+
+```php
+/**
+ * 小区列表
+ * @Apidoc\Method("GET")
+ * @Apidoc\Url("/admin/community")
+ * @Apidoc\Group("property-core")
+ * @Apidoc\Sort(1)
+ * @Apidoc\Param("keyword", type="string", require=false, desc="搜索关键词")
+ * @Apidoc\Param(ref="pagination")
+ * @Apidoc\Returned("id", type="string", desc="hashid")
+ */
+```
+
+### 通用定义块
+
+| 块名 | 内容 |
+|------|------|
+| `pagination` | page/page_size 分页参数 |
+| `searchParams` | keyword/status 搜索筛选 |
+| `dateRange` | start_date/end_date 日期范围 |
+| `passwordConfirm` | password 密码确认 |
+
+## 16. 统一响应格式
 
 ```json
 {

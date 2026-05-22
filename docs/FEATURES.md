@@ -59,6 +59,7 @@
 | 安全管理 | 18 层纵深防御 + security.txt |
 | 运维监控 | 健康检查 + Prometheus 指标 + API 文档 |
 | 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations + HarmonyOS 资源限定符 |
+| API 文档 | `hg/apidoc` 自动生成，admin 7分组 + service 9分组，按功能模块组织 |
 
 ## 跨功能特性
 
@@ -105,4 +106,4 @@
 - **合计**: 78个测试，209个断言
 - **覆盖范围**: Snowflake ID生成唯一性、Hashids编解码往返、统一响应格式、64张表Schema验证、中英文翻译键一致性
 - **Flutter**: flutter analyze 零问题
-- **前端页面**: 10个 Flutter 页面（登录/首页/费用3/报修3/个人中心/公告）+ HarmonyOS 完整骨架
+- **API 文档**: `hg/apidoc` 自动生成，admin(7分组) + service(9分组)，按功能模块组织接口文档

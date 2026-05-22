@@ -99,10 +99,20 @@ property-management-platform/
 | `erikwang2013/poster-php` | 敏感操作随机验证码 |
 | `phpoffice/phpspreadsheet` | Excel 导出 |
 | `barryvdh/laravel-dompdf` | PDF 导出 |
+| `hg/apidoc` | API 接口文档自动生成 |
 
 ### 前端
 - **Flutter 3.x** + GetX（含 i18n） + Dio + fl_chart — PC 风格 Web 管理后台
 - **HarmonyOS ArkTS** + @ohos.net.http — 移动端 App
+
+### API 文档
+
+启动服务后访问 apidoc 自动生成的接口文档：
+
+| 端 | 地址 | 分组 |
+|----|------|------|
+| 管理端 | `http://localhost:8787/apidoc` | 7组（通用/仪表盘/系统管理/核心业务/辅助业务/高级功能/扩展功能） |
+| 业主端 | `http://localhost:8788/apidoc` | 9组（公开接口/首页/费用/报修/反馈/停车/活动/个人/扩展） |
 
 ### 国际化
 

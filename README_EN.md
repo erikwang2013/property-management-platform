@@ -99,10 +99,20 @@ property-management-platform/
 | `erikwang2013/poster-php` | Sensitive operation verification |
 | `phpoffice/phpspreadsheet` | Excel export |
 | `barryvdh/laravel-dompdf` | PDF export |
+| `hg/apidoc` | API documentation auto-generation |
 
 ### Frontend
 - **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart — PC-style web dashboard
 - **HarmonyOS ArkTS** + @ohos.net.http — Mobile client
+
+### API Documentation
+
+Start the services and access the auto-generated apidoc:
+
+| Side | URL | Groups |
+|------|-----|--------|
+| Admin | `http://localhost:8787/apidoc` | 7 groups (Common/Dashboard/System/Core/Aux/Advanced/Extensions) |
+| Service | `http://localhost:8788/apidoc` | 9 groups (Public/Home/Fee/Repair/Feedback/Parking/Activity/Profile/Extensions) |
 
 ### Internationalization (i18n)
 - **PHP Backend**: symfony/translation, language files in `resource/translations/{zh_CN,en}/messages.php`
