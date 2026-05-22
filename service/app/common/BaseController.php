@@ -81,6 +81,18 @@ class BaseController
     }
 
     /**
+     * 获取翻译文本
+     * @param string $key 翻译键
+     * @param array $replace 替换参数
+     * @return string
+     */
+    protected function __(string $key, array $replace = []): string
+    {
+        $message = trans($key, $replace);
+        return $message !== $key ? $message : $key;
+    }
+
+    /**
      * 密码二次确认 — 敏感操作验证
      *
      * @param int $ownerId 业主 ID
