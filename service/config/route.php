@@ -77,6 +77,12 @@ Route::group('/service', function () {
     Route::post('/visitor', [app\api\v1\controller\VisitorController::class, 'store']);
     Route::put('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'update']);
     Route::delete('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'destroy']);
+
+    // 社区活动
+    Route::get('/activities', [app\api\v1\controller\ActivityController::class, 'index']);
+    Route::get('/activity/{hashid}', [app\api\v1\controller\ActivityController::class, 'show']);
+    Route::post('/activity/{hashid}/signup', [app\api\v1\controller\ActivityController::class, 'signup']);
+    Route::post('/activity/{hashid}/cancel', [app\api\v1\controller\ActivityController::class, 'cancel']);
 })->middleware([
     app\middleware\ServiceAuth::class,
 ]);

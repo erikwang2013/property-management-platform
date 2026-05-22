@@ -157,6 +157,27 @@ Route::group('/admin', function () {
     Route::get('/finance/statistics', [app\admin\controller\FinanceController::class, 'statistics']);
     Route::resource('/finance-income', app\admin\controller\FinanceController::class, ['names' => 'finance.income']);
     Route::resource('/finance-expense', app\admin\controller\FinanceController::class, ['names' => 'finance.expense']);
+
+    // ============================================================
+    // 物业管理 — 第3批高级功能
+    // ============================================================
+    Route::resource('/security-patrol', app\admin\controller\SecurityPatrolController::class);
+    Route::get('/patrol-record', [app\admin\controller\PatrolRecordController::class, 'index']);
+    Route::post('/patrol-record', [app\admin\controller\PatrolRecordController::class, 'store']);
+    Route::resource('/cleaning-area', app\admin\controller\CleaningAreaController::class);
+    Route::get('/cleaning-record', [app\admin\controller\CleaningRecordController::class, 'index']);
+    Route::post('/cleaning-record', [app\admin\controller\CleaningRecordController::class, 'store']);
+    Route::resource('/green-area', app\admin\controller\GreenAreaController::class);
+    Route::get('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'index']);
+    Route::post('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'store']);
+    Route::resource('/activity', app\admin\controller\ActivityController::class);
+    Route::get('/activity-signup', [app\admin\controller\ActivitySignupController::class, 'index']);
+    Route::put('/activity-signup/{id}/checkin', [app\admin\controller\ActivitySignupController::class, 'checkin']);
+    Route::resource('/energy-meter', app\admin\controller\EnergyMeterController::class);
+    Route::get('/energy-record', [app\admin\controller\EnergyRecordController::class, 'index']);
+    Route::post('/energy-record', [app\admin\controller\EnergyRecordController::class, 'store']);
+    Route::resource('/staff', app\admin\controller\StaffController::class);
+    Route::post('/staff/batch/status', [app\admin\controller\StaffController::class, 'batchStatus']);
 })->middleware([
     app\middleware\AdminAuth::class,
     app\middleware\AdminPermission::class,
