@@ -389,7 +389,19 @@ SLA规则匹配 → 定时检查超时 → 自动升级 → 罚款记录
 | `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
 | `extensions` | 11 | Notification, Approval, Payment, Vote, Sla, Collection, Inspection, Mall, Face, Group, Knowledge |
 
-**业务端** (`http://localhost:8788/apidoc`): 9组 — 公开接口/首页/费用/报修/反馈/停车/活动/个人/扩展
+**业务端** (`http://localhost:8788/apidoc`): 9组 — 17个控制器注入注解
+
+| 分组 | 数量 | 控制器 |
+|------|------|--------|
+| `public` | 2 | Auth, Captcha |
+| `home` | 2 | Home, Room |
+| `fee` | 1 | Fee |
+| `repair` | 1 | Repair |
+| `feedback` | 2 | Complaint, Announcement |
+| `parking` | 2 | Parking, Visitor |
+| `activity` | 1 | Activity |
+| `profile` | 1 | Profile |
+| `extensions` | 5 | Notification, Vote, Mall, Knowledge, Face |
 
 ### 注解规范
 
