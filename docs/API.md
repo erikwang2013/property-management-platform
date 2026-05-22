@@ -401,6 +401,51 @@ OpenAPI 文档。
 | DELETE | /admin/staff/{hashid} | 删除 |
 | POST | /admin/staff/batch/status | 批量启禁用 |
 
+#### 消息通知
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/notification-template | 模板列表 |
+| POST | /admin/notification-template | 创建模板 |
+| PUT | /admin/notification-template/{hashid} | 更新模板 |
+| DELETE | /admin/notification-template/{hashid} | 删除模板 |
+| GET | /admin/notification | 消息列表 (?type=&is_read=) |
+| POST | /admin/notification/send | 手动发送通知 |
+
+#### 审批工作流
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/approval-type | 审批类型列表 |
+| POST | /admin/approval-type | 创建审批类型 |
+| GET | /admin/approval | 审批列表 (?status=) |
+| GET | /admin/approval/{hashid} | 审批详情 |
+| POST | /admin/approval | 提交审批 |
+| PUT | /admin/approval/{hashid}/approve | 审批（通过/驳回） |
+
+#### 支付管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/payment-order | 订单列表 |
+| GET | /admin/payment-order/{hashid} | 订单详情 |
+| POST | /admin/payment-order/{hashid}/refund | 退款 |
+| GET | /admin/payment/statistics | 支付统计 |
+
+#### 业主投票
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /admin/vote | 投票列表 (?status=) |
+| POST | /admin/vote | 创建投票 |
+| GET | /admin/vote/{hashid}/statistics | 计票统计 |
+| PUT | /admin/vote/{hashid}/publish | 发布投票 |
+| PUT | /admin/vote/{hashid}/end | 结束投票 |
+
+#### SLA管理 · 智能催缴 · 巡检管理 · 商城管理 · 人脸管理 · 集团管理 · 知识库
+
+（完整端点参见 `docs/API.md` 文件）
+
 ---
 
 ## 业务端 API (service :8788)

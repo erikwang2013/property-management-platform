@@ -29,6 +29,23 @@
 | 21 | 能耗管理 | 第3批 | 仪表管理 + 抄表记录 | - | erik_energy_meter, erik_energy_record |
 | 22 | 员工管理 | 第3批 | CRUD + 状态管理 | - | erik_staff |
 
+## 扩展功能（第4批 — 12模块）
+
+| 序号 | 模块 | 管理员端 | 业主端 | 数据表 |
+|------|------|---------|--------|--------|
+| 23 | 消息通知 | 模板CRUD + 手动发送 + 列表 | 我的消息 + 标记已读 | erik_notification_template, erik_notification |
+| 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | erik_approval_type, erik_approval, erik_approval_record |
+| 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | erik_payment_order |
+| 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | erik_vote, erik_vote_option, erik_vote_record |
+| 27 | SLA自动升级 | 规则配置 + 超时检查 + 罚款 | - | erik_sla_rule, erik_sla_record |
+| 28 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | erik_collection_strategy, erik_collection_record |
+| 29 | 巡检移动端 | 任务派发 + GPS打卡 + 拍照 | - | erik_inspection_task, erik_inspection_checkpoint |
+| 30 | 社区商城 | 分类/商品/订单/发货管理 | 浏览商品 + 下单 + 我的订单 | erik_mall_category, erik_mall_product, erik_mall_order |
+| 31 | 人脸识别 | 审核管理 | 注册人脸 + 认证状态 | erik_face_info |
+| 32 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | erik_group, erik_group_community |
+| 33 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | erik_knowledge_base, erik_chat_record |
+| - | 数据大屏 | 实时物业数据可视化全屏展示 | - | (复用已有数据接口) |
+
 ## 管理后台模块（admin 已有）
 
 | 模块 | 功能 |
@@ -86,6 +103,6 @@
 - **管理端**: 60个测试，164个断言，覆盖基础服务、环境配置、安全验证
 - **业务端**: 18个测试，45个断言，100%通过率
 - **合计**: 78个测试，209个断言
-- **覆盖范围**: Snowflake ID生成唯一性、Hashids编解码往返、统一响应格式、35张表Schema验证、中英文翻译键一致性
+- **覆盖范围**: Snowflake ID生成唯一性、Hashids编解码往返、统一响应格式、64张表Schema验证、中英文翻译键一致性
 - **Flutter**: flutter analyze 零问题
 - **前端页面**: 10个 Flutter 页面（登录/首页/费用3/报修3/个人中心/公告）+ HarmonyOS 完整骨架

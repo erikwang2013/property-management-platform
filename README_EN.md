@@ -4,7 +4,7 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
-A full-stack property management system covering 15 business modules including community management, fee collection, repair maintenance, parking, access control, security patrol, and cleaning services. The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
+A full-stack property management system covering 22 business modules + 12 extension features (notifications, approval workflow, payments, voting, SLA, collections, inspections, marketplace, face recognition, group management, AI Q&A). The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
 
 ## Project Structure
 
@@ -57,11 +57,11 @@ property-management-platform/
 
 | Layer | Count | Details |
 |-------|-------|---------|
-| Database Tables | 35 | All `erik_` prefix, BIGINT non-auto-increment PK |
-| PHP Models | 33 | With encryptable field encryption |
-| Admin Controllers | 25+ | General admin + 22 property business modules |
-| Service Controllers | 11 | Complete owner-facing API |
-| API Routes | 66+ | admin 45 + service 21 |
+| Database Tables | 64 | All `erik_` prefix, BIGINT non-auto-increment PK |
+| PHP Models | 58 | With encryptable field encryption |
+| Admin Controllers | 46 | General admin + 22 modules + 12 extensions |
+| Service Controllers | 17 | Complete owner-facing API |
+| API Routes | 150+ | admin 100+ + service 50+ |
 | Flutter Pages | 10 | Login/Home/Fee(3)/Repair(3)/Profile/Announcements |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
@@ -73,6 +73,7 @@ property-management-platform/
 | Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Repair, Announcement (10) | ✅ Complete |
 | Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance + Dashboard + Export (8) | ✅ Complete |
 | Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
+| Extensions | Notifications, Approval, Payment, Voting, SLA, Collection, Inspection, Mall, Face, Group, Knowledge (12) | ✅ Complete |
 
 ## Tech Stack
 
