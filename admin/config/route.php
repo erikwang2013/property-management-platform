@@ -1,0 +1,156 @@
+<?php
+/*
+ * Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+ */
+
+use Webman\Route;
+use support\Request;
+
+/**
+ * API 路由配置
+ *
+ * 路由分组说明:
+ * - /admin/*  管理端接口，需要 JWT 认证 + 权限校验
+ * - /api/*    客户端接口（部分白名单，部分需认证）
+ * - /health   健康检查（无需认证）
+ *
+ * API 版本策略:
+ * - 版本号通过请求头 API-Version 携带（如 "v1"、"v2"），不在 URL 中体现
+ * - 缺失时默认使用 v1
+ * - 由 ApiVersion 中间件校验，路由闭包按版本解析对应控制器
+ */
+
+/**
+ * 创建版本化 API 路由闭包
+ */
+function v(string $controller, string $action): \Closure
+{
+    return function (Request $request) use ($controller, $action) {
+        $version = $request->apiVersion ?? 'v1';
+        $class = "\\app\\api\\{$version}\\controller\\{$controller}";
+        return (new $class)->{$action}($request);
+    };
+}
+
+// ============================================================
+// 健康检查（全局，无需认证）
+// ============================================================
+Route::get('/health', [app\admin\controller\HealthController::class, 'index']);
+
+// Prometheus 指标（无需认证）
+Route::get('/metrics', [app\admin\controller\MetricsController::class, 'index']);
+
+// security.txt — RFC 9116 安全漏洞报告联系人
+Route::get('/.well-known/security.txt', function () {
+    return response(<<<'TXT'
+Contact: mailto:erik@erik.xyz
+Expires: 2027-12-31T23:59:59Z
+Preferred-Languages: zh, en
+Canonical: https://erik.xyz/.well-known/security.txt
+TXT
+    , 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+});
+
+// API 文档（全局，无需认证）
+Route::get('/api/docs', [app\admin\controller\DocsController::class, 'index']);
+
+// ============================================================
+// 管理端路由
+// ============================================================
+Route::group('/admin', function () {
+    // 仪表盘
+    Route::get('/dashboard', [app\admin\controller\DashboardController::class, 'index']);
+
+    // 用户管理
+    Route::resource('/user', app\admin\controller\UserController::class);
+    Route::post('/user/batch/destroy', [app\admin\controller\UserController::class, 'batchDestroy']);
+    Route::post('/user/batch/status', [app\admin\controller\UserController::class, 'batchStatus']);
+
+    // 角色管理
+    Route::resource('/role', app\admin\controller\RoleController::class);
+
+    // 权限管理
+    Route::resource('/permission', app\admin\controller\PermissionController::class);
+
+    // 系统配置
+    Route::get('/config', [app\admin\controller\ConfigController::class, 'index']);
+    Route::post('/config', [app\admin\controller\ConfigController::class, 'store']);
+    Route::put('/config/{id}', [app\admin\controller\ConfigController::class, 'update']);
+    Route::delete('/config/{id}', [app\admin\controller\ConfigController::class, 'destroy']);
+
+    // 操作日志
+    Route::get('/log', [app\admin\controller\LogController::class, 'index']);
+
+    // 个人中心
+    Route::put('/profile', [app\admin\controller\ProfileController::class, 'updateProfile']);
+    Route::put('/profile/password', [app\admin\controller\ProfileController::class, 'updatePassword']);
+    Route::post('/profile/logout', [app\admin\controller\ProfileController::class, 'logout']);
+
+    // 导出
+    Route::post('/export/excel', [app\admin\controller\ExportController::class, 'excel']);
+    Route::post('/export/pdf', [app\admin\controller\ExportController::class, 'pdf']);
+
+    // 导入
+    Route::post('/import/users', [app\admin\controller\ImportController::class, 'users']);
+
+    // 文件上传
+    Route::post('/upload', [app\admin\controller\UploadController::class, 'upload']);
+
+    // ============================================================
+    // 物业管理 — 第1批核心业务
+    // ============================================================
+    // 小区管理
+    Route::resource('/community', app\admin\controller\CommunityController::class);
+    // 楼栋管理
+    Route::resource('/building', app\admin\controller\BuildingController::class);
+    // 单元管理
+    Route::resource('/unit', app\admin\controller\UnitController::class);
+    // 户型管理
+    Route::resource('/room-type', app\admin\controller\RoomTypeController::class);
+    // 房产管理
+    Route::resource('/room', app\admin\controller\RoomController::class);
+    Route::get('/room/tree', [app\admin\controller\RoomController::class, 'tree']);
+    // 业主管理
+    Route::resource('/owner', app\admin\controller\OwnerController::class);
+    Route::post('/owner/batch/import', [app\admin\controller\OwnerController::class, 'batchImport']);
+    Route::post('/owner/batch/destroy', [app\admin\controller\OwnerController::class, 'batchDestroy']);
+    // 租户管理
+    Route::resource('/tenant', app\admin\controller\TenantController::class);
+    // 费用类型
+    Route::resource('/fee-type', app\admin\controller\FeeTypeController::class);
+    // 账单管理
+    Route::resource('/fee-bill', app\admin\controller\FeeBillController::class);
+    Route::post('/fee-bill/batch/generate', [app\admin\controller\FeeBillController::class, 'batchGenerate']);
+    // 缴费记录
+    Route::get('/fee-payment', [app\admin\controller\FeePaymentController::class, 'index']);
+    Route::post('/fee-payment/offline', [app\admin\controller\FeePaymentController::class, 'offlinePay']);
+    // 报修管理
+    Route::resource('/repair', app\admin\controller\RepairController::class);
+    Route::put('/repair/{id}/assign', [app\admin\controller\RepairController::class, 'assign']);
+    Route::post('/repair/{id}/progress', [app\admin\controller\RepairController::class, 'progress']);
+    // 公告管理
+    Route::resource('/announcement', app\admin\controller\AnnouncementController::class);
+})->middleware([
+    app\middleware\AdminAuth::class,
+    app\middleware\AdminPermission::class,
+    app\middleware\OperationLog::class,
+]);
+
+// ============================================================
+// 公开接口（通过 API-Version 头路由到版本化控制器）
+// ============================================================
+Route::group('/api', function () {
+    // 点击验证码
+    Route::post('/captcha/generate', v('CaptchaController', 'generate'));
+    Route::post('/captcha/verify', v('CaptchaController', 'verify'));
+
+    // 认证
+    Route::post('/auth/login', v('AuthController', 'login'));
+    Route::post('/auth/register', v('AuthController', 'register'));
+    Route::post('/auth/refresh', v('AuthController', 'refresh'));
+})->middleware([
+    app\middleware\ApiVersion::class,
+]);
+
+// 关闭默认路由
+Route::disableDefaultRoute();
