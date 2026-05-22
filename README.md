@@ -213,6 +213,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | 文档 | 说明 |
 |------|------|
+| [版本对比](docs/EDITIONS.md) | 基础版(Lite) / 标准版(Standard) / 完整版(Full) 功能与技术指标对比 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |
 | [功能设计文档](docs/FEATURE_DESIGN.md) | 15大模块功能规格说明 |
