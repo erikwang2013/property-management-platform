@@ -26,4 +26,9 @@ class FaceInfo extends BaseModel
         'created_at'    => 'datetime',
         'updated_at'    => 'datetime',
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class, 'owner_id');
+    }
 }

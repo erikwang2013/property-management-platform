@@ -29,4 +29,9 @@ class InspectionTask extends BaseModel
         'created_at'     => 'datetime',
         'updated_at'     => 'datetime',
     ];
+
+    public function checkpointRecords()
+    {
+        return $this->hasMany(InspectionCheckpoint::class, 'task_id');
+    }
 }

@@ -30,4 +30,9 @@ class SlaRecord extends BaseModel
         'created_at'          => 'datetime',
         'updated_at'          => 'datetime',
     ];
+
+    public function rule()
+    {
+        return $this->belongsTo(SlaRule::class, 'rule_id');
+    }
 }

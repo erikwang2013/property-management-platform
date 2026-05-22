@@ -178,6 +178,57 @@ Route::group('/admin', function () {
     Route::post('/energy-record', [app\admin\controller\EnergyRecordController::class, 'store']);
     Route::resource('/staff', app\admin\controller\StaffController::class);
     Route::post('/staff/batch/status', [app\admin\controller\StaffController::class, 'batchStatus']);
+
+    // ============================================================
+    // 物业管理 — 第4批扩展功能
+    // ============================================================
+    // SLA管理
+    Route::get('/sla-rule', [app\admin\controller\SlaController::class, 'rules']);
+    Route::post('/sla-rule', [app\admin\controller\SlaController::class, 'ruleStore']);
+    Route::put('/sla-rule/{hashid}', [app\admin\controller\SlaController::class, 'ruleUpdate']);
+    Route::delete('/sla-rule/{hashid}', [app\admin\controller\SlaController::class, 'ruleDestroy']);
+    Route::get('/sla-record', [app\admin\controller\SlaController::class, 'records']);
+    // 智能催缴
+    Route::get('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategies']);
+    Route::post('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategyStore']);
+    Route::put('/collection-strategy/{hashid}', [app\admin\controller\CollectionController::class, 'strategyUpdate']);
+    Route::delete('/collection-strategy/{hashid}', [app\admin\controller\CollectionController::class, 'strategyDestroy']);
+    Route::get('/collection-record', [app\admin\controller\CollectionController::class, 'records']);
+    Route::post('/collection/run', [app\admin\controller\CollectionController::class, 'run']);
+    // 巡检管理
+    Route::resource('/inspection-task', app\admin\controller\InspectionController::class);
+    Route::get('/inspection-task/{hashid}/checkpoints', [app\admin\controller\InspectionController::class, 'checkpoints']);
+    Route::put('/inspection-task/{hashid}/start', [app\admin\controller\InspectionController::class, 'startTask']);
+    Route::put('/inspection-task/{hashid}/complete', [app\admin\controller\InspectionController::class, 'completeTask']);
+    Route::put('/inspection-checkpoint/{hashid}/checkin', [app\admin\controller\InspectionController::class, 'checkin']);
+    // 社区商城
+    Route::resource('/mall-category', app\admin\controller\MallController::class, ['names'=>'mall.category']);
+    Route::resource('/mall-product', app\admin\controller\MallController::class, ['names'=>'mall.product']);
+    Route::get('/mall-order', [app\admin\controller\MallController::class, 'orders']);
+    Route::get('/mall-order/{hashid}', [app\admin\controller\MallController::class, 'orderShow']);
+    Route::put('/mall-order/{hashid}/ship', [app\admin\controller\MallController::class, 'ship']);
+    Route::post('/mall-order/{hashid}/refund', [app\admin\controller\MallController::class, 'refundOrder']);
+    // 人脸管理
+    Route::get('/face', [app\admin\controller\FaceController::class, 'index']);
+    Route::put('/face/{hashid}/verify', [app\admin\controller\FaceController::class, 'verify']);
+    Route::put('/face/{hashid}/reject', [app\admin\controller\FaceController::class, 'reject']);
+    // 集团管理
+    Route::resource('/group', app\admin\controller\GroupController::class);
+    Route::get('/group/{hashid}/communities', [app\admin\controller\GroupController::class, 'communities']);
+    Route::post('/group/{hashid}/community', [app\admin\controller\GroupController::class, 'addCommunity']);
+    Route::delete('/group/{hashid}/community/{communityHashid}', [app\admin\controller\GroupController::class, 'removeCommunity']);
+    Route::get('/group/{hashid}/summary', [app\admin\controller\GroupController::class, 'summary']);
+    // 智能问答
+    Route::get('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categories']);
+    Route::post('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categoryStore']);
+    Route::put('/knowledge-category/{hashid}', [app\admin\controller\KnowledgeController::class, 'categoryUpdate']);
+    Route::delete('/knowledge-category/{hashid}', [app\admin\controller\KnowledgeController::class, 'categoryDestroy']);
+    Route::get('/knowledge', [app\admin\controller\KnowledgeController::class, 'articles']);
+    Route::post('/knowledge', [app\admin\controller\KnowledgeController::class, 'articleStore']);
+    Route::put('/knowledge/{hashid}', [app\admin\controller\KnowledgeController::class, 'articleUpdate']);
+    Route::delete('/knowledge/{hashid}', [app\admin\controller\KnowledgeController::class, 'articleDestroy']);
+    Route::get('/chat-record', [app\admin\controller\KnowledgeController::class, 'chatRecords']);
+    Route::get('/chat-stats', [app\admin\controller\KnowledgeController::class, 'chatStats']);
 })->middleware([
     app\middleware\AdminAuth::class,
     app\middleware\AdminPermission::class,

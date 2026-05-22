@@ -32,4 +32,9 @@ class MallOrder extends BaseModel
         'created_at'     => 'datetime',
         'updated_at'     => 'datetime',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(MallProduct::class, 'product_id');
+    }
 }

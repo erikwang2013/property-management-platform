@@ -23,4 +23,9 @@ class CollectionRecord extends BaseModel
         'executed_at' => 'datetime',
         'created_at'  => 'datetime',
     ];
+
+    public function strategy()
+    {
+        return $this->belongsTo(CollectionStrategy::class, 'strategy_id');
+    }
 }
