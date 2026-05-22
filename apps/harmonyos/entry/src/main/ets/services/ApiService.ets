@@ -24,7 +24,7 @@ export class ApiService {
   }
 
   private getHeaders(): Object {
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const headers: Record<string, string> = { 'Content-Type': 'application/json', 'X-Client-Platform': 'harmonyos' };
     if (this.token) {
       headers['Authorization'] = `Bearer ${this.token}`;
     }

@@ -85,6 +85,7 @@ Route::group('/service', function () {
     Route::post('/activity/{hashid}/cancel', [app\api\v1\controller\ActivityController::class, 'cancel']);
 })->middleware([
     app\middleware\ServiceAuth::class,
+    app\middleware\OperationLog::class,
 ]);
 
 Route::disableDefaultRoute();

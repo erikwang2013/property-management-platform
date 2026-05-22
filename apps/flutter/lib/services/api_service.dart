@@ -18,7 +18,7 @@ class ApiService extends GetxService {
       baseUrl: ApiConfig.baseUrl,
       connectTimeout: ApiConfig.connectTimeout,
       receiveTimeout: ApiConfig.receiveTimeout,
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'X-Client-Platform': 'web'},
     ));
 
     dio.interceptors.add(InterceptorsWrapper(
