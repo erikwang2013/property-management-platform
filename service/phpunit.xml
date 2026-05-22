@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+-->
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Service">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
