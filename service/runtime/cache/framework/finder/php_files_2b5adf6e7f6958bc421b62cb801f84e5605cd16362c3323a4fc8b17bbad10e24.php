@@ -63,4 +63,18 @@ return array (
     'class' => 'app\\api\\v1\\controller\\RepairController',
     'type' => 'class',
   ),
+  '/home/wwwroot/property-management-platform/service/app/api/v1/controller/VisitorController.php' => 
+  array (
+    'mtime' => 1779454688,
+    'hasAttributes' => false,
+    'class' => 'app\\api\\v1\\controller\\VisitorController',
+    'type' => 'class',
+  ),
+  '/home/wwwroot/property-management-platform/service/app/api/v1/controller/ParkingController.php' => 
+  array (
+    'mtime' => 1779454664,
+    'hasAttributes' => false,
+    'class' => 'app\\api\\v1\\controller\\ParkingController',
+    'type' => 'class',
+  ),
 );
