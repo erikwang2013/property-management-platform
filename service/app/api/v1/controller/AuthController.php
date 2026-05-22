@@ -1,0 +1,131 @@
+<?php
+/*
+ * Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+ */
+
+declare(strict_types=1);
+
+namespace app\api\v1\controller;
+
+use app\common\BaseController;
+use app\common\SnowflakeService;
+use app\model\Owner;
+use app\model\Room;
+use app\model\RoomOwner;
+use support\Request;
+use support\Response;
+use support\Redis;
+use Erikwang2013\Jwt\JWTFactory;
+
+class AuthController extends BaseController
+{
+    public function login(Request $request): Response
+    {
+        $phone = $request->input('phone', '');
+        $password = $request->input('password', '');
+        $captchaKey = $request->input('captcha_key', '');
+        $clicks = $request->input('clicks', []);
+
+        if (empty($phone) || empty($password)) {
+            return $this->fail('手机号和密码不能为空', 422);
+        }
+
+        if (!captcha_verify($captchaKey, 'click', $clicks)) {
+            return $this->fail('验证码错误', 422);
+        }
+
+        $owner = Owner::where('phone', $phone)->first();
+        if (!$owner || !password_verify($password, $owner->password)) {
+            return $this->fail('手机号或密码错误', 401);
+        }
+
+        if ($owner->locked_until && strtotime($owner->locked_until) > time()) {
+            return $this->fail('账号已被锁定，请稍后再试', 429);
+        }
+
+        if ($owner->status !== 1) {
+            return $this->fail('账号已被禁用', 403);
+        }
+
+        $owner->last_login_at = date('Y-m-d H:i:s');
+        $owner->last_login_ip = $request->getRealIp();
+        $owner->login_failures = 0;
+        $owner->save();
+
+        $jwt = JWTFactory::createFromConfig(config('plugin.erikwang2013.jwt.jwt', []));
+        $accessToken = $jwt->create(['sub' => $owner->id, 'phone' => $owner->phone]);
+        $refreshToken = $jwt->createRefresh(['sub' => $owner->id, 'phone' => $owner->phone]);
+
+        return $this->success([
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            'owner' => [
+                'id' => $this->encodeId($owner->id),
+                'name' => $owner->name,
+                'phone' => $this->maskPhone($owner->phone),
+                'gender' => $owner->gender,
+            ],
+        ], '登录成功');
+    }
+
+    public function register(Request $request): Response
+    {
+        $phone = $request->input('phone', '');
+        $password = $request->input('password', '');
+        $name = $request->input('name', '');
+        $captchaKey = $request->input('captcha_key', '');
+        $clicks = $request->input('clicks', []);
+
+        if (empty($phone) || empty($password) || empty($name)) {
+            return $this->fail('手机号、密码、姓名不能为空', 422);
+        }
+
+        if (strlen($password) < 6) {
+            return $this->fail('密码至少6位', 422);
+        }
+
+        if (!captcha_verify($captchaKey, 'click', $clicks)) {
+            return $this->fail('验证码错误', 422);
+        }
+
+        if (Owner::where('phone', $phone)->exists()) {
+            return $this->fail('该手机号已注册', 422);
+        }
+
+        $ownerId = SnowflakeService::generate();
+        Owner::create([
+            'id' => $ownerId,
+            'name' => $name,
+            'phone' => $phone,
+            'password' => password_hash($password, PASSWORD_BCRYPT),
+            'status' => 1,
+        ]);
+
+        return $this->success([], '注册成功');
+    }
+
+    public function refresh(Request $request): Response
+    {
+        $refreshToken = $request->input('refresh_token', '');
+        if (empty($refreshToken)) {
+            return $this->fail('缺少 refresh_token', 422);
+        }
+
+        try {
+            $jwt = JWTFactory::createFromConfig(config('plugin.erikwang2013.jwt.jwt', []));
+            $payload = $jwt->decode($refreshToken);
+            $accessToken = $jwt->create(['sub' => $payload['sub'], 'phone' => $payload['phone']]);
+            return $this->success(['access_token' => $accessToken]);
+        } catch (\Exception $e) {
+            return $this->fail('Token已过期，请重新登录', 401);
+        }
+    }
+
+    private function maskPhone(string $phone): string
+    {
+        if (strlen($phone) >= 7) {
+            return substr($phone, 0, 3) . '****' . substr($phone, -4);
+        }
+        return $phone;
+    }
+}
