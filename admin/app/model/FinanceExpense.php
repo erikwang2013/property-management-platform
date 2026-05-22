@@ -2,16 +2,27 @@
 /*
  * Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
  */
+
 declare(strict_types=1);
+
 namespace app\model;
 
 class FinanceExpense extends BaseModel
 {
     protected $table = 'erik_finance_expense';
-    protected $fillable = ['community_id', 'category', 'amount', 'pay_method', 'payee', 'transaction_date', 'remark', 'status', 'approval_status'];
+
+    protected $fillable = [
+        'expense_number', 'expense_type', 'amount',
+        'payee', 'expense_date', 'operator_id',
+        'receipt_url', 'remark',
+    ];
+
     protected $casts = [
-        'amount' => 'decimal:2', 'category' => 'integer', 'pay_method' => 'integer',
-        'status' => 'integer', 'approval_status' => 'integer',
-        'transaction_date' => 'date', 'created_at' => 'datetime', 'updated_at' => 'datetime',
+        'expense_type' => 'integer',
+        'amount'       => 'decimal:2',
+        'operator_id'  => 'integer',
+        'expense_date' => 'date',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
     ];
 }

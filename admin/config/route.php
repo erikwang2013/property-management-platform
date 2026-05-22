@@ -130,6 +130,31 @@ Route::group('/admin', function () {
     Route::post('/repair/{id}/progress', [app\admin\controller\RepairController::class, 'progress']);
     // 公告管理
     Route::resource('/announcement', app\admin\controller\AnnouncementController::class);
+
+    // ============================================================
+    // 物业管理 — 第2批辅助业务
+    // ============================================================
+    // 停车管理
+    Route::resource('/parking-space', app\admin\controller\ParkingSpaceController::class);
+    Route::resource('/parking-vehicle', app\admin\controller\ParkingVehicleController::class);
+    Route::get('/parking-record', [app\admin\controller\ParkingRecordController::class, 'index']);
+    // 设备管理
+    Route::resource('/equipment', app\admin\controller\EquipmentController::class);
+    Route::resource('/equipment-maintenance', app\admin\controller\EquipmentMaintenanceController::class);
+    // 投诉管理
+    Route::get('/complaint', [app\admin\controller\ComplaintController::class, 'index']);
+    Route::get('/complaint/{id}', [app\admin\controller\ComplaintController::class, 'show']);
+    Route::put('/complaint/{id}/handle', [app\admin\controller\ComplaintController::class, 'handle']);
+    Route::post('/complaint/{id}/visit', [app\admin\controller\ComplaintController::class, 'visit']);
+    // 访客管理
+    Route::get('/visitor', [app\admin\controller\VisitorController::class, 'index']);
+    Route::put('/visitor/{id}/approve', [app\admin\controller\VisitorController::class, 'approve']);
+    // 合同管理
+    Route::resource('/contract', app\admin\controller\ContractController::class);
+    // 财务管理
+    Route::get('/finance/statistics', [app\admin\controller\FinanceController::class, 'statistics']);
+    Route::resource('/finance-income', app\admin\controller\FinanceController::class, ['names' => 'finance.income']);
+    Route::resource('/finance-expense', app\admin\controller\FinanceController::class, ['names' => 'finance.expense']);
 })->middleware([
     app\middleware\AdminAuth::class,
     app\middleware\AdminPermission::class,

@@ -67,6 +67,16 @@ Route::group('/service', function () {
     Route::put('/profile', [app\api\v1\controller\ProfileController::class, 'update']);
     Route::put('/profile/password', [app\api\v1\controller\ProfileController::class, 'updatePassword']);
     Route::post('/profile/logout', [app\api\v1\controller\ProfileController::class, 'logout']);
+
+    // 停车管理
+    Route::get('/parking/vehicles', [app\api\v1\controller\ParkingController::class, 'vehicles']);
+    Route::get('/parking/spaces', [app\api\v1\controller\ParkingController::class, 'spaces']);
+    Route::get('/parking/records', [app\api\v1\controller\ParkingController::class, 'records']);
+    // 访客管理
+    Route::get('/visitors', [app\api\v1\controller\VisitorController::class, 'index']);
+    Route::post('/visitor', [app\api\v1\controller\VisitorController::class, 'store']);
+    Route::put('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'update']);
+    Route::delete('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'destroy']);
 })->middleware([
     app\middleware\ServiceAuth::class,
 ]);
