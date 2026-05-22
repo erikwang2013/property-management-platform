@@ -132,6 +132,10 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
         array (
             'support\\' => 8,
         ),
+        'h' => 
+        array (
+            'hg\\apidoc\\' => 10,
+        ),
         'a' => 
         array (
             'app\\' => 4,
@@ -196,6 +200,7 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
             'Psr\\EventDispatcher\\' => 20,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
+            'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
@@ -265,6 +270,8 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
             'Dotenv\\' => 7,
             'Dompdf\\' => 7,
             'Doctrine\\Inflector\\' => 19,
+            'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
             'DeepCopy\\' => 9,
         ),
         'C' => 
@@ -291,6 +298,10 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
         array (
             0 => __DIR__ . '/..' . '/workerman/webman-framework/src/support',
         ),
+        'hg\\apidoc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hg/apidoc/src',
+        ),
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -305,8 +316,8 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
         ),
         'Workerman\\' => 
         array (
-            0 => __DIR__ . '/..' . '/workerman/coroutine/src',
-            1 => __DIR__ . '/..' . '/workerman/workerman/src',
+            0 => __DIR__ . '/..' . '/workerman/workerman/src',
+            1 => __DIR__ . '/..' . '/workerman/coroutine/src',
         ),
         'Webman\\' => 
         array (
@@ -468,6 +479,10 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
         'Psr\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
         'PhpParser\\' => 
         array (
@@ -651,6 +666,14 @@ class ComposerStaticInit2a7b22d0b3d68c1632c9e48af691b9f1
         'Doctrine\\Inflector\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/src',
+        ),
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/src',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
         ),
         'DeepCopy\\' => 
         array (
