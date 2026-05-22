@@ -13,6 +13,11 @@ use app\model\KnowledgeBase;
 use support\Request;
 use support\Response;
 
+/**
+ * 智能问答
+ * @Apidoc\Group("extensions")
+ * @Apidoc\Sort(4)
+ */
 class KnowledgeController extends BaseController
 {
     /**

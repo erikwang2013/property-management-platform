@@ -14,6 +14,11 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * 报修管理
+ * @Apidoc\Group("repair")
+ * @Apidoc\Sort(1)
+ */
 class RepairController extends BaseController
 {
     /**

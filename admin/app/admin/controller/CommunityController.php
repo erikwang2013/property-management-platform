@@ -11,11 +11,29 @@ use app\common\SnowflakeService;
 use app\model\Community;
 use support\Request;
 
+/**
+ * 小区管理
+ * @Apidoc\Group("property-core")
+ * @Apidoc\Sort(1)
+ */
 class CommunityController extends BaseController
 {
     /**
      * 小区列表
-     * ?keyword=搜索词&status=状态
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/community")
+     * @Apidoc\Param("keyword", type="string", require=false, desc="搜索关键词")
+     * @Apidoc\Param("status", type="int", require=false, desc="状态: 0=停用 1=正常")
+     * @Apidoc\Param(ref="pagination")
+     * @Apidoc\Returned("id", type="string", desc="小区hashid")
+     * @Apidoc\Returned("name", type="string", desc="小区名称")
+     * @Apidoc\Returned("address", type="string", desc="详细地址")
+     * @Apidoc\Returned("city", type="string", desc="城市")
+     * @Apidoc\Returned("building_count", type="int", desc="楼栋总数")
+     * @Apidoc\Returned("room_count", type="int", desc="房屋总套数")
+     * @Apidoc\Returned("property_company", type="string", desc="物业公司")
+     * @Apidoc\Returned("status", type="int", desc="状态")
+     * @Apidoc\Returned("created_at", type="string", desc="创建时间")
      */
     public function index(Request $request)
     {
@@ -49,7 +67,16 @@ class CommunityController extends BaseController
         return $this->success($list);
     }
 
-    /** 小区详情 */
+    /**
+     * 小区详情
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/community/{hashid}")
+     * @Apidoc\Param("hashid", type="string", require=true, desc="小区hashid", from="path")
+     * @Apidoc\Returned("id", type="string", desc="小区hashid")
+     * @Apidoc\Returned("name", type="string", desc="名称")
+     * @Apidoc\Returned("address", type="string", desc="地址")
+     * @Apidoc\Returned("area_total", type="float", desc="总面积(m²)")
+     */
     public function show(Request $request, string $hashid)
     {
         $id = $this->decodeId($hashid);
@@ -76,7 +103,22 @@ class CommunityController extends BaseController
         ]);
     }
 
-    /** 创建小区 */
+    /**
+     * 创建小区
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/community")
+     * @Apidoc\Param("name", type="string", require=true, desc="小区名称")
+     * @Apidoc\Param("address", type="string", require=false, desc="详细地址")
+     * @Apidoc\Param("province", type="string", require=false, desc="省")
+     * @Apidoc\Param("city", type="string", require=false, desc="市")
+     * @Apidoc\Param("district", type="string", require=false, desc="区")
+     * @Apidoc\Param("area_total", type="float", require=false, desc="总建筑面积(m²)")
+     * @Apidoc\Param("developer", type="string", require=false, desc="开发商")
+     * @Apidoc\Param("property_company", type="string", require=false, desc="物业公司")
+     * @Apidoc\Param("contact_phone", type="string", require=false, desc="联系电话")
+     * @Apidoc\Param("description", type="string", require=false, desc="简介")
+     * @Apidoc\Returned("id", type="string", desc="新建小区的hashid")
+     */
     public function store(Request $request)
     {
         $data = $request->only([

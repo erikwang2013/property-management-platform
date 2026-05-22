@@ -12,6 +12,11 @@ use app\model\FaceInfo;
 use support\Request;
 use support\Response;
 
+/**
+ * 人脸识别
+ * @Apidoc\Group("extensions")
+ * @Apidoc\Sort(5)
+ */
 class FaceController extends BaseController
 {
     /**

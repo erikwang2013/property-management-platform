@@ -14,6 +14,11 @@ use app\model\ParkingRecord;
 use support\Request;
 use support\Response;
 
+/**
+ * 停车管理
+ * @Apidoc\Group("parking")
+ * @Apidoc\Sort(1)
+ */
 class ParkingController extends BaseController
 {
     /**

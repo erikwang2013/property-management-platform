@@ -15,6 +15,11 @@ use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
+/**
+ * 社区商城
+ * @Apidoc\Group("extensions")
+ * @Apidoc\Sort(3)
+ */
 class MallController extends BaseController
 {
     /**

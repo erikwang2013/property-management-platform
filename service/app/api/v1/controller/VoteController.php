@@ -16,6 +16,11 @@ use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
+/**
+ * 业主投票
+ * @Apidoc\Group("extensions")
+ * @Apidoc\Sort(2)
+ */
 class VoteController extends BaseController
 {
     /**

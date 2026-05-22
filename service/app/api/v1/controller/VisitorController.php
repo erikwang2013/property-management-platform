@@ -13,6 +13,11 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * 访客管理
+ * @Apidoc\Group("parking")
+ * @Apidoc\Sort(2)
+ */
 class VisitorController extends BaseController
 {
     /**

@@ -14,6 +14,11 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * 社区活动
+ * @Apidoc\Group("activity")
+ * @Apidoc\Sort(1)
+ */
 class ActivityController extends BaseController
 {
     /**

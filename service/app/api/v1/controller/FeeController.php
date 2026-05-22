@@ -16,6 +16,11 @@ use support\Response;
 use support\Db;
 use InvalidArgumentException;
 
+/**
+ * 费用管理
+ * @Apidoc\Group("fee")
+ * @Apidoc\Sort(1)
+ */
 class FeeController extends BaseController
 {
     /**

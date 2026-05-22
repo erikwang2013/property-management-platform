@@ -13,6 +13,11 @@ use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
+/**
+ * 消息通知
+ * @Apidoc\Group("extensions")
+ * @Apidoc\Sort(1)
+ */
 class NotificationController extends BaseController
 {
     /**

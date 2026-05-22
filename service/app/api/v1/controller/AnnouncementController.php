@@ -13,6 +13,11 @@ use support\Request;
 use support\Response;
 use InvalidArgumentException;
 
+/**
+ * 公告通知
+ * @Apidoc\Group("feedback")
+ * @Apidoc\Sort(3)
+ */
 class AnnouncementController extends BaseController
 {
     /**

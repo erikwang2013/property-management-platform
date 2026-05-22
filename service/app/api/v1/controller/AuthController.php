@@ -17,8 +17,28 @@ use support\Response;
 use support\Redis;
 use Erikwang2013\Jwt\JWTFactory;
 
+/**
+ * 业主认证
+ * @Apidoc\Group("public")
+ * @Apidoc\Sort(1)
+ */
 class AuthController extends BaseController
 {
+    /**
+     * 业主登录
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/login")
+     * @Apidoc\Desc("业主手机号+密码+验证码登录，返回JWT令牌")
+     * @Apidoc\Param("phone", type="string", require=true, desc="手机号")
+     * @Apidoc\Param("password", type="string", require=true, desc="密码")
+     * @Apidoc\Param("captcha_key", type="string", require=true, desc="验证码key")
+     * @Apidoc\Param("clicks", type="array", require=true, desc="点击坐标[{x,y},...]")
+     * @Apidoc\Returned("access_token", type="string", desc="访问令牌(2h)")
+     * @Apidoc\Returned("refresh_token", type="string", desc="刷新令牌(14d)")
+     * @Apidoc\Returned("owner.id", type="string", desc="业主hashid")
+     * @Apidoc\Returned("owner.name", type="string", desc="业主姓名")
+     * @Apidoc\Returned("owner.phone", type="string", desc="手机号(掩码)")
+     */
     public function login(Request $request): Response
     {
         $phone = $request->input('phone', '');
