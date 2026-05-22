@@ -229,9 +229,10 @@ Static files: Flutter Web build/
 
 | Document | Description |
 |----------|-------------|
+| [Editions Comparison](docs/EDITIONS.md) | Lite / Standard / Full edition feature and spec comparison |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
-| [Feature Design](docs/FEATURE_DESIGN.md) | 15 module feature specifications |
+| [Feature Design](docs/FEATURE_DESIGN.md) | 34 module feature specifications |
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
 
