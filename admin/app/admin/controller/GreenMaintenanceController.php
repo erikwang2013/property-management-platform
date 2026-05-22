@@ -11,6 +11,10 @@ use app\common\SnowflakeService;
 use app\model\GreenMaintenance;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class GreenMaintenanceController extends BaseController
 {
     /**

@@ -14,6 +14,10 @@ use support\Redis;
 use support\Request;
 use support\Response;
 
+/**
+ * 仪表盘与运维
+ * @Apidoc\Group("dashboard")
+ */
 class DashboardController extends BaseController
 {
     /**

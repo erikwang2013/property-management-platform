@@ -14,6 +14,10 @@ use support\Redis;
 use Erikwang2013\Jwt\JWT;
 use Erikwang2013\Jwt\JWTFactory;
 
+/**
+ * 系统管理
+ * @Apidoc\Group("system")
+ */
 class ProfileController extends BaseController
 {
     private static ?JWT $jwt = null;

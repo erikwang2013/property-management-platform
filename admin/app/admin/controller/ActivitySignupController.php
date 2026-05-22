@@ -11,6 +11,10 @@ use app\model\ActivitySignup;
 use support\Carbon;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class ActivitySignupController extends BaseController
 {
     /**

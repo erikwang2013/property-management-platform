@@ -11,6 +11,10 @@ use app\common\SnowflakeService;
 use app\model\CleaningArea;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class CleaningAreaController extends BaseController
 {
     /**

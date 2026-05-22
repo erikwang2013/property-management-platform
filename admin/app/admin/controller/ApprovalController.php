@@ -15,6 +15,10 @@ use app\model\Notification;
 use support\Request;
 use support\Response;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class ApprovalController extends BaseController
 {
     /**

@@ -13,6 +13,10 @@ use app\model\InspectionTask;
 use InvalidArgumentException;
 use support\Request;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class InspectionController extends BaseController
 {
     // ============================================================

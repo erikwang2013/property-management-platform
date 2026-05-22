@@ -11,6 +11,10 @@ use app\common\SnowflakeService;
 use app\model\EquipmentMaintenance;
 use support\Request;
 
+/**
+ * 物业管理·辅助
+ * @Apidoc\Group("property-aux")
+ */
 class EquipmentMaintenanceController extends BaseController
 {
     /**

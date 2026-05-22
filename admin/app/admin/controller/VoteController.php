@@ -14,6 +14,10 @@ use app\model\VoteRecord;
 use support\Request;
 use support\Response;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class VoteController extends BaseController
 {
     /**

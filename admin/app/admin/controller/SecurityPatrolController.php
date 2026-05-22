@@ -12,6 +12,10 @@ use app\model\SecurityPatrol;
 use app\model\PatrolRecord;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class SecurityPatrolController extends BaseController
 {
     /**

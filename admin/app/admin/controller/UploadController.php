@@ -10,6 +10,10 @@ namespace app\admin\controller;
 use support\Request;
 use support\Response;
 
+/**
+ * 仪表盘与运维
+ * @Apidoc\Group("dashboard")
+ */
 class UploadController extends BaseController
 {
     private array $allowExts = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'xlsx', 'docx'];

@@ -12,6 +12,10 @@ use app\model\PaymentOrder;
 use support\Request;
 use support\Response;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class PaymentController extends BaseController
 {
     /**

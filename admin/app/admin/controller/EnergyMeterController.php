@@ -11,6 +11,10 @@ use app\common\SnowflakeService;
 use app\model\EnergyMeter;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class EnergyMeterController extends BaseController
 {
     /**

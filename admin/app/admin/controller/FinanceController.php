@@ -13,6 +13,10 @@ use app\model\FinanceExpense;
 use support\Db;
 use support\Request;
 
+/**
+ * 物业管理·辅助
+ * @Apidoc\Group("property-aux")
+ */
 class FinanceController extends BaseController
 {
     /**

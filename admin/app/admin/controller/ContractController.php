@@ -11,6 +11,10 @@ use app\common\SnowflakeService;
 use app\model\Contract;
 use support\Request;
 
+/**
+ * 物业管理·辅助
+ * @Apidoc\Group("property-aux")
+ */
 class ContractController extends BaseController
 {
     /**

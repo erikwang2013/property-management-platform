@@ -11,6 +11,11 @@ use support\Request;
 use support\Response;
 use Throwable;
 
+/**
+ * 通用接口
+ * @Apidoc\Group("common")
+ * @ApidocSort(1)
+ */
 class CaptchaController
 {
     /**

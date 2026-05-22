@@ -13,6 +13,10 @@ use support\Db;
 use support\Redis;
 use Throwable;
 
+/**
+ * 仪表盘与运维
+ * @Apidoc\Group("dashboard")
+ */
 class HealthController
 {
     public function index(Request $request): Response

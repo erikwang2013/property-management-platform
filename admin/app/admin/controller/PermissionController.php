@@ -10,6 +10,10 @@ namespace app\admin\controller;
 use app\model\AdminPermission;
 use support\Request;
 
+/**
+ * 系统管理
+ * @Apidoc\Group("system")
+ */
 class PermissionController extends BaseController
 {
     /**

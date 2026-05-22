@@ -10,6 +10,10 @@ namespace app\admin\controller;
 use app\model\Complaint;
 use support\Request;
 
+/**
+ * 物业管理·辅助
+ * @Apidoc\Group("property-aux")
+ */
 class ComplaintController extends BaseController
 {
     /**

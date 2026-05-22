@@ -12,6 +12,10 @@ use app\model\EnergyRecord;
 use app\model\EnergyMeter;
 use support\Request;
 
+/**
+ * 物业管理·高级
+ * @Apidoc\Group("property-adv")
+ */
 class EnergyRecordController extends BaseController
 {
     /**

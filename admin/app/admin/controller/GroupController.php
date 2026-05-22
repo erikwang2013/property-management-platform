@@ -18,6 +18,10 @@ use InvalidArgumentException;
 use support\Db;
 use support\Request;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class GroupController extends BaseController
 {
     /**

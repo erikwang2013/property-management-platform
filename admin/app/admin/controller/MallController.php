@@ -14,6 +14,10 @@ use app\model\MallProduct;
 use InvalidArgumentException;
 use support\Request;
 
+/**
+ * 扩展功能
+ * @Apidoc\Group("extensions")
+ */
 class MallController extends BaseController
 {
     /**

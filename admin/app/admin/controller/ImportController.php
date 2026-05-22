@@ -12,6 +12,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use support\Request;
 use support\Response;
 
+/**
+ * 仪表盘与运维
+ * @Apidoc\Group("dashboard")
+ */
 class ImportController extends BaseController
 {
     public function users(Request $request): Response
