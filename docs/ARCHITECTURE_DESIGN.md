@@ -377,7 +377,17 @@ SLA规则匹配 → 定时检查超时 → 自动升级 → 罚款记录
 
 使用 `hg/apidoc` 从控制器注解自动生成接口文档，按功能分组。
 
-**管理端** (`http://localhost:8787/apidoc`): 7组 — 通用/仪表盘/系统管理/核心业务/辅助业务/高级功能/扩展功能
+**管理端** (`http://localhost:8787/apidoc`): 7组 — 47个控制器注入注解
+
+| 分组 | 数量 | 控制器 |
+|------|------|--------|
+| `common` | 2 | Auth, Captcha |
+| `dashboard` | 7 | Dashboard, Health, Docs, Metrics, Export, Import, Upload |
+| `system` | 6 | User, Role, Permission, Config, Log, Profile |
+| `property-core` | 1 | Community |
+| `property-aux` | 9 | Parking(3), Equipment(2), Complaint, Visitor, Contract, Finance |
+| `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
+| `extensions` | 11 | Notification, Approval, Payment, Vote, Sla, Collection, Inspection, Mall, Face, Group, Knowledge |
 
 **业务端** (`http://localhost:8788/apidoc`): 9组 — 公开接口/首页/费用/报修/反馈/停车/活动/个人/扩展
 
