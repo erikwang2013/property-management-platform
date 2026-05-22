@@ -150,6 +150,67 @@ class DashboardController extends BaseController
             ->toArray();
     }
 
+    /**
+     * 物业管理面板统计
+     * GET /admin/dashboard/property
+     */
+    public function propertyStats(Request $request): Response
+    {
+        $communityId = $request->input('community_id');
+
+        // 应收/实收/欠费统计
+        $billQuery = \app\model\FeeBill::query();
+        if ($communityId) {
+            $billQuery->whereHas('room', fn($q) => $q->where('community_id', $communityId));
+        }
+        $totalBilled = (float) $billQuery->sum('amount');
+        $totalPaid = (float) \app\model\FeeBill::query()->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))->sum('paid_amount');
+
+        // 入住率
+        $totalRooms = \app\model\Room::when($communityId, fn($q) => $q->where('community_id', $communityId))->count();
+        $occupiedRooms = \app\model\Room::when($communityId, fn($q) => $q->where('community_id', $communityId))->whereIn('status', [1, 2, 3])->count();
+        $occupancyRate = $totalRooms > 0 ? round($occupiedRooms / $totalRooms * 100, 1) : 0;
+
+        // 报修统计（按分类）
+        $repairStats = \app\model\RepairOrder::query()
+            ->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))
+            ->selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')->get();
+
+        // 报修状态统计
+        $repairStatusStats = \app\model\RepairOrder::query()
+            ->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')->get();
+
+        // 投诉统计
+        $complaintStats = \app\model\Complaint::query()
+            ->selectRaw('type, status, COUNT(*) as count')
+            ->groupBy('type', 'status')->get();
+
+        // 月度收入趋势（近12个月）
+        $monthlyIncome = \app\model\FinanceIncome::query()
+            ->selectRaw("DATE_FORMAT(income_date, '%Y-%m') as month, SUM(amount) as total")
+            ->where('income_date', '>=', date('Y-m-d', strtotime('-11 months')))
+            ->groupBy('month')->orderBy('month')->get();
+
+        // 月度支出趋势
+        $monthlyExpense = \app\model\FinanceExpense::query()
+            ->selectRaw("DATE_FORMAT(expense_date, '%Y-%m') as month, SUM(amount) as total")
+            ->where('expense_date', '>=', date('Y-m-d', strtotime('-11 months')))
+            ->groupBy('month')->orderBy('month')->get();
+
+        return $this->success([
+            'billing' => ['total_billed' => $totalBilled, 'total_paid' => $totalPaid, 'arrears_rate' => $totalBilled > 0 ? round(($totalBilled - $totalPaid) / $totalBilled * 100, 1) : 0],
+            'occupancy' => ['total_rooms' => $totalRooms, 'occupied_rooms' => $occupiedRooms, 'rate' => $occupancyRate],
+            'repair_by_category' => $repairStats,
+            'repair_by_status' => $repairStatusStats,
+            'complaint_stats' => $complaintStats,
+            'monthly_income' => $monthlyIncome,
+            'monthly_expense' => $monthlyExpense,
+        ]);
+    }
+
     private function calcTrend(string $modelClass): ?float
     {
         $today = $modelClass::whereDate('created_at', date('Y-m-d'))->count();

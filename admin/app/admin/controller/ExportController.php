@@ -254,6 +254,85 @@ class ExportController extends BaseController
         return $maps[$table] ?? [];
     }
 
+    /**
+     * 物业数据 Excel 导出
+     * POST /admin/export/property-excel
+     * Body: { type: 'owners'|'bills'|'payments', community_id?, conditions? }
+     */
+    public function propertyExcel(Request $request): Response
+    {
+        $type = $request->input('type', 'owners');
+        $communityId = $request->input('community_id');
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        if ($type === 'owners') {
+            $sheet->setTitle('业主列表');
+            $sheet->fromArray(['姓名', '手机号', '性别', '入住日期', '绑定房产', '状态'], null, 'A1');
+            $owners = \app\model\Owner::with('rooms')->when($communityId, fn($q) => $q->whereHas('rooms', fn($r) => $r->where('community_id', $communityId)))->get();
+            $row = 2;
+            foreach ($owners as $owner) {
+                $sheet->fromArray([
+                    $owner->name,
+                    $this->maskPhone($owner->phone ?? ''),
+                    ['未知', '男', '女'][$owner->gender] ?? '未知',
+                    $owner->check_in_date ? $owner->check_in_date->format('Y-m-d') : '',
+                    $owner->rooms->pluck('room_number')->implode(', '),
+                    $owner->status === 1 ? '入住' : '迁出',
+                ], null, "A{$row}");
+                $row++;
+            }
+            $this->styleHeader($sheet, 'A1:F1');
+        } elseif ($type === 'bills') {
+            $sheet->setTitle('账单报表');
+            $sheet->fromArray(['账单编号', '房号', '费用类型', '金额', '已缴', '状态', '截止日期'], null, 'A1');
+            $bills = \app\model\FeeBill::with(['room', 'feeType'])->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))->orderBy('created_at', 'desc')->limit(10000)->get();
+            $row = 2;
+            foreach ($bills as $bill) {
+                $sheet->fromArray([
+                    $bill->bill_number,
+                    $bill->room->room_number ?? '',
+                    $bill->feeType->name ?? '',
+                    $bill->amount,
+                    $bill->paid_amount,
+                    ['未缴', '部分缴', '已缴', '逾期', '豁免'][$bill->status] ?? '未知',
+                    $bill->due_date ? $bill->due_date->format('Y-m-d') : '',
+                ], null, "A{$row}");
+                $row++;
+            }
+            $this->styleHeader($sheet, 'A1:G1');
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'export_' . $type . '_' . date('YmdHis') . '.xlsx';
+        $filepath = runtime_path() . '/tmp/' . $filename;
+
+        $dir = dirname($filepath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $writer->save($filepath);
+
+        return response()->download($filepath, $filename);
+    }
+
+    private function styleHeader($sheet, string $range): void
+    {
+        $sheet->getStyle($range)->getFont()->setBold(true)->getColor()->setARGB('FFFFFF');
+        $sheet->getStyle($range)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('1677FF');
+        $sheet->freezePane('A2');
+    }
+
+    private function maskPhone(string $phone): string
+    {
+        if (strlen($phone) >= 7) {
+            return substr($phone, 0, 3) . '****' . substr($phone, -4);
+        }
+        return $phone;
+    }
+
     private function getSensitiveFields(string $table): array
     {
         $maps = [

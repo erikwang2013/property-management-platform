@@ -60,6 +60,7 @@ Route::get('/api/docs', [app\admin\controller\DocsController::class, 'index']);
 Route::group('/admin', function () {
     // 仪表盘
     Route::get('/dashboard', [app\admin\controller\DashboardController::class, 'index']);
+    Route::get('/dashboard/property', [app\admin\controller\DashboardController::class, 'propertyStats']);
 
     // 用户管理
     Route::resource('/user', app\admin\controller\UserController::class);
@@ -89,6 +90,7 @@ Route::group('/admin', function () {
     // 导出
     Route::post('/export/excel', [app\admin\controller\ExportController::class, 'excel']);
     Route::post('/export/pdf', [app\admin\controller\ExportController::class, 'pdf']);
+    Route::post('/export/property-excel', [app\admin\controller\ExportController::class, 'propertyExcel']);
 
     // 导入
     Route::post('/import/users', [app\admin\controller\ImportController::class, 'users']);
