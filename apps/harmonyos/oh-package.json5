@@ -1,0 +1,9 @@
+{
+  "name": "property-portal",
+  "version": "1.0.0",
+  "description": "物业管理系统-业主端 HarmonyOS App",
+  "main": "",
+  "author": "erik <erik@erik.xyz>",
+  "license": "MIT",
+  "dependencies": {}
+}

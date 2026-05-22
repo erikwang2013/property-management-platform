@@ -1,0 +1,21 @@
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "srcEntry": "./ets/entryability/EntryAbility.ets",
+    "description": "物业管理系统业主端",
+    "mainElement": "EntryAbility",
+    "deviceTypes": ["phone", "tablet", "2in1"],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [{
+      "name": "EntryAbility",
+      "srcEntry": "./ets/entryability/EntryAbility.ets",
+      "launchType": "singleton",
+      "startWindowIcon": "$media:app_icon",
+      "startWindowBackground": "$color:start_window_background",
+      "skills": [{ "actions": ["action.system.home"], "entities": ["entity.system.home"] }]
+    }]
+  }
+}

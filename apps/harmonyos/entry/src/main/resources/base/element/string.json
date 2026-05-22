@@ -1,0 +1,10 @@
+{
+  "string": [
+    { "name": "entry_desc", "value": "物业管理系统业主端" },
+    { "name": "tab_home", "value": "首页" },
+    { "name": "tab_room", "value": "房产" },
+    { "name": "tab_fee", "value": "费用" },
+    { "name": "tab_repair", "value": "报修" },
+    { "name": "tab_profile", "value": "我的" }
+  ]
+}

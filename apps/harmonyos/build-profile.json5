@@ -1,0 +1,10 @@
+{
+  "app": {
+    "signingConfigs": [],
+    "products": [
+      { "name": "default", "signingConfig": "default", "bundleName": "com.erik.propertyportal", "buildOption": {} }
+    ],
+    "buildModeSet": [{ "name": "debug" }, { "name": "release" }]
+  },
+  "modules": [{ "name": "entry", "srcPath": "./entry", "targets": [{ "name": "default", "applyToProducts": ["default"] }] }]
+}
