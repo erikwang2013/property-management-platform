@@ -1,5 +1,7 @@
 # 物业管理系统 (Property Management Platform)
 
+[English](README_EN.md) | 中文
+
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 全栈物业管理系统，覆盖小区管理、费用收缴、报修维护、停车门禁、安保保洁等15个业务模块。管理员端（admin）和业主端（service）分离部署，前端覆盖 Flutter Web（PC 管理后台风格）与 HarmonyOS 移动端。

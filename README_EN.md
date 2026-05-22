@@ -1,0 +1,199 @@
+# Property Management Platform
+
+[中文](README.md) | English
+
+> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+
+A full-stack property management system covering 15 business modules including community management, fee collection, repair maintenance, parking, access control, security patrol, and cleaning services. The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
+
+## Project Structure
+
+```
+property-management-platform/
+├── admin/                         # Admin panel — webman v2 project
+│   ├── app/
+│   │   ├── admin/controller/      # Admin controllers
+│   │   ├── api/v1/controller/     # Public API controllers
+│   │   ├── common/                # Shared utilities
+│   │   ├── middleware/            # Middleware (auth/authz/rate-limit/security)
+│   │   ├── model/                 # Data models (Eloquent ORM)
+│   │   ├── queue/                 # Queue jobs
+│   │   └── process/               # Process management
+│   ├── apps/
+│   │   ├── flutter/               # Admin Flutter Web (PC dashboard style)
+│   │   └── harmonyos/             # Admin HarmonyOS App
+│   ├── config/                    # Config files (with Chinese annotations)
+│   ├── database/
+│   │   ├── migrations/            # SQL migration files
+│   │   └── backup/                # Database backup scripts
+│   ├── resource/
+│   │   └── translations/          # i18n language files (zh_CN / en)
+│   ├── docs/                      # Admin documentation
+│   ├── tests/                     # Unit tests
+│   └── public/                    # Web entry point
+├── service/                       # Owner-facing API — webman v2 project
+│   ├── app/
+│   │   ├── api/v1/controller/     # Owner API controllers
+│   │   ├── common/                # Shared utilities
+│   │   ├── middleware/            # Middleware
+│   │   ├── model/                 # Data models
+│   │   └── process/               # Process management
+│   ├── config/                    # Config files
+│   ├── resource/
+│   │   └── translations/          # i18n language files
+│   └── database/migrations/       # SQL migration files
+├── apps/
+│   ├── flutter/                   # Owner portal Flutter Web (PC style)
+│   └── harmonyos/                 # Owner portal HarmonyOS App
+└── docs/                          # Project documentation
+    ├── ARCHITECTURE.md
+    ├── ARCHITECTURE_DESIGN.md
+    ├── API.md
+    ├── FEATURES.md
+    └── FEATURE_DESIGN.md
+```
+
+## Feature Modules
+
+| Batch | Modules | Admin | Owner Portal |
+|-------|---------|-------|-------------|
+| Batch 1 | Community, Building, Room, Owner, Tenant, Fee, Repair, Announcement | Full CRUD | View/Pay/Repair/Rate |
+| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance | Full CRUD + Approval | Reserve/Submit/View |
+| Batch 3 | Security Patrol, Cleaning, Green, Activity, Energy, Staff | Full CRUD | View/Sign Up |
+
+## Tech Stack
+
+### Backend
+- **Framework**: webman v2 (workerman/webman)
+- **Language**: PHP 8.3+
+- **Database**: MySQL 8.0+, table prefix `erik_`, BIGINT non-auto-increment PKs
+- **Search Engine**: Elasticsearch 8.x
+- **Cache**: Redis 7.x
+
+### Core Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `erikwang2013/snowflake-php` | Globally unique BIGINT primary key generation |
+| `erikwang2013/hashids` | API-layer ID encryption/decryption |
+| `erikwang2013/jwt-webman` | JWT authentication (HS256) |
+| `erikwang2013/encryption` | API transport AES-256-CBC encryption |
+| `erikwang2013/encryptable` | Database field encryption |
+| `erikwang2013/webman-scout` | Elasticsearch data sync and full-text search |
+| `erikwang2013/season` | Country flag data |
+| `erikwang2013/security-php` | Security scanning |
+| `erikwang2013/poster-php` | Sensitive operation verification |
+| `phpoffice/phpspreadsheet` | Excel export |
+| `barryvdh/laravel-dompdf` | PDF export |
+
+### Frontend
+- **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart — PC-style web dashboard
+- **HarmonyOS ArkTS** + @ohos.net.http — Mobile client
+
+### Internationalization (i18n)
+- **PHP Backend**: symfony/translation, language files in `resource/translations/{zh_CN,en}/messages.php`
+- **Flutter Web**: GetX `Translations`, `lib/i18n/messages.dart`
+- **Default**: Simplified Chinese (zh_CN), fallback to English (en)
+
+## Security (18-Layer Defense-in-Depth)
+
+1. Click Captcha → 2. Password Confirmation → 3. Random Verification → 4. Security Scan → 5. Attack Interception (XSS/SQLi/CSRF) → 6. HTTPS + AES-256-CBC → 7. JWT HS256 → 8. Concurrent Session Limit (max 3) → 9. Account Lockout (5 failures/15 min) → 10. RBAC (method.path granularity) → 11. Redis Sliding Window Rate Limit → 12. Hashids ID Protection → 13. Request Body Encryption → 14. DB Field Encryption → 15. Display Masking → 16. Full Audit Trail (8 platform sources) → 17. CSP Headers → 18. PDF Copyright Watermark
+
+## Coding Standards
+
+- All new files include copyright header: `Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz`
+- Use `use` imports instead of `\` prefix for global functions/classes
+- Config files include Chinese annotations for each setting
+- Primary keys: `BIGINT UNSIGNED NOT NULL`, generated by snowflake-php at the application layer
+- API-layer ID transmission uses hashids encoding
+
+## Quick Start
+
+### Requirements
+
+- PHP 8.1+
+- MySQL 8.0+
+- Redis 6.0+
+- Composer 2.x
+- Flutter SDK 3.x (for frontend development)
+
+### 1. Initialize Database
+
+```bash
+# Create database
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# Import admin tables
+mysql -u root property_management < admin/database/migrations/2026_05_16_000000_init_tables.sql
+mysql -u root property_management < admin/database/migrations/2026_05_20_000001_seed_permissions.sql
+mysql -u root property_management < admin/database/migrations/2026_05_21_000002_add_source_to_operation_log.sql
+mysql -u root property_management < admin/database/migrations/2026_05_22_000001_property_batch1_tables.sql
+```
+
+### 2. Start Admin Panel
+
+```bash
+cd admin
+cp .env.example .env
+# Edit .env to configure database credentials
+composer install
+php start.php start -d
+# Admin API runs at http://localhost:8787
+```
+
+### 3. Start Owner Service
+
+```bash
+cd service
+cp .env.example .env
+# Edit .env to configure database credentials
+composer install
+php start.php start -d
+# Service API runs at http://localhost:8788
+```
+
+### 4. Start Frontend (Dev)
+
+```bash
+cd apps/flutter
+flutter pub get
+flutter run -d chrome
+```
+
+### Docker Deployment
+
+```bash
+cd admin
+cp .env.docker .env
+docker-compose up -d
+# Includes Nginx + PHP + MySQL + Redis + Elasticsearch
+```
+
+## Deployment Topology
+
+```
+Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
+Static files: Flutter Web build/
+```
+
+## Default Admin Account
+
+| Username | Password | Role |
+|----------|----------|------|
+| admin | admin123 | Super Admin |
+
+> Change the default password immediately in production.
+
+## Document Index
+
+| Document | Description |
+|----------|-------------|
+| [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
+| [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
+| [Feature Design](docs/FEATURE_DESIGN.md) | 15 module feature specifications |
+| [Features](docs/FEATURES.md) | Feature checklist and module overview |
+| [API Reference](docs/API.md) | Complete API endpoints and parameters |
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
