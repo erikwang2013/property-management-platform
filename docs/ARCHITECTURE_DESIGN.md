@@ -261,7 +261,38 @@ Get.updateLocale(Locale('en', 'US'));  // 切换英文
 
 **HarmonyOS:** 使用 `resources/base/element/string.json` + `resources/en_US/element/string.json` 资源限定符（创建 HarmonyOS 项目时同步实现）。
 
-## 12. 统一响应格式
+## 12. 测试策略
+
+### TDD 测试流程
+
+项目遵循 TDD（测试驱动开发）流程：红→绿→重构。
+
+```
+RED: 先写测试，观察失败
+  ↓
+GREEN: 写最小代码使测试通过
+  ↓
+REFACTOR: 清理代码，保持测试绿
+```
+
+### 测试覆盖
+
+| 层 | 测试框架 | 测试内容 |
+|----|---------|---------|
+| 基础服务 | PHPUnit | Snowflake ID生成、Hashids编解码、响应格式 |
+| 数据库 | PHPUnit + PDO | 表结构验证（BIGINT主键、非自增、erik_前缀） |
+| 国际化 | PHPUnit | 翻译文件存在性、中英文键一致性 |
+| API端点 | PHPUnit | 健康检查、响应格式 |
+| 中间件 | 集成测试 | JWT认证、限流、权限 |
+
+### 运行测试
+
+```bash
+cd admin && php vendor/bin/phpunit    # 管理端: 60 tests, 164 assertions
+cd service && php vendor/bin/phpunit  # 业务端: 18 tests, 45 assertions, 100% pass
+```
+
+## 13. 统一响应格式
 
 ```json
 {

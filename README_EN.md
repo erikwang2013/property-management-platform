@@ -160,6 +160,23 @@ flutter pub get
 flutter run -d chrome
 ```
 
+### 5. Run Tests
+
+```bash
+# Admin tests
+cd admin && php vendor/bin/phpunit
+
+# Service tests
+cd service && php vendor/bin/phpunit
+```
+
+| Project | Tests | Assertions | Pass Rate |
+|---------|-------|------------|-----------|
+| admin | 60 | 164 | 93.3% (4 pre-existing config issues) |
+| service | 18 | 45 | 100% |
+
+Service test coverage: Snowflake ID generation, Hashids encode/decode, unified response format, database schema validation, i18n translation files
+
 ### Docker Deployment
 
 ```bash

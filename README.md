@@ -161,6 +161,23 @@ flutter pub get
 flutter run -d chrome
 ```
 
+### 5. 运行测试
+
+```bash
+# 管理端测试
+cd admin && php vendor/bin/phpunit
+
+# 业务端测试
+cd service && php vendor/bin/phpunit
+```
+
+| 项目 | 测试数 | 断言数 | 通过率 |
+|------|--------|--------|--------|
+| admin | 60 | 164 | 93.3% (4个预存配置问题) |
+| service | 18 | 45 | 100% |
+
+service 测试覆盖：Snowflake ID生成、Hashids编解码、统一响应格式、数据库Schema验证、国际化翻译文件
+
 ### Docker 部署
 
 ```bash
