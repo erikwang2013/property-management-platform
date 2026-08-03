@@ -36,15 +36,18 @@ return [
     'connections' => [
 
         'main' => [
-            'salt' => '',
-            'length' => 0,
-            // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+            // 盐值，生产环境请使用环境变量 HASHIDS_SALT 注入随机字符串
+            'salt' => getenv('HASHIDS_SALT') ?: 'open-admin-hashids-salt-2026',
+            // 生成的 hash 最小长度，16 位可有效避免碰撞
+            'length' => 16,
+            // 自定义字符集，62 个字符的混合字母数字
+            'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 
         'alternative' => [
-            'salt' => 'your-salt-string',
-            'length' => 0,
-            // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+            'salt' => getenv('HASHIDS_ALT_SALT') ?: 'open-admin-alt-salt-2026',
+            'length' => 16,
+            'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 
     ],

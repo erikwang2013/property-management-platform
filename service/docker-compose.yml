@@ -1,26 +1,22 @@
 # ============================================================
-# 开放管理后台 — Docker Compose 生产编排
+# 物业管理系统-业务端 — Docker Compose 生产编排
 # Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 # ============================================================
 
 services:
-  # ============================================================
-  # Web 应用 + Nginx 反向代理
-  # ============================================================
   nginx:
     image: nginx:1.27-alpine
-    container_name: open-admin-nginx
+    container_name: property-svc-nginx
     restart: unless-stopped
     ports:
       - "${NGINX_PORT:-80}:80"
       - "${NGINX_SSL_PORT:-443}:443"
     volumes:
       - ./public:/app/public:ro
-      - ./docs/nginx-security.conf:/etc/nginx/conf.d/security.conf:ro
     depends_on:
       - app
     networks:
-      - open-admin
+      - property-svc
     logging:
       driver: json-file
       options:
@@ -31,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: open-admin-app
+    container_name: property-svc-app
     restart: unless-stopped
     working_dir: /app
     volumes:
@@ -46,7 +42,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - open-admin
+      - property-svc
     deploy:
       resources:
         limits:
@@ -57,18 +53,15 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # ============================================================
-  # 数据服务
-  # ============================================================
   mysql:
     image: mysql:8.0.36
-    container_name: open-admin-mysql
+    container_name: property-svc-mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-open_admin}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-property_management}
     ports:
-      - "${MYSQL_PORT:-3306}:3306"
+      - "${MYSQL_PORT:-3307}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database/migrations:/docker-entrypoint-initdb.d:ro
@@ -79,7 +72,7 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - open-admin
+      - property-svc
     deploy:
       resources:
         limits:
@@ -92,10 +85,10 @@ services:
 
   redis:
     image: redis:7.2-alpine
-    container_name: open-admin-redis
+    container_name: property-svc-redis
     restart: unless-stopped
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${REDIS_PORT:-6380}:6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -105,7 +98,7 @@ services:
       retries: 5
       start_period: 10s
     networks:
-      - open-admin
+      - property-svc
     deploy:
       resources:
         limits:
@@ -118,14 +111,14 @@ services:
 
   elasticsearch:
     image: elasticsearch:8.12.0
-    container_name: open-admin-es
+    container_name: property-svc-es
     restart: unless-stopped
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
-      - "${ES_PORT:-9200}:9200"
+      - "${ES_PORT:-9201}:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
     healthcheck:
@@ -135,7 +128,7 @@ services:
       retries: 5
       start_period: 60s
     networks:
-      - open-admin
+      - property-svc
     deploy:
       resources:
         limits:
@@ -153,5 +146,5 @@ volumes:
   app-runtime:
 
 networks:
-  open-admin:
+  property-svc:
     driver: bridge

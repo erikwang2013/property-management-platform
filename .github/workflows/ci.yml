@@ -1,0 +1,151 @@
+# ============================================================
+# CI/CD Workflow
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# ============================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  php-syntax:
+    name: PHP Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Check admin PHP syntax
+        run: find admin/app admin/config -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Check service PHP syntax
+        run: find service/app service/config -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+
+  admin-tests:
+    name: Admin Tests
+    runs-on: ubuntu-latest
+    needs: php-syntax
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: open_admin
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo, pdo_mysql, redis, gd, mbstring
+          coverage: none
+
+      - name: Validate composer.json
+        run: cd admin && composer validate --strict
+
+      - name: Install dependencies
+        run: cd admin && composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Setup environment
+        run: cp admin/.env.example admin/.env
+
+      - name: Run tests
+        run: cd admin && php vendor/bin/phpunit
+
+  service-tests:
+    name: Service Tests
+    runs-on: ubuntu-latest
+    needs: php-syntax
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: property_management
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo, pdo_mysql, redis, gd, mbstring
+          coverage: none
+
+      - name: Validate composer.json
+        run: cd service && composer validate --strict
+
+      - name: Install dependencies
+        run: cd service && composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Setup environment
+        run: cp service/.env.example service/.env
+
+      - name: Run tests
+        run: cd service && php vendor/bin/phpunit
+
+  flutter-analyze:
+    name: Flutter Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+
+      - name: Analyze admin Flutter
+        run: cd admin/apps/flutter && flutter pub get && flutter analyze
+
+      - name: Analyze service Flutter
+        run: cd apps/flutter && flutter pub get && flutter analyze

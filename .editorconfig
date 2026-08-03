@@ -1,0 +1,23 @@
+# EditorConfig — unified editor settings
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.php]
+indent_size = 4
+
+[*.{dart,js,ts,json,yml,yaml,xml,css,scss}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab

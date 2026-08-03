@@ -1,0 +1,42 @@
+/admin/runtime
+/service/runtime
+/.idea
+/.vscode
+/vendor
+*.log
+.env
+/tests/tmp
+/tests/.phpunit.result.cache
+/.cursor
+/service/vendor
+/admin/vendor
+/service/composer.lock
+/admin/composer.lock
+/.github/*
+!.github/workflows/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads & backups
+/uploads
+/backup
+*.sql.gz
+
+# Composer
+*.phar
+auth.json
+/composer.lock
+/.cursor
+.claude
+.claude-flow
+.swarm
+.mcp.json
+ruvector.db
+.superpowers/state/target
+.agents
+skills-lock.json
+.php-cs-fixer.cache
+*.backup
+*.bak

@@ -236,6 +236,16 @@ Static files: Flutter Web build/
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
 
+## Support
+
+Thank you for your support!
+
+| <img src="admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+|:---:|:---:|
+| WeChat Pay | Alipay |
+
+Your support is greatly appreciated!
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.

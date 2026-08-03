@@ -239,6 +239,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | [功能文档](docs/FEATURES.md) | 功能清单与模块概览 |
 | [接口文档](docs/API.md) | 全部 API 端点与参数说明 |
 
+## 支持项目
+
+感谢您的支持！
+
+| <img src="admin/docs/weixinpay.png" width="130" height="130" alt="微信支付"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="支付宝"> |
+|:---:|:---:|
+| 微信支付 | 支付宝 |
+
+欢迎支持本项目！
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
