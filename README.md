@@ -135,7 +135,23 @@ property-management-platform/
 
 ## 快速开始
 
-### 环境要求
+### 方式一：Web 安装向导（推荐）
+
+启动管理端后访问 `http://localhost:8787/install`，通过界面完成数据库配置和后台管理员账户创建。
+
+```bash
+cd admin
+cp .env.example .env
+composer install
+php start.php start -d
+# 访问 http://localhost:8787/install 完成安装
+```
+
+详见 [安装指南](docs/INSTALL.md)。
+
+### 方式二：手动安装
+
+#### 环境要求
 
 - PHP 8.1+
 - MySQL 8.0+
@@ -143,20 +159,14 @@ property-management-platform/
 - Composer 2.x
 - Flutter SDK 3.x（前端开发）
 
-### 1. 初始化数据库
+#### 1. 初始化数据库
 
 ```bash
-# 创建数据库
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# 导入管理端数据表
-mysql -u root property_management < admin/database/migrations/2026_05_16_000000_init_tables.sql
-mysql -u root property_management < admin/database/migrations/2026_05_20_000001_seed_permissions.sql
-mysql -u root property_management < admin/database/migrations/2026_05_21_000002_add_source_to_operation_log.sql
-mysql -u root property_management < admin/database/migrations/2026_05_22_000001_property_batch1_tables.sql
+mysql -u root property_management < docs/install.sql
 ```
 
-### 2. 启动管理端
+#### 2. 启动管理端
 
 ```bash
 cd admin
@@ -232,6 +242,8 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | 文档 | 说明 |
 |------|------|
+| [安装指南](docs/INSTALL.md) | 从零部署指南，含数据库初始化、Docker 部署、常见问题 |
+| [合并安装脚本](docs/install.sql) | 全部 65 张表 + RBAC 权限种子数据，一键导入 |
 | [版本对比](docs/EDITIONS.md) | 基础版(Lite) / 标准版(Standard) / 完整版(Full) 功能与技术指标对比 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |

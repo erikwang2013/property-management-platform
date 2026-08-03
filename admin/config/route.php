@@ -251,5 +251,9 @@ Route::group('/api', function () {
     app\middleware\ApiVersion::class,
 ]);
 
+// 安装向导（.installed 锁定前可访问）
+Route::get('/install', [app\admin\controller\InstallController::class, 'index']);
+Route::post('/install', [app\admin\controller\InstallController::class, 'store']);
+
 // 关闭默认路由
 Route::disableDefaultRoute();

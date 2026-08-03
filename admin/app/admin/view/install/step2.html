@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装向导 — 物业管理系统</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); padding:40px; max-width:520px; width:100%; }
+h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
+.subtitle { font-size:14px; color:#999; margin-bottom:24px; }
+.progress { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:32px; }
+.progress .step { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; border:2px solid #d9d9d9; color:#999; background:#fff; }
+.progress .step.active { border-color:#4f46e5; background:#4f46e5; color:#fff; }
+.progress .step.done { border-color:#10b981; background:#10b981; color:#fff; }
+.progress .line { flex:1; height:2px; background:#d9d9d9; max-width:60px; }
+.progress .line.done { background:#10b981; }
+.error-msg { background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:13px; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:6px; }
+.form-group input { width:100%; padding:10px 14px; border:1px solid #d9d9d9; border-radius:8px; font-size:14px; transition:border-color .2s; outline:none; }
+.form-group input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.db-summary { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px 18px; margin-bottom:24px; font-size:13px; line-height:1.8; }
+.db-summary strong { color:#4f46e5; }
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; width:100%; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-primary:hover { background:#4338ca; }
+.footer { margin-top:24px; text-align:center; font-size:12px; color:#aaa; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>安装向导</h1>
+  <p class="subtitle">物业管理系统 · 步骤 2/3 · 管理员账户</p>
+  <div class="progress">
+    <div class="step done">&#10003;</div><div class="line done"></div>
+    <div class="step active">2</div><div class="line"></div>
+    <div class="step">3</div>
+  </div>
+  <?php if (!empty($error)): ?>
+  <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+  <?php endif; ?>
+  <div class="db-summary">
+    数据库：<strong><?= htmlspecialchars($dbConfig['host']) ?>:<?= htmlspecialchars($dbConfig['port']) ?></strong><br>
+    库名：<strong><?= htmlspecialchars($dbConfig['database']) ?></strong> &middot; 用户：<strong><?= htmlspecialchars($dbConfig['username']) ?></strong>
+  </div>
+  <form method="post" action="/install">
+    <input type="hidden" name="_step" value="3">
+    <input type="hidden" name="host" value="<?= htmlspecialchars($dbConfig['host']) ?>">
+    <input type="hidden" name="port" value="<?= htmlspecialchars($dbConfig['port']) ?>">
+    <input type="hidden" name="database" value="<?= htmlspecialchars($dbConfig['database']) ?>">
+    <input type="hidden" name="db_username" value="<?= htmlspecialchars($dbConfig['username']) ?>">
+    <input type="hidden" name="db_password" value="<?= htmlspecialchars($dbConfig['password']) ?>">
+    <div class="form-group">
+      <label for="admin_username">管理员用户名</label>
+      <input type="text" id="admin_username" name="admin_username" value="<?= htmlspecialchars($old['admin_username'] ?? 'admin') ?>" required minlength="3">
+    </div>
+    <div class="form-group">
+      <label for="admin_password">管理员密码</label>
+      <input type="password" id="admin_password" name="admin_password" required minlength="6" placeholder="至少6位">
+    </div>
+    <div class="form-group">
+      <label for="admin_password_confirm">确认密码</label>
+      <input type="password" id="admin_password_confirm" name="admin_password_confirm" required minlength="6" placeholder="再次输入密码">
+    </div>
+    <button type="submit" class="btn btn-primary">下一步：确认安装 &rarr;</button>
+  </form>
+  <div class="footer">Copyright (c) 2026 erik — https://erik.xyz</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装向导 — 物业管理系统</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); padding:40px; max-width:580px; width:100%; }
+h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
+.subtitle { font-size:14px; color:#999; margin-bottom:24px; }
+.progress { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:32px; }
+.progress .step { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; border:2px solid #d9d9d9; color:#999; background:#fff; }
+.progress .step.active { border-color:#4f46e5; background:#4f46e5; color:#fff; }
+.progress .step.done { border-color:#10b981; background:#10b981; color:#fff; }
+.progress .line { flex:1; height:2px; background:#d9d9d9; max-width:60px; }
+.progress .line.done { background:#10b981; }
+.summary { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:18px 20px; margin-bottom:24px; font-size:13px; line-height:2; }
+.summary strong { color:#4f46e5; }
+.summary .mask { color:#999; }
+.result-list { margin-bottom:24px; }
+.result-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:8px; margin-bottom:8px; font-size:14px; }
+.result-item.success { background:#f0fdf4; border:1px solid #bbf7d0; }
+.result-item.error { background:#fef2f2; border:1px solid #fecaca; }
+.result-icon { font-size:18px; flex-shrink:0; width:24px; text-align:center; }
+.result-text { flex:1; }
+.result-text .title { font-weight:600; }
+.result-text .detail { font-size:12px; color:#888; margin-top:2px; }
+.success-box { background:#f0fdf4; border:2px solid #10b981; border-radius:12px; padding:24px; text-align:center; margin-bottom:24px; }
+.success-box .check { font-size:48px; margin-bottom:8px; }
+.success-box h2 { font-size:18px; color:#065f46; margin-bottom:8px; }
+.success-box p { font-size:14px; color:#065f46; margin-bottom:12px; }
+.success-box .login-info { background:#fff; border-radius:8px; padding:12px 16px; font-size:14px; line-height:1.8; margin-bottom:12px; display:inline-block; text-align:left; }
+.success-box .login-info code { background:#f0fdf4; padding:2px 6px; border-radius:4px; font-size:13px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; width:100%; text-decoration:none; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-primary:hover { background:#4338ca; }
+.footer { margin-top:24px; text-align:center; font-size:12px; color:#aaa; }
+.note { background:#fefce8; border:1px solid #fde68a; border-radius:8px; padding:12px 14px; font-size:13px; color:#92400e; margin-top:16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>安装向导</h1>
+  <p class="subtitle">物业管理系统 &middot; 步骤 3/3 &middot; <?= $executed ? '安装结果' : '确认安装' ?></p>
+  <div class="progress">
+    <div class="step done">&#10003;</div><div class="line done"></div>
+    <div class="step done">&#10003;</div><div class="line <?= $executed ? 'done' : '' ?>"></div>
+    <div class="step <?= $executed ? 'done' : 'active' ?>"><?= $executed ? '&#10003;' : '3' ?></div>
+  </div>
+
+  <?php if (!$executed): ?>
+  <div class="summary">
+    <strong>数据库</strong><br>
+    主机：<?= htmlspecialchars($dbConfig['host']) ?>:<?= htmlspecialchars($dbConfig['port']) ?><br>
+    库名：<?= htmlspecialchars($dbConfig['database']) ?> &middot; 用户：<?= htmlspecialchars($dbConfig['username']) ?><br>
+    密码：<span class="mask"><?= str_repeat('&bull;', max(4, strlen($dbConfig['password']))) ?></span><br><br>
+    <strong>管理员账户</strong><br>
+    用户名：<?= htmlspecialchars($adminConfig['admin_username']) ?><br>
+    密码：<span class="mask"><?= str_repeat('&bull;', strlen($adminConfig['admin_password'])) ?></span>
+  </div>
+  <form method="post" action="/install">
+    <input type="hidden" name="_step" value="3">
+    <input type="hidden" name="_confirm" value="1">
+    <input type="hidden" name="host" value="<?= htmlspecialchars($dbConfig['host']) ?>">
+    <input type="hidden" name="port" value="<?= htmlspecialchars($dbConfig['port']) ?>">
+    <input type="hidden" name="database" value="<?= htmlspecialchars($dbConfig['database']) ?>">
+    <input type="hidden" name="db_username" value="<?= htmlspecialchars($dbConfig['username']) ?>">
+    <input type="hidden" name="db_password" value="<?= htmlspecialchars($dbConfig['password']) ?>">
+    <input type="hidden" name="admin_username" value="<?= htmlspecialchars($adminConfig['admin_username']) ?>">
+    <input type="hidden" name="admin_password" value="<?= htmlspecialchars($adminConfig['admin_password']) ?>">
+    <button type="submit" class="btn btn-primary">确认安装</button>
+  </form>
+
+  <?php else: ?>
+  <div class="result-list">
+    <?php foreach ($results as $r): ?>
+    <div class="result-item <?= $r['status'] ?>">
+      <div class="result-icon"><?= $r['status'] === 'success' ? '&#10003;' : '&#10007;' ?></div>
+      <div class="result-text">
+        <div class="title"><?= htmlspecialchars($r['title']) ?></div>
+        <?php if (!empty($r['message'])): ?>
+        <div class="detail"><?= htmlspecialchars($r['message']) ?></div>
+        <?php endif; ?>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+
+  <?php if ($allSuccess): ?>
+  <div class="success-box">
+    <div class="check">&#10003;</div>
+    <h2>安装成功！</h2>
+    <p>物业管理系统已就绪</p>
+    <div class="login-info">
+      登录地址：<code><?= htmlspecialchars($loginUrl) ?></code><br>
+      用户名：<code><?= htmlspecialchars($adminConfig['admin_username']) ?></code><br>
+      密码：<code><?= htmlspecialchars($adminConfig['admin_password']) ?></code>
+    </div>
+    <a href="/admin" class="btn btn-primary" style="margin-top:8px;">前往管理后台</a>
+  </div>
+  <div class="note">
+    <strong>重要：</strong>请立即删除 <code>public/.installed</code> 文件或确保安装向导不可公开访问。<br>
+    建议重启服务使 .env 配置生效：<code>php start.php restart -d</code>
+  </div>
+  <?php else: ?>
+  <form method="get" action="/install">
+    <button type="submit" class="btn btn-primary">返回重试</button>
+  </form>
+  <?php endif; ?>
+  <?php endif; ?>
+
+  <div class="footer">Copyright (c) 2026 erik — https://erik.xyz</div>
+</div>
+</body>
+</html>

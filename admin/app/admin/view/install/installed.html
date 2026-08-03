@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>已安装 — 物业管理系统</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); padding:40px; max-width:480px; width:100%; text-align:center; }
+.icon { font-size:48px; margin-bottom:16px; }
+h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:8px; }
+p { font-size:14px; color:#888; line-height:1.8; margin-bottom:8px; }
+code { background:#f1f5f9; padding:2px 8px; border-radius:4px; font-size:13px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; text-decoration:none; margin-top:20px; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-primary:hover { background:#4338ca; }
+.footer { margin-top:24px; font-size:12px; color:#aaa; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">&#128274;</div>
+  <h1>系统已安装</h1>
+  <p>安装向导已锁定。</p>
+  <p>如需重新安装，请删除 <code>public/.installed</code> 文件后刷新此页面。</p>
+  <a href="/admin" class="btn btn-primary">前往管理后台</a>
+  <div class="footer">Copyright (c) 2026 erik — https://erik.xyz</div>
+</div>
+</body>
+</html>

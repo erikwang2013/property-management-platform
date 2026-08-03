@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装向导 — 物业管理系统</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); padding:40px; max-width:520px; width:100%; }
+h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
+.subtitle { font-size:14px; color:#999; margin-bottom:24px; }
+.progress { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:32px; }
+.progress .step { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; border:2px solid #d9d9d9; color:#999; background:#fff; }
+.progress .step.active { border-color:#4f46e5; background:#4f46e5; color:#fff; }
+.progress .step.done { border-color:#10b981; background:#10b981; color:#fff; }
+.progress .line { flex:1; height:2px; background:#d9d9d9; max-width:60px; }
+.progress .line.done { background:#10b981; }
+.error-msg { background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:13px; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:6px; }
+.form-group input { width:100%; padding:10px 14px; border:1px solid #d9d9d9; border-radius:8px; font-size:14px; transition:border-color .2s; outline:none; }
+.form-group input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.form-row { display:flex; gap:12px; }
+.form-row .form-group { flex:1; }
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; width:100%; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-primary:hover { background:#4338ca; }
+.footer { margin-top:24px; text-align:center; font-size:12px; color:#aaa; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>安装向导</h1>
+  <p class="subtitle">物业管理系统 · 步骤 1/3 · 数据库配置</p>
+  <div class="progress">
+    <div class="step active">1</div><div class="line"></div>
+    <div class="step">2</div><div class="line"></div>
+    <div class="step">3</div>
+  </div>
+  <?php if (!empty($error)): ?>
+  <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+  <?php endif; ?>
+  <form method="post" action="/install">
+    <input type="hidden" name="_step" value="2">
+    <div class="form-group">
+      <label for="host">数据库主机</label>
+      <input type="text" id="host" name="host" value="<?= htmlspecialchars($old['host'] ?? '127.0.0.1') ?>" required>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="port">端口</label>
+        <input type="number" id="port" name="port" value="<?= htmlspecialchars($old['port'] ?? '3306') ?>" required>
+      </div>
+      <div class="form-group">
+        <label for="database">数据库名</label>
+        <input type="text" id="database" name="database" value="<?= htmlspecialchars($old['database'] ?? 'property_management') ?>" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="username">数据库用户名</label>
+      <input type="text" id="username" name="username" value="<?= htmlspecialchars($old['username'] ?? 'root') ?>" required>
+    </div>
+    <div class="form-group">
+      <label for="password">数据库密码</label>
+      <input type="password" id="password" name="password" value="<?= htmlspecialchars($old['password'] ?? '') ?>">
+    </div>
+    <button type="submit" class="btn btn-primary">下一步：设置管理员账户 →</button>
+  </form>
+  <div class="footer">Copyright (c) 2026 erik — https://erik.xyz</div>
+</div>
+</body>
+</html>

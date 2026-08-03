@@ -133,7 +133,23 @@ Start the services and access the auto-generated apidoc:
 
 ## Quick Start
 
-### Requirements
+### Option 1: Web Installer (Recommended)
+
+Start the admin panel and open `http://localhost:8787/install` to configure the database and create an admin account through the UI.
+
+```bash
+cd admin
+cp .env.example .env
+composer install
+php start.php start -d
+# Visit http://localhost:8787/install to complete setup
+```
+
+See [Installation Guide](docs/INSTALL.md) for details.
+
+### Option 2: Manual Setup
+
+#### Requirements
 
 - PHP 8.1+
 - MySQL 8.0+
@@ -141,20 +157,17 @@ Start the services and access the auto-generated apidoc:
 - Composer 2.x
 - Flutter SDK 3.x (for frontend development)
 
-### 1. Initialize Database
+#### 1. Initialize Database
 
 ```bash
 # Create database
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Import admin tables
-mysql -u root property_management < admin/database/migrations/2026_05_16_000000_init_tables.sql
-mysql -u root property_management < admin/database/migrations/2026_05_20_000001_seed_permissions.sql
-mysql -u root property_management < admin/database/migrations/2026_05_21_000002_add_source_to_operation_log.sql
-mysql -u root property_management < admin/database/migrations/2026_05_22_000001_property_batch1_tables.sql
+# Import merged install script (all 65 tables + RBAC seed data)
+mysql -u root property_management < docs/install.sql
 ```
 
-### 2. Start Admin Panel
+#### 2. Start Admin Panel
 
 ```bash
 cd admin
@@ -229,6 +242,8 @@ Static files: Flutter Web build/
 
 | Document | Description |
 |----------|-------------|
+| [Installation Guide](docs/INSTALL.md) | Deployment guide: database init, Docker, FAQ |
+| [Install SQL](docs/install.sql) | All 65 tables + RBAC seed data, single import |
 | [Editions Comparison](docs/EDITIONS.md) | Lite / Standard / Full edition feature and spec comparison |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
