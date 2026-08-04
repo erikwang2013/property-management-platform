@@ -34,4 +34,41 @@ class ApiConfig {
   static const String profile = '/service/profile';
   static const String profilePassword = '/service/profile/password';
   static const String profileLogout = '/service/profile/logout';
+
+  // 停车
+  static const String parkingVehicles = '/service/parking/vehicles';
+  static const String parkingSpaces = '/service/parking/spaces';
+  static const String parkingRecords = '/service/parking/records';
+
+  // 访客
+  static const String visitors = '/service/visitors';
+  static const String visitorStore = '/service/visitor';
+
+  // 活动
+  static const String activities = '/service/activities';
+  static String activityDetail(String hid) => '/service/activity/$hid';
+  static const String activitySignup = '/service/activity/signup';
+
+  // 通知
+  static const String notifications = '/service/notifications';
+  static String notificationRead(String hid) => '/service/notification/$hid/read';
+  static const String notificationReadAll = '/service/notifications/read-all';
+
+  // 投票
+  static const String votes = '/service/votes';
+  static String voteDetail(String hid) => '/service/vote/$hid';
+  static const String voteCast = '/service/vote/cast';
+
+  // 商城
+  static const String mallProducts = '/service/mall/products';
+  static String mallProductDetail(String hid) => '/service/mall/product/$hid';
+  static const String mallOrder = '/service/mall/order';
+  static const String mallOrders = '/service/mall/orders';
+
+  // 智能问答
+  static const String chatAsk = '/service/chat/ask';
+
+  // 人脸
+  static const String faceRegister = '/service/face/register';
+  static const String faceStatus = '/service/face/status';
 }
