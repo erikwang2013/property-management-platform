@@ -77,123 +77,23 @@ property-management-platform/
 
 ### 系统全景架构
 
-```mermaid
-graph TB
-    subgraph CLIENTS["客户端层"]
-        direction LR
-        FW["Flutter Web<br/>PC 管理后台"]
-        SW["Flutter Web<br/>PC 业主端"]
-        HM["HarmonyOS App<br/>手机/平板"]
-    end
-
-    subgraph GATEWAY["网关层"]
-        NGINX["Nginx<br/>HTTPS · Gzip · 反向代理"]
-    end
-
-    subgraph APP["应用层"]
-        direction LR
-        subgraph ADMIN["admin webman :8787"]
-            A_MW["中间件链<br/>SecurityFilter → RateLimit<br/>→ Auth → RBAC → AuditLog"]
-            A_CTL["控制器 46个<br/>22业务模块 + 12扩展"]
-        end
-        subgraph SVC["service webman :8788"]
-            S_MW["中间件链<br/>SecurityFilter → RateLimit → Auth"]
-            S_CTL["控制器 17个<br/>业主端全部 API"]
-        end
-    end
-
-    subgraph DATA["数据层"]
-        direction LR
-        MySQL[("MySQL 8.0<br/>64张表")]
-        Redis[("Redis 7.x<br/>缓存/限流")]
-        ES[("Elasticsearch 8.x<br/>全文检索")]
-    end
-
-    CLIENTS --> GATEWAY --> ADMIN & SVC
-    ADMIN & SVC --> MySQL & Redis & ES
-```
+<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="100%">
 
 ### 核心业务流程
 
-```mermaid
-flowchart LR
-    subgraph SETUP["基础数据"]
-        direction TB
-        S1["小区"] --> S2["楼栋"] --> S3["单元"] --> S4["房产"]
-    end
-    subgraph PEOPLE["人员管理"]
-        direction TB
-        P1["业主"] --> P2["房产绑定"] --> P3["家庭成员"]
-    end
-    subgraph BIZ["业务服务"]
-        direction TB
-        B1["费用管理<br/>账单→缴费→逾期→催缴"]
-        B2["报修管理<br/>提交→派单→维修→验收→评价"]
-        B3["停车/投诉/访客/公告"]
-    end
-    SETUP --> PEOPLE --> BIZ
-```
+<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="100%">
 
 ### 功能模块总览
 
-```mermaid
-graph TB
-    subgraph ALL["34个功能模块"]
-        SYS["系统管理<br/>5模块"]
-        CORE["核心业务<br/>10模块"]
-        AUX["辅助业务<br/>6模块"]
-        OPS["运营管理<br/>6模块"]
-        EXT["扩展功能<br/>12模块"]
-    end
-    SYS -.-> CORE & AUX & OPS & EXT
-    CORE --> AUX --> OPS --> EXT
-```
+<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="100%">
 
 ### 数据实体生命周期
 
-```mermaid
-stateDiagram-v2
-    [*] --> 创建: Snowflake ID 生成
-    创建 --> 活跃: 投入使用
-    活跃 --> 更新: 业务操作
-    更新 --> 活跃: 继续使用
-    活跃 --> 归档: 业务完成/注销
-    归档 --> [*]
-
-    note right of 创建: encryptable 加密敏感字段<br/>ES 索引自动同步
-    note right of 更新: RBAC 权限校验<br/>OperationLog 全量审计
-```
+<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="100%">
 
 ### 18层安全纵深防御
 
-```mermaid
-flowchart TB
-    subgraph ACCESS["接入层"]
-        direction LR
-        A1["① 点击验证码"] --> A2["② 密码二次确认"] --> A3["③ poster随机验证"] --> A4["④ security-php扫描"]
-    end
-    subgraph GATE["网关层"]
-        direction LR
-        G1["⑤ SecurityFilter<br/>XSS/SQL注入/CSRF"] --> G2["⑥ HTTPS+AES-256-CBC"]
-    end
-    subgraph AUTH["认证层"]
-        direction LR
-        U1["⑦ JWT HS256"] --> U2["⑧ 会话限制(≤3)"] --> U3["⑨ 账号锁定(5次/15min)"]
-    end
-    subgraph AUTHZ["鉴权层"]
-        direction LR
-        Z1["⑩ RBAC method.path"] --> Z2["⑪ Redis滑动窗口限流"]
-    end
-    subgraph DATA["数据层"]
-        direction LR
-        D1["⑫ Hashids ID保护"] --> D2["⑬ 请求体加密"] --> D3["⑭ 存储加密"] --> D4["⑮ 展示脱敏"]
-    end
-    subgraph AUDIT["审计层"]
-        direction LR
-        T1["⑯ 操作日志全量审计"] --> T2["⑰ CSP头防护"] --> T3["⑱ PDF版权水印"]
-    end
-    ACCESS --> GATE --> AUTH --> AUTHZ --> DATA --> AUDIT
-```
+<img src="docs/images/readme_security.svg" alt="18层安全纵深防御" width="100%">
 
 ## 功能模块（22大模块 + 12扩展）
 

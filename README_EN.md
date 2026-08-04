@@ -77,123 +77,23 @@ property-management-platform/
 
 ### System Architecture Overview
 
-```mermaid
-graph TB
-    subgraph CLIENTS["Client Layer"]
-        direction LR
-        FW["Flutter Web<br/>Admin Dashboard"]
-        SW["Flutter Web<br/>Owner Portal"]
-        HM["HarmonyOS App<br/>Mobile"]
-    end
-
-    subgraph GATEWAY["Gateway"]
-        NGINX["Nginx<br/>HTTPS · Gzip · Reverse Proxy"]
-    end
-
-    subgraph APP["Application Layer"]
-        direction LR
-        subgraph ADMIN["admin webman :8787"]
-            A_MW["Middleware Chain<br/>SecurityFilter → RateLimit<br/>→ Auth → RBAC → AuditLog"]
-            A_CTL["46 Controllers<br/>22 Modules + 12 Extensions"]
-        end
-        subgraph SVC["service webman :8788"]
-            S_MW["Middleware Chain<br/>SecurityFilter → RateLimit → Auth"]
-            S_CTL["17 Controllers<br/>Owner-facing API"]
-        end
-    end
-
-    subgraph DATA["Data Layer"]
-        direction LR
-        MySQL[("MySQL 8.0<br/>64 Tables")]
-        Redis[("Redis 7.x<br/>Cache/RateLimit")]
-        ES[("Elasticsearch 8.x<br/>Full-Text Search")]
-    end
-
-    CLIENTS --> GATEWAY --> ADMIN & SVC
-    ADMIN & SVC --> MySQL & Redis & ES
-```
+<img src="docs/images/readme_en_architecture.svg" alt="System Architecture Overview" width="100%">
 
 ### Core Business Flow
 
-```mermaid
-flowchart LR
-    subgraph SETUP["Foundation"]
-        direction TB
-        S1["Community"] --> S2["Building"] --> S3["Unit"] --> S4["Room"]
-    end
-    subgraph PEOPLE["People"]
-        direction TB
-        P1["Owner"] --> P2["Room Binding"] --> P3["Family"]
-    end
-    subgraph BIZ["Business"]
-        direction TB
-        B1["Fee Management<br/>Bill→Pay→Overdue→Collect"]
-        B2["Repair<br/>Submit→Assign→Fix→Verify→Rate"]
-        B3["Parking/Complaint/Visitor/Notice"]
-    end
-    SETUP --> PEOPLE --> BIZ
-```
+<img src="docs/images/readme_en_business_flow.svg" alt="Core Business Flow" width="100%">
 
 ### Function Module Overview
 
-```mermaid
-graph TB
-    subgraph ALL["34 Function Modules"]
-        SYS["System Admin<br/>5 Modules"]
-        CORE["Core Business<br/>10 Modules"]
-        AUX["Auxiliary<br/>6 Modules"]
-        OPS["Operations<br/>6 Modules"]
-        EXT["Extensions<br/>12 Modules"]
-    end
-    SYS -.-> CORE & AUX & OPS & EXT
-    CORE --> AUX --> OPS --> EXT
-```
+<img src="docs/images/readme_en_modules.svg" alt="Function Module Overview" width="100%">
 
 ### Entity Lifecycle
 
-```mermaid
-stateDiagram-v2
-    [*] --> Created: Snowflake ID Generated
-    Created --> Active: Put into Use
-    Active --> Updated: Business Operations
-    Updated --> Active: Continue Use
-    Active --> Archived: Completed/Deactivated
-    Archived --> [*]
-
-    note right of Created: encryptable field encryption<br/>ES index auto-sync
-    note right of Updated: RBAC permission check<br/>Full audit logging
-```
+<img src="docs/images/readme_en_lifecycle.svg" alt="Entity Lifecycle" width="100%">
 
 ### 18-Layer Defense-in-Depth Security
 
-```mermaid
-flowchart TB
-    subgraph ACCESS["Access Layer"]
-        direction LR
-        A1["① Click Captcha"] --> A2["② Password Confirm"] --> A3["③ Poster Verify"] --> A4["④ Security Scan"]
-    end
-    subgraph GATE["Gateway Layer"]
-        direction LR
-        G1["⑤ SecurityFilter<br/>XSS/SQLi/CSRF"] --> G2["⑥ HTTPS+AES-256-CBC"]
-    end
-    subgraph AUTH["Auth Layer"]
-        direction LR
-        U1["⑦ JWT HS256"] --> U2["⑧ Session Limit(≤3)"] --> U3["⑨ Lockout(5/15min)"]
-    end
-    subgraph AUTHZ["AuthZ Layer"]
-        direction LR
-        Z1["⑩ RBAC method.path"] --> Z2["⑪ Rate Limit"]
-    end
-    subgraph DATA["Data Layer"]
-        direction LR
-        D1["⑫ Hashids ID"] --> D2["⑬ Request Encryption"] --> D3["⑭ DB Encryption"] --> D4["⑮ Display Mask"]
-    end
-    subgraph AUDIT["Audit Layer"]
-        direction LR
-        T1["⑯ Full Audit Trail"] --> T2["⑰ CSP Headers"] --> T3["⑱ PDF Watermark"]
-    end
-    ACCESS --> GATE --> AUTH --> AUTHZ --> DATA --> AUDIT
-```
+<img src="docs/images/readme_en_security.svg" alt="18-Layer Defense-in-Depth Security" width="100%">
 
 ## Feature Modules (22 Modules)
 
