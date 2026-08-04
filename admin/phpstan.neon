@@ -1,0 +1,10 @@
+parameters:
+  level: 5
+  paths:
+    - app/
+  excludePaths:
+    - vendor/
+    - runtime/
+    - tests/
+  checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
