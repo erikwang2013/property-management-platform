@@ -5,6 +5,8 @@
 
 FROM php:8.3-cli-alpine
 
+RUN addgroup -S app && adduser -S app -G app
+
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # 镜像加速 + 基础依赖
@@ -51,6 +53,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 COPY . .
+
+USER app
 
 EXPOSE 8787
 CMD ["php", "start.php", "start"]

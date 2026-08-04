@@ -5,6 +5,8 @@
 
 FROM php:8.3-cli-alpine
 
+RUN addgroup -S app && adduser -S app -G app
+
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
@@ -46,6 +48,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 COPY . .
+
+USER app
 
 EXPOSE 8788
 CMD ["php", "start.php", "start"]

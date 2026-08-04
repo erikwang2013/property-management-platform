@@ -622,5 +622,15 @@ Policy: https://erik.xyz/security-policy
 | 无独立 WAF 引擎 | SecurityFilter 使用 `@preg_match` 正则匹配，非专用 WAF 规则引擎 | 生产环境建议前置 Nginx ModSecurity 或 Cloudflare WAF |
 | JWT 无状态无法主动失效 | Token 未过期前无法从服务端主动吊销（除黑名单外） | 黑名单 + 短期 2h TTL 降低风险窗口 |
 | IP 黑名单仅内存存储 | Redis 重启后黑名单丢失 | Ban 时长仅 15 分钟，影响有限 |
-| 管理员端点无特殊限流 | 管理员接口与普通接口共用 60/min 默认限制 | 管理员操作频率天然低，暂无需区分 |
 | CSP 包含 `unsafe-inline` | Flutter Web 依赖内联脚本和样式 | 未来迁移至 nonce 机制可去掉 unsafe-inline |
+
+### 12.3 基础设施安全
+
+| 措施 | admin | service | 说明 |
+|------|:-----:|:-------:|------|
+| Docker 非 root 用户 | ✅ | ✅ | `adduser -S app` + `USER app` |
+| Redis 密码认证 | ✅ | ✅ | `requirepass` + `config/redis.php` |
+| ES xpack.security | ✅ | ✅ | 密码认证 + SCOUT_HOSTS 凭据 |
+| MySQL 专用用户 | ✅ | ✅ | 非 root 应用账户 |
+| Dependabot | ✅ | ✅ | 周一双周自动更新 composer + GA |
+| Nginx 安全配置 | ✅ | ✅ | 限流/安全头/敏感文件保护 |
