@@ -52,6 +52,7 @@ property-management-platform/
     ├── FLOWCHART.md               # 业务流程图
     ├── FUNCTION_DIAGRAM.md        # 功能模块图
     ├── LIFECYCLE_DIAGRAM.md       # 生命周期图
+    ├── SECURITY_ARCHITECTURE.md   # 安全架构图
     ├── API.md
     ├── FEATURES.md
     └── FEATURE_DESIGN.md
@@ -72,7 +73,7 @@ property-management-platform/
 
 ## 系统架构与设计图
 
-> 以下为概要图，详细图表见 [架构图](docs/ARCHITECTURE_DIAGRAM.md) · [流程图](docs/FLOWCHART.md) · [功能图](docs/FUNCTION_DIAGRAM.md) · [生命周期图](docs/LIFECYCLE_DIAGRAM.md)
+> 以下为概要图，详细图表见 [架构图](docs/ARCHITECTURE_DIAGRAM.md) · [流程图](docs/FLOWCHART.md) · [功能图](docs/FUNCTION_DIAGRAM.md) · [生命周期图](docs/LIFECYCLE_DIAGRAM.md) · [安全架构图](docs/SECURITY_ARCHITECTURE.md)
 
 ### 系统全景架构
 
@@ -161,6 +162,37 @@ stateDiagram-v2
 
     note right of 创建: encryptable 加密敏感字段<br/>ES 索引自动同步
     note right of 更新: RBAC 权限校验<br/>OperationLog 全量审计
+```
+
+### 18层安全纵深防御
+
+```mermaid
+flowchart TB
+    subgraph ACCESS["接入层"]
+        direction LR
+        A1["① 点击验证码"] --> A2["② 密码二次确认"] --> A3["③ poster随机验证"] --> A4["④ security-php扫描"]
+    end
+    subgraph GATE["网关层"]
+        direction LR
+        G1["⑤ SecurityFilter<br/>XSS/SQL注入/CSRF"] --> G2["⑥ HTTPS+AES-256-CBC"]
+    end
+    subgraph AUTH["认证层"]
+        direction LR
+        U1["⑦ JWT HS256"] --> U2["⑧ 会话限制(≤3)"] --> U3["⑨ 账号锁定(5次/15min)"]
+    end
+    subgraph AUTHZ["鉴权层"]
+        direction LR
+        Z1["⑩ RBAC method.path"] --> Z2["⑪ Redis滑动窗口限流"]
+    end
+    subgraph DATA["数据层"]
+        direction LR
+        D1["⑫ Hashids ID保护"] --> D2["⑬ 请求体加密"] --> D3["⑭ 存储加密"] --> D4["⑮ 展示脱敏"]
+    end
+    subgraph AUDIT["审计层"]
+        direction LR
+        T1["⑯ 操作日志全量审计"] --> T2["⑰ CSP头防护"] --> T3["⑱ PDF版权水印"]
+    end
+    ACCESS --> GATE --> AUTH --> AUTHZ --> DATA --> AUDIT
 ```
 
 ## 功能模块（22大模块 + 12扩展）
@@ -348,6 +380,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | [业务流程图](docs/FLOWCHART.md) | 认证流程、费用管理、报修处理、房产管理、投诉、访客 |
 | [功能模块图](docs/FUNCTION_DIAGRAM.md) | 34模块全景、依赖关系、管理后台功能树、业主端功能地图 |
 | [生命周期图](docs/LIFECYCLE_DIAGRAM.md) | 请求生命周期、实体生命周期、Token生命周期、CRUD全流程 |
+| [安全架构图](docs/SECURITY_ARCHITECTURE.md) | 18层纵深防御全景、攻击面防护矩阵、加密全链路、审计追溯体系 |
 | [功能设计文档](docs/FEATURE_DESIGN.md) | 34模块功能规格说明 |
 | [功能文档](docs/FEATURES.md) | 功能清单与模块概览 |
 | [接口文档](docs/API.md) | 全部 API 端点与参数说明 |

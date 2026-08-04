@@ -52,6 +52,7 @@ property-management-platform/
     ├── FLOWCHART.md               # Business flowchart
     ├── FUNCTION_DIAGRAM.md        # Function module diagram
     ├── LIFECYCLE_DIAGRAM.md       # Lifecycle diagram
+    ├── SECURITY_ARCHITECTURE.md   # Security architecture diagram
     ├── API.md
     ├── FEATURES.md
     └── FEATURE_DESIGN.md
@@ -72,7 +73,7 @@ property-management-platform/
 
 ## System Architecture & Design Diagrams
 
-> Overview diagrams below. See detailed charts: [Architecture](docs/ARCHITECTURE_DIAGRAM.md) · [Flowchart](docs/FLOWCHART.md) · [Functions](docs/FUNCTION_DIAGRAM.md) · [Lifecycle](docs/LIFECYCLE_DIAGRAM.md)
+> Overview diagrams below. See detailed charts: [Architecture](docs/ARCHITECTURE_DIAGRAM.md) · [Flowchart](docs/FLOWCHART.md) · [Functions](docs/FUNCTION_DIAGRAM.md) · [Lifecycle](docs/LIFECYCLE_DIAGRAM.md) · [Security](docs/SECURITY_ARCHITECTURE.md)
 
 ### System Architecture Overview
 
@@ -161,6 +162,37 @@ stateDiagram-v2
 
     note right of Created: encryptable field encryption<br/>ES index auto-sync
     note right of Updated: RBAC permission check<br/>Full audit logging
+```
+
+### 18-Layer Defense-in-Depth Security
+
+```mermaid
+flowchart TB
+    subgraph ACCESS["Access Layer"]
+        direction LR
+        A1["① Click Captcha"] --> A2["② Password Confirm"] --> A3["③ Poster Verify"] --> A4["④ Security Scan"]
+    end
+    subgraph GATE["Gateway Layer"]
+        direction LR
+        G1["⑤ SecurityFilter<br/>XSS/SQLi/CSRF"] --> G2["⑥ HTTPS+AES-256-CBC"]
+    end
+    subgraph AUTH["Auth Layer"]
+        direction LR
+        U1["⑦ JWT HS256"] --> U2["⑧ Session Limit(≤3)"] --> U3["⑨ Lockout(5/15min)"]
+    end
+    subgraph AUTHZ["AuthZ Layer"]
+        direction LR
+        Z1["⑩ RBAC method.path"] --> Z2["⑪ Rate Limit"]
+    end
+    subgraph DATA["Data Layer"]
+        direction LR
+        D1["⑫ Hashids ID"] --> D2["⑬ Request Encryption"] --> D3["⑭ DB Encryption"] --> D4["⑮ Display Mask"]
+    end
+    subgraph AUDIT["Audit Layer"]
+        direction LR
+        T1["⑯ Full Audit Trail"] --> T2["⑰ CSP Headers"] --> T3["⑱ PDF Watermark"]
+    end
+    ACCESS --> GATE --> AUTH --> AUTHZ --> DATA --> AUDIT
 ```
 
 ## Feature Modules (22 Modules)
@@ -348,6 +380,7 @@ Static files: Flutter Web build/
 | [Business Flowchart](docs/FLOWCHART.md) | Auth flow, fee management, repair handling, property, complaint, visitor |
 | [Function Diagram](docs/FUNCTION_DIAGRAM.md) | 34 modules overview, dependencies, admin feature tree, owner portal map |
 | [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, token lifecycle, CRUD flow |
+| [Security Architecture](docs/SECURITY_ARCHITECTURE.md) | 18-layer defense-in-depth, attack surface matrix, encryption chain, audit system |
 | [Feature Design](docs/FEATURE_DESIGN.md) | 34 module feature specifications |
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
