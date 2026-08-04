@@ -11,6 +11,18 @@ import 'app/pages/role/role_list_page.dart';
 import 'app/pages/config/config_page.dart';
 import 'app/pages/log/log_page.dart';
 import 'app/pages/profile/profile_page.dart';
+import 'app/pages/community/community_list_page.dart';
+import 'app/pages/building/building_list_page.dart';
+import 'app/pages/unit/unit_list_page.dart';
+import 'app/pages/room_type/room_type_list_page.dart';
+import 'app/pages/room/room_list_page.dart';
+import 'app/pages/owner/owner_list_page.dart';
+import 'app/pages/tenant/tenant_list_page.dart';
+import 'app/pages/fee_type/fee_type_list_page.dart';
+import 'app/pages/fee_bill/fee_bill_list_page.dart';
+import 'app/pages/fee_payment/fee_payment_list_page.dart';
+import 'app/pages/repair/repair_list_page.dart';
+import 'app/pages/announcement/announcement_list_page.dart';
 
 void main() {
   runApp(const AdminApp());
@@ -42,6 +54,18 @@ class AdminApp extends StatelessWidget {
         GetPage(name: '/config', page: () => const AdminLayout(child: ConfigPage(), initialIndex: 3)),
         GetPage(name: '/logs', page: () => const AdminLayout(child: LogPage(), initialIndex: 4)),
         GetPage(name: '/profile', page: () => const ProfilePage()),
+        GetPage(name: '/communities', page: () => const AdminLayout(child: CommunityListPage())),
+        GetPage(name: '/buildings', page: () => const AdminLayout(child: BuildingListPage())),
+        GetPage(name: '/units', page: () => const AdminLayout(child: UnitListPage())),
+        GetPage(name: '/room-types', page: () => const AdminLayout(child: RoomTypeListPage())),
+        GetPage(name: '/rooms', page: () => const AdminLayout(child: RoomListPage())),
+        GetPage(name: '/owners', page: () => const AdminLayout(child: OwnerListPage())),
+        GetPage(name: '/tenants', page: () => const AdminLayout(child: TenantListPage())),
+        GetPage(name: '/fee-types', page: () => const AdminLayout(child: FeeTypeListPage())),
+        GetPage(name: '/fee-bills', page: () => const AdminLayout(child: FeeBillListPage())),
+        GetPage(name: '/fee-payments', page: () => const AdminLayout(child: FeePaymentListPage())),
+        GetPage(name: '/repairs', page: () => const AdminLayout(child: RepairListPage())),
+        GetPage(name: '/announcements', page: () => const AdminLayout(child: AnnouncementListPage())),
       ],
       initialRoute: '/login',
     );

@@ -170,11 +170,10 @@ class DashboardPage extends GetView<DashboardController> {
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegend(const Color(0xFF1677FF), '启用'),
-                const SizedBox(width: 24),
-                _buildLegend(const Color(0xFF52C41A), '禁用'),
-              ],
+              children: controller.pieLegend.map((item) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: _buildLegend(item['color'] as Color, item['name'] as String),
+              )).toList(),
             ),
           ],
         ),

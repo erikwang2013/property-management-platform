@@ -2,32 +2,45 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:dio/dio.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import '../../services/api_service.dart';
+import '../../config/api_config.dart';
 
 class DashboardController extends GetxController {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://localhost:8787'));
+  final _api = ApiService();
   final isLoading = true.obs;
 
   final stats = <Map<String, dynamic>>[].obs;
   final trends = <String, dynamic>{}.obs;
+  final distribution = <String, dynamic>{}.obs;
   final recentLogs = <Map<String, dynamic>>[].obs;
 
   List<List<FlSpot>> get trendSpots {
     final allSeries = trends['series'] as List<dynamic>? ?? [];
     return allSeries.map((s) {
       final data = s['data'] as List<dynamic>? ?? [];
-      return data.asMap().entries.map((e) => FlSpot(e.key.toDouble(), (e.value as num).toDouble())).toList();
+      return data.asMap().entries
+          .map((e) => FlSpot(e.key.toDouble(), (e.value as num).toDouble()))
+          .toList();
     }).toList();
   }
 
   List<PieChartSectionData> get pieSections {
-    return [
-      PieChartSectionData(color: const Color(0xFF1677FF), value: 265, title: '', radius: 30),
-      PieChartSectionData(color: const Color(0xFF52C41A), value: 35, title: '', radius: 30),
-    ];
+    final userStatus = distribution['user_status'] as List<dynamic>? ?? [];
+    if (userStatus.isEmpty) return [];
+    const colors = [Color(0xFF1677FF), Color(0xFF52C41A)];
+    return userStatus.asMap().entries.map((e) {
+      final item = e.value as Map<String, dynamic>;
+      return PieChartSectionData(
+        color: colors[e.key % colors.length],
+        value: (item['value'] as num).toDouble(),
+        title: '${item['value']}',
+        radius: 30,
+        titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+      );
+    }).toList();
   }
 
   @override
@@ -39,30 +52,17 @@ class DashboardController extends GetxController {
   Future<void> loadData() async {
     try {
       isLoading.value = true;
-      final response = await _dio.get('/admin/dashboard');
-      if (response.data['code'] == 0) {
-        final data = response.data['data'];
-        stats.value = List<Map<String, dynamic>>.from(data['stats'] ?? []);
-        trends.value = Map<String, dynamic>.from(data['trends'] ?? {});
-        recentLogs.value = List<Map<String, dynamic>>.from(data['recent_logs'] ?? []);
-      }
+      final resp = await _api.get(ApiConfig.dashboard);
+      final data = resp['data'] as Map<String, dynamic>;
+      stats.value = List<Map<String, dynamic>>.from(data['stats'] ?? []);
+      trends.value = Map<String, dynamic>.from(data['trends'] ?? {});
+      distribution.value = Map<String, dynamic>.from(data['distribution'] ?? {});
+      recentLogs.value = List<Map<String, dynamic>>.from(data['recent_logs'] ?? []);
     } catch (e) {
-      // 开发环境使用模拟数据
-      stats.value = [
-        {'label': '用户总数', 'value': '1,236', 'icon': 'people', 'color': '#1677FF', 'trend': 12.5},
-        {'label': '今日新增', 'value': '28', 'icon': 'person_add', 'color': '#52C41A', 'trend': null},
-        {'label': '活跃用户', 'value': '89', 'icon': 'bolt', 'color': '#FA8C16', 'trend': -3.2},
-        {'label': '操作日志', 'value': '452', 'icon': 'description', 'color': '#722ED1', 'trend': 8.0},
-      ];
-      trends.value = {
-        'dates': List.generate(30, (i) => 'Day $i'),
-        'series': [
-          {
-            'name': '累计用户',
-            'data': List.generate(30, (i) => 800 + i * 15 + (i > 20 ? 20 : 0)),
-          },
-        ],
-      };
+      stats.clear();
+      trends.clear();
+      distribution.clear();
+      recentLogs.clear();
     } finally {
       isLoading.value = false;
     }
