@@ -172,10 +172,11 @@ POST/PUT 请求**必须**声明 `Content-Type` 为 `application/json` 或 `appli
 
 | 头 | 值 | 作用 |
 |----|-----|------|
-| Access-Control-Allow-Origin | `*` | 允许任意源跨域（内网管理后台场景） |
+| Access-Control-Allow-Origin | 环境变量 `CORS_ALLOWED_ORIGIN` 配置 | 仅允许指定源跨域（默认 localhost），生产环境改为实际域名 |
 | Access-Control-Allow-Methods | `GET,POST,PUT,DELETE,OPTIONS` | 允许的方法集合 |
 | Access-Control-Allow-Headers | `Authorization,Content-Type,API-Version` | 允许的自定义头 |
 | Access-Control-Max-Age | `86400` | 预检请求缓存 24 小时 |
+| Strict-Transport-Security | `max-age=31536000; includeSubDomains` | 强制 HTTPS 连接，防 SSL 剥离攻击 |
 | X-Content-Type-Options | `nosniff` | 禁止浏览器 MIME 嗅探 |
 | X-Frame-Options | `DENY` | 禁止所有 iframe 嵌入，防点击劫持 |
 | X-XSS-Protection | `1; mode=block` | 启用浏览器内置 XSS 过滤器并拦截页面渲染 |
@@ -300,9 +301,9 @@ AdminAuth 中间件实现，挂载在需要认证的路由组上。
 | 参数 | 值 | 说明 |
 |------|-----|------|
 | 算法 | HS256 | HMAC-SHA256 对称签名 |
-| 密钥 | `JWT_SECRET` | 环境变量注入，生产环境需更换 |
-| access_token TTL | 7200s (2h) | `JWT_TTL` |
-| refresh_token TTL | 1209600s (14d) | `JWT_REFRESH_TTL` |
+| 密钥 | `JWT_SECRET_KEY` | 环境变量注入，默认值为明确占位符，生产环境必须更换 |
+| access_token TTL | 7200s (2h) | `JWT_DEFAULT_EXPIRE` |
+| refresh_token TTL | 1209600s (14d) | `JWT_REFRESH_EXPIRE` |
 | 签发者 | `open-admin` | `JWT_ISSUER` |
 | 受众 | `open-admin` | `JWT_AUDIENCE` |
 
@@ -378,6 +379,29 @@ API 权限标识格式：`{method}.{path}`
 5. 匹配失败 → 403 `{"code": 403, "message": "无权限访问"}`
 
 **二次确认**：BaseController 提供 `confirmPassword()` 方法，敏感操作（删除用户、数据导出等）在 Controller 层额外要求输入当前密码，防止会话劫持后被未授权操作。
+
+### 6.4 密码复杂度要求
+
+所有密码（注册、修改密码）需满足以下复杂度要求：
+
+- **长度**：8-32 位
+- **字符组成**：必须包含大写字母、小写字母、数字和特殊字符（`@$!%*?&`）
+- **密码哈希**：使用 `password_hash()` + bcrypt 算法存储
+
+**实现位置**：
+- 管理端注册/登录：`AuthController` 使用 webman validator 的 `regex` 规则
+- 管理端修改密码：`ProfileController::updatePassword()` 使用 `preg_match` 校验
+- 业务端注册：`AuthController` 使用 `preg_match` 校验
+
+### 6.5 Session Cookie 安全
+
+Session Cookie 配置（`config/session.php`）：
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| http_only | `true` | 禁止 JavaScript 访问 Cookie |
+| secure | 环境变量 `SESSION_SECURE`（默认 `true`） | HTTPS 时启用 Secure 标志 |
+| same_site | 环境变量 `SESSION_SAME_SITE`（默认 `Strict`） | 防止 CSRF 攻击 |
 
 ---
 
@@ -599,4 +623,4 @@ Policy: https://erik.xyz/security-policy
 | JWT 无状态无法主动失效 | Token 未过期前无法从服务端主动吊销（除黑名单外） | 黑名单 + 短期 2h TTL 降低风险窗口 |
 | IP 黑名单仅内存存储 | Redis 重启后黑名单丢失 | Ban 时长仅 15 分钟，影响有限 |
 | 管理员端点无特殊限流 | 管理员接口与普通接口共用 60/min 默认限制 | 管理员操作频率天然低，暂无需区分 |
-| `@preg_match` 抑制错误 | 畸形正则输入时静默失效 | `preg_last_error()` 可加监控，当前未实现 |
+| CSP 包含 `unsafe-inline` | Flutter Web 依赖内联脚本和样式 | 未来迁移至 nonce 机制可去掉 unsafe-inline |

@@ -75,6 +75,9 @@ jobs:
       - name: Install dependencies
         run: cd admin && composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Audit dependencies
+        run: cd admin && composer audit
+
       - name: Setup environment
         run: cp admin/.env.example admin/.env
 
@@ -125,6 +128,9 @@ jobs:
 
       - name: Install dependencies
         run: cd service && composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Audit dependencies
+        run: cd service && composer audit
 
       - name: Setup environment
         run: cp service/.env.example service/.env

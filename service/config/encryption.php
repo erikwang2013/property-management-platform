@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 return [
     // AES 加密密钥，生产环境请使用 32 字节随机字符串并通过环境变量注入
-    'key' => getenv('ENCRYPTION_KEY') ?: 'open-admin-api-encryption-key32b',
+    'key' => getenv('ENCRYPTION_KEY') ?: 'change-me-32-byte-encryption-key!!',
 
     // 加密算法，推荐 AES-256-CBC。也支持 sm4-ecb/sm4-cbc（国密）
     'cipher' => getenv('ENCRYPTION_CIPHER') ?: 'AES-256-CBC',

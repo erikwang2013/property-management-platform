@@ -58,8 +58,10 @@ services:
     container_name: property-svc-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-me-root-password}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-property_management}
+      MYSQL_USER: ${MYSQL_USER:-property_svc_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me-user-password}
     ports:
       - "${MYSQL_PORT:-3307}:3306"
     volumes:
@@ -115,14 +117,15 @@ services:
     restart: unless-stopped
     environment:
       discovery.type: single-node
-      xpack.security.enabled: "false"
+      xpack.security.enabled: "true"
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-change-me-es-password}
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
       - "${ES_PORT:-9201}:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q 'green\\|yellow'"]
+      test: ["CMD-SHELL", "curl -s -u elastic:${ELASTIC_PASSWORD:-change-me-es-password} http://localhost:9200/_cluster/health | grep -q 'green\\|yellow'"]
       interval: 30s
       timeout: 10s
       retries: 5

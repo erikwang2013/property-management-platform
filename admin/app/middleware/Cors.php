@@ -15,9 +15,11 @@ class Cors implements MiddlewareInterface
 {
     public function process(Request $request, callable $handler): Response
     {
+        $allowedOrigin = getenv('CORS_ALLOWED_ORIGIN') ?: 'http://localhost:8787';
+
         if ($request->method() === 'OPTIONS') {
             return response('', 204, [
-                'Access-Control-Allow-Origin'      => '*',
+                'Access-Control-Allow-Origin'      => $allowedOrigin,
                 'Access-Control-Allow-Methods'     => 'GET,POST,PUT,DELETE,OPTIONS',
                 'Access-Control-Allow-Headers'     => 'Authorization,Content-Type,API-Version',
                 'Access-Control-Max-Age'           => '86400',
@@ -26,12 +28,13 @@ class Cors implements MiddlewareInterface
 
         $response = $handler($request);
         $response = $response->withHeaders([
-            'Access-Control-Allow-Origin'   => '*',
+            'Access-Control-Allow-Origin'   => $allowedOrigin,
             'X-Content-Type-Options'        => 'nosniff',
             'X-Frame-Options'               => 'DENY',
             'X-XSS-Protection'              => '1; mode=block',
             'Referrer-Policy'               => 'strict-origin-when-cross-origin',
             'Permissions-Policy'            => 'camera=(), microphone=(), geolocation=()',
+            'Strict-Transport-Security'     => 'max-age=31536000; includeSubDomains',
             'Content-Security-Policy'       => "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http: https:;",
             'X-Permitted-Cross-Domain-Policies' => 'none',
         ]);

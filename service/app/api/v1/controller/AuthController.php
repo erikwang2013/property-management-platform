@@ -100,8 +100,12 @@ class AuthController extends BaseController
             return $this->fail('手机号、密码、姓名不能为空', 422);
         }
 
-        if (strlen($password) < 6) {
-            return $this->fail('密码至少6位', 422);
+        if (strlen($password) < 8 || strlen($password) > 32) {
+            return $this->fail('密码长度 8-32 位', 422);
+        }
+
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/', $password)) {
+            return $this->fail('密码需包含大小写字母、数字和特殊字符(@$!%*?&)', 422);
         }
 
         if (!captcha_verify($captchaKey, 'click', $clicks)) {

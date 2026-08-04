@@ -60,9 +60,9 @@ return [
     
     'http_only' => true,
 
-    'secure' => false,
+    'secure' => (getenv('SESSION_SECURE') ?: 'true') !== 'false',
     
-    'same_site' => '',
+    'same_site' => getenv('SESSION_SAME_SITE') ?: 'Strict',
 
     'gc_probability' => [1, 1000],
 

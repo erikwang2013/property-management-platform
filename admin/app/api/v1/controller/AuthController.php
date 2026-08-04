@@ -44,7 +44,7 @@ class AuthController
     {
         $validator = validator($request->all(), [
             'username'    => 'required|string|min:3|max:50',
-            'password'    => 'required|string|min:6|max:32',
+            'password'    => 'required|string|min:8|max:32|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
             'captcha_key' => 'required|string',
             'clicks'      => 'required|array|min:2',
         ]);
@@ -132,7 +132,7 @@ class AuthController
     {
         $validator = validator($request->all(), [
             'username'    => 'required|string|min:3|max:50',
-            'password'    => 'required|string|min:6|max:32',
+            'password'    => 'required|string|min:8|max:32|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
             'real_name'   => 'required|string|max:50',
             'captcha_key' => 'required|string',
             'clicks'      => 'required|array|min:2',
