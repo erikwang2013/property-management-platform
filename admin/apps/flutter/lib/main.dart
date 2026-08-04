@@ -23,6 +23,14 @@ import 'app/pages/fee_bill/fee_bill_list_page.dart';
 import 'app/pages/fee_payment/fee_payment_list_page.dart';
 import 'app/pages/repair/repair_list_page.dart';
 import 'app/pages/announcement/announcement_list_page.dart';
+import 'app/pages/parking/parking_space_list_page.dart';
+import 'app/pages/parking/parking_vehicle_list_page.dart';
+import 'app/pages/parking/parking_record_list_page.dart';
+import 'app/pages/equipment/equipment_list_page.dart';
+import 'app/pages/complaint/complaint_list_page.dart';
+import 'app/pages/visitor/visitor_list_page.dart';
+import 'app/pages/contract/contract_list_page.dart';
+import 'app/pages/finance/finance_list_page.dart';
 
 void main() {
   runApp(const AdminApp());
@@ -66,6 +74,16 @@ class AdminApp extends StatelessWidget {
         GetPage(name: '/fee-payments', page: () => const AdminLayout(child: FeePaymentListPage())),
         GetPage(name: '/repairs', page: () => const AdminLayout(child: RepairListPage())),
         GetPage(name: '/announcements', page: () => const AdminLayout(child: AnnouncementListPage())),
+        GetPage(name: '/parking-spaces', page: () => const AdminLayout(child: ParkingSpaceListPage())),
+        GetPage(name: '/parking-vehicles', page: () => const AdminLayout(child: ParkingVehicleListPage())),
+        GetPage(name: '/parking-records', page: () => const AdminLayout(child: ParkingRecordListPage())),
+        GetPage(name: '/equipment', page: () => const AdminLayout(child: EquipmentListPage())),
+        GetPage(name: '/complaints', page: () => const AdminLayout(child: ComplaintListPage())),
+        GetPage(name: '/visitors', page: () => const AdminLayout(child: VisitorListPage())),
+        GetPage(name: '/contracts', page: () => const AdminLayout(child: ContractListPage())),
+        GetPage(name: '/finance-statistics', page: () => const AdminLayout(child: FinanceStatisticsPage())),
+        GetPage(name: '/finance-income', page: () => const AdminLayout(child: FinanceIncomeListPage())),
+        GetPage(name: '/finance-expense', page: () => const AdminLayout(child: FinanceExpenseListPage())),
       ],
       initialRoute: '/login',
     );
