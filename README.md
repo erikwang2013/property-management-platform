@@ -48,6 +48,10 @@ property-management-platform/
 └── docs/                          # 项目文档
     ├── ARCHITECTURE.md
     ├── ARCHITECTURE_DESIGN.md
+    ├── ARCHITECTURE_DIAGRAM.md    # 系统架构图
+    ├── FLOWCHART.md               # 业务流程图
+    ├── FUNCTION_DIAGRAM.md        # 功能模块图
+    ├── LIFECYCLE_DIAGRAM.md       # 生命周期图
     ├── API.md
     ├── FEATURES.md
     └── FEATURE_DESIGN.md
@@ -65,6 +69,99 @@ property-management-platform/
 | Flutter 页面 | 10个 | 登录/首页/费用(3)/报修(3)/个人中心/公告 |
 | HarmonyOS | 完整骨架 | 服务层 + 认证 + 登录/首页页面 |
 | 测试 | 18/18 通过 | 45断言，100% 通过率 |
+
+## 系统架构与设计图
+
+> 以下为概要图，详细图表见 [架构图](docs/ARCHITECTURE_DIAGRAM.md) · [流程图](docs/FLOWCHART.md) · [功能图](docs/FUNCTION_DIAGRAM.md) · [生命周期图](docs/LIFECYCLE_DIAGRAM.md)
+
+### 系统全景架构
+
+```mermaid
+graph TB
+    subgraph CLIENTS["客户端层"]
+        direction LR
+        FW["Flutter Web<br/>PC 管理后台"]
+        SW["Flutter Web<br/>PC 业主端"]
+        HM["HarmonyOS App<br/>手机/平板"]
+    end
+
+    subgraph GATEWAY["网关层"]
+        NGINX["Nginx<br/>HTTPS · Gzip · 反向代理"]
+    end
+
+    subgraph APP["应用层"]
+        direction LR
+        subgraph ADMIN["admin webman :8787"]
+            A_MW["中间件链<br/>SecurityFilter → RateLimit<br/>→ Auth → RBAC → AuditLog"]
+            A_CTL["控制器 46个<br/>22业务模块 + 12扩展"]
+        end
+        subgraph SVC["service webman :8788"]
+            S_MW["中间件链<br/>SecurityFilter → RateLimit → Auth"]
+            S_CTL["控制器 17个<br/>业主端全部 API"]
+        end
+    end
+
+    subgraph DATA["数据层"]
+        direction LR
+        MySQL[("MySQL 8.0<br/>64张表")]
+        Redis[("Redis 7.x<br/>缓存/限流")]
+        ES[("Elasticsearch 8.x<br/>全文检索")]
+    end
+
+    CLIENTS --> GATEWAY --> ADMIN & SVC
+    ADMIN & SVC --> MySQL & Redis & ES
+```
+
+### 核心业务流程
+
+```mermaid
+flowchart LR
+    subgraph SETUP["基础数据"]
+        direction TB
+        S1["小区"] --> S2["楼栋"] --> S3["单元"] --> S4["房产"]
+    end
+    subgraph PEOPLE["人员管理"]
+        direction TB
+        P1["业主"] --> P2["房产绑定"] --> P3["家庭成员"]
+    end
+    subgraph BIZ["业务服务"]
+        direction TB
+        B1["费用管理<br/>账单→缴费→逾期→催缴"]
+        B2["报修管理<br/>提交→派单→维修→验收→评价"]
+        B3["停车/投诉/访客/公告"]
+    end
+    SETUP --> PEOPLE --> BIZ
+```
+
+### 功能模块总览
+
+```mermaid
+graph TB
+    subgraph ALL["34个功能模块"]
+        SYS["系统管理<br/>5模块"]
+        CORE["核心业务<br/>10模块"]
+        AUX["辅助业务<br/>6模块"]
+        OPS["运营管理<br/>6模块"]
+        EXT["扩展功能<br/>12模块"]
+    end
+    SYS -.-> CORE & AUX & OPS & EXT
+    CORE --> AUX --> OPS --> EXT
+```
+
+### 数据实体生命周期
+
+```mermaid
+stateDiagram-v2
+    [*] --> 创建: Snowflake ID 生成
+    创建 --> 活跃: 投入使用
+    活跃 --> 更新: 业务操作
+    更新 --> 活跃: 继续使用
+    活跃 --> 归档: 业务完成/注销
+    归档 --> [*]
+
+    note right of 创建: encryptable 加密敏感字段<br/>ES 索引自动同步
+    note right of 更新: RBAC 权限校验<br/>OperationLog 全量审计
+```
 
 ## 功能模块（22大模块 + 12扩展）
 
@@ -247,6 +344,10 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | [版本对比](docs/EDITIONS.md) | 基础版(Lite) / 标准版(Standard) / 完整版(Full) 功能与技术指标对比 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |
+| [系统架构图](docs/ARCHITECTURE_DIAGRAM.md) | 全景架构、分层详图、部署架构（Mermaid 可视化） |
+| [业务流程图](docs/FLOWCHART.md) | 认证流程、费用管理、报修处理、房产管理、投诉、访客 |
+| [功能模块图](docs/FUNCTION_DIAGRAM.md) | 34模块全景、依赖关系、管理后台功能树、业主端功能地图 |
+| [生命周期图](docs/LIFECYCLE_DIAGRAM.md) | 请求生命周期、实体生命周期、Token生命周期、CRUD全流程 |
 | [功能设计文档](docs/FEATURE_DESIGN.md) | 34模块功能规格说明 |
 | [功能文档](docs/FEATURES.md) | 功能清单与模块概览 |
 | [接口文档](docs/API.md) | 全部 API 端点与参数说明 |

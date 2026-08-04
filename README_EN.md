@@ -48,6 +48,10 @@ property-management-platform/
 └── docs/                          # Project documentation
     ├── ARCHITECTURE.md
     ├── ARCHITECTURE_DESIGN.md
+    ├── ARCHITECTURE_DIAGRAM.md    # System architecture diagram
+    ├── FLOWCHART.md               # Business flowchart
+    ├── FUNCTION_DIAGRAM.md        # Function module diagram
+    ├── LIFECYCLE_DIAGRAM.md       # Lifecycle diagram
     ├── API.md
     ├── FEATURES.md
     └── FEATURE_DESIGN.md
@@ -65,6 +69,99 @@ property-management-platform/
 | Flutter Pages | 10 | Login/Home/Fee(3)/Repair(3)/Profile/Announcements |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
+
+## System Architecture & Design Diagrams
+
+> Overview diagrams below. See detailed charts: [Architecture](docs/ARCHITECTURE_DIAGRAM.md) · [Flowchart](docs/FLOWCHART.md) · [Functions](docs/FUNCTION_DIAGRAM.md) · [Lifecycle](docs/LIFECYCLE_DIAGRAM.md)
+
+### System Architecture Overview
+
+```mermaid
+graph TB
+    subgraph CLIENTS["Client Layer"]
+        direction LR
+        FW["Flutter Web<br/>Admin Dashboard"]
+        SW["Flutter Web<br/>Owner Portal"]
+        HM["HarmonyOS App<br/>Mobile"]
+    end
+
+    subgraph GATEWAY["Gateway"]
+        NGINX["Nginx<br/>HTTPS · Gzip · Reverse Proxy"]
+    end
+
+    subgraph APP["Application Layer"]
+        direction LR
+        subgraph ADMIN["admin webman :8787"]
+            A_MW["Middleware Chain<br/>SecurityFilter → RateLimit<br/>→ Auth → RBAC → AuditLog"]
+            A_CTL["46 Controllers<br/>22 Modules + 12 Extensions"]
+        end
+        subgraph SVC["service webman :8788"]
+            S_MW["Middleware Chain<br/>SecurityFilter → RateLimit → Auth"]
+            S_CTL["17 Controllers<br/>Owner-facing API"]
+        end
+    end
+
+    subgraph DATA["Data Layer"]
+        direction LR
+        MySQL[("MySQL 8.0<br/>64 Tables")]
+        Redis[("Redis 7.x<br/>Cache/RateLimit")]
+        ES[("Elasticsearch 8.x<br/>Full-Text Search")]
+    end
+
+    CLIENTS --> GATEWAY --> ADMIN & SVC
+    ADMIN & SVC --> MySQL & Redis & ES
+```
+
+### Core Business Flow
+
+```mermaid
+flowchart LR
+    subgraph SETUP["Foundation"]
+        direction TB
+        S1["Community"] --> S2["Building"] --> S3["Unit"] --> S4["Room"]
+    end
+    subgraph PEOPLE["People"]
+        direction TB
+        P1["Owner"] --> P2["Room Binding"] --> P3["Family"]
+    end
+    subgraph BIZ["Business"]
+        direction TB
+        B1["Fee Management<br/>Bill→Pay→Overdue→Collect"]
+        B2["Repair<br/>Submit→Assign→Fix→Verify→Rate"]
+        B3["Parking/Complaint/Visitor/Notice"]
+    end
+    SETUP --> PEOPLE --> BIZ
+```
+
+### Function Module Overview
+
+```mermaid
+graph TB
+    subgraph ALL["34 Function Modules"]
+        SYS["System Admin<br/>5 Modules"]
+        CORE["Core Business<br/>10 Modules"]
+        AUX["Auxiliary<br/>6 Modules"]
+        OPS["Operations<br/>6 Modules"]
+        EXT["Extensions<br/>12 Modules"]
+    end
+    SYS -.-> CORE & AUX & OPS & EXT
+    CORE --> AUX --> OPS --> EXT
+```
+
+### Entity Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Created: Snowflake ID Generated
+    Created --> Active: Put into Use
+    Active --> Updated: Business Operations
+    Updated --> Active: Continue Use
+    Active --> Archived: Completed/Deactivated
+    Archived --> [*]
+
+    note right of Created: encryptable field encryption<br/>ES index auto-sync
+    note right of Updated: RBAC permission check<br/>Full audit logging
+```
 
 ## Feature Modules (22 Modules)
 
@@ -247,6 +344,10 @@ Static files: Flutter Web build/
 | [Editions Comparison](docs/EDITIONS.md) | Lite / Standard / Full edition feature and spec comparison |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
+| [Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | System architecture, layered detail, deployment (Mermaid visualization) |
+| [Business Flowchart](docs/FLOWCHART.md) | Auth flow, fee management, repair handling, property, complaint, visitor |
+| [Function Diagram](docs/FUNCTION_DIAGRAM.md) | 34 modules overview, dependencies, admin feature tree, owner portal map |
+| [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, token lifecycle, CRUD flow |
 | [Feature Design](docs/FEATURE_DESIGN.md) | 34 module feature specifications |
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
