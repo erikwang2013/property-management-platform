@@ -62,12 +62,15 @@ property-management-platform/
 
 | Layer | Count | Details |
 |-------|-------|---------|
-| Database Tables | 64 | All `erik_` prefix, BIGINT non-auto-increment PK |
-| PHP Models | 58 | With encryptable field encryption |
-| Admin Controllers | 46 | General admin + 22 modules + 12 extensions |
+| Database Tables | 65 | All `erik_` prefix, BIGINT non-auto-increment PK |
+| PHP Models | 64 | With encryptable field encryption |
+| Admin Controllers | 47 | General admin + 22 modules + 12 extensions |
 | Service Controllers | 17 | Complete owner-facing API |
-| API Routes | 150+ | admin 100+ + service 50+ |
-| Flutter Pages | 10 | Login/Home/Fee(3)/Repair(3)/Profile/Announcements |
+| API Routes | 178+ | admin 123+ + service 55+ |
+| Flutter Admin | 57 pages | 34 modules full coverage, 96 files/6,462 lines |
+| Flutter Owner | 23 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,148 lines |
+| HarmonyOS | 7 pages | Login/Home/Bills/Repairs(2)/Announcements/Profile, 10 files/831 lines |
+| Tests | 133 total | admin 90(196 assertions) + service 43(83 assertions) |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
 

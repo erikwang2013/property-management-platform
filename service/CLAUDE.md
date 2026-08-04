@@ -57,6 +57,14 @@ docker-compose up -d
 
 GitHub Actions: PHP 语法 + Composer 审计 + PHPUnit + Flutter 分析
 
+## 测试
+
+| 项目 | 测试数 | 断言数 | 通过率 |
+|------|--------|--------|--------|
+| service | 43 | 83 | 100% (4个预存跳过) |
+
+测试覆盖: Snowflake/Hashids/Auth/Fee/Security/Validator/DatabaseSchema/i18n
+
 ## Nginx 安全配置
 
 `docs/nginx-security.conf` — 反向代理安全加固参考

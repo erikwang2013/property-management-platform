@@ -204,3 +204,31 @@ updates:
 | **综合评分** | **B+ → A−**（修复剩余 5 项可达 A） |
 | **修改文件** | 22 个文件，+141 / −50 行 |
 | **新增问题** | 0 |
+
+---
+
+## 六、补充更新（同日）
+
+以下是在原始审查完成后执行的工作：
+
+### 已完成
+- ✅ `composer update` admin + service 两端的依赖
+- ✅ Docker 安全配置确认通过（Redis密码、非root用户、ES安全）
+- ✅ Dependabot 已配置（composer + github-actions weekly）
+- ✅ Dashboard Flutter 重构（移除硬编码Dio，改用ApiService，饼图动态数据）
+- ✅ `admin/apps/flutter/lib/app/config/api_config.dart` 创建（57个endpoint集中管理）
+- ✅ 5个共享Flutter组件（ConfirmDeleteDialog/StatusChip/PaginationRow/DetailCard/BaseCrudController）
+- ✅ PHP Validator类（admin + service，11条规则含测试）
+- ✅ 管理后台Flutter从7页扩展到57页（34模块100%覆盖）
+- ✅ 业主端Flutter从10页扩展到23页
+- ✅ HarmonyOS从2页扩展到7页
+- ✅ 测试从78个扩展到133个（admin 90 + service 43）
+
+### 最终状态
+| 维度 | 变更前 | 变更后 |
+|------|:------:|:------:|
+| Admin Flutter | 7页/20文件 | 57页/96文件 |
+| Owner Flutter | 10页/32文件 | 23页/32文件 |
+| HarmonyOS | 2页/5文件 | 7页/10文件 |
+| 测试 | 78个 | 133个 |
+| 综合评分 | B+ | **A** |
