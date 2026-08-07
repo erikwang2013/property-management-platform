@@ -377,14 +377,17 @@ SLA规则匹配 → 定时检查超时 → 自动升级 → 罚款记录
 
 使用 `hg/apidoc` 从控制器注解自动生成接口文档，按功能分组。
 
-**管理端** (`http://localhost:8787/apidoc`): 7组 — 47个控制器注入注解
+**管理端** (`http://localhost:8787/apidoc`): 10组 — 57个控制器注入注解（Base/Docs/Install 未分组）
 
 | 分组 | 数量 | 控制器 |
 |------|------|--------|
 | `common` | 2 | Auth, Captcha |
-| `dashboard` | 7 | Dashboard, Health, Docs, Metrics, Export, Import, Upload |
+| `dashboard` | 3 | Dashboard, Metrics, Health |
+| `export` | 1 | Export |
+| `import` | 1 | Import |
+| `upload` | 1 | Upload |
 | `system` | 6 | User, Role, Permission, Config, Log, Profile |
-| `property-core` | 1 | Community |
+| `property-core` | 12 | Community, Building, Unit, RoomType, Room, Owner, Tenant, FeeType, FeeBill, FeePayment, Repair, Announcement |
 | `property-aux` | 9 | Parking(3), Equipment(2), Complaint, Visitor, Contract, Finance |
 | `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
 | `extensions` | 11 | Notification, Approval, Payment, Vote, Sla, Collection, Inspection, Mall, Face, Group, Knowledge |

@@ -59,7 +59,7 @@ class AnnouncementListPage extends GetView<AnnouncementController> {
         const SizedBox(height: 12),
         TextField(controller: content, decoration: const InputDecoration(labelText: '内容', isDense: true), maxLines: 5),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [DropdownMenuItem(value: 1, child: Text('发布')), DropdownMenuItem(value: 0, child: Text('草稿'))],
           onChanged: (v) => st(() => status = v ?? 0)),
       ])),
@@ -69,7 +69,7 @@ class AnnouncementListPage extends GetView<AnnouncementController> {
           if (title.text.trim().isEmpty) return;
           try {
             final d = {'title': title.text.trim(), 'content': content.text.trim(), 'status': status};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '发布')),

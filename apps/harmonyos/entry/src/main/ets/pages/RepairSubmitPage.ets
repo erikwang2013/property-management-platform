@@ -4,6 +4,7 @@
 
 import router from '@ohos.router';
 import { ApiService } from '../services/ApiService';
+import { RepairRequest } from '../model/Models';
 
 @Entry
 @Component
@@ -21,12 +22,20 @@ struct RepairSubmitPage {
   async submit(): Promise<void> {
     if (!this.description) return;
     try {
-      const resp = await this.api.post('/service/repair', {
+      let payload: RepairRequest = {
         category: this.category,
         urgency: this.urgency,
-        description: this.description,
-        room_id: this.roomId || undefined
-      }) as Record<string, Object>;
+        description: this.description
+      };
+      if (this.roomId) {
+        payload = {
+          category: this.category,
+          urgency: this.urgency,
+          description: this.description,
+          room_id: this.roomId
+        };
+      }
+      const resp = await this.api.post('/service/repair', payload) as Record<string, Object>;
       if (resp['code'] === 0) {
         router.back();
       }

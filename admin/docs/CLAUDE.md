@@ -48,7 +48,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ```
 open-admin/
 ├── app/
-│   ├── admin/controller/       # 管理端控制器 (14 个)
+│   ├── admin/controller/       # 管理端控制器 (58 个，列表从略)
 │   │   ├── BaseController.php      # 基础控制器
 │   │   ├── DashboardController.php # 仪表盘（Redis 缓存）
 │   │   ├── UserController.php      # 用户 CRUD + 批量操作

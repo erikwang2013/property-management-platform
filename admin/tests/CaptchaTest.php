@@ -28,11 +28,11 @@ class CaptchaTest extends TestCase
         $this->assertArrayHasKey('key', $result, '应包含 key');
         $this->assertArrayHasKey('image', $result, '应包含 image');
         $this->assertArrayHasKey('extra', $result, '应包含 extra');
-        $this->assertArrayHasKey('targets', $result['extra'], 'extra 应包含 targets');
+        $this->assertArrayHasKey('texts', $result['extra'], 'extra 应包含 texts');
 
         $this->assertNotEmpty($result['key']);
         $this->assertNotEmpty($result['image']);
-        $this->assertCount(3, $result['extra']['targets'], 'medium 难度应有 3 个目标');
+        $this->assertCount(3, $result['extra']['texts'], 'medium 难度应有 3 个目标');
     }
 
     #[Test]
@@ -40,15 +40,23 @@ class CaptchaTest extends TestCase
     {
         $result = captcha_create('click', ['difficulty' => 'easy']);
 
-        foreach ($result['extra']['targets'] as $target) {
-            $this->assertArrayHasKey('x', $target);
-            $this->assertArrayHasKey('y', $target);
+        foreach ($result['extra']['texts'] as $target) {
             $this->assertArrayHasKey('text', $target);
             $this->assertArrayHasKey('order', $target);
-            $this->assertIsInt($target['x']);
-            $this->assertIsInt($target['y']);
             $this->assertIsString($target['text']);
             $this->assertIsInt($target['order']);
+        }
+    }
+
+    #[Test]
+    public function captcha_targets_do_not_expose_coordinates(): void
+    {
+        // 安全要求：响应中不得泄露目标坐标，否则验证码可被脚本绕过
+        $result = captcha_create('click', ['difficulty' => 'medium']);
+
+        foreach ($result['extra']['texts'] as $target) {
+            $this->assertArrayNotHasKey('x', $target);
+            $this->assertArrayNotHasKey('y', $target);
         }
     }
 
@@ -59,22 +67,9 @@ class CaptchaTest extends TestCase
         $medium = captcha_create('click', ['difficulty' => 'medium']);
         $hard = captcha_create('click', ['difficulty' => 'hard']);
 
-        $this->assertCount(2, $easy['extra']['targets'], 'easy 应为 2 个目标');
-        $this->assertCount(3, $medium['extra']['targets'], 'medium 应为 3 个目标');
-        $this->assertCount(4, $hard['extra']['targets'], 'hard 应为 4 个目标');
-    }
-
-    #[Test]
-    public function captcha_verify_correct_clicks_passes(): void
-    {
-        $result = captcha_create('click', ['difficulty' => 'easy']);
-        $targets = $result['extra']['targets'];
-
-        // 使用正确的目标坐标
-        $clicks = array_map(fn($t) => ['x' => $t['x'], 'y' => $t['y']], $targets);
-        $valid = captcha_verify($result['key'], 'click', $clicks);
-
-        $this->assertTrue($valid, '点击正确坐标应验证通过');
+        $this->assertCount(2, $easy['extra']['texts'], 'easy 应为 2 个目标');
+        $this->assertCount(3, $medium['extra']['texts'], 'medium 应为 3 个目标');
+        $this->assertCount(4, $hard['extra']['texts'], 'hard 应为 4 个目标');
     }
 
     #[Test]
@@ -83,22 +78,22 @@ class CaptchaTest extends TestCase
         $result = captcha_create('click', ['difficulty' => 'easy']);
 
         // 使用完全错误的坐标
-        $clicks = [['x' => 0, 'y' => 0], ['x' => 999, 'y' => 999]];
+        $clicks = [[0, 0], [999, 999]];
         $valid = captcha_verify($result['key'], 'click', $clicks);
 
         $this->assertFalse($valid, '错误坐标应验证失败');
     }
 
     #[Test]
-    public function captcha_key_has_limited_attempts(): void
+    public function captcha_verify_rejects_associative_clicks(): void
     {
+        // 契约要求：clicks 必须为数字索引 [[x,y],...]，控制器调用前需先归一化
         $result = captcha_create('click', ['difficulty' => 'easy']);
-        $targets = $result['extra']['targets'];
-        $clicks = array_map(fn($t) => ['x' => $t['x'], 'y' => $t['y']], $targets);
 
-        // 第一次验证通过
-        $first = captcha_verify($result['key'], 'click', $clicks);
-        $this->assertTrue($first);
+        $clicks = [['x' => 0, 'y' => 0], ['x' => 999, 'y' => 999]];
+        $valid = captcha_verify($result['key'], 'click', $clicks);
+
+        $this->assertFalse($valid, '关联数组 clicks 应按验证失败处理');
     }
 
     #[Test]

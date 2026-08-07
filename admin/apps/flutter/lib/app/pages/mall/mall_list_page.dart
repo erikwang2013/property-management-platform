@@ -7,6 +7,8 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import '../../widgets/base_crud_controller.dart';
+import '../../config/api_config.dart';
+import '../../services/api_service.dart';
 
 class MallCategoryController extends BaseCrudController {
   final categories = <Map<String, dynamic>>[].obs;
@@ -52,7 +54,7 @@ class MallCategoryListPage extends GetView<MallCategoryController> {
       Obx(()=>PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
     ]);
   }
-  void _catForm(BuildContext ctx,MallCategoryController c,{Map<String,dynamic>? data}){final n=TextEditingController(text:data?['name']??'');final s=TextEditingController(text:data?['sort']?.toString()??'');final isEdit=data!=null;showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑分类':'新增分类'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'名称',isDense:true)),const SizedBox(height:12),TextField(controller:s,decoration:const InputDecoration(labelText:'排序',isDense:true))]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'sort':int.tryParse(s.text)??0};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.mallCategory,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));}
+  void _catForm(BuildContext ctx,MallCategoryController c,{Map<String,dynamic>? data}){final n=TextEditingController(text:data?['name']??'');final s=TextEditingController(text:data?['sort']?.toString()??'');final isEdit=data!=null;showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑分类':'新增分类'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'名称',isDense:true)),const SizedBox(height:12),TextField(controller:s,decoration:const InputDecoration(labelText:'排序',isDense:true))]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'sort':int.tryParse(s.text)??0};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.mallCategory,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));}
 }
 
 class MallProductListPage extends GetView<MallProductController> {
@@ -69,7 +71,7 @@ class MallProductListPage extends GetView<MallProductController> {
       Obx(()=>PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
     ]);
   }
-  void _prodForm(BuildContext ctx,MallProductController c,{Map<String,dynamic>? data}){final n=TextEditingController(text:data?['name']??'');final pr=TextEditingController(text:data?['price']?.toString()??'');final stk=TextEditingController(text:data?['stock']?.toString()??'');final isEdit=data!=null;showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑商品':'新增商品'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'商品名称',isDense:true)),const SizedBox(height:12),TextField(controller:pr,decoration:const InputDecoration(labelText:'价格',isDense:true)),const SizedBox(height:12),TextField(controller:stk,decoration:const InputDecoration(labelText:'库存',isDense:true))]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'price':double.tryParse(pr.text),'stock':int.tryParse(stk.text)};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.mallProduct,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));}
+  void _prodForm(BuildContext ctx,MallProductController c,{Map<String,dynamic>? data}){final n=TextEditingController(text:data?['name']??'');final pr=TextEditingController(text:data?['price']?.toString()??'');final stk=TextEditingController(text:data?['stock']?.toString()??'');final isEdit=data!=null;showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑商品':'新增商品'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'商品名称',isDense:true)),const SizedBox(height:12),TextField(controller:pr,decoration:const InputDecoration(labelText:'价格',isDense:true)),const SizedBox(height:12),TextField(controller:stk,decoration:const InputDecoration(labelText:'库存',isDense:true))]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'price':double.tryParse(pr.text),'stock':int.tryParse(stk.text)};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.mallProduct,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));}
 }
 
 class MallOrderListPage extends GetView<MallOrderController> {
@@ -84,7 +86,7 @@ class MallOrderListPage extends GetView<MallOrderController> {
         return DataTable(columns:const[DataColumn(label:Text('订单号')),DataColumn(label:Text('商品')),DataColumn(label:Text('金额')),DataColumn(label:Text('状态')),DataColumn(label:Text('时间')),DataColumn(label:Text('操作'))],rows:c.orders.map((o){final hid=o['id'].toString();return DataRow(cells:[DataCell(Text(o['order_no']??'-')),DataCell(Text(o['product_name']??'-')),DataCell(Text('${o['amount']??'-'}')),DataCell(StatusChip(status:o['status']as int?,labels:const{0:'待支付',1:'已支付',2:'已发货',3:'已完成',4:'已退款'})),DataCell(Text(o['created_at']??'-')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[
           if((o['status']as int? ??0)==1)IconButton(icon:const Icon(Icons.local_shipping,size:18,color:Colors.blue),tooltip:'发货',onPressed:()=>_shipDialog(context,c,hid)),
           if((o['status']as int? ??0)==1)IconButton(icon:const Icon(Icons.undo,size:18,color:Colors.orange),tooltip:'退款',onPressed:()=>_refundDialog(context,c,hid)),
-        ]))])]);}).toList());
+        ]))]);}).toList());
       })),
       Obx(()=>PaginationRow(page:c.page.value,total:c.total.value,pageSize:15,onPrev:c.prevPage,onNext:c.nextPage)),
     ]);

@@ -9,7 +9,9 @@
 
 return [
     'enable' => true,
-    'secret_key' => getenv('JWT_SECRET_KEY') ?: 'open-admin-jwt-secret-change-in-production',
+    // 生产环境必须设置 JWT_SECRET_KEY；缺失时回退到随机密钥（重启后旧令牌失效），
+    // 绝不可使用公开的硬编码默认值
+    'secret_key' => getenv('JWT_SECRET_KEY') ?: bin2hex(random_bytes(32)),
     'algorithm' => getenv('JWT_ALGORITHM') ?: 'HS256',
     'issuer' => getenv('JWT_ISSUER') ?: 'open-admin',
     'audience' => getenv('JWT_AUDIENCE') ?: 'open-admin',

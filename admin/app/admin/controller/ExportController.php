@@ -19,10 +19,11 @@ use app\model\OperationLog;
 use app\model\AdminRole;
 use app\model\SystemConfig;
 use support\Request;
+use support\Response;
 
 /**
- * 仪表盘与运维
- * @Apidoc\Group("dashboard")
+ * 数据导出（Excel/PDF）
+ * @Apidoc\Group("export")
  */
 class ExportController extends BaseController
 {
@@ -221,13 +222,31 @@ class ExportController extends BaseController
         $model = new $modelMap[$table]();
         $query = $model->newQuery();
 
+        // 字段名白名单：杜绝通过 conditions 字段名注入 SQL（字段名会原样拼接进查询）
+        $allowed = $this->getFilterableFields($table);
         foreach ($conditions as $field => $value) {
-            if (!empty($value) || $value === '0') {
+            if (!in_array($field, $allowed, true)) {
+                continue;
+            }
+            if (is_array($value) && $value) {
+                $query->whereIn($field, $value);
+            } elseif (!empty($value) || $value === '0') {
                 $query->where($field, $value);
             }
         }
 
         return $query->limit(10000)->get()->toArray();
+    }
+
+    private function getFilterableFields(string $table): array
+    {
+        $maps = [
+            'admin_user'    => ['username', 'real_name', 'phone', 'email', 'status'],
+            'operation_log' => ['user_id', 'action', 'method', 'path', 'ip'],
+            'admin_role'    => ['name', 'slug', 'status'],
+            'system_config' => ['group', 'key', 'type'],
+        ];
+        return $maps[$table] ?? [];
     }
 
     private function getExportColumns(string $table): array

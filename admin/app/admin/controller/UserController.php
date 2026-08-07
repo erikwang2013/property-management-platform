@@ -137,13 +137,13 @@ class UserController extends BaseController
         $user->real_name = $request->input('real_name', $user->real_name);
         $user->status = (int) $request->input('status', $user->status);
 
-        if ($request->has('password') && !empty($request->input('password'))) {
+        if ($request->input('password') !== null && !empty($request->input('password'))) {
             $user->password = password_hash($request->input('password'), PASSWORD_BCRYPT);
         }
-        if ($request->has('phone')) {
+        if ($request->input('phone') !== null) {
             $user->phone = $request->input('phone', '');
         }
-        if ($request->has('email')) {
+        if ($request->input('email') !== null) {
             $user->email = $request->input('email', '');
         }
 

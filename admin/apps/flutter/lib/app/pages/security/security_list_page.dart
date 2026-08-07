@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'security_controller.dart';
+import '../../config/api_config.dart';
 
 class SecurityPatrolListPage extends GetView<SecurityPatrolController> {
   const SecurityPatrolListPage({super.key});
@@ -15,7 +16,6 @@ class SecurityPatrolListPage extends GetView<SecurityPatrolController> {
     if (!Get.isRegistered<SecurityPatrolController>()) Get.put(SecurityPatrolController(), permanent: false);
     final c = controller;
     return _buildList(context, c, '安防巡逻', c.patrols, ['路线名称','负责人员','时段','状态'], (item) {
-      final id = item['id'].toString();
       return [Text(item['name']??''),Text(item['guard_name']??'-'),Text('${item['start_time']??''} - ${item['end_time']??''}'),StatusChip(status:item['status'] as int?)];
     });
   }
@@ -40,7 +40,7 @@ Widget _buildList(BuildContext ctx, dynamic c, String title, RxList items, List<
       if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
       if (items.isEmpty) return const Center(child: Text('暂无数据'));
       return DataTable(columns: [...cols.map((h)=>DataColumn(label:Text(h))), const DataColumn(label: Text('操作'))],
-        rows: items.map((item) => DataRow(cells: [...cells(item), DataCell(Row(mainAxisSize: MainAxisSize.min, children: [
+        rows: items.map((item) => DataRow(cells: [...cells(item).map((w) => DataCell(w)), DataCell(Row(mainAxisSize: MainAxisSize.min, children: [
           IconButton(icon: Icon(Icons.edit,size:18), onPressed: ()=>_patrolForm(ctx,c,data:item)),
           IconButton(icon: Icon(Icons.delete,size:18,color:Colors.red), onPressed: () async {
             final pwd = await ConfirmDeleteDialog.show(ctx, itemName: item['name']??'');
@@ -60,7 +60,7 @@ Widget _buildRecordList(BuildContext ctx, dynamic c, String title, RxList items,
       if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
       if (items.isEmpty) return const Center(child: Text('暂无数据'));
       return DataTable(columns: cols.map((h)=>DataColumn(label:Text(h))).toList(),
-        rows: items.map((r) => DataRow(cells: [DataCell(Text(r['route_name']??'-')),DataCell(Text(r['guard_name']??'-')),DataCell(Text(r['start_time']??'-')),DataCell(Text(r['end_time']??'-')),DataCell(Text(r['status']==1?'完成':'进行中'))]).toList())).toList());
+        rows: items.map((r) => DataRow(cells: [DataCell(Text(r['route_name']??'-')),DataCell(Text(r['guard_name']??'-')),DataCell(Text(r['start_time']??'-')),DataCell(Text(r['end_time']??'-')),DataCell(Text(r['status']==1?'完成':'进行中'))])).toList());
     })),
     Obx(() => PaginationRow(page: c.page.value, total: c.total.value, pageSize: 15, onPrev: c.prevPage, onNext: c.nextPage)),
   ]);
@@ -84,7 +84,7 @@ void _patrolForm(BuildContext ctx, dynamic c, {Map<String, dynamic>? data}) {
       ElevatedButton(onPressed:()async{
         if(name.text.trim().isEmpty)return;
         try{final d={'name':name.text.trim(),'guard_name':guard.text.trim(),'start_time':start.text.trim(),'end_time':end.text.trim()};
-          if(isEdit) await c.updateItem(data!['id'],d);
+          if (isEdit) { await c.updateItem(data['id'], d); }
           else{await c.api.post(ApiConfig.securityPatrol,data:d);c.loadItems(reset:true);}
           if(ctx.mounted)Navigator.pop(ctx);
         }catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}

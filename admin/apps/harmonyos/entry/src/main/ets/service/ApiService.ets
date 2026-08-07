@@ -93,11 +93,12 @@ export class ApiService {
       );
 
       if (refreshResponse.responseCode === 200) {
-        const data = JSON.parse(refreshResponse.result as string);
-        if (data.code === 0 && data.data) {
+        const data = JSON.parse(refreshResponse.result as string) as Record<string, Object>;
+        if (data['code'] === 0 && data['data']) {
+          const tokenData = data['data'] as Record<string, Object>;
           TokenManager.saveTokens(
-            data.data.access_token,
-            data.data.refresh_token
+            tokenData['access_token'] as string,
+            tokenData['refresh_token'] as string
           );
           return true;
         }

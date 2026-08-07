@@ -6,10 +6,12 @@ import { apiService } from './ApiService';
 import {
   LoginRequest,
   LoginResponse,
+  RefreshRequest,
   DashboardData,
   User,
   UserListResult,
-  PageParams
+  UserListParams,
+  UserCreateData
 } from '../model/DataModels';
 
 /**
@@ -26,9 +28,8 @@ export class AuthService {
   }
 
   static async refreshToken(refreshToken: string): Promise<LoginResponse> {
-    const response = await apiService.post<LoginResponse>('/api/auth/refresh', {
-      refresh_token: refreshToken
-    });
+    const body: RefreshRequest = { refresh_token: refreshToken };
+    const response = await apiService.post<LoginResponse>('/api/auth/refresh', body);
     if (response.code !== 0) {
       throw new Error(response.message);
     }
@@ -53,11 +54,17 @@ export class DashboardService {
  * 用户管理服务
  */
 export class UserService {
-  static async getList(params: PageParams & { keyword?: string; status?: number }): Promise<UserListResult> {
-    const query = Object.entries(params)
-      .filter(([_, v]) => v !== undefined && v !== '')
-      .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
-      .join('&');
+  static async getList(params: UserListParams): Promise<UserListResult> {
+    const parts: string[] = [];
+    parts.push(`page=${encodeURIComponent(String(params.page))}`);
+    parts.push(`limit=${encodeURIComponent(String(params.limit))}`);
+    if (params.keyword !== undefined && params.keyword !== '') {
+      parts.push(`keyword=${encodeURIComponent(params.keyword)}`);
+    }
+    if (params.status !== undefined) {
+      parts.push(`status=${encodeURIComponent(String(params.status))}`);
+    }
+    const query = parts.join('&');
     const response = await apiService.get<UserListResult>(`/admin/user?${query}`);
     if (response.code !== 0) {
       throw new Error(response.message);
@@ -73,7 +80,7 @@ export class UserService {
     return response.data;
   }
 
-  static async create(data: Partial<User> & { password: string }): Promise<void> {
+  static async create(data: UserCreateData): Promise<void> {
     const response = await apiService.post<User>('/admin/user', data);
     if (response.code !== 0) {
       throw new Error(response.message);

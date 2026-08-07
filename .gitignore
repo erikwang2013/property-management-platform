@@ -6,7 +6,7 @@
 *.log
 .env
 /tests/tmp
-/tests/.phpunit.result.cache
+.phpunit.result.cache
 /.cursor
 /service/vendor
 /admin/vendor

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 
 use app\common\SnowflakeService;
-use app\model\Activity;
+use app\model\CommunityActivity;
 use support\Request;
 
 /**
@@ -19,21 +19,25 @@ class ActivityController extends BaseController
 {
     /**
      * 社区活动列表
-     * ?community_id=xxx&status=xxx&keyword=搜索词
+     * ?community_id=xxx&status=xxx&category=xxx&keyword=搜索词
      */
     public function index(Request $request)
     {
         $communityId = $request->input('community_id');
         $status      = $request->input('status');
+        $category    = $request->input('category');
         $keyword     = $request->input('keyword', '');
 
-        $query = Activity::query();
+        $query = CommunityActivity::query()->withCount('signups');
 
         if (!empty($communityId)) {
             $query->where('community_id', (int) $communityId);
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
+        }
+        if ($category !== null && $category !== '') {
+            $query->where('category', (int) $category);
         }
         if (!empty($keyword)) {
             $query->where('title', 'like', "%{$keyword}%");
@@ -43,16 +47,21 @@ class ActivityController extends BaseController
             ->paginate((int) $request->input('page_size', 20))
             ->through(function ($item) {
                 return [
-                    'id'           => $this->encodeId($item->id),
-                    'community_id' => $this->encodeId($item->community_id),
-                    'title'        => $item->title,
-                    'location'     => $item->location,
-                    'start_time'   => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
-                    'end_time'     => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
-                    'max_signup'   => $item->max_signup,
-                    'signup_count' => $item->signup_count,
-                    'status'       => $item->status,
-                    'created_at'   => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
+                    'id'               => $this->encodeId($item->id),
+                    'community_id'     => $this->encodeId($item->community_id),
+                    'title'            => $item->title,
+                    'category'         => $item->category,
+                    'cover_image'      => $item->cover_image,
+                    'location'         => $item->location,
+                    'start_time'       => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
+                    'end_time'         => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
+                    'max_participants' => $item->max_participants,
+                    'signup_count'     => $item->signups_count ?? 0,
+                    'is_free'          => $item->is_free,
+                    'cost'             => $item->cost,
+                    'organizer'        => $item->organizer,
+                    'status'           => $item->status,
+                    'created_at'       => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
                 ];
             });
 
@@ -63,25 +72,32 @@ class ActivityController extends BaseController
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
-        $item = Activity::find($id);
+        $item = CommunityActivity::withCount('signups')->find($id);
         if (!$item) {
             return $this->fail('活动不存在', 404);
         }
 
         return $this->success([
-            'id'           => $this->encodeId($item->id),
-            'community_id' => $this->encodeId($item->community_id),
-            'title'        => $item->title,
-            'description'  => $item->description,
-            'cover_image'  => $item->cover_image,
-            'location'     => $item->location,
-            'start_time'   => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
-            'end_time'     => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
-            'max_signup'   => $item->max_signup,
-            'signup_count' => $item->signup_count,
-            'status'       => $item->status,
-            'created_at'   => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
-            'updated_at'   => $item->updated_at ? $item->updated_at->format('Y-m-d H:i') : '',
+            'id'               => $this->encodeId($item->id),
+            'community_id'     => $this->encodeId($item->community_id),
+            'title'            => $item->title,
+            'content'          => $item->content,
+            'category'         => $item->category,
+            'cover_image'      => $item->cover_image,
+            'location'         => $item->location,
+            'max_participants' => $item->max_participants,
+            'signup_count'     => $item->signups_count ?? 0,
+            'start_time'       => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
+            'end_time'         => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
+            'signup_start'     => $item->signup_start ? $item->signup_start->format('Y-m-d H:i') : '',
+            'signup_end'       => $item->signup_end ? $item->signup_end->format('Y-m-d H:i') : '',
+            'is_free'          => $item->is_free,
+            'cost'             => $item->cost,
+            'organizer'        => $item->organizer,
+            'contact_phone'    => $item->contact_phone,
+            'status'           => $item->status,
+            'created_at'       => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
+            'updated_at'       => $item->updated_at ? $item->updated_at->format('Y-m-d H:i') : '',
         ]);
     }
 
@@ -89,8 +105,10 @@ class ActivityController extends BaseController
     public function store(Request $request)
     {
         $data = $request->only([
-            'community_id', 'title', 'description', 'cover_image',
-            'location', 'start_time', 'end_time', 'max_signup',
+            'community_id', 'title', 'content', 'category', 'cover_image',
+            'location', 'max_participants', 'start_time', 'end_time',
+            'signup_start', 'signup_end', 'is_free', 'cost',
+            'organizer', 'contact_phone',
         ]);
 
         if (empty($data['community_id'])) {
@@ -100,11 +118,10 @@ class ActivityController extends BaseController
             return $this->fail('活动标题不能为空', 422);
         }
 
-        $data['id']           = SnowflakeService::generate();
-        $data['status']       = $request->input('status', 0); // 0=草稿
-        $data['signup_count'] = 0;
+        $data['id']     = SnowflakeService::generate();
+        $data['status'] = (int) $request->input('status', 0); // 0=草稿
 
-        Activity::create($data);
+        CommunityActivity::create($data);
 
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
@@ -113,14 +130,16 @@ class ActivityController extends BaseController
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
-        $item = Activity::find($id);
+        $item = CommunityActivity::find($id);
         if (!$item) {
             return $this->fail('活动不存在', 404);
         }
 
         $item->fill($request->only([
-            'community_id', 'title', 'description', 'cover_image',
-            'location', 'start_time', 'end_time', 'max_signup', 'status',
+            'community_id', 'title', 'content', 'category', 'cover_image',
+            'location', 'max_participants', 'start_time', 'end_time',
+            'signup_start', 'signup_end', 'is_free', 'cost',
+            'organizer', 'contact_phone', 'status',
         ]));
         $item->save();
 
@@ -139,7 +158,7 @@ class ActivityController extends BaseController
         }
 
         $id   = $this->decodeId($hashid);
-        $item = Activity::find($id);
+        $item = CommunityActivity::find($id);
         if (!$item) {
             return $this->fail('活动不存在', 404);
         }

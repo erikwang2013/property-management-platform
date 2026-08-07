@@ -48,7 +48,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ```
 open-admin/
 ├── app/
-│   ├── admin/controller/       # 管理端控制器 (14 个)
+│   ├── admin/controller/       # 管理端控制器 (58 个，列表从略)
 │   │   ├── BaseController.php      # 基础控制器
 │   │   ├── DashboardController.php # 仪表盘（Redis 缓存）
 │   │   ├── UserController.php      # 用户 CRUD + 批量操作
@@ -82,9 +82,9 @@ open-admin/
 │   ├── queue/                  # 队列任务
 │   └── process/                # 进程 (Http, Monitor)
 ├── apps/
-│   ├── flutter/                # Flutter Web 管理后台（34模块，57页，96文件）
+│   ├── flutter/                # Flutter Web 管理后台（42个页面模块，96文件）
 │   │   └── lib/app/
-│   │       ├── pages/          # 34个模块，57个路由
+│   │       ├── pages/          # 42个页面模块
 │   │       │   ├── dashboard/  # 仪表盘
 │   │       │   ├── login/      # 登录
 │   │       │   ├── user/       # 用户管理

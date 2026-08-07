@@ -6,5 +6,3 @@ parameters:
     - vendor/
     - runtime/
     - tests/
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false

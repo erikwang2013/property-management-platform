@@ -4,7 +4,8 @@
 
 /// API 配置 — 业主端
 class ApiConfig {
-  static const String baseUrl = 'http://localhost:8788';
+  /// 可通过 --dart-define=API_BASE_URL=... 覆盖
+  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8788');
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 

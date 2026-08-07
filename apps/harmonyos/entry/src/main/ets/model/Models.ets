@@ -2,6 +2,30 @@
  * Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
  */
 
+export interface ClickPoint {
+  x: number;
+  y: number;
+}
+
+export interface LoginRequest {
+  phone: string;
+  password: string;
+  captcha_key: string;
+  clicks: Array<ClickPoint>;
+}
+
+export interface RepairRequest {
+  category: number;
+  urgency: number;
+  description: string;
+  room_id?: string;
+}
+
+export interface PasswordRequest {
+  old_password: string;
+  new_password: string;
+}
+
 export interface Owner {
   id: string;
   name: string;

@@ -11,6 +11,7 @@ use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
 use support\Redis;
+use support\Log;
 
 class RateLimit implements MiddlewareInterface
 {
@@ -57,7 +58,9 @@ LUA;
         try {
             $result = Redis::eval($lua, 1, $key, $windowStart, $limit, $now, $now . '.' . mt_rand(), $window + 10);
         } catch (\Throwable $e) {
-            return $handler($request); // Redis down, fail open
+            // Redis down 时放行（fail-open），但必须记录告警便于运维发现
+            Log::error('Redis unavailable, rate limit disabled: ' . $e->getMessage());
+            return $handler($request);
         }
         $count     = (int) ($result[1] ?? 0);
         $remaining = max($limit - $count, 0);

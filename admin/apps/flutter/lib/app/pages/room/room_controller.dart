@@ -53,13 +53,14 @@ class RoomController extends BaseCrudController {
     total.value = data['total'] as int? ?? 0;
   }
 
-  Future<void> create(Map<String, dynamic> d) async {
-    await api.post(ApiConfig.room, data: d);
+  Future<void> create(Map<String, dynamic> data) async {
+    await api.post(ApiConfig.room, data: data);
     await loadItems(reset: true);
   }
 
-  Future<void> updateItem(String hid, Map<String, dynamic> d) async {
-    await api.put('${ApiConfig.room}/$hid', data: d);
+  @override
+  Future<void> updateItem(String hid, Map<String, dynamic> data) async {
+    await api.put('${ApiConfig.room}/$hid', data: data);
     await loadItems();
   }
 }

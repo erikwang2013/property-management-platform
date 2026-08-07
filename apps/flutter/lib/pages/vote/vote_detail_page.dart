@@ -34,7 +34,7 @@ class _VoteDetailPageState extends State<VoteDetailPage> {
     body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(_detail?['title'] ?? '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       const SizedBox(height: 16), Text('截止时间: ${_detail?['end_time'] ?? '-'}', style: const TextStyle(color: Colors.grey)),
-      const SizedBox(height: 16), ..._options.map((o) => RadioListTile<String>(title: Text(o['name'] ?? ''), subtitle: Text('${o['vote_count'] ?? 0} 票'), value: o['id'].toString(), groupValue: _selectedOption, onChanged: (v) => setState(() => _selectedOption = v))),
+      const SizedBox(height: 16), RadioGroup<String>(groupValue: _selectedOption, onChanged: (v) => setState(() => _selectedOption = v), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final o in _options) RadioListTile<String>(title: Text(o['name'] ?? ''), subtitle: Text('${o['vote_count'] ?? 0} 票'), value: o['id'].toString())])),
       const SizedBox(height: 16), SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _cast, child: const Text('提交投票'))),
     ]))))),
   );

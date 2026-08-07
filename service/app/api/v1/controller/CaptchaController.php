@@ -20,7 +20,7 @@ class CaptchaController
      * 生成点击验证码
      * POST /api/captcha/generate
      *
-     * 返回: { key, image (base64), extra: { targets: [{order, text}] } }
+     * 返回: { key, image (base64), extra: { texts: [{order, text}] } }
      */
     public function generate(Request $request): Response
     {
@@ -36,7 +36,7 @@ class CaptchaController
                     'key' => $result['key'],
                     'image' => base64_encode($result['image']), // base64 PNG
                     'extra' => [
-                        'targets' => $result['extra']['targets'],
+                        'texts' => $result['extra']['texts'],
                     ],
                 ],
             ]);
@@ -63,6 +63,9 @@ class CaptchaController
         if (empty($key) || empty($clicks)) {
             return json(['code' => 422, 'message' => '缺少验证参数', 'data' => []]);
         }
+
+        // 归一化为数字索引坐标 [[x,y],...]（包契约要求）
+        $clicks = array_map(fn($c) => [(int)($c['x'] ?? 0), (int)($c['y'] ?? 0)], $clicks);
 
         $valid = captcha_verify($key, 'click', $clicks);
 

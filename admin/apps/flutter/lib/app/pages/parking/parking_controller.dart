@@ -3,6 +3,7 @@
  */
 import 'package:get/get.dart';
 import '../../config/api_config.dart';
+import '../../services/api_service.dart';
 import '../../widgets/base_crud_controller.dart';
 
 class ParkingSpaceController extends BaseCrudController {
@@ -42,5 +43,11 @@ class ParkingRecordController extends GetxController {
       records.value = List<Map<String, dynamic>>.from(d['data'] ?? []);
       total.value = d['total'] as int? ?? 0;
     } catch (_) {} finally { isLoading.value = false; }
+  }
+  void nextPage() {
+    if (page.value * limit.value < total.value) { page.value++; loadItems(); }
+  }
+  void prevPage() {
+    if (page.value > 1) { page.value--; loadItems(); }
   }
 }

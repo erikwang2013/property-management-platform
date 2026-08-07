@@ -124,3 +124,30 @@ export interface LoginResponse {
   refresh_token: string;
   expires_in: number;
 }
+
+/**
+ * 刷新令牌请求
+ */
+export interface RefreshRequest {
+  refresh_token: string;
+}
+
+/**
+ * 用户列表查询参数
+ */
+export interface UserListParams extends PageParams {
+  keyword?: string;
+  status?: number;
+}
+
+/**
+ * 新建用户参数（password 必填）
+ */
+export interface UserCreateData {
+  username: string;
+  real_name: string;
+  password: string;
+  phone?: string;
+  email?: string;
+  status: number;
+}

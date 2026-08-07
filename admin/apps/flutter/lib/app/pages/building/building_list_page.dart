@@ -89,7 +89,7 @@ class BuildingListPage extends GetView<BuildingController> {
           TextField(controller: code, decoration: const InputDecoration(labelText: '编号', isDense: true)),
           const SizedBox(height: 12),
           DropdownButtonFormField<int>(
-            value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+            initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
             items: const [DropdownMenuItem(value: 1, child: Text('启用')), DropdownMenuItem(value: 0, child: Text('禁用'))],
             onChanged: (v) => setSt(() => status = v ?? 1)),
         ]),
@@ -99,8 +99,7 @@ class BuildingListPage extends GetView<BuildingController> {
             if (name.text.trim().isEmpty) return;
             final d = {'name': name.text.trim(), 'code': code.text.trim(), 'status': status};
             try {
-              if (isEdit) await ctrl.updateItem(data!['id'], d);
-              else await ctrl.create(d);
+              if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
               if (ctx.mounted) Navigator.pop(ctx);
             } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
           }, child: Text(isEdit ? '保存' : '创建')),

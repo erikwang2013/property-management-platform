@@ -6,5 +6,10 @@ parameters:
     - vendor/
     - runtime/
     - tests/
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
+    # webman/redis-queue 未安装，队列消费者为预留代码，暂不纳入分析
+    - app/queue/
+  # illuminate 系列包 psr-4 目标为 ""，PHPStan 自动发现会解析失败，需显式扫描
+  scanDirectories:
+    - vendor/illuminate/database
+    - vendor/illuminate/contracts
+    - vendor/illuminate/support

@@ -94,7 +94,7 @@ class ConfigPage extends GetView<ConfigController> {
     ]);
   }
 
-  void _showDialog(BuildContext context, ConfigController ctrl, {dynamic? item}) {
+  void _showDialog(BuildContext context, ConfigController ctrl, {dynamic item}) {
     final gCtrl = TextEditingController(text: item?['group'] ?? '');
     final kCtrl = TextEditingController(text: item?['key'] ?? '');
     final vCtrl = TextEditingController(text: item?['value'] ?? '');

@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'green_controller.dart';
+import '../../config/api_config.dart';
 
 class GreenAreaListPage extends GetView<GreenAreaController> {
   const GreenAreaListPage({super.key});
@@ -24,7 +25,7 @@ class GreenAreaListPage extends GetView<GreenAreaController> {
           rows:c.areas.map((a){final id=a['id'].toString();return DataRow(cells:[
             DataCell(Text(a['name']??'')),DataCell(Text(a['plant_type']??'-')),DataCell(Text('${a['area']??'-'}')),DataCell(StatusChip(status:a['status']as int?)),
             DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:a)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:a['name']??'');if(p!=null)c.deleteItem(id,p);})])),
-          ]));}).toList(),
+          ]);}).toList(),
         );
       })),
       Obx(() => PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -35,7 +36,7 @@ class GreenAreaListPage extends GetView<GreenAreaController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑区域':'新增区域'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:n,decoration:const InputDecoration(labelText:'区域名称',isDense:true)),const SizedBox(height:12),TextField(controller:pt,decoration:const InputDecoration(labelText:'植物种类',isDense:true)),const SizedBox(height:12),TextField(controller:ar,decoration:const InputDecoration(labelText:'面积',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'plant_type':pt.text.trim(),'area':double.tryParse(ar.text)};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.greenArea,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'plant_type':pt.text.trim(),'area':double.tryParse(ar.text)};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.greenArea,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }
 class GreenMaintenanceListPage extends GetView<GreenMaintenanceController> {

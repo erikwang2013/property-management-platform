@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace app\api\v1\controller;
 
 use app\common\BaseController;
-use app\model\Activity;
 use app\model\ActivitySignup;
+use app\model\CommunityActivity;
 use support\Request;
 use support\Response;
 use InvalidArgumentException;
@@ -31,7 +31,7 @@ class ActivityController extends BaseController
         $status      = $request->input('status');
         $page        = (int) $request->input('page', 1);
 
-        $query = Activity::query();
+        $query = CommunityActivity::query()->withCount('signups');
 
         if (!empty($communityId)) {
             $query->where('community_id', (int) $communityId);
@@ -39,7 +39,7 @@ class ActivityController extends BaseController
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
         } else {
-            // 默认只展示已发布和进行中的活动
+            // 默认只展示报名中和进行中的活动
             $query->whereIn('status', [1, 2]);
         }
 
@@ -47,16 +47,20 @@ class ActivityController extends BaseController
             ->paginate(20, ['*'], 'page', $page)
             ->through(function ($item) {
                 return [
-                    'id'           => $this->encodeId($item->id),
-                    'title'        => $item->title,
-                    'cover_image'  => $item->cover_image,
-                    'location'     => $item->location,
-                    'start_time'   => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
-                    'end_time'     => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
-                    'max_signup'   => $item->max_signup,
-                    'signup_count' => $item->signup_count,
-                    'status'       => $item->status,
-                    'created_at'   => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
+                    'id'               => $this->encodeId($item->id),
+                    'title'            => $item->title,
+                    'category'         => $item->category,
+                    'cover_image'      => $item->cover_image,
+                    'location'         => $item->location,
+                    'start_time'       => $item->start_time ? $item->start_time->format('Y-m-d H:i') : '',
+                    'end_time'         => $item->end_time ? $item->end_time->format('Y-m-d H:i') : '',
+                    'max_participants' => $item->max_participants,
+                    'signup_count'     => $item->signups_count ?? 0,
+                    'is_free'          => $item->is_free,
+                    'cost'             => $item->cost,
+                    'organizer'        => $item->organizer,
+                    'status'           => $item->status,
+                    'created_at'       => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
                 ];
             });
 
@@ -75,24 +79,31 @@ class ActivityController extends BaseController
             return $this->fail('无效的活动ID', 404);
         }
 
-        $activity = Activity::find($activityId);
+        $activity = CommunityActivity::withCount('signups')->find($activityId);
         if (!$activity) {
             return $this->fail('活动不存在', 404);
         }
 
         $data = [
-            'id'           => $this->encodeId($activity->id),
-            'community_id' => $activity->community_id ? $this->encodeId($activity->community_id) : '',
-            'title'        => $activity->title,
-            'description'  => $activity->description,
-            'cover_image'  => $activity->cover_image,
-            'location'     => $activity->location,
-            'start_time'   => $activity->start_time ? $activity->start_time->format('Y-m-d H:i') : '',
-            'end_time'     => $activity->end_time ? $activity->end_time->format('Y-m-d H:i') : '',
-            'max_signup'   => $activity->max_signup,
-            'signup_count' => $activity->signup_count,
-            'status'       => $activity->status,
-            'created_at'   => $activity->created_at ? $activity->created_at->format('Y-m-d H:i') : '',
+            'id'               => $this->encodeId($activity->id),
+            'community_id'     => $activity->community_id ? $this->encodeId($activity->community_id) : '',
+            'title'            => $activity->title,
+            'content'          => $activity->content,
+            'category'         => $activity->category,
+            'cover_image'      => $activity->cover_image,
+            'location'         => $activity->location,
+            'max_participants' => $activity->max_participants,
+            'signup_count'     => $activity->signups_count ?? 0,
+            'start_time'       => $activity->start_time ? $activity->start_time->format('Y-m-d H:i') : '',
+            'end_time'         => $activity->end_time ? $activity->end_time->format('Y-m-d H:i') : '',
+            'signup_start'     => $activity->signup_start ? $activity->signup_start->format('Y-m-d H:i') : '',
+            'signup_end'       => $activity->signup_end ? $activity->signup_end->format('Y-m-d H:i') : '',
+            'is_free'          => $activity->is_free,
+            'cost'             => $activity->cost,
+            'organizer'        => $activity->organizer,
+            'contact_phone'    => $activity->contact_phone,
+            'status'           => $activity->status,
+            'created_at'       => $activity->created_at ? $activity->created_at->format('Y-m-d H:i') : '',
         ];
 
         return $this->success($data);
@@ -115,18 +126,21 @@ class ActivityController extends BaseController
             return $this->fail('无效的活动ID', 404);
         }
 
-        $activity = Activity::find($activityId);
+        $activity = CommunityActivity::find($activityId);
         if (!$activity) {
             return $this->fail('活动不存在', 404);
         }
 
-        // 状态校验：仅开放报名状态(1=open)允许报名
+        // 状态校验：仅开放报名状态(1=报名中)允许报名
         if ($activity->status != 1) {
             return $this->fail('当前活动暂未开放报名', 422);
         }
 
         // 名额校验
-        if ($activity->max_signup > 0 && $activity->signup_count >= $activity->max_signup) {
+        $signupCount = ActivitySignup::where('activity_id', $activityId)
+            ->where('signup_status', '<>', 2)
+            ->count();
+        if ($activity->max_participants > 0 && $signupCount >= $activity->max_participants) {
             return $this->fail('报名已满', 422);
         }
 
@@ -153,12 +167,9 @@ class ActivityController extends BaseController
         $signup->signup_at         = date('Y-m-d H:i:s');
         $signup->save();
 
-        // 更新活动报名人数
-        $activity->signup_count = ActivitySignup::where('activity_id', $activityId)->count();
-        $activity->save();
-
         return $this->success([
-            'id' => $this->encodeId($signup->id),
+            'id'           => $this->encodeId($signup->id),
+            'signup_count' => ActivitySignup::where('activity_id', $activityId)->count(),
         ], '报名成功');
     }
 
@@ -193,13 +204,6 @@ class ActivityController extends BaseController
         }
 
         $signup->delete();
-
-        // 更新活动报名人数
-        $activity = Activity::find($activityId);
-        if ($activity) {
-            $activity->signup_count = ActivitySignup::where('activity_id', $activityId)->count();
-            $activity->save();
-        }
 
         return $this->success([], '取消报名成功');
     }

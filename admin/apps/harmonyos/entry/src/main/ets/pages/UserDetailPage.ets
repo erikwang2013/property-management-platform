@@ -176,44 +176,110 @@ struct UserDetailPage {
               .fill('#E6F0FF')
               .margin({ top: 24, bottom: 24 })
 
-            // 表单
-            this.buildFormItem('用户名', () => {
+            // 表单（行内直接内联，避免在 @Builder 中调用函数参数）
+            Row() {
+              Text('用户名')
+                .fontSize(15)
+                .fontColor('#333333')
+                .width(80)
+
               TextInput({ placeholder: '请输入用户名', text: this.formUsername })
                 .fontSize(15)
+                .layoutWeight(1)
                 .enabled(this.mode === 'create')
                 .onChange((v: string) => { this.formUsername = v; })
-            });
+            }
+            .width('100%')
+            .height(56)
+            .padding({ left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+            .alignItems(VerticalAlign.Center)
 
             if (this.mode === 'create') {
-              this.buildFormItem('密码', () => {
+              Row() {
+                Text('密码')
+                  .fontSize(15)
+                  .fontColor('#333333')
+                  .width(80)
+
                 TextInput({ placeholder: '请输入密码', text: this.formPassword })
                   .fontSize(15)
+                  .layoutWeight(1)
                   .type(InputType.Password)
                   .onChange((v: string) => { this.formPassword = v; })
-              });
+              }
+              .width('100%')
+              .height(56)
+              .padding({ left: 16, right: 16 })
+              .backgroundColor('#FFFFFF')
+              .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+              .alignItems(VerticalAlign.Center)
             }
 
-            this.buildFormItem('姓名', () => {
+            Row() {
+              Text('姓名')
+                .fontSize(15)
+                .fontColor('#333333')
+                .width(80)
+
               TextInput({ placeholder: '请输入真实姓名', text: this.formRealName })
                 .fontSize(15)
+                .layoutWeight(1)
                 .onChange((v: string) => { this.formRealName = v; })
-            });
+            }
+            .width('100%')
+            .height(56)
+            .padding({ left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+            .alignItems(VerticalAlign.Center)
 
-            this.buildFormItem('手机号', () => {
+            Row() {
+              Text('手机号')
+                .fontSize(15)
+                .fontColor('#333333')
+                .width(80)
+
               TextInput({ placeholder: '请输入手机号', text: this.formPhone })
                 .fontSize(15)
+                .layoutWeight(1)
                 .type(InputType.PhoneNumber)
                 .onChange((v: string) => { this.formPhone = v; })
-            });
+            }
+            .width('100%')
+            .height(56)
+            .padding({ left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+            .alignItems(VerticalAlign.Center)
 
-            this.buildFormItem('邮箱', () => {
+            Row() {
+              Text('邮箱')
+                .fontSize(15)
+                .fontColor('#333333')
+                .width(80)
+
               TextInput({ placeholder: '请输入邮箱', text: this.formEmail })
                 .fontSize(15)
+                .layoutWeight(1)
                 .type(InputType.Email)
                 .onChange((v: string) => { this.formEmail = v; })
-            });
+            }
+            .width('100%')
+            .height(56)
+            .padding({ left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+            .alignItems(VerticalAlign.Center)
 
-            this.buildFormItem('状态', () => {
+            // 状态行（直接内联，避免在回调中书写组件块）
+            Row() {
+              Text('状态')
+                .fontSize(15)
+                .fontColor('#333333')
+                .width(80)
+
               Row() {
                 Button('启用')
                   .fontSize(13)
@@ -232,7 +298,14 @@ struct UserDetailPage {
                   .margin({ left: 12 })
                   .onClick(() => { this.formStatus = 0; })
               }
-            });
+              .layoutWeight(1)
+            }
+            .width('100%')
+            .height(56)
+            .padding({ left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
+            .alignItems(VerticalAlign.Center)
 
             // 提交按钮
             Button('保 存')
@@ -257,22 +330,4 @@ struct UserDetailPage {
     .height('100%')
   }
 
-  @Builder
-  buildFormItem(label: string, content: () => void) {
-    Row() {
-      Text(label)
-        .fontSize(15)
-        .fontColor('#333333')
-        .width(80)
-
-      content()
-        .layoutWeight(1)
-    }
-    .width('100%')
-    .height(56)
-    .padding({ left: 16, right: 16 })
-    .backgroundColor('#FFFFFF')
-    .border({ width: { bottom: 0.5 }, color: '#EEEEEE' })
-    .alignItems(VerticalAlign.Center)
-  }
 }

@@ -21,16 +21,16 @@ class HealthController
 {
     public function index(Request $request): Response
     {
+        // 健康检查仅暴露服务可用性，不返回 PHP 版本、ES 集群状态等内部信息
         return json([
             'code' => 0,
             'message' => 'success',
             'data' => [
                 'app'           => 'open-admin',
                 'version'       => '1.0',
-                'php'           => PHP_VERSION,
                 'database'      => $this->checkDb(),
                 'redis'         => $this->checkRedis(),
-                'elasticsearch' => $this->checkES(),
+                'elasticsearch' => $this->checkES() === 'ok' ? 'ok' : 'unavailable',
                 'timestamp'     => time(),
             ],
         ]);

@@ -22,12 +22,12 @@ struct HomePage {
 
   async loadDashboard(): Promise<void> {
     try {
-      const resp = await this.api.get('/service/home/dashboard') as Record<string, Object>;
+      const resp = await this.api.get('/service/home') as Record<string, Object>;
       if (resp['code'] === 0) {
         const data = resp['data'] as Record<string, Object>;
-        this.balance = (data['balance'] as number) || 0;
-        this.pendingRepairs = (data['pending_repairs'] as number) || 0;
-        this.rooms = (data['rooms'] as number) || 0;
+        this.balance = parseFloat(data['pending_amount'] as string) || 0;
+        this.pendingRepairs = (data['repairing_count'] as number) || 0;
+        this.rooms = (data['room_count'] as number) || 0;
         this.announcements = (data['announcements'] as Announcement[]) || [];
       }
     } catch (e) {

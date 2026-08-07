@@ -61,7 +61,7 @@ GitHub Actions: PHP 语法 + Composer 审计 + PHPUnit + Flutter 分析
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| service | 43 | 83 | 100% (4个预存跳过) |
+| service | 43 | 248 | 100% (1个跳过) |
 
 测试覆盖: Snowflake/Hashids/Auth/Fee/Security/Validator/DatabaseSchema/i18n
 

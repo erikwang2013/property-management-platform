@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'collection_controller.dart';
+import '../../config/api_config.dart';
 
 class CollectionStrategyListPage extends GetView<CollectionStrategyController> {
   const CollectionStrategyListPage({super.key});
@@ -31,7 +32,7 @@ class CollectionStrategyListPage extends GetView<CollectionStrategyController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑策略':'新增策略'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:n,decoration:const InputDecoration(labelText:'策略名称',isDense:true)),const SizedBox(height:12),TextField(controller:d,decoration:const InputDecoration(labelText:'逾期天数',isDense:true)),const SizedBox(height:12),TextField(controller:m,decoration:const InputDecoration(labelText:'通知方式',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final dd={'name':n.text.trim(),'overdue_days':int.tryParse(d.text),'notify_method':m.text.trim()};if(isEdit)await c.updateItem(data!['id'],dd);else{await c.api.post(ApiConfig.collectionStrategy,data:dd);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final dd={'name':n.text.trim(),'overdue_days':int.tryParse(d.text),'notify_method':m.text.trim()};if (isEdit) { await c.updateItem(data['id'], dd); }else{await c.api.post(ApiConfig.collectionStrategy,data:dd);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }
 class CollectionRecordListPage extends GetView<CollectionRecordController> {

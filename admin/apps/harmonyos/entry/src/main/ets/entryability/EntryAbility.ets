@@ -3,13 +3,15 @@
  */
 
 import UIAbility from '@ohos.app.ability.UIAbility';
+import Want from '@ohos.app.ability.Want';
+import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 
 const TAG = 'EntryAbility';
 
 export default class EntryAbility extends UIAbility {
-  onCreate(want, launchParam): void {
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     hilog.info(0x0000, TAG, 'Ability onCreate');
   }
 

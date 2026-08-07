@@ -4,7 +4,7 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
-A full-stack property management system covering 22 business modules + 12 extension features (notifications, approval workflow, payments, voting, SLA, collections, inspections, marketplace, face recognition, group management, AI Q&A). The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
+A full-stack property management system covering 22 business modules + 12 extension features (notifications, approval workflow, payments, voting, SLA, data dashboard, collections, inspections, marketplace, face recognition, group management, AI Q&A). The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
 
 ## Project Structure
 
@@ -64,13 +64,13 @@ property-management-platform/
 |-------|-------|---------|
 | Database Tables | 65 | All `erik_` prefix, BIGINT non-auto-increment PK |
 | PHP Models | 64 | With encryptable field encryption |
-| Admin Controllers | 47 | General admin + 22 modules + 12 extensions |
+| Admin Controllers | 58 | General admin + 22 modules + 12 extensions |
 | Service Controllers | 17 | Complete owner-facing API |
-| API Routes | 178+ | admin 123+ + service 55+ |
-| Flutter Admin | 57 pages | 34 modules full coverage, 96 files/6,462 lines |
-| Flutter Owner | 23 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,148 lines |
-| HarmonyOS | 7 pages | Login/Home/Bills/Repairs(2)/Announcements/Profile, 10 files/831 lines |
-| Tests | 133 total | admin 90(196 assertions) + service 43(83 assertions) |
+| API Routes | 178 | admin 125 + service 53 |
+| Flutter Admin | 42 pages | 42 page modules, 96 files/6,662 lines |
+| Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,582 lines |
+| HarmonyOS | 7 pages | Login/Home/Bills/Repairs(2)/Announcements/Profile, 11 files/927 lines |
+| Tests | 133 total | admin 90(217 assertions) + service 43(248 assertions) |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
 
@@ -103,9 +103,9 @@ property-management-platform/
 | Batch | Modules | Status |
 |-------|---------|--------|
 | Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Repair, Announcement (10) | ✅ Complete |
-| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance + Dashboard + Export (8) | ✅ Complete |
+| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance (6) + Dashboard/Export (platform features) | ✅ Complete |
 | Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
-| Extensions | Notifications, Approval, Payment, Voting, SLA, Collection, Inspection, Mall, Face, Group, Knowledge (12) | ✅ Complete |
+| Extensions | Notifications, Approval, Payment, Voting, SLA, Data Dashboard, Collection, Inspection, Mall, Face, Group, Knowledge (12) | ✅ Complete |
 
 ## Tech Stack
 
@@ -143,7 +143,7 @@ Start the services and access the auto-generated apidoc:
 
 | Side | URL | Groups |
 |------|-----|--------|
-| Admin | `http://localhost:8787/apidoc` | 7 groups (Common/Dashboard/System/Core/Aux/Advanced/Extensions) |
+| Admin | `http://localhost:8787/apidoc` | 10 groups (common/dashboard/system/property-core/property-aux/property-adv/extensions/export/import/upload) |
 | Service | `http://localhost:8788/apidoc` | 9 groups (Public/Home/Fee/Repair/Feedback/Parking/Activity/Profile/Extensions) |
 
 ### Internationalization (i18n)

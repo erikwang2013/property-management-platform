@@ -76,7 +76,7 @@ class RepairListPage extends GetView<RepairController> {
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         TextField(controller: content, decoration: const InputDecoration(labelText: '进度说明', isDense: true)),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [
             DropdownMenuItem(value: 2, child: Text('维修中')), DropdownMenuItem(value: 3, child: Text('已完成')),
           ], onChanged: (v) => st(() => status = v ?? 2)),

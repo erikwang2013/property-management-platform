@@ -36,6 +36,20 @@ class AuthController
         return self::$jwt;
     }
 
+    /** 归一化点击坐标为数字索引 [[x,y],...]（验证码包契约要求） */
+    private function normalizeClicks(mixed $clicks): array
+    {
+        if (!is_array($clicks)) {
+            return [];
+        }
+        return array_map(function ($c) {
+            if (is_array($c) && isset($c[0], $c[1]) && !isset($c['x'])) {
+                return [(int)$c[0], (int)$c[1]];
+            }
+            return [(int)($c['x'] ?? 0), (int)($c['y'] ?? 0)];
+        }, $clicks);
+    }
+
     /**
      * 登录（需先通过点击验证码）
      * POST /api/auth/login
@@ -54,7 +68,7 @@ class AuthController
         }
 
         // 验证点击验证码
-        if (!captcha_verify($request->input('captcha_key'), 'click', $request->input('clicks'))) {
+        if (!captcha_verify($request->input('captcha_key'), 'click', $this->normalizeClicks($request->input('clicks')))) {
             return json(['code' => 422, 'message' => '验证码错误，请重试', 'data' => []]);
         }
 
@@ -142,7 +156,7 @@ class AuthController
             return json(['code' => 422, 'message' => $validator->errors()->first(), 'data' => []]);
         }
 
-        if (!captcha_verify($request->input('captcha_key'), 'click', $request->input('clicks'))) {
+        if (!captcha_verify($request->input('captcha_key'), 'click', $this->normalizeClicks($request->input('clicks')))) {
             return json(['code' => 422, 'message' => '验证码错误，请重试', 'data' => []]);
         }
 

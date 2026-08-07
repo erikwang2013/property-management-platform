@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace app\model;
 
-use support\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class AdminRole extends Model
 {

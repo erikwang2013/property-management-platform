@@ -30,6 +30,12 @@ interface ClickPoint {
   y: number;
 }
 
+interface ClickMarker {
+  x: number;
+  y: number;
+  order: number;
+}
+
 @Entry
 @Component
 struct LoginPage {
@@ -42,7 +48,7 @@ struct LoginPage {
   @State captchaData: CaptchaData | null = null;
   @State captchaLoading: boolean = true;
   @State clicks: ClickPoint[] = [];
-  @State clickMarkers: {x: number, y: number, order: number}[] = [];
+  @State clickMarkers: ClickMarker[] = [];
   @State captchaError: string = '';
   @State loginError: string = '';
 
@@ -67,9 +73,9 @@ struct LoginPage {
         readTimeout: 10000
       });
 
-      const result = JSON.parse(resp.result as string);
-      if (result.code === 0) {
-        this.captchaData = result.data;
+      const result = JSON.parse(resp.result as string) as Record<string, Object>;
+      if (result['code'] === 0) {
+        this.captchaData = result['data'] as CaptchaData;
         this.captchaData!.targets.sort((a, b) => a.order - b.order);
       } else {
         this.captchaError = '验证码加载失败';
@@ -134,13 +140,14 @@ struct LoginPage {
         readTimeout: 15000
       });
 
-      const result = JSON.parse(resp.result as string);
-      if (result.code === 0) {
-        await TokenManager.saveTokens(result.data.access_token, result.data.refresh_token);
+      const result = JSON.parse(resp.result as string) as Record<string, Object>;
+      if (result['code'] === 0) {
+        const tokenData = result['data'] as Record<string, Object>;
+        await TokenManager.saveTokens(tokenData['access_token'] as string, tokenData['refresh_token'] as string);
         AppStorage.setOrCreate('adminUsername', trimmedUsername);
         router.replaceUrl({ url: 'pages/DashboardPage' });
       } else {
-        this.loginError = result.message ?? '登录失败';
+        this.loginError = (result['message'] as string) ?? '登录失败';
         this.loadCaptcha();
       }
     } catch (e) {
@@ -263,7 +270,7 @@ struct LoginPage {
                     .onClick((event: ClickEvent) => { this.onCaptchaClick(event); })
 
                   // 点击标记
-                  ForEach(this.clickMarkers, (m: {x: number, y: number, order: number}) => {
+                  ForEach(this.clickMarkers, (m: ClickMarker) => {
                     Circle({ width: 26, height: 26 })
                       .fill('#1677FFCC')
                       .position({ x: m.x - 13, y: m.y - 13 })

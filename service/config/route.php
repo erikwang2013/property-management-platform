@@ -22,6 +22,7 @@ Route::get('/health', function () {
 // 公开接口
 Route::group('/api', function () {
     Route::post('/captcha/generate', [app\api\v1\controller\CaptchaController::class, 'generate']);
+    Route::post('/captcha/verify', [app\api\v1\controller\CaptchaController::class, 'verify']);
     Route::post('/auth/login', [app\api\v1\controller\AuthController::class, 'login']);
     Route::post('/auth/register', [app\api\v1\controller\AuthController::class, 'register']);
     Route::post('/auth/refresh', [app\api\v1\controller\AuthController::class, 'refresh']);
@@ -104,6 +105,7 @@ Route::group('/service', function () {
     Route::get('/face/status', [app\api\v1\controller\FaceController::class, 'status']);
 })->middleware([
     app\middleware\ServiceAuth::class,
+    app\middleware\ApiVersion::class,
     app\middleware\OperationLog::class,
 ]);
 

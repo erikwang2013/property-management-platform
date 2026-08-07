@@ -199,29 +199,52 @@ class FeeController extends BaseController
             return $this->fail('支付金额不能超过待缴金额', 422);
         }
 
-        $paymentId = $this->generateId();
-        $paymentNumber = 'PAY' . date('YmdHis') . mt_rand(100, 999);
-
-        FeePayment::create([
-            'id'              => $paymentId,
-            'bill_id'         => $billId,
-            'owner_id'        => $ownerId,
-            'payment_number'  => $paymentNumber,
-            'amount'          => $amount,
-            'payment_method'  => $paymentMethod,
-            'payment_channel' => $paymentChannel,
-            'paid_at'         => date('Y-m-d H:i:s'),
-        ]);
-
-        // 更新账单状态
-        $newPaidAmount = $bill->paid_amount + $amount;
-        $newStatus = ($newPaidAmount >= $bill->amount + $bill->late_fee) ? 1 : 3;
-        $bill->paid_amount = $newPaidAmount;
-        $bill->status = $newStatus;
-        if ($newStatus === 1) {
-            $bill->paid_at = date('Y-m-d H:i:s');
+        // 幂等：30 秒内同一账单同金额的重复请求直接返回既有支付记录，避免重复扣费
+        $recent = FeePayment::where('bill_id', $billId)
+            ->where('owner_id', $ownerId)
+            ->where('amount', $amount)
+            ->where('paid_at', '>=', date('Y-m-d H:i:s', time() - 30))
+            ->first();
+        if ($recent) {
+            return $this->success([
+                'payment_number' => $recent->payment_number,
+                'amount'         => $amount,
+                'paid_amount'    => $bill->paid_amount,
+                'bill_status'    => $bill->status,
+            ], '缴费成功');
         }
-        $bill->save();
+
+        // 支付流水与账单更新放入同一事务，避免创建成功但账单未更新的不一致状态
+        try {
+            [$paymentNumber, $newPaidAmount, $newStatus] = Db::transaction(function () use ($ownerId, $bill, $amount, $paymentMethod, $paymentChannel) {
+                $paymentId = $this->generateId();
+                $paymentNumber = 'PAY' . date('YmdHis') . mt_rand(100, 999);
+
+                FeePayment::create([
+                    'id'              => $paymentId,
+                    'bill_id'         => $bill->id,
+                    'owner_id'        => $ownerId,
+                    'payment_number'  => $paymentNumber,
+                    'amount'          => $amount,
+                    'payment_method'  => $paymentMethod,
+                    'payment_channel' => $paymentChannel,
+                    'paid_at'         => date('Y-m-d H:i:s'),
+                ]);
+
+                $newPaidAmount = $bill->paid_amount + $amount;
+                $newStatus = ($newPaidAmount >= $bill->amount + $bill->late_fee) ? 1 : 3;
+                $bill->paid_amount = $newPaidAmount;
+                $bill->status = $newStatus;
+                if ($newStatus === 1) {
+                    $bill->paid_at = date('Y-m-d H:i:s');
+                }
+                $bill->save();
+
+                return [$paymentNumber, $newPaidAmount, $newStatus];
+            });
+        } catch (\Throwable) {
+            return $this->fail('支付失败，请稍后重试', 500);
+        }
 
         return $this->success([
             'payment_number' => $paymentNumber,

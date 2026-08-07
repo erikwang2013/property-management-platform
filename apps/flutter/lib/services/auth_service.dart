@@ -46,6 +46,7 @@ class AuthService extends GetxService {
     await prefs.setString('access_token', data['access_token']);
     await prefs.setString('refresh_token', data['refresh_token']);
     await prefs.setString('owner_name', data['owner']['name'] ?? '');
+    await prefs.setString('phone', data['owner']['phone'] ?? '');
 
     isLoggedIn = true;
     return data;

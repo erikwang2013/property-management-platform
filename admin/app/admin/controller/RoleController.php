@@ -9,6 +9,7 @@ namespace app\admin\controller;
 
 use app\model\AdminRole;
 use support\Request;
+use support\Response;
 
 /**
  * 系统管理
@@ -65,7 +66,7 @@ class RoleController extends BaseController
         $role->save();
 
         // 同步权限
-        if ($request->has('permission_ids')) {
+        if ($request->input('permission_ids') !== null) {
             $role->permissions()->sync($request->input('permission_ids', []));
         }
 
@@ -89,7 +90,7 @@ class RoleController extends BaseController
         $role->status = (int) $request->input('status', $role->status);
         $role->save();
 
-        if ($request->has('permission_ids')) {
+        if ($request->input('permission_ids') !== null) {
             $role->permissions()->sync($request->input('permission_ids', []));
         }
 

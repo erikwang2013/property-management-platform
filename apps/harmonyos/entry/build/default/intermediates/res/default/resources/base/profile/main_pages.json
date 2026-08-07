@@ -1,0 +1,11 @@
+{
+  "src": [
+    "pages/LoginPage",
+    "pages/HomePage",
+    "pages/FeeBillsPage",
+    "pages/RepairListPage",
+    "pages/RepairSubmitPage",
+    "pages/AnnouncementPage",
+    "pages/ProfilePage"
+  ]
+}

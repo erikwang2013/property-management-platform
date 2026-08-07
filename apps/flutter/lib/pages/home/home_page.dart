@@ -9,6 +9,31 @@ import '../../config/theme.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 
+/// 首页功能入口定义
+class _FunctionEntry {
+  const _FunctionEntry(this.label, this.icon, this.color, this.route);
+  final String label;
+  final IconData icon;
+  final Color color;
+  final String route;
+}
+
+const List<_FunctionEntry> _entries = [
+  _FunctionEntry('费用账单', Icons.receipt_long, AppTheme.primary, '/fee-bills'),
+  _FunctionEntry('报修管理', Icons.build_circle_outlined, AppTheme.warning, '/repairs'),
+  _FunctionEntry('我的车辆', Icons.directions_car, Color(0xFF5470C6), '/parking-vehicles'),
+  _FunctionEntry('车位查询', Icons.local_parking, Color(0xFF13A8A8), '/parking-spaces'),
+  _FunctionEntry('停车记录', Icons.history, Color(0xFF2F54EB), '/parking-records'),
+  _FunctionEntry('访客通行', Icons.person_pin, AppTheme.success, '/visitors'),
+  _FunctionEntry('社区活动', Icons.celebration, Color(0xFF722ED1), '/activities'),
+  _FunctionEntry('消息通知', Icons.notifications, Color(0xFFFA8C16), '/notifications'),
+  _FunctionEntry('社区投票', Icons.how_to_vote, Color(0xFFD4380D), '/votes'),
+  _FunctionEntry('社区商城', Icons.storefront, Color(0xFF8C6D1F), '/mall-products'),
+  _FunctionEntry('智能问答', Icons.chat_bubble_outline, Color(0xFF1677FF), '/chat'),
+  _FunctionEntry('人脸识别', Icons.face, Color(0xFF531DAB), '/face-register'),
+  _FunctionEntry('个人中心', Icons.person, AppTheme.danger, '/profile'),
+];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
   @override
@@ -86,107 +111,68 @@ class _HomePageState extends State<HomePage> {
                         value: '$roomCount 套',
                         icon: Icons.home,
                         color: AppTheme.primary,
-                        subtitle: '查看详情',
+                        subtitle: '我的房产',
                       ),
-                      StatCard(
-                        title: 'pending_payment'.tr,
-                        value: _formatCurrency(pendingAmount),
-                        icon: Icons.payment,
-                        color: AppTheme.warning,
-                        subtitle: '去缴费',
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/fee-bills'),
+                        child: StatCard(
+                          title: 'pending_payment'.tr,
+                          value: _formatCurrency(pendingAmount),
+                          icon: Icons.payment,
+                          color: AppTheme.warning,
+                          subtitle: '去缴费',
+                        ),
                       ),
-                      StatCard(
-                        title: 'repairing'.tr,
-                        value: '$repairingCount 件',
-                        icon: Icons.build,
-                        color: AppTheme.danger,
-                        subtitle: '查看',
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/repairs'),
+                        child: StatCard(
+                          title: 'repairing'.tr,
+                          value: '$repairingCount 件',
+                          icon: Icons.build,
+                          color: AppTheme.danger,
+                          subtitle: '查看',
+                        ),
                       ),
-                      StatCard(
-                        title: 'latest_announcements'.tr,
-                        value: '${_announcements.length} 条',
-                        icon: Icons.campaign,
-                        color: AppTheme.success,
-                        subtitle: '查看全部',
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/notifications'),
+                        child: StatCard(
+                          title: 'latest_announcements'.tr,
+                          value: '${_announcements.length} 条',
+                          icon: Icons.campaign,
+                          color: AppTheme.success,
+                          subtitle: '查看全部',
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 32),
 
-                  // 中段: 费用走势 + 分类饼图
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('费用走势', style: Theme.of(context).textTheme.titleMedium),
-                                    TextButton.icon(
-                                      icon: const Icon(Icons.trending_up, size: 18),
-                                      label: Text('fee_statistics'.tr),
-                                      onPressed: () => Get.toNamed('/fee-bills'),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 24),
-                                SizedBox(
-                                  height: 220,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.show_chart, size: 48, color: Colors.grey.shade300),
-                                        const SizedBox(height: 8),
-                                        Text('费用走势图表（待接入数据）',
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                  // 功能入口网格
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('功能服务', style: Theme.of(context).textTheme.titleMedium),
+                          const SizedBox(height: 16),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final columns = (constraints.maxWidth / 130).floor().clamp(3, 8);
+                              return GridView.count(
+                                crossAxisCount: columns,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 1.5,
+                                children: [for (final e in _entries) _EntryTile(entry: e)],
+                              );
+                            },
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      SizedBox(
-                        width: 340,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('费用分类', style: Theme.of(context).textTheme.titleMedium),
-                                const SizedBox(height: 24),
-                                SizedBox(
-                                  height: 220,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.pie_chart_outline, size: 48, color: Colors.grey.shade300),
-                                        const SizedBox(height: 8),
-                                        Text('费用分类图表（待接入数据）',
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 32),
 
@@ -201,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('latest_announcements'.tr, style: Theme.of(context).textTheme.titleMedium),
-                              TextButton(onPressed: () {}, child: Text('查看全部')),
+                              TextButton(onPressed: () => Get.toNamed('/notifications'), child: Text('查看全部')),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -216,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                                   title: Text(a['title'] ?? ''),
                                   subtitle: Text(a['published_at'] ?? ''),
                                   trailing: const Icon(Icons.chevron_right),
-                                  onTap: () {},
+                                  onTap: () => Get.toNamed('/notifications'),
                                 )),
                         ],
                       ),
@@ -225,6 +211,38 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+    );
+  }
+}
+
+/// 单个功能入口卡片
+class _EntryTile extends StatelessWidget {
+  const _EntryTile({required this.entry});
+  final _FunctionEntry entry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Get.toNamed(entry.route),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: entry.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(entry.icon, color: entry.color, size: 24),
+            ),
+            const SizedBox(height: 10),
+            Text(entry.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+          ],
+        ),
+      ),
     );
   }
 }

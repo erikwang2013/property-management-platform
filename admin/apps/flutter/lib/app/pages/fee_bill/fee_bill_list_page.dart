@@ -29,7 +29,6 @@ class FeeBillListPage extends GetView<FeeBillController> {
           DataColumn(label: Text('费项')), DataColumn(label: Text('金额')), DataColumn(label: Text('已缴')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('截止日期')), DataColumn(label: Text('操作')),
         ], rows: ctrl.bills.map((b) {
-          final id = b['id'].toString();
           return DataRow(cells: [
             DataCell(Text(b['fee_type_name'] ?? b['fee_type_id']?.toString() ?? '-')),
             DataCell(Text('${b['amount'] ?? '-'}')), DataCell(Text('${b['paid_amount'] ?? '0'}')),

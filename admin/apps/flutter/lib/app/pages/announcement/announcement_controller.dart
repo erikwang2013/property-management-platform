@@ -14,10 +14,11 @@ class AnnouncementController extends BaseCrudController {
     announcements.value = List<Map<String, dynamic>>.from(data['data'] ?? []);
     total.value = data['total'] as int? ?? 0;
   }
-  Future<void> create(Map<String, dynamic> d) async {
-    await api.post(ApiConfig.announcement, data: d); await loadItems(reset: true);
+  Future<void> create(Map<String, dynamic> data) async {
+    await api.post(ApiConfig.announcement, data: data); await loadItems(reset: true);
   }
-  Future<void> updateItem(String hid, Map<String, dynamic> d) async {
-    await api.put('${ApiConfig.announcement}/$hid', data: d); await loadItems();
+  @override
+  Future<void> updateItem(String hid, Map<String, dynamic> data) async {
+    await api.put('${ApiConfig.announcement}/$hid', data: data); await loadItems();
   }
 }

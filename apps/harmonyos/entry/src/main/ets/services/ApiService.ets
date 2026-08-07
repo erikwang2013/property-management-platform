@@ -20,7 +20,7 @@ export class ApiService {
 
   async init(): Promise<void> {
     const prefs = await preferences.getPreferences(getContext(), 'property_portal');
-    this.token = prefs.get('access_token', '') as string;
+    this.token = (await prefs.get('access_token', '')) as string;
   }
 
   private getHeaders(): Object {
@@ -38,7 +38,7 @@ export class ApiService {
     return JSON.parse(resp.result as string);
   }
 
-  async post(path: string, data: Object): Promise<Object> {
+  async post(path: string, data?: Object): Promise<Object> {
     const req = http.createHttp();
     const resp = await req.request(BASE_URL + path, {
       method: http.RequestMethod.POST,

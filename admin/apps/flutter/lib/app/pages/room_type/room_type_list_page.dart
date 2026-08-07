@@ -70,7 +70,7 @@ class RoomTypeListPage extends GetView<RoomTypeController> {
           if (name.text.trim().isEmpty) return;
           try {
             final d = {'name': name.text.trim(), 'area': double.tryParse(area.text), 'bedrooms': int.tryParse(bd.text), 'living_rooms': int.tryParse(lr.text)};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

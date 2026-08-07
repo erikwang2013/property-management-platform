@@ -207,6 +207,326 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (21000000000000094, NULL, '文件上传', 'post.admin/upload', 3, NULL, NULL, 1, NOW(), NOW());
 
 -- ============================================================
+-- API 权限 (type=3) — 物业管理业务模块
+-- ID 段: 21000000000100xx 起始，每模块一组（查看/创建/更新/删除）
+-- parent_id 全部为 NULL（业务模块无菜单权限），slug = 小写方法.路由路径
+-- ============================================================
+
+-- API 权限 — 小区管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010001, NULL, '查看小区', 'get.admin/community',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010002, NULL, '创建小区', 'post.admin/community',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010003, NULL, '更新小区', 'put.admin/community',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010004, NULL, '删除小区', 'delete.admin/community', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 楼栋管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010005, NULL, '查看楼栋', 'get.admin/building',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010006, NULL, '创建楼栋', 'post.admin/building',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010007, NULL, '更新楼栋', 'put.admin/building',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010008, NULL, '删除楼栋', 'delete.admin/building', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 单元管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010009, NULL, '查看单元', 'get.admin/unit',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010010, NULL, '创建单元', 'post.admin/unit',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010011, NULL, '更新单元', 'put.admin/unit',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010012, NULL, '删除单元', 'delete.admin/unit', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 户型管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010013, NULL, '查看户型', 'get.admin/room-type',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010014, NULL, '创建户型', 'post.admin/room-type',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010015, NULL, '更新户型', 'put.admin/room-type',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010016, NULL, '删除户型', 'delete.admin/room-type', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 房产管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010017, NULL, '查看房产', 'get.admin/room',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010018, NULL, '创建房产', 'post.admin/room',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010019, NULL, '更新房产', 'put.admin/room',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010020, NULL, '删除房产', 'delete.admin/room', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 业主管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010021, NULL, '查看业主', 'get.admin/owner',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010022, NULL, '创建业主', 'post.admin/owner',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010023, NULL, '更新业主', 'put.admin/owner',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010024, NULL, '删除业主', 'delete.admin/owner', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 租户管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010025, NULL, '查看租户', 'get.admin/tenant',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010026, NULL, '创建租户', 'post.admin/tenant',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010027, NULL, '更新租户', 'put.admin/tenant',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010028, NULL, '删除租户', 'delete.admin/tenant', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 费用类型
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010029, NULL, '查看费用类型', 'get.admin/fee-type',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010030, NULL, '创建费用类型', 'post.admin/fee-type',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010031, NULL, '更新费用类型', 'put.admin/fee-type',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010032, NULL, '删除费用类型', 'delete.admin/fee-type', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 账单管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010033, NULL, '查看账单', 'get.admin/fee-bill',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010034, NULL, '创建账单', 'post.admin/fee-bill',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010035, NULL, '更新账单', 'put.admin/fee-bill',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010036, NULL, '删除账单', 'delete.admin/fee-bill', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 报修管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010037, NULL, '查看报修', 'get.admin/repair',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010038, NULL, '创建报修', 'post.admin/repair',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010039, NULL, '更新报修', 'put.admin/repair',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010040, NULL, '删除报修', 'delete.admin/repair', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 公告管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010041, NULL, '查看公告', 'get.admin/announcement',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010042, NULL, '创建公告', 'post.admin/announcement',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010043, NULL, '更新公告', 'put.admin/announcement',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010044, NULL, '删除公告', 'delete.admin/announcement', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 停车位管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010045, NULL, '查看停车位', 'get.admin/parking-space',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010046, NULL, '创建停车位', 'post.admin/parking-space',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010047, NULL, '更新停车位', 'put.admin/parking-space',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010048, NULL, '删除停车位', 'delete.admin/parking-space', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 车辆管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010049, NULL, '查看车辆', 'get.admin/parking-vehicle',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010050, NULL, '创建车辆', 'post.admin/parking-vehicle',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010051, NULL, '更新车辆', 'put.admin/parking-vehicle',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010052, NULL, '删除车辆', 'delete.admin/parking-vehicle', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 设备管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010053, NULL, '查看设备', 'get.admin/equipment',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010054, NULL, '创建设备', 'post.admin/equipment',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010055, NULL, '更新设备', 'put.admin/equipment',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010056, NULL, '删除设备', 'delete.admin/equipment', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 设备维保
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010057, NULL, '查看维保', 'get.admin/equipment-maintenance',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010058, NULL, '创建维保', 'post.admin/equipment-maintenance',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010059, NULL, '更新维保', 'put.admin/equipment-maintenance',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010060, NULL, '删除维保', 'delete.admin/equipment-maintenance', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 合同管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010061, NULL, '查看合同', 'get.admin/contract',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010062, NULL, '创建合同', 'post.admin/contract',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010063, NULL, '更新合同', 'put.admin/contract',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010064, NULL, '删除合同', 'delete.admin/contract', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 安防巡逻
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010065, NULL, '查看巡逻', 'get.admin/security-patrol',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010066, NULL, '创建巡逻', 'post.admin/security-patrol',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010067, NULL, '更新巡逻', 'put.admin/security-patrol',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010068, NULL, '删除巡逻', 'delete.admin/security-patrol', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 保洁区域
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010069, NULL, '查看保洁区域', 'get.admin/cleaning-area',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010070, NULL, '创建保洁区域', 'post.admin/cleaning-area',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010071, NULL, '更新保洁区域', 'put.admin/cleaning-area',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010072, NULL, '删除保洁区域', 'delete.admin/cleaning-area', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 绿化区域
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010073, NULL, '查看绿化区域', 'get.admin/green-area',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010074, NULL, '创建绿化区域', 'post.admin/green-area',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010075, NULL, '更新绿化区域', 'put.admin/green-area',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010076, NULL, '删除绿化区域', 'delete.admin/green-area', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 社区活动
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010077, NULL, '查看活动', 'get.admin/activity',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010078, NULL, '创建活动', 'post.admin/activity',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010079, NULL, '更新活动', 'put.admin/activity',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010080, NULL, '删除活动', 'delete.admin/activity', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 能耗仪表
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010081, NULL, '查看仪表', 'get.admin/energy-meter',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010082, NULL, '创建仪表', 'post.admin/energy-meter',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010083, NULL, '更新仪表', 'put.admin/energy-meter',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010084, NULL, '删除仪表', 'delete.admin/energy-meter', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 员工管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010085, NULL, '查看员工', 'get.admin/staff',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010086, NULL, '创建员工', 'post.admin/staff',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010087, NULL, '更新员工', 'put.admin/staff',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010088, NULL, '删除员工', 'delete.admin/staff', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 巡检任务
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010089, NULL, '查看巡检任务', 'get.admin/inspection-task',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010090, NULL, '创建巡检任务', 'post.admin/inspection-task',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010091, NULL, '更新巡检任务', 'put.admin/inspection-task',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010092, NULL, '删除巡检任务', 'delete.admin/inspection-task', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 商城分类
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010093, NULL, '查看商城分类', 'get.admin/mall-category',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010094, NULL, '创建商城分类', 'post.admin/mall-category',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010095, NULL, '更新商城分类', 'put.admin/mall-category',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010096, NULL, '删除商城分类', 'delete.admin/mall-category', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 商城商品
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010097, NULL, '查看商品', 'get.admin/mall-product',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010098, NULL, '创建商品', 'post.admin/mall-product',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010099, NULL, '更新商品', 'put.admin/mall-product',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010100, NULL, '删除商品', 'delete.admin/mall-product', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 集团管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010101, NULL, '查看集团', 'get.admin/group',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010102, NULL, '创建集团', 'post.admin/group',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010103, NULL, '更新集团', 'put.admin/group',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010104, NULL, '删除集团', 'delete.admin/group', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 问答分类
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010105, NULL, '查看问答分类', 'get.admin/knowledge-category',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010106, NULL, '创建问答分类', 'post.admin/knowledge-category',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010107, NULL, '更新问答分类', 'put.admin/knowledge-category',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010108, NULL, '删除问答分类', 'delete.admin/knowledge-category', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 智能问答
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010109, NULL, '查看文章', 'get.admin/knowledge',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010110, NULL, '创建文章', 'post.admin/knowledge',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010111, NULL, '更新文章', 'put.admin/knowledge',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010112, NULL, '删除文章', 'delete.admin/knowledge', 3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 业务模块特殊端点
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010113, NULL, '房产层级树',       'get.admin/room/tree',               3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010114, NULL, '业主批量导入',     'post.admin/owner/batch/import',     3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010115, NULL, '业主批量删除',     'post.admin/owner/batch/destroy',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010116, NULL, '账单批量生成',     'post.admin/fee-bill/batch/generate', 3, NULL, NULL, 4, NOW(), NOW()),
+(2100000000010117, NULL, '查看缴费记录',     'get.admin/fee-payment',             3, NULL, NULL, 5, NOW(), NOW()),
+(2100000000010118, NULL, '线下收款',         'post.admin/fee-payment/offline',    3, NULL, NULL, 6, NOW(), NOW()),
+(2100000000010119, NULL, '报修派单',         'put.admin/repair/assign',           3, NULL, NULL, 7, NOW(), NOW()),
+(2100000000010120, NULL, '报修进度更新',     'post.admin/repair/progress',        3, NULL, NULL, 8, NOW(), NOW()),
+(2100000000010121, NULL, '查看投诉',         'get.admin/complaint',               3, NULL, NULL, 9, NOW(), NOW()),
+(2100000000010122, NULL, '投诉处理',         'put.admin/complaint/handle',        3, NULL, NULL, 10, NOW(), NOW()),
+(2100000000010123, NULL, '访客审核',         'put.admin/visitor/approve',         3, NULL, NULL, 11, NOW(), NOW()),
+(2100000000010124, NULL, '财务统计',         'get.admin/finance/statistics',      3, NULL, NULL, 12, NOW(), NOW()),
+(2100000000010125, NULL, '查看巡逻记录',     'get.admin/patrol-record',           3, NULL, NULL, 13, NOW(), NOW()),
+(2100000000010126, NULL, '创建巡逻记录',     'post.admin/patrol-record',          3, NULL, NULL, 14, NOW(), NOW()),
+(2100000000010127, NULL, '查看保洁记录',     'get.admin/cleaning-record',         3, NULL, NULL, 15, NOW(), NOW()),
+(2100000000010128, NULL, '创建保洁记录',     'post.admin/cleaning-record',        3, NULL, NULL, 16, NOW(), NOW()),
+(2100000000010129, NULL, '查看绿化养护',     'get.admin/green-maintenance',       3, NULL, NULL, 17, NOW(), NOW()),
+(2100000000010130, NULL, '创建绿化养护',     'post.admin/green-maintenance',      3, NULL, NULL, 18, NOW(), NOW()),
+(2100000000010131, NULL, '查看活动报名',     'get.admin/activity-signup',         3, NULL, NULL, 19, NOW(), NOW()),
+(2100000000010132, NULL, '活动签到',         'put.admin/activity-signup/checkin', 3, NULL, NULL, 20, NOW(), NOW()),
+(2100000000010133, NULL, '查看能耗记录',     'get.admin/energy-record',           3, NULL, NULL, 21, NOW(), NOW()),
+(2100000000010134, NULL, '创建能耗记录',     'post.admin/energy-record',          3, NULL, NULL, 22, NOW(), NOW()),
+(2100000000010135, NULL, '查看SLA规则',      'get.admin/sla-rule',                3, NULL, NULL, 23, NOW(), NOW()),
+(2100000000010136, NULL, '创建SLA规则',      'post.admin/sla-rule',               3, NULL, NULL, 24, NOW(), NOW()),
+(2100000000010137, NULL, '更新SLA规则',      'put.admin/sla-rule',                3, NULL, NULL, 25, NOW(), NOW()),
+(2100000000010138, NULL, '删除SLA规则',      'delete.admin/sla-rule',             3, NULL, NULL, 26, NOW(), NOW()),
+(2100000000010139, NULL, '查看SLA记录',      'get.admin/sla-record',              3, NULL, NULL, 27, NOW(), NOW()),
+(2100000000010140, NULL, '查看催缴策略',     'get.admin/collection-strategy',     3, NULL, NULL, 28, NOW(), NOW()),
+(2100000000010141, NULL, '创建催缴策略',     'post.admin/collection-strategy',    3, NULL, NULL, 29, NOW(), NOW()),
+(2100000000010142, NULL, '更新催缴策略',     'put.admin/collection-strategy',     3, NULL, NULL, 30, NOW(), NOW()),
+(2100000000010143, NULL, '删除催缴策略',     'delete.admin/collection-strategy',  3, NULL, NULL, 31, NOW(), NOW()),
+(2100000000010144, NULL, '查看催缴记录',     'get.admin/collection-record',       3, NULL, NULL, 32, NOW(), NOW()),
+(2100000000010145, NULL, '执行催缴',         'post.admin/collection/run',         3, NULL, NULL, 33, NOW(), NOW()),
+(2100000000010146, NULL, '查看商城订单',     'get.admin/mall-order',              3, NULL, NULL, 34, NOW(), NOW()),
+(2100000000010147, NULL, '商城订单发货',     'put.admin/mall-order/ship',         3, NULL, NULL, 35, NOW(), NOW()),
+(2100000000010148, NULL, '商城订单退款',     'post.admin/mall-order/refund',      3, NULL, NULL, 36, NOW(), NOW()),
+(2100000000010149, NULL, '查看人脸库',       'get.admin/face',                    3, NULL, NULL, 37, NOW(), NOW()),
+(2100000000010150, NULL, '人脸审核通过',     'put.admin/face/verify',             3, NULL, NULL, 38, NOW(), NOW()),
+(2100000000010151, NULL, '人脸审核拒绝',     'put.admin/face/reject',             3, NULL, NULL, 39, NOW(), NOW()),
+(2100000000010152, NULL, '集团小区列表',     'get.admin/group/communities',       3, NULL, NULL, 40, NOW(), NOW()),
+(2100000000010153, NULL, '集团添加小区',     'post.admin/group/community',        3, NULL, NULL, 41, NOW(), NOW()),
+(2100000000010154, NULL, '集团统计',         'get.admin/group/summary',           3, NULL, NULL, 42, NOW(), NOW()),
+(2100000000010155, NULL, '查看聊天记录',     'get.admin/chat-record',             3, NULL, NULL, 43, NOW(), NOW()),
+(2100000000010156, NULL, '聊天统计',         'get.admin/chat-stats',              3, NULL, NULL, 44, NOW(), NOW()),
+(2100000000010157, NULL, '查看访客',         'get.admin/visitor',                 3, NULL, NULL, 45, NOW(), NOW()),
+(2100000000010158, NULL, '投诉回访',         'post.admin/complaint/visit',        3, NULL, NULL, 46, NOW(), NOW()),
+(2100000000010159, NULL, '查看停车记录',     'get.admin/parking-record',          3, NULL, NULL, 47, NOW(), NOW()),
+(2100000000010160, NULL, '物业仪表盘统计',   'get.admin/dashboard/property',      3, NULL, NULL, 48, NOW(), NOW());
+
+-- API 权限 — 财务收支
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010161, NULL, '查看财务收入', 'get.admin/finance-income',    3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010162, NULL, '创建财务收入', 'post.admin/finance-income',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010163, NULL, '更新财务收入', 'put.admin/finance-income',    3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010164, NULL, '删除财务收入', 'delete.admin/finance-income', 3, NULL, NULL, 4, NOW(), NOW()),
+(2100000000010165, NULL, '查看财务支出', 'get.admin/finance-expense',    3, NULL, NULL, 5, NOW(), NOW()),
+(2100000000010166, NULL, '创建财务支出', 'post.admin/finance-expense',   3, NULL, NULL, 6, NOW(), NOW()),
+(2100000000010167, NULL, '更新财务支出', 'put.admin/finance-expense',    3, NULL, NULL, 7, NOW(), NOW()),
+(2100000000010168, NULL, '删除财务支出', 'delete.admin/finance-expense', 3, NULL, NULL, 8, NOW(), NOW());
+
+-- API 权限 — 员工批量状态
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010169, NULL, '员工批量启禁用', 'post.admin/staff/batch/status', 3, NULL, NULL, 1, NOW(), NOW());
+
+-- API 权限 — 巡检扩展端点
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010170, NULL, '查看巡检点',       'get.admin/inspection-task/checkpoints',     3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010171, NULL, '开始巡检任务',     'put.admin/inspection-task/start',           3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010172, NULL, '完成巡检任务',     'put.admin/inspection-task/complete',        3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010173, NULL, '巡检点打卡',       'put.admin/inspection-checkpoint/checkin',   3, NULL, NULL, 4, NOW(), NOW());
+
+-- API 权限 — 集团移除小区
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010174, NULL, '集团移除小区', 'delete.admin/group/community', 3, NULL, NULL, 1, NOW(), NOW());
+
+-- API 权限 — 审批管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010175, NULL, '查看审批类型', 'get.admin/approval-type',     3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010176, NULL, '创建审批类型', 'post.admin/approval-type',    3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010177, NULL, '更新审批类型', 'put.admin/approval-type',     3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010178, NULL, '删除审批类型', 'delete.admin/approval-type',  3, NULL, NULL, 4, NOW(), NOW()),
+(2100000000010179, NULL, '查看审批',     'get.admin/approval',          3, NULL, NULL, 5, NOW(), NOW()),
+(2100000000010180, NULL, '提交审批',     'post.admin/approval',         3, NULL, NULL, 6, NOW(), NOW()),
+(2100000000010181, NULL, '审批处理',     'put.admin/approval/approve',  3, NULL, NULL, 7, NOW(), NOW()),
+(2100000000010182, NULL, '我的待办审批', 'get.admin/approval/my-pending', 3, NULL, NULL, 8, NOW(), NOW());
+
+-- API 权限 — 通知管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010183, NULL, '查看通知模板', 'get.admin/notification-template',   3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010184, NULL, '创建通知模板', 'post.admin/notification-template',  3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010185, NULL, '更新通知模板', 'put.admin/notification-template',   3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010186, NULL, '删除通知模板', 'delete.admin/notification-template', 3, NULL, NULL, 4, NOW(), NOW()),
+(2100000000010187, NULL, '查看通知',     'get.admin/notification',            3, NULL, NULL, 5, NOW(), NOW()),
+(2100000000010188, NULL, '发送通知',     'post.admin/notification/send',      3, NULL, NULL, 6, NOW(), NOW());
+
+-- API 权限 — 投票管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010189, NULL, '查看投票',     'get.admin/vote',           3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010190, NULL, '创建投票',     'post.admin/vote',          3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010191, NULL, '更新投票',     'put.admin/vote',           3, NULL, NULL, 3, NOW(), NOW()),
+(2100000000010192, NULL, '删除投票',     'delete.admin/vote',        3, NULL, NULL, 4, NOW(), NOW()),
+(2100000000010193, NULL, '查看投票选项', 'get.admin/vote/options',   3, NULL, NULL, 5, NOW(), NOW()),
+(2100000000010194, NULL, '创建投票选项', 'post.admin/vote/option',   3, NULL, NULL, 6, NOW(), NOW()),
+(2100000000010195, NULL, '更新投票选项', 'put.admin/vote/option',    3, NULL, NULL, 7, NOW(), NOW()),
+(2100000000010196, NULL, '删除投票选项', 'delete.admin/vote/option', 3, NULL, NULL, 8, NOW(), NOW()),
+(2100000000010197, NULL, '投票记录',     'get.admin/vote/records',   3, NULL, NULL, 9, NOW(), NOW()),
+(2100000000010198, NULL, '投票统计',     'get.admin/vote/statistics', 3, NULL, NULL, 10, NOW(), NOW()),
+(2100000000010199, NULL, '发布投票',     'put.admin/vote/publish',   3, NULL, NULL, 11, NOW(), NOW()),
+(2100000000010200, NULL, '结束投票',     'put.admin/vote/end',       3, NULL, NULL, 12, NOW(), NOW());
+
+-- API 权限 — 支付管理
+INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010201, NULL, '查看支付订单',       'get.admin/payment-order',           3, NULL, NULL, 1, NOW(), NOW()),
+(2100000000010202, NULL, '支付订单退款',       'post.admin/payment-order/refund',   3, NULL, NULL, 2, NOW(), NOW()),
+(2100000000010203, NULL, '支付统计',           'get.admin/payment-order/statistics', 3, NULL, NULL, 3, NOW(), NOW());
+
+-- ============================================================
 -- 超级管理员角色 (ID=10000000000000001) 关联所有权限
 -- ============================================================
 INSERT INTO `erik_admin_role_permission` (`role_id`, `permission_id`)

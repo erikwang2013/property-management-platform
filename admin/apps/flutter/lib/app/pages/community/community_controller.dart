@@ -21,13 +21,14 @@ class CommunityController extends BaseCrudController {
     total.value = data['total'] as int? ?? 0;
   }
 
-  Future<void> create(Map<String, dynamic> formData) async {
-    await api.post(ApiConfig.community, data: formData);
+  Future<void> create(Map<String, dynamic> data) async {
+    await api.post(ApiConfig.community, data: data);
     await loadItems(reset: true);
   }
 
-  Future<void> updateItem(String hashid, Map<String, dynamic> formData) async {
-    await api.put('${ApiConfig.community}/$hashid', data: formData);
+  @override
+  Future<void> updateItem(String hid, Map<String, dynamic> data) async {
+    await api.put('${ApiConfig.community}/$hid', data: data);
     await loadItems();
   }
 }

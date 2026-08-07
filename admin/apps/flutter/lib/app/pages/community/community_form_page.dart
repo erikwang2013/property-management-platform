@@ -97,7 +97,7 @@ class _CommunityFormPageState extends State<CommunityFormPage> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<int>(
-                      value: _status,
+                      initialValue: _status,
                       decoration: const InputDecoration(labelText: '状态', isDense: true),
                       items: const [
                         DropdownMenuItem(value: 1, child: Text('启用')),

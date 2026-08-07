@@ -25,7 +25,8 @@ global $argv;
 return [
     'webman' => [
         'handler' => Http::class,
-        'listen' => 'http://0.0.0.0:8787',
+        // 端口可用环境变量 SERVER_LISTEN 覆盖（如 SERVER_LISTEN=0.0.0.0:8790），默认 8787
+        'listen' => getenv('SERVER_LISTEN') ?: 'http://0.0.0.0:8787',
         'count' => cpu_count() * 4,
         'user' => '',
         'group' => '',

@@ -51,7 +51,7 @@ TXT
     , 200, ['Content-Type' => 'text/plain; charset=utf-8']);
 });
 
-// API 文档（全局，无需认证）
+// API 文档（DOCS_ENABLED 开关控制，默认关闭）
 Route::get('/api/docs', [app\admin\controller\DocsController::class, 'index']);
 
 // ============================================================
@@ -229,6 +229,48 @@ Route::group('/admin', function () {
     Route::delete('/knowledge/{hashid}', [app\admin\controller\KnowledgeController::class, 'articleDestroy']);
     Route::get('/chat-record', [app\admin\controller\KnowledgeController::class, 'chatRecords']);
     Route::get('/chat-stats', [app\admin\controller\KnowledgeController::class, 'chatStats']);
+
+    // ============================================================
+    // 物业管理 — 第5批：审批/通知/投票/支付
+    // ============================================================
+    // 审批类型
+    Route::get('/approval-type', [app\admin\controller\ApprovalController::class, 'types']);
+    Route::post('/approval-type', [app\admin\controller\ApprovalController::class, 'typeStore']);
+    Route::put('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeUpdate']);
+    Route::delete('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeDestroy']);
+    // 审批实例
+    Route::get('/approval', [app\admin\controller\ApprovalController::class, 'index']);
+    Route::get('/approval/{hashid}', [app\admin\controller\ApprovalController::class, 'show']);
+    Route::post('/approval', [app\admin\controller\ApprovalController::class, 'submit']);
+    Route::put('/approval/{hashid}/approve', [app\admin\controller\ApprovalController::class, 'approve']);
+    Route::get('/approval/my-pending', [app\admin\controller\ApprovalController::class, 'myPending']);
+    // 通知模板
+    Route::get('/notification-template', [app\admin\controller\NotificationController::class, 'templates']);
+    Route::post('/notification-template', [app\admin\controller\NotificationController::class, 'templateStore']);
+    Route::put('/notification-template/{hashid}', [app\admin\controller\NotificationController::class, 'templateUpdate']);
+    Route::delete('/notification-template/{hashid}', [app\admin\controller\NotificationController::class, 'templateDestroy']);
+    // 通知
+    Route::get('/notification', [app\admin\controller\NotificationController::class, 'index']);
+    Route::post('/notification/send', [app\admin\controller\NotificationController::class, 'send']);
+    // 投票
+    Route::get('/vote', [app\admin\controller\VoteController::class, 'index']);
+    Route::post('/vote', [app\admin\controller\VoteController::class, 'store']);
+    Route::get('/vote/{hashid}', [app\admin\controller\VoteController::class, 'show']);
+    Route::put('/vote/{hashid}', [app\admin\controller\VoteController::class, 'update']);
+    Route::delete('/vote/{hashid}', [app\admin\controller\VoteController::class, 'destroy']);
+    Route::get('/vote/{hashid}/options', [app\admin\controller\VoteController::class, 'options']);
+    Route::post('/vote/{hashid}/option', [app\admin\controller\VoteController::class, 'optionStore']);
+    Route::put('/vote/{hashid}/option/{optionHashid}', [app\admin\controller\VoteController::class, 'optionUpdate']);
+    Route::delete('/vote/{hashid}/option/{optionHashid}', [app\admin\controller\VoteController::class, 'optionDestroy']);
+    Route::get('/vote/{hashid}/records', [app\admin\controller\VoteController::class, 'records']);
+    Route::get('/vote/{hashid}/statistics', [app\admin\controller\VoteController::class, 'statistics']);
+    Route::put('/vote/{hashid}/publish', [app\admin\controller\VoteController::class, 'publish']);
+    Route::put('/vote/{hashid}/end', [app\admin\controller\VoteController::class, 'end']);
+    // 支付订单
+    Route::get('/payment-order', [app\admin\controller\PaymentController::class, 'orders']);
+    Route::get('/payment-order/{hashid}', [app\admin\controller\PaymentController::class, 'orderShow']);
+    Route::post('/payment-order/{hashid}/refund', [app\admin\controller\PaymentController::class, 'refund']);
+    Route::get('/payment-order/statistics', [app\admin\controller\PaymentController::class, 'statistics']);
 })->middleware([
     app\middleware\AdminAuth::class,
     app\middleware\AdminPermission::class,
@@ -254,6 +296,13 @@ Route::group('/api', function () {
 // 安装向导（.installed 锁定前可访问）
 Route::get('/install', [app\admin\controller\InstallController::class, 'index']);
 Route::post('/install', [app\admin\controller\InstallController::class, 'store']);
+
+// ============================================================
+// 支付回调（第三方服务器调用，无需 JWT / ApiVersion 中间件，
+// 签名验证由 PaymentController 回调方法内部自行处理）
+// ============================================================
+Route::post('/payment/wechat/callback', [app\admin\controller\PaymentController::class, 'callbackWechat']);
+Route::post('/payment/alipay/callback', [app\admin\controller\PaymentController::class, 'callbackAlipay']);
 
 // 关闭默认路由
 Route::disableDefaultRoute();

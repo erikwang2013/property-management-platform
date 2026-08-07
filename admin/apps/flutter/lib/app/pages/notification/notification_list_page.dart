@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import 'notification_controller.dart';
+import '../../config/api_config.dart';
 
 class NotificationListPage extends GetView<NotificationController> {
   const NotificationListPage({super.key});

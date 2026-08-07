@@ -2,7 +2,10 @@
   "apiType": "stageMode",
   "buildOption": {
     "arkOptions": {
-      "runtimeOnly": false
+      "runtimeOnly": {
+        "sources": [],
+        "packages": []
+      }
     }
   },
   "buildOptionSet": [
@@ -22,7 +25,7 @@
     {
       "name": "default",
       "source": {
-        "root": "./src/main"
+        "sourceRoots": ["./src/main"]
       }
     },
     {

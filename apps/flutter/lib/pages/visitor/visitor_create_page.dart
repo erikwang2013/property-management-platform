@@ -41,6 +41,6 @@ class _VisitorCreatePageState extends State<VisitorCreatePage> {
         const SizedBox(height: 16), TextFormField(controller: _reason, decoration: const InputDecoration(labelText: '访问事由'), maxLines: 3),
         const SizedBox(height: 24), ElevatedButton(onPressed: _submit, child: const Text('提交预约')),
       ]))))),
-    );
+    ));
   }
 }

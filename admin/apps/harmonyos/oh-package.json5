@@ -1,5 +1,6 @@
 {
   "name": "open-admin",
+  "modelVersion": "5.0.0",
   "version": "1.0.0",
   "description": "开放管理后台 - 鸿蒙客户端",
   "main": "",

@@ -80,7 +80,7 @@ class OwnerListPage extends GetView<OwnerController> {
         const SizedBox(height: 12),
         TextField(controller: idCard, decoration: const InputDecoration(labelText: '身份证号', isDense: true)),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [DropdownMenuItem(value: 1, child: Text('启用')), DropdownMenuItem(value: 0, child: Text('禁用'))],
           onChanged: (v) => st(() => status = v ?? 1)),
       ])),
@@ -90,7 +90,7 @@ class OwnerListPage extends GetView<OwnerController> {
           if (name.text.trim().isEmpty) return;
           try {
             final d = {'name': name.text.trim(), 'phone': phone.text.trim(), 'id_card': idCard.text.trim(), 'status': status};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

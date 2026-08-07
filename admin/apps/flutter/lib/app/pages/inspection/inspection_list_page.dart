@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import '../../widgets/base_crud_controller.dart';
+import '../../config/api_config.dart';
 
 class InspectionTaskController extends BaseCrudController {
   final tasks = <Map<String, dynamic>>[].obs;
@@ -44,7 +45,7 @@ class InspectionListPage extends GetView<InspectionTaskController> {
             if((t['status']as int? ?? 0)==1)IconButton(icon:const Icon(Icons.check,size:18,color:Colors.blue),tooltip:'完成',onPressed:()=>c.completeTask(id)),
             IconButton(icon:const Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:t)),
             IconButton(icon:const Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:t['name']??'');if(p!=null)c.deleteItem(id,p);}),
-          ]))])]);
+          ]))]);
         }).toList());
       })),
       Obx(() => PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -55,6 +56,6 @@ class InspectionListPage extends GetView<InspectionTaskController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑任务':'新增任务'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:n,decoration:const InputDecoration(labelText:'任务名称',isDense:true)),const SizedBox(height:12),TextField(controller:ins,decoration:const InputDecoration(labelText:'巡检人',isDense:true)),const SizedBox(height:12),TextField(controller:dt,decoration:const InputDecoration(labelText:'计划日期',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'inspector_name':ins.text.trim(),'scheduled_date':dt.text.trim()};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.inspectionTask,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'inspector_name':ins.text.trim(),'scheduled_date':dt.text.trim()};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.inspectionTask,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }

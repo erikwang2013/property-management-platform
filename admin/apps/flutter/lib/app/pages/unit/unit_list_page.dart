@@ -64,7 +64,7 @@ class UnitListPage extends GetView<UnitController> {
         const SizedBox(height: 12),
         TextField(controller: floors, decoration: const InputDecoration(labelText: '楼层数', isDense: true), keyboardType: TextInputType.number),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [DropdownMenuItem(value: 1, child: Text('启用')), DropdownMenuItem(value: 0, child: Text('禁用'))],
           onChanged: (v) => st(() => status = v ?? 1)),
       ]),
@@ -74,7 +74,7 @@ class UnitListPage extends GetView<UnitController> {
           if (name.text.trim().isEmpty) return;
           try {
             final d = {'name': name.text.trim(), 'floor_count': int.tryParse(floors.text) ?? 0, 'status': status};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

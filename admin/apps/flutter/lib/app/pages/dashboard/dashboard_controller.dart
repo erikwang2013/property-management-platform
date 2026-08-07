@@ -43,6 +43,18 @@ class DashboardController extends GetxController {
     }).toList();
   }
 
+  List<Map<String, dynamic>> get pieLegend {
+    final userStatus = distribution['user_status'] as List<dynamic>? ?? [];
+    const colors = [Color(0xFF1677FF), Color(0xFF52C41A)];
+    return userStatus.asMap().entries.map((e) {
+      final item = e.value as Map<String, dynamic>;
+      return {
+        'color': colors[e.key % colors.length],
+        'name': item['name'] ?? '状态${e.key + 1}',
+      };
+    }).toList();
+  }
+
   @override
   void onInit() {
     super.onInit();

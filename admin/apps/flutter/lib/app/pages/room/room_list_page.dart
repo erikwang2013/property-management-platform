@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
-import '../../widgets/detail_card.dart';
 import 'room_controller.dart';
 
 class RoomListPage extends GetView<RoomController> {
@@ -69,30 +68,30 @@ class RoomListPage extends GetView<RoomController> {
         TextField(controller: area, decoration: const InputDecoration(labelText: '面积(m²)', isDense: true), keyboardType: TextInputType.number),
         const SizedBox(height: 12),
         Obx(() => DropdownButtonFormField<String>(
-          value: communityId, decoration: const InputDecoration(labelText: '小区', isDense: true),
+          initialValue: communityId, decoration: const InputDecoration(labelText: '小区', isDense: true),
           items: ctrl.communities.map((c) => DropdownMenuItem(value: c['id']?.toString(), child: Text(c['name'] ?? ''))).toList(),
           onChanged: (v) { st(() { communityId = v; buildingId = null; unitId = null; }); if (v != null) ctrl.loadBuildings(v); },
         )),
         const SizedBox(height: 12),
         Obx(() => DropdownButtonFormField<String>(
-          value: buildingId, decoration: const InputDecoration(labelText: '楼栋', isDense: true),
+          initialValue: buildingId, decoration: const InputDecoration(labelText: '楼栋', isDense: true),
           items: ctrl.buildings.map((b) => DropdownMenuItem(value: b['id']?.toString(), child: Text(b['name'] ?? ''))).toList(),
           onChanged: (v) { st(() { buildingId = v; unitId = null; }); if (v != null) ctrl.loadUnits(v); },
         )),
         const SizedBox(height: 12),
         Obx(() => DropdownButtonFormField<String>(
-          value: unitId, decoration: const InputDecoration(labelText: '单元', isDense: true),
+          initialValue: unitId, decoration: const InputDecoration(labelText: '单元', isDense: true),
           items: ctrl.units.map((u) => DropdownMenuItem(value: u['id']?.toString(), child: Text(u['name'] ?? ''))).toList(),
           onChanged: (v) => st(() => unitId = v),
         )),
         const SizedBox(height: 12),
         Obx(() => DropdownButtonFormField<String>(
-          value: roomTypeId, decoration: const InputDecoration(labelText: '户型', isDense: true),
+          initialValue: roomTypeId, decoration: const InputDecoration(labelText: '户型', isDense: true),
           items: ctrl.roomTypes.map((rt) => DropdownMenuItem(value: rt['id']?.toString(), child: Text(rt['name'] ?? ''))).toList(),
           onChanged: (v) => st(() => roomTypeId = v),
         )),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [
             DropdownMenuItem(value: 0, child: Text('空置')), DropdownMenuItem(value: 1, child: Text('已售')),
             DropdownMenuItem(value: 2, child: Text('出租')), DropdownMenuItem(value: 3, child: Text('自住')),
@@ -104,7 +103,7 @@ class RoomListPage extends GetView<RoomController> {
           if (number.text.trim().isEmpty) return;
           try {
             final d = {'room_number': number.text.trim(), 'area': double.tryParse(area.text), 'community_id': communityId, 'building_id': buildingId, 'unit_id': unitId, 'room_type_id': roomTypeId, 'status': status};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

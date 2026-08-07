@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'parking_controller.dart';
+import '../../config/api_config.dart';
 
 class ParkingVehicleListPage extends GetView<ParkingVehicleController> {
   const ParkingVehicleListPage({super.key});
@@ -63,7 +64,7 @@ class ParkingVehicleListPage extends GetView<ParkingVehicleController> {
           if (plate.text.trim().isEmpty) return;
           try {
             final d = {'plate_number': plate.text.trim(), 'owner_name': owner.text.trim()};
-            if (isEdit) await c.updateItem(data!['id'], d); else { await c.api.post(ApiConfig.parkingVehicle, data: d); c.loadItems(reset: true); }
+            if (isEdit) { await c.updateItem(data['id'], d); } else { await c.api.post(ApiConfig.parkingVehicle, data: d); c.loadItems(reset: true); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

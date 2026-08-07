@@ -11,6 +11,7 @@ use app\model\AdminUser;
 use support\Redis;
 use support\Request;
 use support\Response;
+use support\Log;
 
 class AdminPermission
 {
@@ -32,9 +33,14 @@ class AdminPermission
             return $next($request);
         }
 
+        // 带参数的路径（如 /admin/user/{id}）无法与 seed 中的资源级 slug 精确匹配，
+        // 逐级去掉末尾段做前缀回退，直到命中或只剩方法名（如 get.admin/user/{id} → get.admin/user）
         $requiredPermission = strtolower($method) . '.' . trim($path, '/');
+        while (!in_array($requiredPermission, $permissions, true) && str_contains($requiredPermission, '/')) {
+            $requiredPermission = substr($requiredPermission, 0, (int) strrpos($requiredPermission, '/'));
+        }
 
-        if (!in_array($requiredPermission, $permissions)) {
+        if (!in_array($requiredPermission, $permissions, true)) {
             return json(['code' => 403, 'message' => '无权限访问', 'data' => []]);
         }
 
@@ -50,7 +56,9 @@ class AdminPermission
             if ($cached) {
                 return json_decode($cached, true);
             }
-        } catch (\Throwable) {}
+        } catch (\Throwable $e) {
+            Log::error('Redis unavailable, skip permission cache read: ' . $e->getMessage());
+        }
 
         $user = AdminUser::find($adminId);
         if (!$user) return [];
@@ -66,7 +74,9 @@ class AdminPermission
 
         try {
             Redis::setex($cacheKey, self::CACHE_TTL, json_encode($permissions));
-        } catch (\Throwable) {}
+        } catch (\Throwable $e) {
+            Log::error('Redis unavailable, skip permission cache write: ' . $e->getMessage());
+        }
 
         return $permissions;
     }

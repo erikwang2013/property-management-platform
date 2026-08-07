@@ -58,7 +58,7 @@ class ComplaintListPage extends GetView<ComplaintController> {
   void _visitDialog(BuildContext ctx, ComplaintController c, String hid) {
     String sat = '满意';
     showDialog(context: ctx, builder: (_) => StatefulBuilder(builder: (_, st) => AlertDialog(
-      title: const Text('回访'), content: DropdownButtonFormField<String>(value: sat, decoration: const InputDecoration(labelText: '满意度', isDense: true),
+      title: const Text('回访'), content: DropdownButtonFormField<String>(initialValue: sat, decoration: const InputDecoration(labelText: '满意度', isDense: true),
         items: const [DropdownMenuItem(value:'满意',child:Text('满意')),DropdownMenuItem(value:'一般',child:Text('一般')),DropdownMenuItem(value:'不满意',child:Text('不满意'))],
         onChanged: (v) => st(() => sat = v ?? '满意')),
       actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')), ElevatedButton(onPressed: () async { await c.visit(hid, sat); if (ctx.mounted) Navigator.pop(ctx); }, child: const Text('提交'))],

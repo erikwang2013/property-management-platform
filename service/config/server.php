@@ -17,7 +17,8 @@
  */
 
 return [
-    'listen' => 'http://0.0.0.0:8788',
+    // 监听地址，可用环境变量 SERVER_LISTEN 覆盖（如本地端口冲突时）
+    'listen' => getenv('SERVER_LISTEN') ?: 'http://0.0.0.0:8788',
     'name' => 'property-service',
     'event_loop' => '',
     'stop_timeout' => 2,

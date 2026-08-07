@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'vote_controller.dart';
+import '../../config/api_config.dart';
 
 class VoteListPage extends GetView<VoteController> {
   const VoteListPage({super.key});
@@ -32,6 +33,6 @@ class VoteListPage extends GetView<VoteController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑投票':'发起投票'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:t,decoration:const InputDecoration(labelText:'投票标题',isDense:true)),const SizedBox(height:12),TextField(controller:end,decoration:const InputDecoration(labelText:'截止时间',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(t.text.isEmpty)return;try{final d={'title':t.text.trim(),'end_time':end.text.trim()};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.vote,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(t.text.isEmpty)return;try{final d={'title':t.text.trim(),'end_time':end.text.trim()};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.vote,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }

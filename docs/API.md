@@ -43,6 +43,25 @@
 }
 ```
 
+#### POST /api/captcha/verify
+校验点击验证码。
+
+请求参数:
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| key | string | 验证码 key，由 generate 返回 |
+| clicks | array | 点击坐标 [{x, y}, ...] |
+
+响应:
+```json
+{
+  "code": 0,
+  "data": { "valid": true }
+}
+```
+
+验证失败时 `code` 为 422，`data.valid` 为 `false`。
+
 #### POST /api/auth/login
 管理员登录。
 
@@ -463,6 +482,9 @@ OpenAPI 文档。
 
 #### POST /api/captcha/generate
 获取点击验证码。（与管理端相同）
+
+#### POST /api/captcha/verify
+校验点击验证码。（请求/响应与管理端相同）
 
 #### POST /api/auth/login
 业主登录。

@@ -15,7 +15,13 @@
       "launchType": "singleton",
       "startWindowIcon": "$media:app_icon",
       "startWindowBackground": "$color:start_window_background",
+      "exported": true,
       "skills": [{ "actions": ["action.system.home"], "entities": ["entity.system.home"] }]
-    }]
+    }],
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      }
+    ]
   }
 }

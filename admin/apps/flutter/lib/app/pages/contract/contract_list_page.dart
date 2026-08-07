@@ -62,7 +62,7 @@ class ContractListPage extends GetView<ContractController> {
         const SizedBox(height: 12), TextField(controller: amount, decoration: const InputDecoration(labelText: '金额', isDense: true)),
         const SizedBox(height: 12), TextField(controller: end, decoration: const InputDecoration(labelText: '到期日(YYYY-MM-DD)', isDense: true)),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [DropdownMenuItem(value:1,child:Text('生效中')),DropdownMenuItem(value:0,child:Text('草稿')),DropdownMenuItem(value:2,child:Text('已到期'))],
           onChanged: (v) => st(() => status = v ?? 1)),
       ])),
@@ -72,7 +72,7 @@ class ContractListPage extends GetView<ContractController> {
           if (no.text.trim().isEmpty) return;
           try {
             final d = {'contract_no': no.text.trim(), 'party_name': party.text.trim(), 'amount': double.tryParse(amount.text), 'end_date': end.text.trim(), 'status': status};
-            if (isEdit) await c.updateItem(data!['id'], d); else await c.create(d);
+            if (isEdit) { await c.updateItem(data['id'], d); } else { await c.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

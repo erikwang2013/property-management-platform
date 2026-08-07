@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'cleaning_controller.dart';
+import '../../config/api_config.dart';
 
 class CleaningAreaListPage extends GetView<CleaningAreaController> {
   const CleaningAreaListPage({super.key});
@@ -25,7 +26,7 @@ class CleaningAreaListPage extends GetView<CleaningAreaController> {
           rows: c.areas.map((a){final id=a['id'].toString();return DataRow(cells:[
             DataCell(Text(a['name']??'')),DataCell(Text(a['cleaner_name']??'-')),DataCell(Text(a['frequency']??'-')),DataCell(StatusChip(status:a['status']as int?)),
             DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:a)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:a['name']??'');if(p!=null)c.deleteItem(id,p);})])),
-          ]));}).toList(),
+          ]);}).toList(),
         );
       })),
       Obx(() => PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -36,7 +37,7 @@ class CleaningAreaListPage extends GetView<CleaningAreaController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑区域':'新增区域'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:n,decoration:const InputDecoration(labelText:'区域名称',isDense:true)),const SizedBox(height:12),TextField(controller:cl,decoration:const InputDecoration(labelText:'负责人',isDense:true)),const SizedBox(height:12),TextField(controller:freq,decoration:const InputDecoration(labelText:'频次',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'cleaner_name':cl.text.trim(),'frequency':freq.text.trim()};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.cleaningArea,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'cleaner_name':cl.text.trim(),'frequency':freq.text.trim()};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.cleaningArea,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }
 

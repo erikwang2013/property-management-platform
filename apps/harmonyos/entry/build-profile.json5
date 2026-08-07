@@ -1,0 +1,23 @@
+{
+  "apiType": "stageMode",
+  "buildOption": {
+    "arkOptions": {
+      "runtimeOnly": {
+        "sources": [],
+        "packages": []
+      }
+    }
+  },
+  "buildOptionSet": [],
+  "targets": [
+    {
+      "name": "default",
+      "source": {
+        "sourceRoots": ["./src/main"]
+      }
+    },
+    {
+      "name": "ohosTest"
+    }
+  ]
+}

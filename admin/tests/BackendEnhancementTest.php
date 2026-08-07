@@ -41,7 +41,8 @@ class BackendEnhancementTest extends TestCase
         $this->assertEquals(0, $body['code']);
         $this->assertEquals('open-admin', $body['data']['app']);
         $this->assertEquals('1.0', $body['data']['version']);
-        $this->assertEquals(PHP_VERSION, $body['data']['php']);
+        // 健康检查已脱敏：不暴露 PHP 版本等内部信息
+        $this->assertArrayNotHasKey('php', $body['data']);
         $this->assertArrayHasKey('database', $body['data']);
         $this->assertArrayHasKey('redis', $body['data']);
         $this->assertArrayHasKey('elasticsearch', $body['data']);
@@ -201,10 +202,12 @@ class BackendEnhancementTest extends TestCase
 
     public function test_middleware_config_contains_cors_and_rate_limit(): void
     {
+        // webman v2: 全局中间件必须挂在 '@' 键下（v1 的扁平数组会抛 "Bad middleware config"）
         $middlewares = require __DIR__ . '/../config/middleware.php';
         $this->assertIsArray($middlewares);
-        $this->assertContains(\app\middleware\Cors::class, $middlewares, '全局中间件应包含 Cors');
-        $this->assertContains(\app\middleware\RateLimit::class, $middlewares, '全局中间件应包含 RateLimit');
+        $globals = $middlewares['@'] ?? [];
+        $this->assertContains(\app\middleware\Cors::class, $globals, '全局中间件应包含 Cors');
+        $this->assertContains(\app\middleware\RateLimit::class, $globals, '全局中间件应包含 RateLimit');
     }
 
     // ============================================================

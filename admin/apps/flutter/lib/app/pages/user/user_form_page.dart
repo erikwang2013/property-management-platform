@@ -93,7 +93,7 @@ class _UserFormPageState extends State<UserFormPage> {
                 const SizedBox(height: 16),
                 TextFormField(controller: _emailCtrl, decoration: const InputDecoration(labelText: '邮箱')),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<int>(value: _status, decoration: const InputDecoration(labelText: '状态'), items: const [
+                DropdownButtonFormField<int>(initialValue: _status, decoration: const InputDecoration(labelText: '状态'), items: const [
                   DropdownMenuItem(value: 1, child: Text('启用')),
                   DropdownMenuItem(value: 0, child: Text('禁用')),
                 ], onChanged: (v) => setState(() => _status = v ?? 1)),

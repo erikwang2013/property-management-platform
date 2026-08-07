@@ -11,13 +11,22 @@ use support\Request;
 use support\Response;
 
 /**
- * 仪表盘与运维
- * @Apidoc\Group("dashboard")
+ * 文件上传
+ * @Apidoc\Group("upload")
  */
 class UploadController extends BaseController
 {
     private array $allowExts = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'xlsx', 'docx'];
     private int $maxSize = 10 * 1024 * 1024;
+    private array $allowMimes = [
+        'jpg'  => ['image/jpeg'],
+        'jpeg' => ['image/jpeg'],
+        'png'  => ['image/png'],
+        'gif'  => ['image/gif'],
+        'pdf'  => ['application/pdf'],
+        'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip'],
+        'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip'],
+    ];
 
     public function upload(Request $request): Response
     {
@@ -37,6 +46,12 @@ class UploadController extends BaseController
 
         if ($file->getSize() > $this->maxSize) {
             return $this->fail('文件大小不能超过 10MB', 422);
+        }
+
+        // 按文件真实内容校验 MIME，防止扩展名伪造（如 PHP 脚本改名 .jpg 上传）
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($file->getPathname());
+        if (!in_array($mime, $this->allowMimes[$ext] ?? [], true)) {
+            return $this->fail('文件内容与扩展名不符，已拒绝', 422);
         }
 
         $dateDir  = date('Y-m-d');

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'sla_controller.dart';
+import '../../config/api_config.dart';
 
 class SlaRuleListPage extends GetView<SlaRuleController> {
   const SlaRuleListPage({super.key});
@@ -31,7 +32,7 @@ class SlaRuleListPage extends GetView<SlaRuleController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>AlertDialog(title:Text(isEdit?'编辑规则':'新增规则'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:n,decoration:const InputDecoration(labelText:'规则名称',isDense:true)),const SizedBox(height:12),TextField(controller:h,decoration:const InputDecoration(labelText:'超时时限(小时)',isDense:true)),const SizedBox(height:12),TextField(controller:act,decoration:const InputDecoration(labelText:'升级动作',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'timeout_hours':int.tryParse(h.text),'escalation_action':act.text.trim()};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.slaRule,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(n.text.isEmpty)return;try{final d={'name':n.text.trim(),'timeout_hours':int.tryParse(h.text),'escalation_action':act.text.trim()};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.slaRule,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],));
   }
 }
 class SlaRecordListPage extends GetView<SlaRecordController> {

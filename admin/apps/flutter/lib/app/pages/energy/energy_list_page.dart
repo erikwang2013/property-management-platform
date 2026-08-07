@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'energy_controller.dart';
+import '../../config/api_config.dart';
 
 class EnergyMeterListPage extends GetView<EnergyMeterController> {
   const EnergyMeterListPage({super.key});
@@ -24,7 +25,7 @@ class EnergyMeterListPage extends GetView<EnergyMeterController> {
           rows:c.meters.map((m){final id=m['id'].toString();return DataRow(cells:[
             DataCell(Text(m['meter_no']??'')),DataCell(Text(m['type']??'-')),DataCell(Text(m['location']??'-')),DataCell(StatusChip(status:m['status']as int?)),
             DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:m)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:m['meter_no']??'');if(p!=null)c.deleteItem(id,p);})])),
-          ]));}).toList(),
+          ]);}).toList(),
         );
       })),
       Obx(() => PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -35,9 +36,9 @@ class EnergyMeterListPage extends GetView<EnergyMeterController> {
     final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>StatefulBuilder(builder:(_,st)=>AlertDialog(title:Text(isEdit?'编辑仪表':'新增仪表'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:no,decoration:const InputDecoration(labelText:'仪表编号',isDense:true)),const SizedBox(height:12),
-      DropdownButtonFormField<String>(value:type,decoration:const InputDecoration(labelText:'类型',isDense:true),items:const[DropdownMenuItem(value:'electric',child:Text('电')),DropdownMenuItem(value:'water',child:Text('水')),DropdownMenuItem(value:'gas',child:Text('气'))],onChanged:(v)=>st(()=>type=v??'electric')),
+      DropdownButtonFormField<String>(initialValue:type,decoration:const InputDecoration(labelText:'类型',isDense:true),items:const[DropdownMenuItem(value:'electric',child:Text('电')),DropdownMenuItem(value:'water',child:Text('水')),DropdownMenuItem(value:'gas',child:Text('气'))],onChanged:(v)=>st(()=>type=v??'electric')),
       const SizedBox(height:12),TextField(controller:loc,decoration:const InputDecoration(labelText:'位置',isDense:true)),
-    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(no.text.isEmpty)return;try{final d={'meter_no':no.text.trim(),'type':type,'location':loc.text.trim()};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.energyMeter,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(no.text.isEmpty)return;try{final d={'meter_no':no.text.trim(),'type':type,'location':loc.text.trim()};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.energyMeter,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
   }
 }
 class EnergyRecordListPage extends GetView<EnergyRecordController> {

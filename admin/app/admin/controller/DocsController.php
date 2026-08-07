@@ -13,15 +13,15 @@ use support\Response;
 /**
  * OpenAPI 3.0 文档端点
  * GET /api/docs — 返回 JSON 格式 API 规范
- */
-/**
- * 仪表盘与运维
- * @Apidoc\Group("dashboard")
+ * 由环境变量 DOCS_ENABLED 控制（默认关闭，生产环境暴露接口结构存在信息泄露风险）
  */
 class DocsController
 {
     public function index(Request $request): Response
     {
+        if (!(bool) getenv('DOCS_ENABLED')) {
+            return json(['code' => 404, 'message' => 'Not Found'], 404);
+        }
         return json($this->buildSpec());
     }
 
@@ -103,7 +103,6 @@ class DocsController
                         'properties' => [
                             'app'           => ['type' => 'string', 'example' => 'open-admin'],
                             'version'       => ['type' => 'string', 'example' => '1.0'],
-                            'php'           => ['type' => 'string', 'example' => '8.3.0'],
                             'database'      => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
                             'redis'         => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
                             'elasticsearch' => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
@@ -153,7 +152,7 @@ class DocsController
         ];
     }
 
-    private function path(string $summary, string $method, array $notes = [], ?string $responseRef = null, ?array $params = null): array
+    private function path(string $summary, string $method, ?array $notes = [], ?string $responseRef = null, ?array $params = null): array
     {
         $methods = explode('|', strtoupper($method));
         $path = [];
@@ -161,7 +160,7 @@ class DocsController
         foreach ($methods as $m) {
             $op = [
                 'summary' => $summary,
-                'description' => implode(' | ', $notes),
+                'description' => implode(' | ', $notes ?? []),
                 'responses' => ['200' => ['description' => '成功']],
             ];
 

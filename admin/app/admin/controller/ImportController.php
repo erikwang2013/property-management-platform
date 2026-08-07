@@ -11,13 +11,16 @@ use app\model\AdminUser;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use support\Request;
 use support\Response;
+use support\Log;
 
 /**
- * 仪表盘与运维
- * @Apidoc\Group("dashboard")
+ * Excel 导入
+ * @Apidoc\Group("import")
  */
 class ImportController extends BaseController
 {
+    private int $maxSize = 10 * 1024 * 1024;
+
     public function users(Request $request): Response
     {
         $file = $request->file('file');
@@ -28,6 +31,10 @@ class ImportController extends BaseController
         $ext = strtolower($file->getUploadExtension() ?: '');
         if (!in_array($ext, ['xlsx', 'xls'], true)) {
             return $this->fail('仅支持 .xlsx 或 .xls 文件', 422);
+        }
+
+        if ($file->getSize() > $this->maxSize) {
+            return $this->fail('文件大小不能超过 10MB', 422);
         }
 
         $tmpPath = $file->getRealPath();
@@ -89,8 +96,10 @@ class ImportController extends BaseController
                 $user->save();
                 $success++;
             } catch (\Throwable $e) {
+                // 不向客户端返回原始异常（可能泄露 SQL/连接信息），仅记服务端日志
                 $failed++;
-                $errors[] = ['row' => $idx + 1, 'reason' => $e->getMessage()];
+                Log::error("Import user failed at row {$idx}: " . $e->getMessage());
+                $errors[] = ['row' => $idx + 1, 'reason' => '导入失败，请检查数据格式'];
             }
         }
 

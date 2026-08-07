@@ -23,7 +23,7 @@ return [
             // 数据库端口
             'port' => (int)(getenv('DB_PORT') ?: 3306),
             // 数据库名
-            'database' => getenv('DB_DATABASE') ?: 'open_admin',
+            'database' => getenv('DB_DATABASE') ?: 'property_management',
             // 用户名
             'username' => getenv('DB_USERNAME') ?: 'root',
             // 密码

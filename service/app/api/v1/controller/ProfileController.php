@@ -73,16 +73,16 @@ class ProfileController extends BaseController
             return $this->fail('用户不存在', 404);
         }
 
-        if ($request->has('name')) {
+        if ($request->input('name') !== null) {
             $owner->name = $request->input('name');
         }
-        if ($request->has('email')) {
+        if ($request->input('email') !== null) {
             $owner->email = $request->input('email', '');
         }
-        if ($request->has('gender')) {
+        if ($request->input('gender') !== null) {
             $owner->gender = (int) $request->input('gender');
         }
-        if ($request->has('birthday')) {
+        if ($request->input('birthday') !== null) {
             $owner->birthday = $request->input('birthday', '') ?: null;
         }
 

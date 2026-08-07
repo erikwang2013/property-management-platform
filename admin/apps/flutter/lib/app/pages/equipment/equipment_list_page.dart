@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'equipment_controller.dart';
+import '../../config/api_config.dart';
 
 class EquipmentListPage extends GetView<EquipmentController> {
   const EquipmentListPage({super.key});
@@ -58,7 +59,7 @@ class EquipmentListPage extends GetView<EquipmentController> {
         const SizedBox(height: 12), TextField(controller: code, decoration: const InputDecoration(labelText: '编号', isDense: true)),
         const SizedBox(height: 12), TextField(controller: loc, decoration: const InputDecoration(labelText: '位置', isDense: true)),
         const SizedBox(height: 12),
-        DropdownButtonFormField<int>(value: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
+        DropdownButtonFormField<int>(initialValue: status, decoration: const InputDecoration(labelText: '状态', isDense: true),
           items: const [DropdownMenuItem(value:1,child:Text('正常')),DropdownMenuItem(value:0,child:Text('停用')),DropdownMenuItem(value:2,child:Text('维修中'))],
           onChanged: (v) => st(() => status = v ?? 1)),
       ]),
@@ -68,7 +69,7 @@ class EquipmentListPage extends GetView<EquipmentController> {
           if (name.text.trim().isEmpty) return;
           try {
             final d = {'name': name.text.trim(), 'code': code.text.trim(), 'location': loc.text.trim(), 'status': status};
-            if (isEdit) await c.updateItem(data!['id'], d); else { await c.api.post(ApiConfig.equipment, data: d); c.loadItems(reset: true); }
+            if (isEdit) { await c.updateItem(data['id'], d); } else { await c.api.post(ApiConfig.equipment, data: d); c.loadItems(reset: true); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

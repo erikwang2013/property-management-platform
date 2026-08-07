@@ -5,6 +5,7 @@
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
 import { ApiService } from '../services/ApiService';
+import { PasswordRequest } from '../model/Models';
 
 @Entry
 @Component
@@ -37,10 +38,8 @@ struct ProfilePage {
       return;
     }
     try {
-      const resp = await this.api.put('/service/profile/password', {
-        old_password: this.oldPassword,
-        new_password: this.newPassword
-      }) as Record<string, Object>;
+      const params: PasswordRequest = { old_password: this.oldPassword, new_password: this.newPassword };
+      const resp = await this.api.put('/service/profile/password', params) as Record<string, Object>;
       if (resp['code'] === 0) {
         promptAction.showToast({ message: '密码修改成功' });
         this.oldPassword = '';
@@ -55,7 +54,7 @@ struct ProfilePage {
 
   async logout(): Promise<void> {
     try {
-      await this.api.post('/service/profile/logout', {});
+      await this.api.post('/service/profile/logout');
     } catch (e) {}
     router.replaceUrl({ url: 'pages/LoginPage' });
   }

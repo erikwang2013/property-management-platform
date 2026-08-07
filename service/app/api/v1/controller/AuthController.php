@@ -44,7 +44,7 @@ class AuthController extends BaseController
         $phone = $request->input('phone', '');
         $password = $request->input('password', '');
         $captchaKey = $request->input('captcha_key', '');
-        $clicks = $request->input('clicks', []);
+        $clicks = $this->normalizeClicks($request->input('clicks', []));
 
         if (empty($phone) || empty($password)) {
             return $this->fail('手机号和密码不能为空', 422);
@@ -55,12 +55,28 @@ class AuthController extends BaseController
         }
 
         $owner = Owner::where('phone', $phone)->first();
-        if (!$owner || !password_verify($password, $owner->password)) {
+
+        // 锁定检查必须在密码验证之前，否则锁定期间仍可无限尝试密码
+        if ($owner && $owner->locked_until && strtotime($owner->locked_until) > time()) {
+            return $this->fail('账号已被锁定，请稍后再试', 429);
+        }
+
+        // 锁定到期自动复位失败计数
+        if ($owner && $owner->locked_until && strtotime($owner->locked_until) <= time()) {
+            $owner->login_failures = 0;
+            $owner->locked_until = null;
+            $owner->save();
+        }
+
+        // 对不存在的手机号执行一次假哈希比对，避免通过响应耗时枚举账号
+        if (!$owner) {
+            password_verify($password, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
             return $this->fail('手机号或密码错误', 401);
         }
 
-        if ($owner->locked_until && strtotime($owner->locked_until) > time()) {
-            return $this->fail('账号已被锁定，请稍后再试', 429);
+        if (!password_verify($password, $owner->password)) {
+            $this->recordLoginFailure($owner);
+            return $this->fail('手机号或密码错误', 401);
         }
 
         if ($owner->status !== 1) {
@@ -94,7 +110,7 @@ class AuthController extends BaseController
         $password = $request->input('password', '');
         $name = $request->input('name', '');
         $captchaKey = $request->input('captcha_key', '');
-        $clicks = $request->input('clicks', []);
+        $clicks = $this->normalizeClicks($request->input('clicks', []));
 
         if (empty($phone) || empty($password) || empty($name)) {
             return $this->fail('手机号、密码、姓名不能为空', 422);
@@ -143,6 +159,31 @@ class AuthController extends BaseController
         } catch (\Exception $e) {
             return $this->fail('Token已过期，请重新登录', 401);
         }
+    }
+
+    /** 记录登录失败：连续 5 次失败锁定账号 15 分钟 */
+    private function recordLoginFailure(Owner $owner): void
+    {
+        $owner->login_failures = (int) $owner->login_failures + 1;
+        if ($owner->login_failures >= 5) {
+            $owner->locked_until = date('Y-m-d H:i:s', time() + 900);
+            $owner->login_failures = 0;
+        }
+        $owner->save();
+    }
+
+    /** 归一化点击坐标为数字索引 [[x,y],...]（验证码包契约要求） */
+    private function normalizeClicks(mixed $clicks): array
+    {
+        if (!is_array($clicks)) {
+            return [];
+        }
+        return array_map(function ($c) {
+            if (is_array($c) && isset($c[0], $c[1]) && !isset($c['x'])) {
+                return [(int)$c[0], (int)$c[1]];
+            }
+            return [(int)($c['x'] ?? 0), (int)($c['y'] ?? 0)];
+        }, $clicks);
     }
 
     private function maskPhone(string $phone): string

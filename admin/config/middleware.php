@@ -11,7 +11,10 @@
  */
 
 return [
-    app\middleware\Cors::class,
-    app\middleware\SecurityFilter::class,
-    app\middleware\RateLimit::class,
+    // webman v2: 全局中间件必须挂在 '@' 键下（v1 的扁平数组会抛 "Bad middleware config"）
+    '@' => [
+        app\middleware\Cors::class,
+        app\middleware\SecurityFilter::class,
+        app\middleware\RateLimit::class,
+    ],
 ];

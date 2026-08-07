@@ -19,7 +19,8 @@
 use support\Request;
 
 return [
-    'debug' => true,
+    // 调试模式由环境变量 APP_DEBUG 控制（生产环境必须设为 false，避免堆栈泄漏到客户端）
+    'debug' => (bool) getenv('APP_DEBUG'),
     'error_reporting' => E_ALL,
     'default_timezone' => 'Asia/Shanghai',
     'request_class' => Request::class,

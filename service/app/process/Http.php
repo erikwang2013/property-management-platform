@@ -16,6 +16,9 @@ class Http
 {
     public static function init(): void
     {
+        // 先加载全部配置，否则 config('server') 为 null，端口永远回退硬编码值
+        require_once base_path() . '/support/bootstrap.php';
+
         $config = config('server');
         $worker = new Worker(
             $config['listen'] ?? 'http://0.0.0.0:8788',
@@ -26,7 +29,6 @@ class Http
         $worker->user = $config['user'] ?? '';
 
         $worker->onWorkerStart = function ($worker) {
-            require_once base_path() . '/support/bootstrap.php';
             $app = new App(
                 config('app.request_class', Request::class),
                 Log::channel('default'),

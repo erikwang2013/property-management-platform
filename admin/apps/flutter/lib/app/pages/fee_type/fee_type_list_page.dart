@@ -67,7 +67,7 @@ class FeeTypeListPage extends GetView<FeeTypeController> {
           if (name.text.trim().isEmpty) return;
           try {
             final d = {'name': name.text.trim(), 'unit_price': double.tryParse(price.text), 'billing_cycle': cycle.text.trim(), 'category': cat.text.trim()};
-            if (isEdit) await ctrl.updateItem(data!['id'], d); else await ctrl.create(d);
+            if (isEdit) { await ctrl.updateItem(data['id'], d); } else { await ctrl.create(d); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

@@ -3,6 +3,7 @@
  */
 import 'package:get/get.dart';
 import '../../config/api_config.dart';
+import '../../services/api_service.dart';
 
 class ComplaintController extends GetxController {
   final api = ApiService();

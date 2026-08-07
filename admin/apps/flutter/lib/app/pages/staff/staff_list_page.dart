@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'staff_controller.dart';
+import '../../config/api_config.dart';
 
 class StaffListPage extends GetView<StaffController> {
   const StaffListPage({super.key});
@@ -34,7 +35,7 @@ class StaffListPage extends GetView<StaffController> {
             DataCell(Text(s['name']??'')),DataCell(Text(s['employee_no']??'-')),DataCell(Text(s['department']??'-')),DataCell(Text(s['phone']??'-')),
             DataCell(StatusChip(status:s['status']as int?,labels:const{0:'离职',1:'在职'})),
             DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:s)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:s['name']??'');if(p!=null)c.deleteItem(id,p);})])),
-          ]));}).toList());
+          ]);}).toList());
       })),
       Obx(() => PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
     ]);
@@ -44,7 +45,7 @@ class StaffListPage extends GetView<StaffController> {
     int st=data?['status']as int? ?? 1;final isEdit=data!=null;
     showDialog(context:ctx,builder:(_)=>StatefulBuilder(builder:(_,sb)=>AlertDialog(title:Text(isEdit?'编辑员工':'新增员工'),content:Column(mainAxisSize:MainAxisSize.min,children:[
       TextField(controller:name,decoration:const InputDecoration(labelText:'姓名',isDense:true)),const SizedBox(height:12),TextField(controller:no,decoration:const InputDecoration(labelText:'工号',isDense:true)),const SizedBox(height:12),TextField(controller:dept,decoration:const InputDecoration(labelText:'部门',isDense:true)),const SizedBox(height:12),TextField(controller:phone,decoration:const InputDecoration(labelText:'手机号',isDense:true)),const SizedBox(height:12),
-      DropdownButtonFormField<int>(value:st,decoration:const InputDecoration(labelText:'状态',isDense:true),items:const[DropdownMenuItem(value:1,child:Text('在职')),DropdownMenuItem(value:0,child:Text('离职'))],onChanged:(v)=>sb(()=>st=v??1)),
-    ])),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(name.text.isEmpty)return;try{final d={'name':name.text.trim(),'employee_no':no.text.trim(),'department':dept.text.trim(),'phone':phone.text.trim(),'status':st};if(isEdit)await c.updateItem(data!['id'],d);else{await c.api.post(ApiConfig.staff,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
+      DropdownButtonFormField<int>(initialValue:st,decoration:const InputDecoration(labelText:'状态',isDense:true),items:const[DropdownMenuItem(value:1,child:Text('在职')),DropdownMenuItem(value:0,child:Text('离职'))],onChanged:(v)=>sb(()=>st=v??1)),
+    ]),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('取消')),ElevatedButton(onPressed:()async{if(name.text.isEmpty)return;try{final d={'name':name.text.trim(),'employee_no':no.text.trim(),'department':dept.text.trim(),'phone':phone.text.trim(),'status':st};if (isEdit) { await c.updateItem(data['id'], d); }else{await c.api.post(ApiConfig.staff,data:d);c.loadItems(reset:true);}if(ctx.mounted)Navigator.pop(ctx);}catch(e){if(ctx.mounted)Get.snackbar('错误','操作失败:$e');}},child:Text(isEdit?'保存':'创建'))],)));
   }
 }

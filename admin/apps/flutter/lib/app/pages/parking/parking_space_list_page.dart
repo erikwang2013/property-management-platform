@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'parking_controller.dart';
+import '../../config/api_config.dart';
 
 class ParkingSpaceListPage extends GetView<ParkingSpaceController> {
   const ParkingSpaceListPage({super.key});
@@ -57,7 +58,7 @@ class ParkingSpaceListPage extends GetView<ParkingSpaceController> {
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         TextField(controller: num, decoration: const InputDecoration(labelText: '车位编号', isDense: true)),
         const SizedBox(height: 12),
-        DropdownButtonFormField<String>(value: type, decoration: const InputDecoration(labelText: '类型', isDense: true),
+        DropdownButtonFormField<String>(initialValue: type, decoration: const InputDecoration(labelText: '类型', isDense: true),
           items: const [DropdownMenuItem(value: 'standard', child: Text('标准')), DropdownMenuItem(value: 'large', child: Text('大型')), DropdownMenuItem(value: 'handicap', child: Text('无障碍'))],
           onChanged: (v) => st(() => type = v ?? 'standard')),
         const SizedBox(height: 12),
@@ -69,7 +70,7 @@ class ParkingSpaceListPage extends GetView<ParkingSpaceController> {
           if (num.text.trim().isEmpty) return;
           try {
             final d = {'space_number': num.text.trim(), 'type': type, 'area': double.tryParse(area.text)};
-            if (isEdit) await c.updateItem(data!['id'], d); else { await c.api.post(ApiConfig.parkingSpace, data: d); c.loadItems(reset: true); }
+            if (isEdit) { await c.updateItem(data['id'], d); } else { await c.api.post(ApiConfig.parkingSpace, data: d); c.loadItems(reset: true); }
             if (ctx.mounted) Navigator.pop(ctx);
           } catch (e) { if (ctx.mounted) Get.snackbar('错误', '操作失败: $e'); }
         }, child: Text(isEdit ? '保存' : '创建')),

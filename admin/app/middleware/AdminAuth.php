@@ -10,6 +10,7 @@ namespace app\middleware;
 use support\Request;
 use support\Response;
 use support\Redis;
+use support\Log;
 use Erikwang2013\Jwt\JWT;
 use Erikwang2013\Jwt\JWTFactory;
 use Erikwang2013\Jwt\JWTException;
@@ -43,7 +44,8 @@ class AdminAuth
                 return json(['code' => 401, 'message' => 'Token已失效，请重新登录', 'data' => []]);
             }
         } catch (\Throwable $e) {
-            // Redis down, skip blacklist check
+            // Redis down 时跳过黑名单检查（fail-open），但必须记录告警便于运维发现
+            Log::error('Redis unavailable, skip JWT blacklist check: ' . $e->getMessage());
         }
 
         try {
