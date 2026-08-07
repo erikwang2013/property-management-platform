@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Db;
 use support\Redis;
@@ -24,6 +25,10 @@ use Throwable;
  */
 class MetricsController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/metrics")
+     */
     public function index(Request $request): Response
     {
         $metrics = [];

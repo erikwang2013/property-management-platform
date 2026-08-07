@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\NotificationTemplate;
@@ -21,7 +22,8 @@ class NotificationController extends BaseController
 {
     /**
      * 模板列表
-     * GET /admin/notification-template
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/notification-template")
      */
     public function templates(Request $request): Response
     {
@@ -39,7 +41,8 @@ class NotificationController extends BaseController
 
     /**
      * 创建模板
-     * POST /admin/notification-template
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/notification-template")
      */
     public function templateStore(Request $request): Response
     {
@@ -52,7 +55,8 @@ class NotificationController extends BaseController
 
     /**
      * 更新模板
-     * PUT /admin/notification-template/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/notification-template/{hashid}")
      */
     public function templateUpdate(Request $request, string $hashid): Response
     {
@@ -68,7 +72,8 @@ class NotificationController extends BaseController
 
     /**
      * 删除模板
-     * DELETE /admin/notification-template/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/notification-template/{hashid}")
      */
     public function templateDestroy(Request $request, string $hashid): Response
     {
@@ -79,7 +84,8 @@ class NotificationController extends BaseController
 
     /**
      * 消息列表
-     * GET /admin/notification?type=&is_read=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/notification")
      */
     public function index(Request $request): Response
     {
@@ -112,7 +118,8 @@ class NotificationController extends BaseController
 
     /**
      * 手动发送通知
-     * POST /admin/notification/send
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/notification/send")
      */
     public function send(Request $request): Response
     {

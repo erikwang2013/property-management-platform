@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\FinanceIncome;
@@ -31,26 +32,46 @@ class FinanceController extends BaseController
     // 标准资源方法（Route::resource 需要，按 path 分流到收入/支出）
     // ============================================================
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/finance-income")
+     */
     public function index(Request $request)
     {
         return $this->isIncome($request) ? $this->incomeIndex($request) : $this->expenseIndex($request);
     }
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/finance-income/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         return $this->isIncome($request) ? $this->incomeShow($request, $hashid) : $this->expenseShow($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/finance-income")
+     */
     public function store(Request $request)
     {
         return $this->isIncome($request) ? $this->incomeStore($request) : $this->expenseStore($request);
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/finance-income/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         return $this->isIncome($request) ? $this->incomeUpdate($request, $hashid) : $this->expenseUpdate($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/finance-income/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         return $this->isIncome($request) ? $this->incomeDestroy($request, $hashid) : $this->expenseDestroy($request, $hashid);
@@ -328,7 +349,8 @@ class FinanceController extends BaseController
 
     /**
      * 财务统计（按月汇总收入/支出）
-     * GET /admin/finance/statistics?year=2026
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/finance/statistics")
      */
     public function statistics(Request $request)
     {

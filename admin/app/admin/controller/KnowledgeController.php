@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\ChatRecord;
@@ -26,7 +27,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 分类列表
-     * GET /admin/knowledge-category
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/knowledge-category")
      */
     public function categories(Request $request)
     {
@@ -49,7 +51,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 创建分类
-     * POST /admin/knowledge-category
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/knowledge-category")
      */
     public function categoryStore(Request $request)
     {
@@ -77,7 +80,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 更新分类
-     * PUT /admin/knowledge-category/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/knowledge-category/{hashid}")
      */
     public function categoryUpdate(Request $request, string $hashid)
     {
@@ -106,7 +110,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 删除分类
-     * DELETE /admin/knowledge-category/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/knowledge-category/{hashid}")
      */
     public function categoryDestroy(Request $request, string $hashid)
     {
@@ -140,7 +145,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 知识库文章列表
-     * GET /admin/knowledge?category_id=&keyword=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/knowledge")
      */
     public function articles(Request $request)
     {
@@ -181,7 +187,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 创建知识文章
-     * POST /admin/knowledge
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/knowledge")
      */
     public function articleStore(Request $request)
     {
@@ -203,7 +210,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 更新知识文章
-     * PUT /admin/knowledge/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/knowledge/{hashid}")
      */
     public function articleUpdate(Request $request, string $hashid)
     {
@@ -232,7 +240,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 删除知识文章
-     * DELETE /admin/knowledge/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/knowledge/{hashid}")
      */
     public function articleDestroy(Request $request, string $hashid)
     {
@@ -266,7 +275,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 聊天记录列表
-     * GET /admin/chat-record?user_id=&user_type=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/chat-record")
      */
     public function chatRecords(Request $request)
     {
@@ -302,7 +312,8 @@ class KnowledgeController extends BaseController
 
     /**
      * 聊天统计
-     * GET /admin/chat-stats
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/chat-stats")
      */
     public function chatStats(Request $request)
     {

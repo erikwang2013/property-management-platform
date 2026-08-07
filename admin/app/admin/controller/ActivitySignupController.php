@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\ActivitySignup;
 use support\Carbon;
@@ -20,6 +21,8 @@ class ActivitySignupController extends BaseController
     /**
      * 活动报名列表
      * ?activity_id=xxx&signup_status=xxx
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/activity-signup")
      */
     public function index(Request $request)
     {
@@ -57,7 +60,8 @@ class ActivitySignupController extends BaseController
 
     /**
      * 签到
-     * PUT /admin/activity-signup/{id}/checkin
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/activity-signup/{id}/checkin")
      */
     public function checkin(Request $request, string $hashid)
     {

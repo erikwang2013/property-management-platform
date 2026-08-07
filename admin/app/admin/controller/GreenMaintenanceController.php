@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\GreenMaintenance;
@@ -20,6 +21,8 @@ class GreenMaintenanceController extends BaseController
     /**
      * 绿化维护记录列表
      * ?area_id=xxx&maintenance_type=xxx&start_date=xxx&end_date=xxx
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/green-maintenance")
      */
     public function index(Request $request)
     {
@@ -61,7 +64,10 @@ class GreenMaintenanceController extends BaseController
         return $this->success($list);
     }
 
-    /** 创建绿化维护记录 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/green-maintenance")
+     */
     public function store(Request $request)
     {
         $data = $request->only([

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\EnergyMeter;
@@ -20,6 +21,8 @@ class EnergyMeterController extends BaseController
     /**
      * 能源仪表列表
      * ?room_id=xxx&meter_type=xxx&status=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/energy-meter")
      */
     public function index(Request $request)
     {
@@ -61,7 +64,10 @@ class EnergyMeterController extends BaseController
         return $this->success($list);
     }
 
-    /** 仪表详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/energy-meter/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -83,7 +89,10 @@ class EnergyMeterController extends BaseController
         ]);
     }
 
-    /** 创建仪表 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/energy-meter")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -106,7 +115,10 @@ class EnergyMeterController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新仪表 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/energy-meter/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -124,7 +136,10 @@ class EnergyMeterController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除仪表（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/energy-meter/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

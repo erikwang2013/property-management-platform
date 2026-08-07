@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
 use support\Response;
@@ -17,6 +18,10 @@ use support\Response;
  */
 class DocsController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/api/docs")
+     */
     public function index(Request $request): Response
     {
         if (!(bool) getenv('DOCS_ENABLED')) {

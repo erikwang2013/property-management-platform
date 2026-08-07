@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use app\common\EncryptionService;
@@ -22,7 +23,8 @@ class DashboardController extends BaseController
 {
     /**
      * 仪表盘数据
-     * GET /admin/dashboard
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/dashboard")
      */
     public function index(Request $request): Response
     {
@@ -156,7 +158,8 @@ class DashboardController extends BaseController
 
     /**
      * 物业管理面板统计
-     * GET /admin/dashboard/property
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/dashboard/property")
      */
     public function propertyStats(Request $request): Response
     {

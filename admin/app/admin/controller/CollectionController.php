@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\CollectionRecord;
@@ -23,7 +24,8 @@ class CollectionController extends BaseController
 {
     /**
      * 催缴策略列表
-     * GET /admin/collection-strategy
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/collection-strategy")
      */
     public function strategies(Request $request)
     {
@@ -60,7 +62,8 @@ class CollectionController extends BaseController
 
     /**
      * 创建催缴策略
-     * POST /admin/collection-strategy
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/collection-strategy")
      */
     public function strategyStore(Request $request)
     {
@@ -83,7 +86,8 @@ class CollectionController extends BaseController
 
     /**
      * 更新催缴策略
-     * PUT /admin/collection-strategy/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/collection-strategy/{hashid}")
      */
     public function strategyUpdate(Request $request, string $hashid)
     {
@@ -109,7 +113,8 @@ class CollectionController extends BaseController
 
     /**
      * 删除催缴策略
-     * DELETE /admin/collection-strategy/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/collection-strategy/{hashid}")
      */
     public function strategyDestroy(Request $request, string $hashid)
     {
@@ -139,7 +144,8 @@ class CollectionController extends BaseController
 
     /**
      * 催缴记录列表
-     * GET /admin/collection-record?bill_id=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/collection-record")
      */
     public function records(Request $request)
     {
@@ -172,8 +178,9 @@ class CollectionController extends BaseController
 
     /**
      * 手动触发催缴
-     * POST /admin/collection/run
      * 扫描逾期账单，匹配策略，生成催缴记录和通知
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/collection/run")
      */
     public function run(Request $request)
     {

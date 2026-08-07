@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\Visitor;
 use support\Request;
@@ -19,6 +20,8 @@ class VisitorController extends BaseController
     /**
      * 访客列表
      * ?status=xxx&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/visitor")
      */
     public function index(Request $request)
     {
@@ -57,8 +60,9 @@ class VisitorController extends BaseController
 
     /**
      * 审批通过（确认到访）
-     * PUT /admin/visitor/{id}/approve
      * status: 0(已预约) → 1(已到访)
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/visitor/{id}/approve")
      */
     public function approve(Request $request, string $hashid)
     {

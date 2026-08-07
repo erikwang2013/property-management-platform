@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Community;
@@ -26,7 +27,8 @@ class GroupController extends BaseController
 {
     /**
      * 集团列表
-     * GET /admin/group
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/group")
      */
     public function index(Request $request)
     {
@@ -60,7 +62,8 @@ class GroupController extends BaseController
 
     /**
      * 创建集团
-     * POST /admin/group
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/group")
      */
     public function store(Request $request)
     {
@@ -82,7 +85,8 @@ class GroupController extends BaseController
 
     /**
      * 集团详情
-     * GET /admin/group/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/group/{hashid}")
      */
     public function show(Request $request, string $hashid)
     {
@@ -111,7 +115,8 @@ class GroupController extends BaseController
 
     /**
      * 更新集团
-     * PUT /admin/group/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/group/{hashid}")
      */
     public function update(Request $request, string $hashid)
     {
@@ -136,7 +141,8 @@ class GroupController extends BaseController
 
     /**
      * 删除集团
-     * DELETE /admin/group/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/group/{hashid}")
      */
     public function destroy(Request $request, string $hashid)
     {
@@ -166,7 +172,8 @@ class GroupController extends BaseController
 
     /**
      * 集团下的小区列表
-     * GET /admin/group/{hashid}/communities
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/group/{hashid}/communities")
      */
     public function communities(Request $request, string $groupHashid)
     {
@@ -207,7 +214,8 @@ class GroupController extends BaseController
 
     /**
      * 添加小区到集团
-     * POST /admin/group/{hashid}/community
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/group/{hashid}/community")
      */
     public function addCommunity(Request $request, string $groupHashid)
     {
@@ -247,7 +255,8 @@ class GroupController extends BaseController
 
     /**
      * 从集团移除小区
-     * DELETE /admin/group/{hashid}/community/{communityHashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/group/{hashid}/community/{communityHashid}")
      */
     public function removeCommunity(Request $request, string $groupHashid, string $communityHashid)
     {
@@ -273,7 +282,8 @@ class GroupController extends BaseController
 
     /**
      * 集团汇总统计
-     * GET /admin/group/{hashid}/summary
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/group/{hashid}/summary")
      */
     public function summary(Request $request, string $groupHashid)
     {

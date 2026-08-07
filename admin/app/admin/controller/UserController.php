@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use app\common\EncryptionService;
@@ -20,7 +21,8 @@ class UserController extends BaseController
 {
     /**
      * 用户列表（分页）
-     * GET /admin/user
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/user")
      */
     public function index(Request $request): Response
     {
@@ -69,7 +71,8 @@ class UserController extends BaseController
 
     /**
      * 创建用户
-     * POST /admin/user
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/user")
      */
     public function store(Request $request): Response
     {
@@ -106,7 +109,8 @@ class UserController extends BaseController
 
     /**
      * 用户详情
-     * GET /admin/user/{id}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/user/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -124,7 +128,8 @@ class UserController extends BaseController
 
     /**
      * 更新用户
-     * PUT /admin/user/{id}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/user/{hashid}")
      */
     public function update(Request $request, string $hashid): Response
     {
@@ -156,7 +161,8 @@ class UserController extends BaseController
 
     /**
      * 删除用户（软删除，需密码二次确认）
-     * DELETE /admin/user/{id}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/user/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {
@@ -178,7 +184,8 @@ class UserController extends BaseController
 
     /**
      * 批量删除
-     * POST /admin/user/batch/destroy
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/user/batch/destroy")
      */
     public function batchDestroy(Request $request): Response
     {
@@ -215,7 +222,8 @@ class UserController extends BaseController
 
     /**
      * 批量启用/禁用
-     * POST /admin/user/batch/status
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/user/batch/status")
      */
     public function batchStatus(Request $request): Response
     {

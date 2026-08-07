@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\MallCategory;
@@ -24,7 +25,8 @@ class MallController extends BaseController
 {
     /**
      * 商品列表
-     * GET /service/mall/products?category_id=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/mall/products")
      */
     public function products(Request $request): Response
     {
@@ -66,7 +68,8 @@ class MallController extends BaseController
 
     /**
      * 商品详情
-     * GET /service/mall/product/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/mall/product/{hashid}")
      */
     public function productDetail(Request $request, string $hashid): Response
     {
@@ -100,7 +103,8 @@ class MallController extends BaseController
 
     /**
      * 创建订单
-     * POST /service/mall/order
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/mall/order")
      */
     public function createOrder(Request $request): Response
     {
@@ -168,7 +172,8 @@ class MallController extends BaseController
 
     /**
      * 我的订单
-     * GET /service/mall/orders
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/mall/orders")
      */
     public function myOrders(Request $request): Response
     {

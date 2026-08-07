@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -21,6 +22,10 @@ class ImportController extends BaseController
 {
     private int $maxSize = 10 * 1024 * 1024;
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/import/users")
+     */
     public function users(Request $request): Response
     {
         $file = $request->file('file');

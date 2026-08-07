@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -29,7 +30,8 @@ class ExportController extends BaseController
 {
     /**
      * Excel 导出
-     * POST /admin/export/excel
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/export/excel")
      */
     public function excel(Request $request): Response
     {
@@ -119,7 +121,8 @@ class ExportController extends BaseController
 
     /**
      * PDF 导出
-     * POST /admin/export/pdf
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/export/pdf")
      */
     public function pdf(Request $request): Response
     {
@@ -279,8 +282,9 @@ class ExportController extends BaseController
 
     /**
      * 物业数据 Excel 导出
-     * POST /admin/export/property-excel
      * Body: { type: 'owners'|'bills'|'payments', community_id?, conditions? }
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/export/property-excel")
      */
     public function propertyExcel(Request $request): Response
     {

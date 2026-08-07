@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminRole;
 use support\Request;
@@ -19,7 +20,8 @@ class RoleController extends BaseController
 {
     /**
      * 角色列表
-     * GET /admin/role
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/role")
      */
     public function index(Request $request): Response
     {
@@ -44,7 +46,8 @@ class RoleController extends BaseController
 
     /**
      * 创建角色
-     * POST /admin/role
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/role")
      */
     public function store(Request $request): Response
     {
@@ -75,7 +78,8 @@ class RoleController extends BaseController
 
     /**
      * 更新角色
-     * PUT /admin/role/{id}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/role/{hashid}")
      */
     public function update(Request $request, string $hashid): Response
     {
@@ -99,7 +103,8 @@ class RoleController extends BaseController
 
     /**
      * 删除角色（需密码二次确认）
-     * DELETE /admin/role/{id}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/role/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {

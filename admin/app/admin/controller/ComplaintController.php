@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\Complaint;
 use support\Request;
@@ -19,6 +20,8 @@ class ComplaintController extends BaseController
     /**
      * 投诉列表
      * ?type=xxx&status=xxx&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/complaint")
      */
     public function index(Request $request)
     {
@@ -56,7 +59,10 @@ class ComplaintController extends BaseController
         return $this->success($list);
     }
 
-    /** 投诉详情（含处理人信息） */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/complaint/{id}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -90,8 +96,9 @@ class ComplaintController extends BaseController
 
     /**
      * 处理投诉（受理）
-     * PUT /admin/complaint/{id}/handle
      * status: 1(待处理) → 2(处理中)
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/complaint/{id}/handle")
      */
     public function handle(Request $request, string $hashid)
     {
@@ -116,8 +123,9 @@ class ComplaintController extends BaseController
 
     /**
      * 回访投诉
-     * POST /admin/complaint/{id}/visit
      * status: 2(处理中) → 3(已回访)
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/complaint/{id}/visit")
      */
     public function visit(Request $request, string $hashid)
     {

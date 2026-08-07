@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\FeeBill;
@@ -22,6 +23,10 @@ use support\Response;
  */
 class HomeController extends BaseController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/home")
+     */
     public function index(Request $request): Response
     {
         $ownerId = $this->getOwnerId($request);

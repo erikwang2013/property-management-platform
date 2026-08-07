@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminPermission;
 use support\Request;
@@ -19,7 +20,8 @@ class PermissionController extends BaseController
 {
     /**
      * 权限树
-     * GET /admin/permission
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/permission")
      */
     public function index(Request $request): Response
     {
@@ -34,7 +36,8 @@ class PermissionController extends BaseController
 
     /**
      * 创建权限
-     * POST /admin/permission
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/permission")
      */
     public function store(Request $request): Response
     {
@@ -64,7 +67,8 @@ class PermissionController extends BaseController
 
     /**
      * 更新权限
-     * PUT /admin/permission/{id}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/permission/{hashid}")
      */
     public function update(Request $request, string $hashid): Response
     {
@@ -85,7 +89,8 @@ class PermissionController extends BaseController
 
     /**
      * 删除权限（需密码二次确认）
-     * DELETE /admin/permission/{id}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/permission/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {

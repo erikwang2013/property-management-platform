@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\GreenArea;
@@ -20,6 +21,8 @@ class GreenAreaController extends BaseController
     /**
      * 绿化区域列表
      * ?community_id=xxx&status=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/green-area")
      */
     public function index(Request $request)
     {
@@ -60,7 +63,10 @@ class GreenAreaController extends BaseController
         return $this->success($list);
     }
 
-    /** 绿化区域详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/green-area/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -84,7 +90,10 @@ class GreenAreaController extends BaseController
         ]);
     }
 
-    /** 创建绿化区域 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/green-area")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -107,7 +116,10 @@ class GreenAreaController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新绿化区域 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/green-area/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -125,7 +137,10 @@ class GreenAreaController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除绿化区域（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/green-area/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

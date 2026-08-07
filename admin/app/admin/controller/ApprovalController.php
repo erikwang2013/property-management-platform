@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Approval;
@@ -23,7 +24,8 @@ class ApprovalController extends BaseController
 {
     /**
      * 审批类型列表
-     * GET /admin/approval-type
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/approval-type")
      */
     public function types(Request $request): Response
     {
@@ -41,7 +43,8 @@ class ApprovalController extends BaseController
 
     /**
      * 创建审批类型
-     * POST /admin/approval-type
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/approval-type")
      */
     public function typeStore(Request $request): Response
     {
@@ -56,7 +59,8 @@ class ApprovalController extends BaseController
 
     /**
      * 更新审批类型
-     * PUT /admin/approval-type/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/approval-type/{hashid}")
      */
     public function typeUpdate(Request $request, string $hashid): Response
     {
@@ -72,7 +76,8 @@ class ApprovalController extends BaseController
 
     /**
      * 删除审批类型
-     * DELETE /admin/approval-type/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/approval-type/{hashid}")
      */
     public function typeDestroy(Request $request, string $hashid): Response
     {
@@ -83,7 +88,8 @@ class ApprovalController extends BaseController
 
     /**
      * 审批实例列表
-     * GET /admin/approval?status=&page=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/approval")
      */
     public function index(Request $request): Response
     {
@@ -116,7 +122,8 @@ class ApprovalController extends BaseController
 
     /**
      * 审批详情（含审批记录）
-     * GET /admin/approval/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/approval/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -153,7 +160,8 @@ class ApprovalController extends BaseController
 
     /**
      * 提交审批
-     * POST /admin/approval
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/approval")
      */
     public function submit(Request $request): Response
     {
@@ -211,7 +219,8 @@ class ApprovalController extends BaseController
 
     /**
      * 审批操作
-     * PUT /admin/approval/{hashid}/approve
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/approval/{hashid}/approve")
      */
     public function approve(Request $request, string $hashid): Response
     {
@@ -293,7 +302,8 @@ class ApprovalController extends BaseController
 
     /**
      * 我的待审批列表
-     * GET /admin/approval/pending?approver_id=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/approval/my-pending")
      */
     public function myPending(Request $request): Response
     {

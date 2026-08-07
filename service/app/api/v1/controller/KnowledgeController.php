@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\ChatRecord;
@@ -22,7 +23,8 @@ class KnowledgeController extends BaseController
 {
     /**
      * 智能问答
-     * POST /service/chat/ask
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/chat/ask")
      */
     public function ask(Request $request): Response
     {

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use support\Request;
@@ -31,6 +32,10 @@ class ProfileController extends BaseController
         return self::$jwt;
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/profile")
+     */
     public function updateProfile(Request $request): Response
     {
         $adminId = $request->adminId ?? 0;
@@ -58,6 +63,10 @@ class ProfileController extends BaseController
         return $this->success($this->encodeIds($data), '更新成功');
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/profile/password")
+     */
     public function updatePassword(Request $request): Response
     {
         $adminId = $request->adminId ?? 0;
@@ -91,6 +100,10 @@ class ProfileController extends BaseController
         return $this->success([], '密码修改成功');
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/profile/logout")
+     */
     public function logout(Request $request): Response
     {
         $token = $request->header('Authorization', '');

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\ParkingSpace;
@@ -23,7 +24,8 @@ class ParkingController extends BaseController
 {
     /**
      * 我的车辆列表（含车位信息）
-     * GET /service/parking/vehicles
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/parking/vehicles")
      */
     public function vehicles(Request $request): Response
     {
@@ -60,7 +62,8 @@ class ParkingController extends BaseController
 
     /**
      * 我的车位列表
-     * GET /service/parking/spaces
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/parking/spaces")
      */
     public function spaces(Request $request): Response
     {
@@ -94,7 +97,8 @@ class ParkingController extends BaseController
 
     /**
      * 停车记录列表
-     * GET /service/parking/records?page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/parking/records")
      */
     public function records(Request $request): Response
     {

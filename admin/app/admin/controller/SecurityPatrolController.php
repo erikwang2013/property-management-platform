@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\SecurityPatrol;
@@ -21,6 +22,8 @@ class SecurityPatrolController extends BaseController
     /**
      * 安防巡逻列表
      * ?community_id=xxx&status=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/security-patrol")
      */
     public function index(Request $request)
     {
@@ -61,7 +64,10 @@ class SecurityPatrolController extends BaseController
         return $this->success($list);
     }
 
-    /** 巡逻详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/security-patrol/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -102,7 +108,10 @@ class SecurityPatrolController extends BaseController
         ]);
     }
 
-    /** 创建巡逻路线 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/security-patrol")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -131,7 +140,10 @@ class SecurityPatrolController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新巡逻路线 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/security-patrol/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -154,7 +166,10 @@ class SecurityPatrolController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除巡逻路线（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/security-patrol/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

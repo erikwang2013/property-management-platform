@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\RepairOrder;
@@ -23,7 +24,8 @@ class RepairController extends BaseController
 {
     /**
      * 报修列表
-     * GET /api/repairs?status=0&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/repairs")
      */
     public function index(Request $request): Response
     {
@@ -59,7 +61,8 @@ class RepairController extends BaseController
 
     /**
      * 报修详情
-     * GET /api/repairs/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/repair/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -113,7 +116,8 @@ class RepairController extends BaseController
 
     /**
      * 创建报修
-     * POST /api/repairs
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/repair")
      */
     public function store(Request $request): Response
     {
@@ -175,7 +179,8 @@ class RepairController extends BaseController
 
     /**
      * 取消报修
-     * DELETE /api/repairs/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/service/repair/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {
@@ -210,7 +215,8 @@ class RepairController extends BaseController
 
     /**
      * 评价报修
-     * POST /api/repairs/{hashid}/rate
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/repair/{hashid}/rate")
      */
     public function rate(Request $request, string $hashid): Response
     {

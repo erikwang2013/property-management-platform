@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\FaceInfo;
 use InvalidArgumentException;
@@ -19,7 +20,8 @@ class FaceController extends BaseController
 {
     /**
      * 人脸记录列表
-     * GET /admin/face?verify_status=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/face")
      */
     public function index(Request $request)
     {
@@ -57,7 +59,8 @@ class FaceController extends BaseController
 
     /**
      * 审核通过
-     * PUT /admin/face/{hashid}/verify
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/face/{hashid}/verify")
      */
     public function verify(Request $request, string $hashid)
     {
@@ -81,7 +84,8 @@ class FaceController extends BaseController
 
     /**
      * 审核拒绝
-     * PUT /admin/face/{hashid}/reject
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/face/{hashid}/reject")
      */
     public function reject(Request $request, string $hashid)
     {

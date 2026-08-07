@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\Visitor;
@@ -22,7 +23,8 @@ class VisitorController extends BaseController
 {
     /**
      * 访客预约列表
-     * GET /service/visitors?status=0&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/visitors")
      */
     public function index(Request $request): Response
     {
@@ -60,7 +62,8 @@ class VisitorController extends BaseController
 
     /**
      * 创建访客预约
-     * POST /service/visitor
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/visitor")
      */
     public function store(Request $request): Response
     {
@@ -120,7 +123,8 @@ class VisitorController extends BaseController
 
     /**
      * 更新访客预约
-     * PUT /service/visitor/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/service/visitor/{hashid}")
      */
     public function update(Request $request, string $hashid): Response
     {
@@ -153,7 +157,8 @@ class VisitorController extends BaseController
 
     /**
      * 取消访客预约（需密码确认）
-     * DELETE /service/visitor/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/service/visitor/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {

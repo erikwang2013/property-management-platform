@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\Notification;
@@ -22,7 +23,8 @@ class NotificationController extends BaseController
 {
     /**
      * 消息通知列表（当前业主）
-     * GET /service/notifications
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/notifications")
      */
     public function index(Request $request): Response
     {
@@ -57,7 +59,8 @@ class NotificationController extends BaseController
 
     /**
      * 标记已读
-     * PUT /service/notification/{hashid}/read
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/service/notification/{hashid}/read")
      */
     public function markRead(Request $request, string $hashid): Response
     {
@@ -86,7 +89,8 @@ class NotificationController extends BaseController
 
     /**
      * 一键全部已读
-     * PUT /service/notifications/read-all
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/service/notifications/read-all")
      */
     public function markAllRead(Request $request): Response
     {

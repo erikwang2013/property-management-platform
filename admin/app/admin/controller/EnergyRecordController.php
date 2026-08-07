@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\EnergyRecord;
@@ -21,6 +22,8 @@ class EnergyRecordController extends BaseController
     /**
      * 能源抄表记录列表
      * ?meter_id=xxx&room_id=xxx&start_date=xxx&end_date=xxx
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/energy-record")
      */
     public function index(Request $request)
     {
@@ -66,7 +69,10 @@ class EnergyRecordController extends BaseController
         return $this->success($list);
     }
 
-    /** 创建抄表记录 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/energy-record")
+     */
     public function store(Request $request)
     {
         $data = $request->only([

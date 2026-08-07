@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Building;
@@ -121,7 +122,10 @@ class UnitController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新单元 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/unit/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id = $this->decodeId($hashid);
@@ -138,7 +142,10 @@ class UnitController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除单元（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/unit/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId = $request->adminId;

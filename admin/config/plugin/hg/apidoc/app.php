@@ -11,41 +11,68 @@ return [
         // 文档描述
         'desc'               => '管理员端全部接口文档，按功能分组。',
         // 应用/版本分组
+        // 每个 app 通过显式 controllers 列表限定所属控制器（与类上 @Apidoc\Group 注解一致），
+        // 避免 hg/apidoc 按 path 目录扫描时把全部控制器重复塞进每个分组
         'apps'           => [
             [
                 'title' => '通用接口',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'common',
+                'controllers' => ['AuthController', 'CaptchaController'],
             ],
             [
                 'title' => '仪表盘与运维',
                 'path'  => 'app\admin\controller',
                 'key'   => 'dashboard',
+                'controllers' => ['DashboardController', 'HealthController', 'MetricsController', 'DocsController', 'InstallController'],
             ],
             [
                 'title' => '系统管理（用户/角色/权限/配置/日志）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'system',
+                'controllers' => ['ConfigController', 'LogController', 'PermissionController', 'ProfileController', 'RoleController', 'UserController'],
             ],
             [
                 'title' => '物业管理-核心业务（小区/楼栋/房产/业主/费用/报修/公告）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'property-core',
+                'controllers' => ['AnnouncementController', 'BuildingController', 'CommunityController', 'FeeBillController', 'FeePaymentController', 'FeeTypeController', 'OwnerController', 'RepairController', 'RoomController', 'RoomTypeController', 'TenantController', 'UnitController'],
             ],
             [
                 'title' => '物业管理-辅助业务（停车/设备/投诉/访客/合同/财务）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'property-aux',
+                'controllers' => ['ComplaintController', 'ContractController', 'EquipmentController', 'EquipmentMaintenanceController', 'FinanceController', 'ParkingRecordController', 'ParkingSpaceController', 'ParkingVehicleController', 'VisitorController'],
             ],
             [
                 'title' => '物业管理-高级功能（巡逻/保洁/绿化/活动/能耗/员工）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'property-adv',
+                'controllers' => ['ActivityController', 'ActivitySignupController', 'CleaningAreaController', 'CleaningRecordController', 'EnergyMeterController', 'EnergyRecordController', 'GreenAreaController', 'GreenMaintenanceController', 'PatrolRecordController', 'SecurityPatrolController', 'StaffController'],
             ],
             [
                 'title' => '扩展功能（通知/审批/支付/投票/SLA/催缴/巡检/商城/人脸/集团/问答）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'extensions',
+                'controllers' => ['ApprovalController', 'CollectionController', 'FaceController', 'GroupController', 'InspectionController', 'KnowledgeController', 'MallController', 'NotificationController', 'PaymentController', 'SlaController', 'VoteController'],
+            ],
+            [
+                'title' => '导出（Excel/PDF，敏感数据脱敏）',
+                'path'  => 'app\admin\controller',
+                'key'   => 'export',
+                'controllers' => ['ExportController'],
+            ],
+            [
+                'title' => '导入（Excel）',
+                'path'  => 'app\admin\controller',
+                'key'   => 'import',
+                'controllers' => ['ImportController'],
+            ],
+            [
+                'title' => '文件上传',
+                'path'  => 'app\admin\controller',
+                'key'   => 'upload',
+                'controllers' => ['UploadController'],
             ],
         ],
         // 通用注释定义

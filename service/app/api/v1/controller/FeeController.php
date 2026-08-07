@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\FeeBill;
@@ -25,7 +26,8 @@ class FeeController extends BaseController
 {
     /**
      * 账单列表（分页）
-     * GET /api/fees/bills?status=0&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/fees/bills")
      */
     public function bills(Request $request): Response
     {
@@ -65,7 +67,8 @@ class FeeController extends BaseController
 
     /**
      * 账单详情
-     * GET /api/fees/bills/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/fees/bill/{hashid}")
      */
     public function billDetail(Request $request, string $hashid): Response
     {
@@ -124,7 +127,8 @@ class FeeController extends BaseController
 
     /**
      * 缴费记录
-     * GET /api/fees/payments?page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/fees/payments")
      */
     public function payments(Request $request): Response
     {
@@ -154,7 +158,8 @@ class FeeController extends BaseController
 
     /**
      * 在线缴费
-     * POST /api/fees/pay
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/fees/pay")
      */
     public function pay(Request $request): Response
     {
@@ -256,7 +261,8 @@ class FeeController extends BaseController
 
     /**
      * 费用统计
-     * GET /api/fees/statistics?year=2026
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/fees/statistics")
      */
     public function statistics(Request $request): Response
     {

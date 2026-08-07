@@ -21,7 +21,9 @@ use support\Request;
 return [
     // 调试模式由环境变量 APP_DEBUG 控制（生产环境必须设为 false，避免堆栈泄漏到客户端）
     'debug' => (bool) getenv('APP_DEBUG'),
-    'error_reporting' => E_ALL,
+    // E_DEPRECATED 不转为异常：hg/apidoc 注解类在 PHP 8.3 产生 dynamic property 弃用通知，
+    // webman 默认将弃用转 ErrorException 会导致 /apidoc 接口 500
+    'error_reporting' => E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED,
     'default_timezone' => 'Asia/Shanghai',
     'request_class' => Request::class,
     'public_path' => base_path() . DIRECTORY_SEPARATOR . 'public',

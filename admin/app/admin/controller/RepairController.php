@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\RepairOrder;
@@ -165,7 +166,10 @@ class RepairController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新报修单 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/repair/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id = $this->decodeId($hashid);
@@ -190,7 +194,10 @@ class RepairController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除报修单（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/repair/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId = $request->adminId;

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\common\SnowflakeService;
@@ -104,6 +105,10 @@ class AuthController extends BaseController
         ], '登录成功');
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/register")
+     */
     public function register(Request $request): Response
     {
         $phone = $request->input('phone', '');
@@ -144,6 +149,10 @@ class AuthController extends BaseController
         return $this->success([], '注册成功');
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/refresh")
+     */
     public function refresh(Request $request): Response
     {
         $refreshToken = $request->input('refresh_token', '');

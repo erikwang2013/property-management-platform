@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\CleaningArea;
@@ -20,6 +21,8 @@ class CleaningAreaController extends BaseController
     /**
      * 保洁区域列表
      * ?community_id=xxx&status=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/cleaning-area")
      */
     public function index(Request $request)
     {
@@ -60,7 +63,10 @@ class CleaningAreaController extends BaseController
         return $this->success($list);
     }
 
-    /** 保洁区域详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/cleaning-area/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -84,7 +90,10 @@ class CleaningAreaController extends BaseController
         ]);
     }
 
-    /** 创建保洁区域 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/cleaning-area")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -107,7 +116,10 @@ class CleaningAreaController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新保洁区域 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/cleaning-area/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -125,7 +137,10 @@ class CleaningAreaController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除保洁区域（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/cleaning-area/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

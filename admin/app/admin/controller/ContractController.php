@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Contract;
@@ -20,6 +21,8 @@ class ContractController extends BaseController
     /**
      * 合同列表
      * ?contract_type=xxx&status=xxx&keyword=搜索词&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/contract")
      */
     public function index(Request $request)
     {
@@ -66,7 +69,10 @@ class ContractController extends BaseController
         return $this->success($list);
     }
 
-    /** 合同详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/contract/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -96,7 +102,10 @@ class ContractController extends BaseController
         ]);
     }
 
-    /** 创建合同 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/contract")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -123,7 +132,10 @@ class ContractController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新合同 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/contract/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -145,7 +157,10 @@ class ContractController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除合同（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/contract/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\CleaningRecord;
@@ -20,6 +21,8 @@ class CleaningRecordController extends BaseController
     /**
      * 保洁记录列表
      * ?area_id=xxx&staff_id=xxx&status=xxx&start_date=xxx&end_date=xxx
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/cleaning-record")
      */
     public function index(Request $request)
     {
@@ -67,7 +70,10 @@ class CleaningRecordController extends BaseController
         return $this->success($list);
     }
 
-    /** 创建保洁记录 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/cleaning-record")
+     */
     public function store(Request $request)
     {
         $data = $request->only([

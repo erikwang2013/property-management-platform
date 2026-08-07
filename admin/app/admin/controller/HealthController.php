@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
 use support\Response;
@@ -19,6 +20,10 @@ use Throwable;
  */
 class HealthController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/health")
+     */
     public function index(Request $request): Response
     {
         // 健康检查仅暴露服务可用性，不返回 PHP 版本、ES 集群状态等内部信息

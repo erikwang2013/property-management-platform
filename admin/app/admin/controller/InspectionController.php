@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\InspectionCheckpoint;
@@ -23,26 +24,46 @@ class InspectionController extends BaseController
     // 标准资源方法（Route::resource 需要，委托到 tasks 方法）
     // ============================================================
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/inspection-task")
+     */
     public function index(Request $request)
     {
         return $this->tasks($request);
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/inspection-task")
+     */
     public function store(Request $request)
     {
         return $this->taskStore($request);
     }
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         return $this->taskShow($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         return $this->taskUpdate($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         return $this->taskDestroy($request, $hashid);
@@ -224,7 +245,8 @@ class InspectionController extends BaseController
 
     /**
      * 获取任务的巡检点列表
-     * GET /admin/inspection-task/{hashid}/checkpoints
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}/checkpoints")
      */
     public function checkpoints(Request $request, string $taskHashid)
     {
@@ -258,7 +280,8 @@ class InspectionController extends BaseController
 
     /**
      * 开始巡检
-     * PUT /admin/inspection-task/{hashid}/start
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}/start")
      */
     public function startTask(Request $request, string $hashid)
     {
@@ -286,7 +309,8 @@ class InspectionController extends BaseController
 
     /**
      * 完成巡检
-     * PUT /admin/inspection-task/{hashid}/complete
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/inspection-task/{hashid}/complete")
      */
     public function completeTask(Request $request, string $hashid)
     {
@@ -314,7 +338,8 @@ class InspectionController extends BaseController
 
     /**
      * 巡检点打卡
-     * PUT /admin/inspection-checkpoint/{hashid}/checkin
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/inspection-checkpoint/{hashid}/checkin")
      */
     public function checkin(Request $request, string $checkpointHashid)
     {

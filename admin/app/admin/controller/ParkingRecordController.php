@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\ParkingRecord;
 use support\Request;
@@ -19,6 +20,8 @@ class ParkingRecordController extends BaseController
     /**
      * 停车记录列表
      * ?vehicle_id=xxx&start_date=2026-01-01&end_date=2026-12-31&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/parking-record")
      */
     public function index(Request $request)
     {

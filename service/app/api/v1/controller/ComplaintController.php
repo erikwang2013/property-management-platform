@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use support\Request;
@@ -22,7 +23,8 @@ class ComplaintController extends BaseController
 {
     /**
      * 投诉列表
-     * GET /api/complaints?page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/complaints")
      */
     public function index(Request $request): Response
     {
@@ -67,7 +69,8 @@ class ComplaintController extends BaseController
 
     /**
      * 投诉详情
-     * GET /api/complaints/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/complaint/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -108,7 +111,8 @@ class ComplaintController extends BaseController
 
     /**
      * 创建投诉
-     * POST /api/complaints
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/complaint")
      */
     public function store(Request $request): Response
     {
@@ -153,7 +157,8 @@ class ComplaintController extends BaseController
 
     /**
      * 满意度评价
-     * POST /api/complaints/{hashid}/satisfaction
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/complaint/{hashid}/satisfaction")
      */
     public function satisfaction(Request $request, string $hashid): Response
     {

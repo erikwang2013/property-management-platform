@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\FeeBill;
 use app\model\PaymentOrder;
@@ -20,7 +21,8 @@ class PaymentController extends BaseController
 {
     /**
      * 支付订单列表
-     * GET /admin/payment-order?status=&channel=&page=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/payment-order")
      */
     public function orders(Request $request): Response
     {
@@ -56,7 +58,8 @@ class PaymentController extends BaseController
 
     /**
      * 支付订单详情（含账单信息）
-     * GET /admin/payment-order/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/payment-order/{hashid}")
      */
     public function orderShow(Request $request, string $hashid): Response
     {
@@ -99,7 +102,8 @@ class PaymentController extends BaseController
 
     /**
      * 退款
-     * POST /admin/payment-order/{hashid}/refund
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/payment-order/{hashid}/refund")
      */
     public function refund(Request $request, string $hashid): Response
     {
@@ -137,7 +141,8 @@ class PaymentController extends BaseController
 
     /**
      * 微信支付回调
-     * POST /admin/payment/callback/wechat (公开路由)
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/payment/wechat/callback")
      */
     public function callbackWechat(Request $request): Response
     {
@@ -190,7 +195,8 @@ class PaymentController extends BaseController
 
     /**
      * 支付宝支付回调
-     * POST /admin/payment/callback/alipay (公开路由)
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/payment/alipay/callback")
      */
     public function callbackAlipay(Request $request): Response
     {
@@ -243,7 +249,8 @@ class PaymentController extends BaseController
 
     /**
      * 支付统计
-     * GET /admin/payment/statistics
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/payment-order/statistics")
      */
     public function statistics(Request $request): Response
     {

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\CommunityActivity;
@@ -20,6 +21,8 @@ class ActivityController extends BaseController
     /**
      * 社区活动列表
      * ?community_id=xxx&status=xxx&category=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/activity")
      */
     public function index(Request $request)
     {
@@ -68,7 +71,10 @@ class ActivityController extends BaseController
         return $this->success($list);
     }
 
-    /** 活动详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/activity/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -101,7 +107,10 @@ class ActivityController extends BaseController
         ]);
     }
 
-    /** 创建活动 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/activity")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -126,7 +135,10 @@ class ActivityController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新活动 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/activity/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -146,7 +158,10 @@ class ActivityController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除活动（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/activity/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

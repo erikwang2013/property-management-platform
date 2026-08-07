@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\ParkingSpace;
@@ -20,6 +21,8 @@ class ParkingSpaceController extends BaseController
     /**
      * 停车位列表
      * ?community_id=xxx&keyword=搜索词&status=状态&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/parking-space")
      */
     public function index(Request $request)
     {
@@ -57,7 +60,10 @@ class ParkingSpaceController extends BaseController
         return $this->success($list);
     }
 
-    /** 停车位详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/parking-space/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -79,7 +85,10 @@ class ParkingSpaceController extends BaseController
         ]);
     }
 
-    /** 创建停车位 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/parking-space")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -101,7 +110,10 @@ class ParkingSpaceController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新停车位 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/parking-space/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -119,7 +131,10 @@ class ParkingSpaceController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除停车位（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/parking-space/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

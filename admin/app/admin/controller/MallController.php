@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\MallCategory;
@@ -32,27 +33,47 @@ class MallController extends BaseController
     // 标准资源方法（Route::resource 需要，按 path 分流到分类/商品）
     // ============================================================
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/mall-category")
+     */
     public function index(Request $request)
     {
         return $this->isCategory($request) ? $this->categories($request) : $this->products($request);
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/mall-category")
+     */
     public function store(Request $request)
     {
         return $this->isCategory($request) ? $this->categoryStore($request) : $this->productStore($request);
     }
 
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/mall-category/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         // 商品仅支持show
         return $this->isCategory($request) ? $this->fail('不支持的操作', 405) : $this->productDetail($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/mall-category/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         return $this->isCategory($request) ? $this->categoryUpdate($request, $hashid) : $this->productUpdate($request, $hashid);
     }
 
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/mall-category/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         return $this->isCategory($request) ? $this->categoryDestroy($request, $hashid) : $this->productDestroy($request, $hashid);
@@ -332,7 +353,8 @@ class MallController extends BaseController
 
     /**
      * 订单列表
-     * GET /admin/mall-order?status=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/mall-order")
      */
     public function orders(Request $request)
     {
@@ -371,7 +393,8 @@ class MallController extends BaseController
 
     /**
      * 订单详情
-     * GET /admin/mall-order/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/mall-order/{hashid}")
      */
     public function orderShow(Request $request, string $hashid)
     {
@@ -409,7 +432,8 @@ class MallController extends BaseController
 
     /**
      * 发货
-     * PUT /admin/mall-order/{hashid}/ship
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/mall-order/{hashid}/ship")
      */
     public function ship(Request $request, string $hashid)
     {
@@ -439,7 +463,8 @@ class MallController extends BaseController
 
     /**
      * 退款
-     * POST /admin/mall-order/{hashid}/refund
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/mall-order/{hashid}/refund")
      */
     public function refundOrder(Request $request, string $hashid)
     {

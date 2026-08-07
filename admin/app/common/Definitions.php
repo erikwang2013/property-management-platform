@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\common;
+use hg\apidoc\annotation as Apidoc;
 
 /**
  * Apidoc 通用定义

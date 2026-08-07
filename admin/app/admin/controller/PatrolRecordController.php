@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\PatrolRecord;
@@ -20,6 +21,8 @@ class PatrolRecordController extends BaseController
     /**
      * 巡逻记录列表
      * ?patrol_id=xxx&staff_id=xxx&start_date=xxx&end_date=xxx&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/patrol-record")
      */
     public function index(Request $request)
     {
@@ -62,7 +65,10 @@ class PatrolRecordController extends BaseController
         return $this->success($list);
     }
 
-    /** 创建巡逻记录 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/patrol-record")
+     */
     public function store(Request $request)
     {
         $data = $request->only([

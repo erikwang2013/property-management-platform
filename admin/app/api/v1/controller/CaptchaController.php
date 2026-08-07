@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
 use support\Response;
@@ -14,15 +15,15 @@ use Throwable;
 /**
  * 通用接口
  * @Apidoc\Group("common")
- * @ApidocSort(1)
+ * @Apidoc\Sort(1)
  */
 class CaptchaController
 {
     /**
      * 生成点击验证码
-     * POST /api/captcha/generate
-     *
      * 返回: { key, image (base64), extra: { texts: [{order, text}] } }
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/captcha/generate")
      */
     public function generate(Request $request): Response
     {
@@ -53,9 +54,9 @@ class CaptchaController
 
     /**
      * 校验点击验证码
-     * POST /api/captcha/verify
-     *
      * 请求: { key, clicks: [{x, y}, ...] }
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/captcha/verify")
      */
     public function verify(Request $request): Response
     {

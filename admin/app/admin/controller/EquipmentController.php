@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Equipment;
@@ -20,6 +21,8 @@ class EquipmentController extends BaseController
     /**
      * 设备列表
      * ?community_id=xxx&category=xxx&status=xxx&keyword=搜索词&page_size=20
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/equipment")
      */
     public function index(Request $request)
     {
@@ -68,7 +71,10 @@ class EquipmentController extends BaseController
         return $this->success($list);
     }
 
-    /** 设备详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/equipment/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -95,7 +101,10 @@ class EquipmentController extends BaseController
         ]);
     }
 
-    /** 创建设备 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/equipment")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -119,7 +128,10 @@ class EquipmentController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新设备 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/equipment/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -138,7 +150,10 @@ class EquipmentController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除设备（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/equipment/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;

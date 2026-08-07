@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\RoomOwner;
@@ -25,7 +26,8 @@ class VoteController extends BaseController
 {
     /**
      * 投票列表（业主所在小区的进行中投票）
-     * GET /service/votes
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/votes")
      */
     public function index(Request $request): Response
     {
@@ -74,7 +76,8 @@ class VoteController extends BaseController
 
     /**
      * 投票详情（含选项）
-     * GET /service/vote/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/vote/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -128,7 +131,8 @@ class VoteController extends BaseController
 
     /**
      * 投票
-     * POST /service/vote/{hashid}/cast
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/vote/{hashid}/cast")
      */
     public function cast(Request $request, string $hashid): Response
     {

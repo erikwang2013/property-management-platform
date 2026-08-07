@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\Owner;
@@ -35,7 +36,8 @@ class ProfileController extends BaseController
 
     /**
      * 获取个人信息
-     * GET /api/profile
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/profile")
      */
     public function index(Request $request): Response
     {
@@ -62,7 +64,8 @@ class ProfileController extends BaseController
 
     /**
      * 更新个人信息
-     * PUT /api/profile
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/service/profile")
      */
     public function update(Request $request): Response
     {
@@ -97,7 +100,8 @@ class ProfileController extends BaseController
 
     /**
      * 修改密码
-     * PUT /api/profile/password
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/service/profile/password")
      */
     public function updatePassword(Request $request): Response
     {
@@ -131,7 +135,8 @@ class ProfileController extends BaseController
 
     /**
      * 退出登录
-     * POST /api/profile/logout
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/profile/logout")
      */
     public function logout(Request $request): Response
     {

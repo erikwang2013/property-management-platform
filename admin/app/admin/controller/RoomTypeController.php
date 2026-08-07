@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\RoomType;
@@ -111,7 +112,10 @@ class RoomTypeController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新户型 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/room-type/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id = $this->decodeId($hashid);
@@ -128,7 +132,10 @@ class RoomTypeController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除户型（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/room-type/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId = $request->adminId;

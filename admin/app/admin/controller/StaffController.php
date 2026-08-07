@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Staff;
@@ -20,6 +21,8 @@ class StaffController extends BaseController
     /**
      * 员工列表
      * ?community_id=xxx&department=xxx&status=xxx&keyword=搜索词
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/staff")
      */
     public function index(Request $request)
     {
@@ -66,7 +69,10 @@ class StaffController extends BaseController
         return $this->success($list);
     }
 
-    /** 员工详情 */
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/staff/{hashid}")
+     */
     public function show(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -91,7 +97,10 @@ class StaffController extends BaseController
         ]);
     }
 
-    /** 创建员工 */
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/staff")
+     */
     public function store(Request $request)
     {
         $data = $request->only([
@@ -114,7 +123,10 @@ class StaffController extends BaseController
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
 
-    /** 更新员工 */
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/staff/{hashid}")
+     */
     public function update(Request $request, string $hashid)
     {
         $id   = $this->decodeId($hashid);
@@ -132,7 +144,10 @@ class StaffController extends BaseController
         return $this->success([], '更新成功');
     }
 
-    /** 删除员工（需密码确认） */
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/staff/{hashid}")
+     */
     public function destroy(Request $request, string $hashid)
     {
         $adminId  = $request->adminId;
@@ -156,7 +171,8 @@ class StaffController extends BaseController
 
     /**
      * 批量修改员工状态
-     * POST /admin/staff/batch/status
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/staff/batch/status")
      */
     public function batchStatus(Request $request)
     {

@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\OperationLog;
 use support\Request;
@@ -17,6 +18,10 @@ use support\Response;
  */
 class LogController extends BaseController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/log")
+     */
     public function index(Request $request): Response
     {
         $page      = (int) $request->input('page', 1);

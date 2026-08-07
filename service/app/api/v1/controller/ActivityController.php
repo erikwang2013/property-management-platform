@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\ActivitySignup;
@@ -23,7 +24,8 @@ class ActivityController extends BaseController
 {
     /**
      * 社区活动列表（仅已发布）
-     * GET /service/activities?community_id=xxx&status=xxx&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/activities")
      */
     public function index(Request $request): Response
     {
@@ -69,7 +71,8 @@ class ActivityController extends BaseController
 
     /**
      * 活动详情（含报名人数）
-     * GET /service/activity/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/activity/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -111,7 +114,8 @@ class ActivityController extends BaseController
 
     /**
      * 报名活动
-     * POST /service/activity/{hashid}/signup
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/activity/{hashid}/signup")
      */
     public function signup(Request $request, string $hashid): Response
     {
@@ -175,7 +179,8 @@ class ActivityController extends BaseController
 
     /**
      * 取消报名
-     * POST /service/activity/{hashid}/cancel
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/activity/{hashid}/cancel")
      */
     public function cancel(Request $request, string $hashid): Response
     {

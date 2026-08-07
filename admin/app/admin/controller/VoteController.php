@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Vote;
@@ -22,7 +23,8 @@ class VoteController extends BaseController
 {
     /**
      * 投票列表
-     * GET /admin/vote?community_id=&status=&page=
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/vote")
      */
     public function index(Request $request): Response
     {
@@ -57,7 +59,8 @@ class VoteController extends BaseController
 
     /**
      * 创建投票
-     * POST /admin/vote
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/vote")
      */
     public function store(Request $request): Response
     {
@@ -73,7 +76,8 @@ class VoteController extends BaseController
 
     /**
      * 投票详情
-     * GET /admin/vote/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/vote/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
@@ -101,7 +105,8 @@ class VoteController extends BaseController
 
     /**
      * 更新投票
-     * PUT /admin/vote/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/vote/{hashid}")
      */
     public function update(Request $request, string $hashid): Response
     {
@@ -120,7 +125,8 @@ class VoteController extends BaseController
 
     /**
      * 删除投票
-     * DELETE /admin/vote/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/vote/{hashid}")
      */
     public function destroy(Request $request, string $hashid): Response
     {
@@ -134,7 +140,8 @@ class VoteController extends BaseController
 
     /**
      * 投票选项列表
-     * GET /admin/vote/{hashid}/options
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/vote/{hashid}/options")
      */
     public function options(Request $request, string $hashid): Response
     {
@@ -159,7 +166,8 @@ class VoteController extends BaseController
 
     /**
      * 添加投票选项
-     * POST /admin/vote/{hashid}/option
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/vote/{hashid}/option")
      */
     public function optionStore(Request $request, string $hashid): Response
     {
@@ -177,7 +185,8 @@ class VoteController extends BaseController
 
     /**
      * 更新投票选项
-     * PUT /admin/vote-option/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/vote/{hashid}/option/{optionHashid}")
      */
     public function optionUpdate(Request $request, string $hashid): Response
     {
@@ -190,7 +199,8 @@ class VoteController extends BaseController
 
     /**
      * 删除投票选项
-     * DELETE /admin/vote-option/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/vote/{hashid}/option/{optionHashid}")
      */
     public function optionDestroy(Request $request, string $hashid): Response
     {
@@ -203,7 +213,8 @@ class VoteController extends BaseController
 
     /**
      * 投票记录列表
-     * GET /admin/vote/{hashid}/records
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/vote/{hashid}/records")
      */
     public function records(Request $request, string $hashid): Response
     {
@@ -229,7 +240,8 @@ class VoteController extends BaseController
 
     /**
      * 投票结果统计
-     * GET /admin/vote/{hashid}/statistics
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/vote/{hashid}/statistics")
      */
     public function statistics(Request $request, string $hashid): Response
     {
@@ -270,7 +282,8 @@ class VoteController extends BaseController
 
     /**
      * 发布投票（设为进行中）
-     * PUT /admin/vote/{hashid}/publish
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/vote/{hashid}/publish")
      */
     public function publish(Request $request, string $hashid): Response
     {
@@ -283,7 +296,8 @@ class VoteController extends BaseController
 
     /**
      * 结束投票（设为已结束）
-     * PUT /admin/vote/{hashid}/end
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/vote/{hashid}/end")
      */
     public function end(Request $request, string $hashid): Response
     {

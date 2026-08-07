@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\Room;
@@ -20,7 +21,8 @@ class RoomController extends BaseController
 {
     /**
      * 我的房间列表
-     * GET /api/rooms
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/rooms")
      */
     public function index(Request $request): Response
     {
@@ -50,7 +52,8 @@ class RoomController extends BaseController
 
     /**
      * 房间详情
-     * GET /api/rooms/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/room/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {

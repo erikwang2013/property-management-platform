@@ -11,51 +11,62 @@ return [
         // 文档描述
         'desc'               => '业主端（业务端）全部接口文档，按功能分组。',
         // 应用/版本分组
+        // 每个 app 通过显式 controllers 列表限定所属控制器（与类上 @Apidoc\Group 注解一致），
+        // 避免 hg/apidoc 按 path 目录扫描时把全部控制器重复塞进每个分组
         'apps'           => [
             [
                 'title' => '公开接口（认证/验证码）',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'public',
+                'controllers' => ['AuthController', 'CaptchaController'],
             ],
             [
                 'title' => '首页与房产',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'home',
+                'controllers' => ['HomeController', 'RoomController'],
             ],
             [
                 'title' => '费用管理（账单/缴费/统计）',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'fee',
+                'controllers' => ['FeeController'],
             ],
             [
                 'title' => '报修管理',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'repair',
+                'controllers' => ['RepairController'],
             ],
             [
                 'title' => '投诉建议与公告',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'feedback',
+                'controllers' => ['AnnouncementController', 'ComplaintController'],
             ],
             [
                 'title' => '停车与访客',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'parking',
+                'controllers' => ['ParkingController', 'VisitorController'],
             ],
             [
                 'title' => '社区活动',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'activity',
+                'controllers' => ['ActivityController'],
             ],
             [
                 'title' => '个人中心',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'profile',
+                'controllers' => ['ProfileController'],
             ],
             [
                 'title' => '扩展功能（通知/投票/商城/问答/人脸）',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'extensions',
+                'controllers' => ['FaceController', 'KnowledgeController', 'MallController', 'NotificationController', 'VoteController'],
             ],
         ],
         // 通用注释定义

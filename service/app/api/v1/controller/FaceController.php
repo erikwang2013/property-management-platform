@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\FaceInfo;
@@ -21,7 +22,8 @@ class FaceController extends BaseController
 {
     /**
      * 人脸注册
-     * POST /service/face/register
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/service/face/register")
      */
     public function register(Request $request): Response
     {
@@ -66,7 +68,8 @@ class FaceController extends BaseController
 
     /**
      * 查询人脸审核状态
-     * GET /service/face/status
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/face/status")
      */
     public function status(Request $request): Response
     {

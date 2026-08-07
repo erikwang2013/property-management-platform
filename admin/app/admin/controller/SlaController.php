@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Notification;
@@ -24,7 +25,8 @@ class SlaController extends BaseController
 {
     /**
      * SLA规则列表
-     * GET /admin/sla-rule
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/sla-rule")
      */
     public function rules(Request $request)
     {
@@ -62,7 +64,8 @@ class SlaController extends BaseController
 
     /**
      * 创建SLA规则
-     * POST /admin/sla-rule
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/sla-rule")
      */
     public function ruleStore(Request $request)
     {
@@ -85,7 +88,8 @@ class SlaController extends BaseController
 
     /**
      * 更新SLA规则
-     * PUT /admin/sla-rule/{hashid}
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/sla-rule/{hashid}")
      */
     public function ruleUpdate(Request $request, string $hashid)
     {
@@ -111,7 +115,8 @@ class SlaController extends BaseController
 
     /**
      * 删除SLA规则
-     * DELETE /admin/sla-rule/{hashid}
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/sla-rule/{hashid}")
      */
     public function ruleDestroy(Request $request, string $hashid)
     {
@@ -141,7 +146,8 @@ class SlaController extends BaseController
 
     /**
      * SLA记录列表
-     * GET /admin/sla-record?repair_order_id=&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/sla-record")
      */
     public function records(Request $request)
     {

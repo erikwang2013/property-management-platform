@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
 use support\Response;
@@ -28,6 +29,10 @@ class UploadController extends BaseController
         'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip'],
     ];
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/upload")
+     */
     public function upload(Request $request): Response
     {
         $file = $request->file('file');

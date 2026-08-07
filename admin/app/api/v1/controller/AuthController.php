@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use app\common\SnowflakeService;
@@ -21,7 +22,7 @@ use Throwable;
 /**
  * 通用接口
  * @Apidoc\Group("common")
- * @ApidocSort(1)
+ * @Apidoc\Sort(1)
  */
 class AuthController
 {
@@ -52,7 +53,8 @@ class AuthController
 
     /**
      * 登录（需先通过点击验证码）
-     * POST /api/auth/login
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/login")
      */
     public function login(Request $request): Response
     {
@@ -140,7 +142,8 @@ class AuthController
 
     /**
      * 注册（需先通过点击验证码）
-     * POST /api/auth/register
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/register")
      */
     public function register(Request $request): Response
     {
@@ -202,7 +205,8 @@ class AuthController
 
     /**
      * 刷新令牌
-     * POST /api/auth/refresh
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/auth/refresh")
      */
     public function refresh(Request $request): Response
     {

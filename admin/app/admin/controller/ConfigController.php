@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\model\SystemConfig;
 use support\Request;
@@ -17,6 +18,10 @@ use support\Response;
  */
 class ConfigController extends BaseController
 {
+    /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/config")
+     */
     public function index(Request $request): Response
     {
         $page  = (int) $request->input('page', 1);
@@ -44,6 +49,10 @@ class ConfigController extends BaseController
         ]);
     }
 
+    /**
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/config")
+     */
     public function store(Request $request): Response
     {
         $validator = validator($request->all(), [
@@ -75,6 +84,10 @@ class ConfigController extends BaseController
         return $this->success($this->encodeIds($config->toArray()), '创建成功');
     }
 
+    /**
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Url("/admin/config/{id}")
+     */
     public function update(Request $request, string $hashid): Response
     {
         $id     = $this->decodeId($hashid);
@@ -98,6 +111,10 @@ class ConfigController extends BaseController
         return $this->success($this->encodeIds($config->toArray()), '更新成功');
     }
 
+    /**
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Url("/admin/config/{id}")
+     */
     public function destroy(Request $request, string $hashid): Response
     {
         $id     = $this->decodeId($hashid);

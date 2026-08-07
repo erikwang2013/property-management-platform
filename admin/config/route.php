@@ -109,9 +109,9 @@ Route::group('/admin', function () {
     Route::resource('/unit', app\admin\controller\UnitController::class);
     // 户型管理
     Route::resource('/room-type', app\admin\controller\RoomTypeController::class);
-    // 房产管理
-    Route::resource('/room', app\admin\controller\RoomController::class);
+    // 房产管理（静态路由必须先于 resource 注册，否则被变量路由遮蔽）
     Route::get('/room/tree', [app\admin\controller\RoomController::class, 'tree']);
+    Route::resource('/room', app\admin\controller\RoomController::class);
     // 业主管理
     Route::resource('/owner', app\admin\controller\OwnerController::class);
     Route::post('/owner/batch/import', [app\admin\controller\OwnerController::class, 'batchImport']);
@@ -155,8 +155,8 @@ Route::group('/admin', function () {
     Route::resource('/contract', app\admin\controller\ContractController::class);
     // 财务管理
     Route::get('/finance/statistics', [app\admin\controller\FinanceController::class, 'statistics']);
-    Route::resource('/finance-income', app\admin\controller\FinanceController::class, ['names' => 'finance.income']);
-    Route::resource('/finance-expense', app\admin\controller\FinanceController::class, ['names' => 'finance.expense']);
+    Route::resource('/finance-income', app\admin\controller\FinanceController::class);
+    Route::resource('/finance-expense', app\admin\controller\FinanceController::class);
 
     // ============================================================
     // 物业管理 — 第3批高级功能
@@ -202,8 +202,8 @@ Route::group('/admin', function () {
     Route::put('/inspection-task/{hashid}/complete', [app\admin\controller\InspectionController::class, 'completeTask']);
     Route::put('/inspection-checkpoint/{hashid}/checkin', [app\admin\controller\InspectionController::class, 'checkin']);
     // 社区商城
-    Route::resource('/mall-category', app\admin\controller\MallController::class, ['names'=>'mall.category']);
-    Route::resource('/mall-product', app\admin\controller\MallController::class, ['names'=>'mall.product']);
+    Route::resource('/mall-category', app\admin\controller\MallController::class);
+    Route::resource('/mall-product', app\admin\controller\MallController::class);
     Route::get('/mall-order', [app\admin\controller\MallController::class, 'orders']);
     Route::get('/mall-order/{hashid}', [app\admin\controller\MallController::class, 'orderShow']);
     Route::put('/mall-order/{hashid}/ship', [app\admin\controller\MallController::class, 'ship']);
@@ -238,12 +238,12 @@ Route::group('/admin', function () {
     Route::post('/approval-type', [app\admin\controller\ApprovalController::class, 'typeStore']);
     Route::put('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeUpdate']);
     Route::delete('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeDestroy']);
-    // 审批实例
+    // 审批实例（静态路由先于变量路由注册，避免 FastRoute 遮蔽异常）
     Route::get('/approval', [app\admin\controller\ApprovalController::class, 'index']);
+    Route::get('/approval/my-pending', [app\admin\controller\ApprovalController::class, 'myPending']);
     Route::get('/approval/{hashid}', [app\admin\controller\ApprovalController::class, 'show']);
     Route::post('/approval', [app\admin\controller\ApprovalController::class, 'submit']);
     Route::put('/approval/{hashid}/approve', [app\admin\controller\ApprovalController::class, 'approve']);
-    Route::get('/approval/my-pending', [app\admin\controller\ApprovalController::class, 'myPending']);
     // 通知模板
     Route::get('/notification-template', [app\admin\controller\NotificationController::class, 'templates']);
     Route::post('/notification-template', [app\admin\controller\NotificationController::class, 'templateStore']);
@@ -266,11 +266,11 @@ Route::group('/admin', function () {
     Route::get('/vote/{hashid}/statistics', [app\admin\controller\VoteController::class, 'statistics']);
     Route::put('/vote/{hashid}/publish', [app\admin\controller\VoteController::class, 'publish']);
     Route::put('/vote/{hashid}/end', [app\admin\controller\VoteController::class, 'end']);
-    // 支付订单
+    // 支付订单（静态路由先于变量路由注册）
     Route::get('/payment-order', [app\admin\controller\PaymentController::class, 'orders']);
+    Route::get('/payment-order/statistics', [app\admin\controller\PaymentController::class, 'statistics']);
     Route::get('/payment-order/{hashid}', [app\admin\controller\PaymentController::class, 'orderShow']);
     Route::post('/payment-order/{hashid}/refund', [app\admin\controller\PaymentController::class, 'refund']);
-    Route::get('/payment-order/statistics', [app\admin\controller\PaymentController::class, 'statistics']);
 })->middleware([
     app\middleware\AdminAuth::class,
     app\middleware\AdminPermission::class,

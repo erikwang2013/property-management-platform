@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
 use support\Response;
@@ -19,7 +20,8 @@ class InstallController
     private const SUPER_ADMIN_ROLE_ID = 10000000000000001;
 
     /**
-     * GET /install — show wizard or installed page.
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/api/install")
      */
     public function index(Request $request): Response
     {
@@ -30,7 +32,8 @@ class InstallController
     }
 
     /**
-     * POST /install — process each step.
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/api/install")
      */
     public function store(Request $request): Response
     {

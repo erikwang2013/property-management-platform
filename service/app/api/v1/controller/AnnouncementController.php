@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\api\v1\controller;
+use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
 use app\model\Announcement;
@@ -22,7 +23,8 @@ class AnnouncementController extends BaseController
 {
     /**
      * 公告列表
-     * GET /api/announcements?category=通知&page=1
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/announcements")
      */
     public function index(Request $request): Response
     {
@@ -55,7 +57,8 @@ class AnnouncementController extends BaseController
 
     /**
      * 公告详情
-     * GET /api/announcements/{hashid}
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/service/announcement/{hashid}")
      */
     public function show(Request $request, string $hashid): Response
     {
