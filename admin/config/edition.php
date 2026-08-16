@@ -10,8 +10,15 @@
  * - full: 完整版，全部模块（默认）
  *
  * 通过环境变量 EDITIONS 覆盖，路由分组按版本条件注册。
+ * fail-fast：无效的 EDITIONS 值直接抛错，避免静默回退到错误版本。
  */
+$edition = strtolower(env('EDITIONS', 'full'));
+$levels  = ['lite' => 1, 'standard' => 2, 'full' => 3];
+if (!isset($levels[$edition])) {
+    throw new RuntimeException("无效的 EDITIONS: {$edition}（可选: lite / standard / full）");
+}
+
 return [
-    'default' => env('EDITIONS', 'full'),
-    'levels'  => ['lite' => 1, 'standard' => 2, 'full' => 3],
+    'default' => $edition,
+    'levels'  => $levels,
 ];
