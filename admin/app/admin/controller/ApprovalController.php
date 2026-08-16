@@ -66,7 +66,10 @@ class ApprovalController extends BaseController
     public function typeUpdate(Request $request, string $hashid): Response
     {
         $id = $this->decodeId($hashid);
-        $t = ApprovalType::findOrFail($id);
+        $t = ApprovalType::find($id);
+        if (!$t) {
+            return $this->fail('审批类型不存在', 404);
+        }
         $t->fill($request->only(['code', 'name', 'steps', 'status']));
         if ($s = $request->input('steps')) {
             $t->steps = is_array($s) ? json_encode($s) : $s;
@@ -83,7 +86,11 @@ class ApprovalController extends BaseController
     public function typeDestroy(Request $request, string $hashid): Response
     {
         $id = $this->decodeId($hashid);
-        ApprovalType::findOrFail($id)->delete();
+        $t = ApprovalType::find($id);
+        if (!$t) {
+            return $this->fail('审批类型不存在', 404);
+        }
+        $t->delete();
         return $this->success([], '删除成功');
     }
 
@@ -129,7 +136,10 @@ class ApprovalController extends BaseController
     public function show(Request $request, string $hashid): Response
     {
         $id = $this->decodeId($hashid);
-        $approval = Approval::with(['approvalType:id,name,steps', 'records'])->findOrFail($id);
+        $approval = Approval::with(['approvalType:id,name,steps', 'records'])->find($id);
+        if (!$approval) {
+            return $this->fail('审批不存在', 404);
+        }
 
         $data = [
             'id'               => $this->encodeId($approval->id),
@@ -172,7 +182,10 @@ class ApprovalController extends BaseController
         $refId          = $request->input('ref_id', 0);
         $remark         = $request->input('remark', '');
 
-        $approvalType = ApprovalType::findOrFail($this->decodeId($approvalTypeId));
+        $approvalType = ApprovalType::find($this->decodeId($approvalTypeId));
+        if (!$approvalType) {
+            return $this->fail('审批类型不存在', 404);
+        }
         $steps = $approvalType->steps;
         if (empty($steps) || !is_array($steps)) {
             return $this->fail('审批类型未配置审批步骤', 422);
@@ -228,13 +241,15 @@ class ApprovalController extends BaseController
         $id = $this->decodeId($hashid);
         $action = (int) $request->input('action'); // 1=通过, 2=驳回
         $remark = $request->input('remark', '');
-        $approverId = $request->input('approver_id', 0);
 
         if (!in_array($action, [1, 2])) {
             return $this->fail('无效的操作', 422);
         }
 
-        $approval = Approval::findOrFail($id);
+        $approval = Approval::find($id);
+        if (!$approval) {
+            return $this->fail('审批不存在', 404);
+        }
         if ($approval->status != 0) {
             return $this->fail('该审批已处理', 422);
         }
@@ -247,6 +262,11 @@ class ApprovalController extends BaseController
 
         if (!$record) {
             return $this->fail('未找到待审批记录', 404);
+        }
+
+        // 审批人必须与记录指派审批人一致，防止越权代批
+        if ((int) ($request->adminId ?? 0) !== (int) $record->approver_id) {
+            return $this->fail('您无权审批该记录', 403);
         }
 
         $record->action   = $action;
@@ -332,7 +352,7 @@ class ApprovalController extends BaseController
      */
     public function myPending(Request $request): Response
     {
-        $approverId = $request->input('approver_id', 0);
+        $approverId = (int) ($request->adminId ?? 0);
 
         // 查找待审批记录对应的审批实例
         $recordIds = ApprovalRecord::where('approver_id', (int) $approverId)

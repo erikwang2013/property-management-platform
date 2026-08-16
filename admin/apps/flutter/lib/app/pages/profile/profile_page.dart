@@ -30,14 +30,25 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     setState(() => _loading = true);
     try {
-      // Leave real_name field empty for user to fill; show username as label
-      // User can update real_name via this form
+      final resp = await _api.get('/admin/profile');
+      final data = resp['data'] as Map<String, dynamic>? ?? {};
+      _realNameCtrl.text = data['real_name'] ?? '';
+      _phoneCtrl.text = data['phone'] ?? '';
+      _emailCtrl.text = data['email'] ?? '';
+    } catch (e) {
+      Get.snackbar('错误', '加载个人信息失败: $e');
     } finally {
       setState(() => _loading = false);
     }
   }
 
   Future<void> _updateProfile() async {
+    if (_realNameCtrl.text.trim().isEmpty &&
+        _phoneCtrl.text.trim().isEmpty &&
+        _emailCtrl.text.trim().isEmpty) {
+      Get.snackbar('提示', '请先填写个人资料');
+      return;
+    }
     try {
       await _api.put('/admin/profile', data: {
         'real_name': _realNameCtrl.text.trim(),

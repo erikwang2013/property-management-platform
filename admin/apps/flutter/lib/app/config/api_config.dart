@@ -148,7 +148,7 @@ class ApiConfig {
   static const String approval = '/admin/approval';
 
   // 支付
-  static const String payment = '/admin/payment';
+  static const String payment = '/admin/payment-order';
 
   // 投票
   static const String vote = '/admin/vote';

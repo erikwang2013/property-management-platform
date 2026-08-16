@@ -29,7 +29,7 @@ class RoomController extends BaseCrudController {
       communities.value = List<Map<String, dynamic>>.from(cr['data']['data'] ?? []);
       final rr = await api.get(ApiConfig.roomType, params: {'page': 1, 'limit': 100});
       roomTypes.value = List<Map<String, dynamic>>.from(rr['data']['data'] ?? []);
-    } catch (_) {}
+    } catch (e) { Get.snackbar('错误', '加载失败: $e'); }
   }
 
   Future<void> loadBuildings(String communityHashId) async {
@@ -37,14 +37,14 @@ class RoomController extends BaseCrudController {
       final br = await api.get(ApiConfig.building, params: {'community_id': communityHashId, 'page': 1, 'limit': 100});
       buildings.value = List<Map<String, dynamic>>.from(br['data']['data'] ?? []);
       units.clear();
-    } catch (_) {}
+    } catch (e) { Get.snackbar('错误', '加载失败: $e'); }
   }
 
   Future<void> loadUnits(String buildingHashId) async {
     try {
       final ur = await api.get(ApiConfig.unit, params: {'building_id': buildingHashId, 'page': 1, 'limit': 100});
       units.value = List<Map<String, dynamic>>.from(ur['data']['data'] ?? []);
-    } catch (_) {}
+    } catch (e) { Get.snackbar('错误', '加载失败: $e'); }
   }
 
   @override

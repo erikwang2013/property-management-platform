@@ -195,6 +195,11 @@ class SlaController extends BaseController
         // 获取所有进行中的报修单（status=1 维修中，或 status=0 待处理）
         $activeOrders = RepairOrder::whereIn('status', [0, 1])->get();
 
+        // 一次批量预取 SLA 记录，避免每单一次查询
+        $recordsByOrder = SlaRecord::whereIn('repair_order_id', $activeOrders->pluck('id'))
+            ->get()
+            ->keyBy('repair_order_id');
+
         foreach ($activeOrders as $order) {
             $createdAt = $order->created_at->format('Y-m-d H:i:s');
 
@@ -206,7 +211,7 @@ class SlaController extends BaseController
             }
 
             // 查找或创建SLA记录
-            $slaRecord = SlaRecord::where('repair_order_id', $order->id)->first();
+            $slaRecord = $recordsByOrder[$order->id] ?? null;
             if (!$slaRecord) {
                 $responseDeadline = self::addMinutes($createdAt, (int) $rule->response_minutes);
                 $resolveDeadline  = self::addMinutes($createdAt, (int) $rule->resolve_minutes);

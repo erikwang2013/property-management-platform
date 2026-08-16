@@ -57,8 +57,30 @@ class FeeBillListPage extends GetView<FeeBillController> {
       ]),
       actions: [
         TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
-        ElevatedButton(onPressed: () => Navigator.pop(ctx), child: const Text('保存')),
+        ElevatedButton(onPressed: () => _saveForm(ctx, ctrl, data: data, amount: amount, dueDate: dueDate), child: const Text('保存')),
       ],
     ));
+  }
+
+  Future<void> _saveForm(BuildContext ctx, FeeBillController ctrl,
+      {Map<String, dynamic>? data, required TextEditingController amount, required TextEditingController dueDate}) async {
+    final isEdit = data != null;
+    if (amount.text.trim().isEmpty) {
+      Get.snackbar('提示', '请输入金额');
+      return;
+    }
+    final payload = {'amount': amount.text.trim(), 'due_date': dueDate.text.trim()};
+    try {
+      if (isEdit) {
+        await ctrl.updateItem(data['id'].toString(), payload);
+      } else {
+        await ctrl.api.post(ctrl.basePath, data: payload);
+        await ctrl.loadItems(reset: true);
+      }
+      if (ctx.mounted) Navigator.pop(ctx);
+      Get.snackbar('成功', isEdit ? '账单更新成功' : '账单创建成功');
+    } catch (e) {
+      Get.snackbar('错误', '保存失败: $e');
+    }
   }
 }

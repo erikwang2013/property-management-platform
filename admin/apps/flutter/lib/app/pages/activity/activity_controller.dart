@@ -26,7 +26,7 @@ class ActivitySignupController extends GetxController {
     try {
       final r = await api.get(ApiConfig.activitySignup);
       signups.value = List<Map<String, dynamic>>.from(r['data'] is List ? r['data'] : (r['data']['data'] ?? []));
-    } catch (_) {} finally { isLoading.value = false; }
+    } catch (e) { Get.snackbar('错误', '加载列表失败: $e'); } finally { isLoading.value = false; }
   }
   Future<void> checkin(String hid) async {
     await api.put(ApiConfig.activitySignupCheckin(hid));

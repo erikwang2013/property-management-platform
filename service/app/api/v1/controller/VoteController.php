@@ -51,25 +51,30 @@ class VoteController extends BaseController
             ->where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
             ->orderBy('created_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
-            ->through(function ($vote) use ($ownerId) {
-                // 检查是否已投票
-                $hasVoted = VoteRecord::where('vote_id', $vote->id)
-                    ->where('owner_id', $ownerId)
-                    ->exists();
+            ->paginate((int) $request->input('page_size', 20));
 
-                return [
-                    'id'          => $this->encodeId($vote->id),
-                    'title'       => $vote->title,
-                    'description' => $vote->description,
-                    'vote_type'   => $vote->vote_type,
-                    'is_anonymous' => $vote->is_anonymous,
-                    'start_time'  => $vote->start_time ? $vote->start_time->format('Y-m-d H:i') : '',
-                    'end_time'    => $vote->end_time ? $vote->end_time->format('Y-m-d H:i') : '',
-                    'has_voted'   => $hasVoted,
-                    'created_at'  => $vote->created_at ? $vote->created_at->format('Y-m-d H:i') : '',
-                ];
-            });
+        // 一次批量查询本页投票记录，避免每行一次 exists
+        $votedMap = array_fill_keys(
+            VoteRecord::whereIn('vote_id', $list->pluck('id'))
+                ->where('owner_id', $ownerId)
+                ->pluck('vote_id')
+                ->unique()
+                ->toArray(),
+            true
+        );
+        $list->setCollection($list->getCollection()->map(function ($vote) use ($votedMap) {
+            return [
+                'id'          => $this->encodeId($vote->id),
+                'title'       => $vote->title,
+                'description' => $vote->description,
+                'vote_type'   => $vote->vote_type,
+                'is_anonymous' => $vote->is_anonymous,
+                'start_time'  => $vote->start_time ? $vote->start_time->format('Y-m-d H:i') : '',
+                'end_time'    => $vote->end_time ? $vote->end_time->format('Y-m-d H:i') : '',
+                'has_voted'   => isset($votedMap[$vote->id]),
+                'created_at'  => $vote->created_at ? $vote->created_at->format('Y-m-d H:i') : '',
+            ];
+        }));
 
         return $this->success($list);
     }

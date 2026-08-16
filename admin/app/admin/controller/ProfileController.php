@@ -33,6 +33,24 @@ class ProfileController extends BaseController
     }
 
     /**
+     * @Apidoc\Method("GET")
+     * @Apidoc\Url("/admin/profile")
+     */
+    public function show(Request $request): Response
+    {
+        $adminId = $request->adminId ?? 0;
+        $user    = AdminUser::find($adminId);
+        if (!$user) {
+            return $this->fail('用户不存在', 404);
+        }
+
+        $data = $user->toArray();
+        unset($data['password'], $data['id_card']);
+
+        return $this->success($this->encodeIds($data));
+    }
+
+    /**
      * @Apidoc\Method("PUT")
      * @Apidoc\Url("/admin/profile")
      */

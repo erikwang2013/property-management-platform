@@ -935,6 +935,7 @@ CREATE TABLE IF NOT EXISTS `erik_equipment` (
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_community_id` (`community_id`),
+    KEY `idx_community_status` (`community_id`, `status`),
     KEY `idx_category` (`category`),
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='设备表';
@@ -1237,7 +1238,7 @@ CREATE TABLE IF NOT EXISTS `erik_energy_record` (
     `reader_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '抄表人ID',
     `bill_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联账单ID',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), KEY `idx_meter_id` (`meter_id`), KEY `idx_room_id` (`room_id`), KEY `idx_record_date` (`record_date`)
+    PRIMARY KEY (`id`), KEY `idx_meter_id` (`meter_id`), KEY `idx_meter_date` (`meter_id`, `record_date`), KEY `idx_room_id` (`room_id`), KEY `idx_record_date` (`record_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗记录表';
 
 -- 35. 员工表
@@ -1350,7 +1351,8 @@ CREATE TABLE IF NOT EXISTS `erik_approval_record` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_approval_id` (`approval_id`),
-    KEY `idx_approver` (`approver_id`)
+    KEY `idx_approver` (`approver_id`),
+    KEY `idx_approver_action` (`approver_id`, `action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批记录表';
 
 -- ============================================================
@@ -1404,6 +1406,7 @@ CREATE TABLE IF NOT EXISTS `erik_vote` (
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_community_id` (`community_id`),
+    KEY `idx_community_status_end` (`community_id`, `status`, `end_time`),
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票表';
 
@@ -1608,6 +1611,7 @@ CREATE TABLE IF NOT EXISTS `erik_mall_order` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_order_number` (`order_number`),
     KEY `idx_owner` (`owner_id`),
+    KEY `idx_owner_status` (`owner_id`, `status`),
     KEY `idx_product` (`product_id`),
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城订单表';
@@ -1708,3 +1712,30 @@ CREATE TABLE IF NOT EXISTS `erik_api_key` (
     UNIQUE KEY `uk_api_key_hash` (`api_key_hash`),
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='开放 API Key 表';
+
+-- ============================================================
+-- 查询索引补充（P11 审计）— 增量场景（表已存在）幂等追加
+-- 注: MySQL 不支持 ADD INDEX IF NOT EXISTS（MariaDB 扩展），故用 INFORMATION_SCHEMA 探测 + 动态 SQL 保证可重复执行
+-- 新建库由上方 CREATE TABLE 内 KEY 直接建立，此处仅覆盖旧库
+-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+-- ============================================================
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_vote' AND index_name = 'idx_community_status_end');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_vote` ADD INDEX `idx_community_status_end` (`community_id`, `status`, `end_time`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_approval_record' AND index_name = 'idx_approver_action');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_approval_record` ADD INDEX `idx_approver_action` (`approver_id`, `action`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_energy_record' AND index_name = 'idx_meter_date');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_energy_record` ADD INDEX `idx_meter_date` (`meter_id`, `record_date`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_mall_order' AND index_name = 'idx_owner_status');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_mall_order` ADD INDEX `idx_owner_status` (`owner_id`, `status`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_equipment' AND index_name = 'idx_community_status');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_equipment` ADD INDEX `idx_community_status` (`community_id`, `status`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;

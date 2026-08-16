@@ -12,6 +12,7 @@ use app\common\BaseController;
 use app\model\MallOrder;
 use app\model\MallProduct;
 use InvalidArgumentException;
+use support\Db;
 use support\Request;
 use support\Response;
 
@@ -137,30 +138,39 @@ class MallController extends BaseController
             return $this->fail('商品不存在或已下架', 404);
         }
 
-        if ($product->stock < $quantity) {
-            return $this->fail('库存不足', 422);
-        }
-
         $orderId      = $this->generateId();
         $orderNumber  = 'MALL' . date('YmdHis') . str_pad((string) mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
         $amount       = round((float) $product->price * $quantity, 2);
 
-        MallOrder::create([
-            'id'            => $orderId,
-            'order_number'  => $orderNumber,
-            'owner_id'      => $ownerId,
-            'product_id'    => $productId,
-            'quantity'      => $quantity,
-            'amount'        => $amount,
-            'status'        => 0,
-            'address'       => $address,
-            'contact_phone' => $contactPhone,
-        ]);
+        // 原子扣库存防超卖：条件满足才扣减，0 影响行说明库存不足
+        try {
+            Db::transaction(function () use ($orderId, $orderNumber, $ownerId, $productId, $quantity, $amount, $address, $contactPhone) {
+                $affected = MallProduct::where('id', $productId)
+                    ->where('status', 1)
+                    ->where('stock', '>=', $quantity)
+                    ->decrement('stock', $quantity);
+                if (!$affected) {
+                    throw new \RuntimeException('库存不足');
+                }
+                MallProduct::where('id', $productId)->increment('sales', $quantity);
 
-        // 扣减库存
-        $product->stock = $product->stock - $quantity;
-        $product->sales = ($product->sales ?? 0) + $quantity;
-        $product->save();
+                MallOrder::create([
+                    'id'            => $orderId,
+                    'order_number'  => $orderNumber,
+                    'owner_id'      => $ownerId,
+                    'product_id'    => $productId,
+                    'quantity'      => $quantity,
+                    'amount'        => $amount,
+                    'status'        => 0,
+                    'address'       => $address,
+                    'contact_phone' => $contactPhone,
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            return $this->fail($e->getMessage(), 422);
+        } catch (\Throwable) {
+            return $this->fail('下单失败，请稍后重试', 500);
+        }
 
         return $this->success([
             'id'           => $this->encodeId($orderId),

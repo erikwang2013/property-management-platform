@@ -30,7 +30,7 @@ class EnergyRecordController extends GetxController {
       final d = r['data'] as Map<String, dynamic>;
       records.value = List<Map<String, dynamic>>.from(d['data'] ?? []);
       total.value = d['total'] as int? ?? 0;
-    } catch (_) {} finally { isLoading.value = false; }
+    } catch (e) { Get.snackbar('错误', '加载列表失败: $e'); } finally { isLoading.value = false; }
   }
   Future<void> record(String meterId, double reading) async {
     await api.post(ApiConfig.energyRecord, data: {'meter_id': meterId, 'reading': reading});

@@ -11,6 +11,7 @@ use hg\apidoc\annotation as Apidoc;
 use app\common\SnowflakeService;
 use app\model\FeeBill;
 use app\model\FeePayment;
+use support\Db;
 use support\Request;
 
 /**
@@ -109,27 +110,45 @@ class FeePaymentController extends BaseController
             return $this->fail('账单已缴清，无需再次收款', 422);
         }
 
-        $payment = new FeePayment();
-        $payment->id              = SnowflakeService::generate();
-        $payment->bill_id         = $bill->id;
-        $payment->owner_id        = $bill->owner_id;
-        $payment->payment_number  = 'FP' . date('YmdHis') . rand(1000, 9999);
-        $payment->amount          = $amount;
-        $payment->payment_method  = (int) $request->input('payment_method', 3);
-        $payment->payment_channel = 2; // 线下
-        $payment->paid_at         = (string) $request->input('paid_at', date('Y-m-d H:i:s'));
-        $payment->operator_id     = (int) ($request->adminId ?? 0);
-        $payment->receipt_url     = (string) $request->input('receipt_url', '');
-        $payment->remark          = (string) $request->input('remark', '');
-        $payment->save();
+        try {
+            $payment = Db::transaction(function () use ($bill, $amount, $request) {
+                // 行锁防止并发重复收款
+                $locked = FeeBill::lockForUpdate()->find($bill->id);
+                $unpaid = bcsub((string) $locked->amount, (string) $locked->paid_amount, 2);
+                if ($amount > (float) $unpaid) {
+                    throw new \RuntimeException('收款金额超过未缴金额');
+                }
 
-        // 更新账单：累计已缴金额与状态
-        $bill->paid_amount = bcadd((string) $bill->paid_amount, (string) $amount, 2);
-        $bill->status      = $bill->paid_amount >= $bill->amount ? 2 : 1;
-        if ($bill->status == 2) {
-            $bill->paid_at = date('Y-m-d H:i:s');
+                $paymentId = SnowflakeService::generate();
+                $payment = new FeePayment();
+                $payment->id              = $paymentId;
+                $payment->bill_id         = $bill->id;
+                $payment->owner_id        = $bill->owner_id;
+                $payment->payment_number  = 'FP' . date('YmdHis') . substr((string) $paymentId, -8);
+                $payment->amount          = $amount;
+                $payment->payment_method  = (int) $request->input('payment_method', 3);
+                $payment->payment_channel = 2; // 线下
+                $payment->paid_at         = (string) $request->input('paid_at', date('Y-m-d H:i:s'));
+                $payment->operator_id     = (int) ($request->adminId ?? 0);
+                $payment->receipt_url     = (string) $request->input('receipt_url', '');
+                $payment->remark          = (string) $request->input('remark', '');
+                $payment->save();
+
+                // 更新账单：累计已缴金额与状态
+                $locked->paid_amount = bcadd((string) $locked->paid_amount, (string) $amount, 2);
+                $locked->status      = $locked->paid_amount >= $locked->amount ? 2 : 1;
+                if ($locked->status == 2) {
+                    $locked->paid_at = date('Y-m-d H:i:s');
+                }
+                $locked->save();
+
+                return $payment;
+            });
+        } catch (\RuntimeException $e) {
+            return $this->fail($e->getMessage(), 422);
+        } catch (\Throwable) {
+            return $this->fail('收款失败，请稍后重试', 500);
         }
-        $bill->save();
 
         return $this->success([
             'id'      => $this->encodeId($payment->id),

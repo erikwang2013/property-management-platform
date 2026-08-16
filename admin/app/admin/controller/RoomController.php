@@ -104,35 +104,52 @@ class RoomController extends BaseController
             $communityQuery->where('id', $this->decodeId($communityId));
         }
 
+        // 四层批量查询，PHP 内组树，避免 N+1
+        $communities = $communityQuery->orderBy('created_at', 'asc')->get();
+        $communityIds = $communities->pluck('id')->toArray();
+        $buildings = Building::whereIn('community_id', $communityIds)
+            ->orderBy('sort')->orderBy('id')->get();
+        $buildingIds = $buildings->pluck('id')->toArray();
+        $units = Unit::whereIn('building_id', $buildingIds)
+            ->orderBy('sort')->orderBy('id')->get();
+        $unitIds = $units->pluck('id')->toArray();
+        $rooms = Room::whereIn('unit_id', $unitIds)
+            ->orderBy('floor')->orderBy('room_number')->get();
+
+        $buildingsByCommunity = $unitsByBuilding = $roomsByUnit = [];
+        foreach ($buildings as $building) {
+            $buildingsByCommunity[$building->community_id][] = $building;
+        }
+        foreach ($units as $unit) {
+            $unitsByBuilding[$unit->building_id][] = $unit;
+        }
+        foreach ($rooms as $room) {
+            $roomsByUnit[$room->unit_id][] = $room;
+        }
+
         $tree = [];
-        foreach ($communityQuery->orderBy('created_at', 'asc')->get() as $community) {
+        foreach ($communities as $community) {
             $node = [
                 'id'       => $this->encodeId($community->id),
                 'name'     => $community->name,
                 'type'     => 'community',
                 'children' => [],
             ];
-            $buildings = Building::where('community_id', $community->id)
-                ->orderBy('sort')->orderBy('id')->get();
-            foreach ($buildings as $building) {
+            foreach ($buildingsByCommunity[$community->id] ?? [] as $building) {
                 $bNode = [
                     'id'       => $this->encodeId($building->id),
                     'name'     => $building->name,
                     'type'     => 'building',
                     'children' => [],
                 ];
-                $units = Unit::where('building_id', $building->id)
-                    ->orderBy('sort')->orderBy('id')->get();
-                foreach ($units as $unit) {
+                foreach ($unitsByBuilding[$building->id] ?? [] as $unit) {
                     $uNode = [
                         'id'       => $this->encodeId($unit->id),
                         'name'     => $unit->name,
                         'type'     => 'unit',
                         'children' => [],
                     ];
-                    $rooms = Room::where('unit_id', $unit->id)
-                        ->orderBy('floor')->orderBy('room_number')->get();
-                    foreach ($rooms as $room) {
+                    foreach ($roomsByUnit[$unit->id] ?? [] as $room) {
                         $uNode['children'][] = [
                             'id'     => $this->encodeId($room->id),
                             'name'   => $room->room_number,

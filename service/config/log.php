@@ -24,7 +24,8 @@ return [
                 'constructor' => [
                     runtime_path() . '/logs/webman.log',
                     7, //$maxFiles
-                    Monolog\Logger::DEBUG,
+                    // 日志级别: debug/info/notice/warning/error/critical/alert/emergency，默认 info（生产环境避免 debug 级刷盘）
+                    Monolog\Logger::toMonologLevel(getenv('LOG_LEVEL') ?: 'info'),
                 ],
                 'formatter' => [
                     'class' => Monolog\Formatter\LineFormatter::class,

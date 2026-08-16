@@ -10,6 +10,7 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\EnergyRecord;
+use InvalidArgumentException;
 use support\Request;
 
 /**
@@ -78,6 +79,17 @@ class EnergyRecordController extends BaseController
             'meter_id', 'room_id', 'reading', 'unit_price',
             'record_date', 'reader_id', 'bill_id',
         ]);
+
+        // 外键字段为 hashid，入库前解码，解码失败返回 422
+        foreach (['meter_id', 'room_id', 'reader_id', 'bill_id'] as $field) {
+            if (!empty($data[$field])) {
+                try {
+                    $data[$field] = $this->decodeId((string) $data[$field]);
+                } catch (InvalidArgumentException) {
+                    return $this->fail('无效的ID', 422);
+                }
+            }
+        }
 
         if (empty($data['meter_id'])) {
             return $this->fail('请选择仪表', 422);

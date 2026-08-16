@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\common\EncryptionService;
 use app\common\SnowflakeService;
 use app\model\Owner;
 use support\Request;
@@ -54,7 +55,7 @@ class OwnerController extends BaseController
                 return [
                     'id'           => $this->encodeId($item->id),
                     'name'         => $item->name,
-                    'phone'        => $this->maskPhone($item->phone),
+                    'phone'        => EncryptionService::maskPhone($item->phone),
                     'email'        => $this->maskEmail($item->email),
                     'gender'       => $item->gender,
                     'status'       => $item->status,
@@ -260,15 +261,6 @@ class OwnerController extends BaseController
         Owner::whereIn('id', $decodedIds)->delete();
 
         return $this->success(['count' => count($decodedIds)], '删除成功');
-    }
-
-    /** 手机号脱敏：138****8000 */
-    private function maskPhone(string $phone): string
-    {
-        if (empty($phone)) {
-            return '';
-        }
-        return preg_replace('/^(\d{3})\d+(\d{4})$/', '$1****$2', $phone);
     }
 
     /** 邮箱脱敏：a***@xx.com */

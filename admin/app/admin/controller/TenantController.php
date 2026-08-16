@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\common\EncryptionService;
 use app\common\SnowflakeService;
 use app\model\Room;
 use app\model\Tenant;
@@ -59,7 +60,7 @@ class TenantController extends BaseController
                     'room_id'     => $this->encodeId($item->room_id),
                     'owner_id'    => $item->owner_id ? $this->encodeId($item->owner_id) : '',
                     'name'        => $item->name,
-                    'phone'       => $this->maskPhone($item->phone),
+                    'phone'       => EncryptionService::maskPhone($item->phone),
                     'lease_start' => $item->lease_start ? $item->lease_start->format('Y-m-d') : '',
                     'lease_end'   => $item->lease_end ? $item->lease_end->format('Y-m-d') : '',
                     'rent_amount' => $item->rent_amount,
@@ -197,12 +198,4 @@ class TenantController extends BaseController
         return $this->success([], '删除成功');
     }
 
-    /** 手机号脱敏：138****8000 */
-    private function maskPhone(string $phone): string
-    {
-        if (empty($phone)) {
-            return '';
-        }
-        return preg_replace('/^(\d{3})\d+(\d{4})$/', '$1****$2', $phone);
-    }
 }

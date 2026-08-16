@@ -15,6 +15,12 @@ class OpenApiTest extends TestCase
 {
     private const TEST_KEY = 'openapi_test_key_0123456789abcdef';
 
+    // 探测端口可用环境变量 OPEN_API_TEST_PORT 覆盖（本机 8788 被其他项目占用时设置）
+    private static function baseUrl(): string
+    {
+        return 'http://localhost:' . (getenv('OPEN_API_TEST_PORT') ?: 8788);
+    }
+
     private static ?ApiKey $key = null;
 
     public static function setUpBeforeClass(): void
@@ -45,7 +51,7 @@ class OpenApiTest extends TestCase
             'ignore_errors' => true, // 4xx/5xx 也返回响应体
             'header'        => $apiKey !== null ? "X-API-Key: $apiKey" : '',
         ]]);
-        $fp = @fopen('http://localhost:8788' . $path, 'r', false, $ctx);
+        $fp = @fopen(self::baseUrl() . $path, 'r', false, $ctx);
         if ($fp === false) {
             return null;
         }

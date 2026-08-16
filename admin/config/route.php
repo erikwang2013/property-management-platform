@@ -91,6 +91,7 @@ Route::group('/admin', function () {
     Route::get('/log', [app\admin\controller\LogController::class, 'index']);
 
     // 个人中心
+    Route::get('/profile', [app\admin\controller\ProfileController::class, 'show']);
     Route::put('/profile', [app\admin\controller\ProfileController::class, 'updateProfile']);
     Route::put('/profile/password', [app\admin\controller\ProfileController::class, 'updatePassword']);
     Route::post('/profile/logout', [app\admin\controller\ProfileController::class, 'logout']);

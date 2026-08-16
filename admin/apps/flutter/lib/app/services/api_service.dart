@@ -4,6 +4,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
+import '../config/api_config.dart';
 import 'auth_service.dart';
 
 class ApiService {
@@ -33,16 +34,38 @@ class ApiService {
         handler.next(options);
       },
       onError: (error, handler) async {
-        if (error.response?.statusCode == 401) {
-          final refreshed = await tryRefresh();
-          if (!refreshed) {
-            await AuthService.clearToken();
-            Future.microtask(() => Get.offAllNamed('/login'));
-          }
+        // 刷新接口自身的 401 不再触发刷新，避免死循环
+        if (error.response?.statusCode != 401 || error.requestOptions.path == ApiConfig.authRefresh) {
+          handler.next(error);
+          return;
         }
+        final opts = error.requestOptions;
+        if (opts.extra['_retried'] == true) {
+          await _forceLogout();
+          handler.next(error);
+          return;
+        }
+        // 并发 401 只发起一次刷新，其余请求排队等待
+        final fut = _refreshing ??= tryRefresh().whenComplete(() => _refreshing = null);
+        final refreshed = await fut;
+        if (refreshed) {
+          opts.extra['_retried'] = true;
+          try {
+            handler.resolve(await dio.fetch(opts));
+            return;
+          } catch (_) {}
+        }
+        await _forceLogout();
         handler.next(error);
       },
     ));
+  }
+
+  Future<bool>? _refreshing;
+
+  Future<void> _forceLogout() async {
+    await AuthService.clearToken();
+    Future.microtask(() => Get.offAllNamed('/login'));
   }
 
   Future<Map<String, dynamic>> get(String path, {Map<String, dynamic>? params}) async {

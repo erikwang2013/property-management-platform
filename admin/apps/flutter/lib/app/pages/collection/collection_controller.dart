@@ -27,7 +27,7 @@ class CollectionRecordController extends GetxController {
     try {
       final r = await api.get(ApiConfig.collectionRecord);
       records.value = List<Map<String, dynamic>>.from(r['data'] is List ? r['data'] : (r['data']['data'] ?? []));
-    } catch (_) {} finally { isLoading.value = false; }
+    } catch (e) { Get.snackbar('错误', '加载列表失败: $e'); } finally { isLoading.value = false; }
   }
   Future<void> run() async {
     await api.post(ApiConfig.collectionRun);

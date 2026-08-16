@@ -40,12 +40,12 @@ class ChatRecordController extends GetxController {
     try {
       final r = await api.get(ApiConfig.chatRecord);
       records.value = List<Map<String, dynamic>>.from(r['data'] is List ? r['data'] : (r['data']['data'] ?? []));
-    } catch (_) {} finally { isLoading.value = false; }
+    } catch (e) { Get.snackbar('错误', '加载列表失败: $e'); } finally { isLoading.value = false; }
   }
   Future<void> loadStats() async {
     try {
       final r = await api.get(ApiConfig.chatStats);
       stats.value = r['data'] as Map<String, dynamic>? ?? {};
-    } catch (_) {}
+    } catch (e) { Get.snackbar('错误', '加载统计数据失败: $e'); }
   }
 }

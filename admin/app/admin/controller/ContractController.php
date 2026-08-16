@@ -10,6 +10,7 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\Contract;
+use InvalidArgumentException;
 use support\Request;
 
 /**
@@ -122,6 +123,17 @@ class ContractController extends BaseController
         }
         if (empty($data['title'])) {
             return $this->fail('合同标题不能为空', 422);
+        }
+
+        // 签约方ID为 hashid，入库前解码，解码失败返回 422
+        foreach (['party_a_id', 'party_b_id'] as $field) {
+            if (!empty($data[$field])) {
+                try {
+                    $data[$field] = $this->decodeId((string) $data[$field]);
+                } catch (InvalidArgumentException) {
+                    return $this->fail('无效的ID', 422);
+                }
+            }
         }
 
         $data['id']     = SnowflakeService::generate();

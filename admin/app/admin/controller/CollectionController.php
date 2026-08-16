@@ -192,7 +192,8 @@ class CollectionController extends BaseController
             ->get();
 
         // 获取所有逾期未缴清的账单
-        $overdueBills = FeeBill::where('status', '!=', 1)
+        // 只纳入未缴(0)/逾期(3)，排除部分缴(1)、已缴(2)、豁免(4)
+        $overdueBills = FeeBill::whereIn('status', [0, 3])
             ->where('due_date', '<', $now)
             ->get();
 
@@ -266,7 +267,8 @@ class CollectionController extends BaseController
         $updatedCount = 0;
 
         // 获取所有逾期未缴清的账单
-        $overdueBills = FeeBill::where('status', '!=', 1)
+        // 只纳入未缴(0)/逾期(3)，排除部分缴(1)、已缴(2)、豁免(4)
+        $overdueBills = FeeBill::whereIn('status', [0, 3])
             ->where('due_date', '<', $now)
             ->get();
 

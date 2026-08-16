@@ -17,7 +17,7 @@ class FinanceController extends GetxController {
     try {
       final r = await api.get(ApiConfig.financeStatistics);
       statistics.value = r['data'] as Map<String, dynamic>? ?? {};
-    } catch (_) {} finally { isLoading.value = false; }
+    } catch (e) { Get.snackbar('错误', '加载统计数据失败: $e'); } finally { isLoading.value = false; }
   }
 }
 

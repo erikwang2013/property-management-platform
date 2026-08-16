@@ -19,6 +19,6 @@ class GroupController extends BaseCrudController {
     try {
       final r = await api.get(ApiConfig.groupSummary(hid));
       summary.value = r['data'] as Map<String, dynamic>? ?? {};
-    } catch (_) {}
+    } catch (e) { Get.snackbar('错误', '加载汇总失败: $e'); }
   }
 }

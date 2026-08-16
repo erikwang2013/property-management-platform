@@ -10,6 +10,7 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use app\model\OperationLog;
+use InvalidArgumentException;
 use support\Redis;
 use support\Request;
 use support\Response;
@@ -163,6 +164,20 @@ class DashboardController extends BaseController
     public function propertyStats(Request $request): Response
     {
         $communityId = $request->input('community_id');
+        if (!empty($communityId)) {
+            try {
+                $communityId = $this->decodeId((string) $communityId);
+            } catch (InvalidArgumentException) {
+                return $this->fail('无效的小区ID', 404);
+            }
+        }
+
+        // Redis 缓存 5 分钟，键含小区维度
+        $cacheKey = 'dashboard:property:' . ($communityId ?: 'all');
+        $cached = Redis::get($cacheKey);
+        if ($cached) {
+            return $this->success(json_decode($cached, true));
+        }
 
         // 应收/实收/欠费统计
         $billQuery = \app\model\FeeBill::query();
@@ -189,8 +204,9 @@ class DashboardController extends BaseController
             ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')->get();
 
-        // 投诉统计
+        // 投诉统计（按小区过滤：投诉通过 room_id 关联小区）
         $complaintStats = \app\model\Complaint::query()
+            ->when($communityId, fn($q) => $q->whereIn('room_id', \app\model\Room::where('community_id', $communityId)->select('id')))
             ->selectRaw('type, status, COUNT(*) as count')
             ->groupBy('type', 'status')->get();
 
@@ -206,7 +222,7 @@ class DashboardController extends BaseController
             ->where('expense_date', '>=', date('Y-m-d', strtotime('-11 months')))
             ->groupBy('month')->orderBy('month')->get();
 
-        return $this->success([
+        $data = [
             'billing' => ['total_billed' => $totalBilled, 'total_paid' => $totalPaid, 'arrears_rate' => $totalBilled > 0 ? round(($totalBilled - $totalPaid) / $totalBilled * 100, 1) : 0],
             'occupancy' => ['total_rooms' => $totalRooms, 'occupied_rooms' => $occupiedRooms, 'rate' => $occupancyRate],
             'repair_by_category' => $repairStats,
@@ -214,7 +230,11 @@ class DashboardController extends BaseController
             'complaint_stats' => $complaintStats,
             'monthly_income' => $monthlyIncome,
             'monthly_expense' => $monthlyExpense,
-        ]);
+        ];
+
+        Redis::setex($cacheKey, 300, json_encode($data, JSON_UNESCAPED_UNICODE));
+
+        return $this->success($data);
     }
 
     private function calcTrend(string $modelClass): ?float
