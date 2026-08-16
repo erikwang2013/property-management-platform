@@ -5,49 +5,41 @@
 
 ## 1. 数据库备份与恢复
 
-两端各自独立备份，库名不同：
+admin 端与 service 端共用同一 MySQL 实例与库 `property_management`，备份一次即可。统一入口：
 
-| 端 | 库名 | 备份脚本 |
+| 库名 | 备份脚本 | 说明 |
 |---|---|---|
-| admin | `open_admin` | `admin/database/backup/backup.sh` |
-| service | `property_management` | `service/database/backup/backup.sh` |
+| `property_management` | `scripts/backup.sh` | 从 `admin/.env` 读连接（可用 `--container=` 覆盖容器名），默认容器内 mysqldump |
 
-脚本通过环境变量读取数据库连接（`DB_HOST`/`DB_PORT`/`DB_DATABASE`/`DB_USERNAME`/`DB_PASSWORD`），未设置时用默认值（127.0.0.1:3306）。备份输出 `database/backup/backup_YYYYMMDD_HHMMSS.sql.gz`，自动保留最近 30 天。
+输出 `backups/backup_YYYYMMDD_HHMMSS.sql.gz`，默认保留最近 7 天（`--keep-days=` 可调）。
 
 ### 1.1 全量备份
 
 ```bash
-cd /path/to/property-management-platform/admin
-bash database/backup/backup.sh
-
-cd /path/to/property-management-platform/service
-bash database/backup/backup.sh
+cd /path/to/property-management-platform
+bash scripts/backup.sh
 ```
 
 ### 1.2 定时任务（crontab）
 
 ```cron
-# 每天 02:00 备份 service，02:30 备份 admin（错峰执行）
-0 2 * * * cd /path/to/property-management-platform/service && bash database/backup/backup.sh >> /var/log/pmp-backup.log 2>&1
-30 2 * * * cd /path/to/property-management-platform/admin && bash database/backup/backup.sh >> /var/log/pmp-backup.log 2>&1
+# 每天 02:00 全量备份
+0 2 * * * cd /path/to/property-management-platform && bash scripts/backup.sh >> /var/log/pmp-backup.log 2>&1
 ```
 
 生产建议：将备份目录挂载到独立磁盘/异地存储，并定期抽查备份文件完整性（`gzip -t` 校验）。
 
 ### 1.3 恢复演练流程（每季度至少一次）
 
-1. 选取最近一份备份：`ls -t database/backup/backup_*.sql.gz`
-2. 在**独立环境**（或临时库）执行恢复：
-   ```bash
-   cd /path/to/property-management-platform/service
-   DB_DATABASE=property_management_drill bash database/backup/restore.sh database/backup/backup_20260815_020000.sql.gz
-   ```
-   > 脚本默认交互确认，防止误覆盖；演练时先建一个空库 `property_management_drill` 再恢复。
+1. 选取最近一份备份：`ls -t backups/backup_*.sql.gz`
+2. 在**独立环境**（或临时库）执行恢复：详见 [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) 场景 A（空库恢复）与场景 B（时间点恢复）。
 3. 验证：
    - 行数对比：`SELECT COUNT(*) FROM erik_user;` 与备份前记录一致
    - 加密字段可正常解密：查一条含 encryptable 字段的记录，值正确、日志无 decrypt 报错
    - 业务冒烟：登录、拉取列表接口正常
 4. 记录演练耗时与结果（用于 RTO 评估）。
+
+> 完整演练手册（空库恢复 / 时间点恢复 / 一致性验证 / 30 分钟演练时间表）见 [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md)。
 
 ### 1.4 RPO / RTO 说明
 

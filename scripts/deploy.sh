@@ -130,3 +130,4 @@ echo
 echo "部署完成。"
 echo "  监控入口: admin Prometheus :9090 / Grafana :3000；service :9091 / :3001（可用 .env 中 PROMETHEUS_PORT/GRAFANA_PORT 覆盖）"
 echo "  注意: 双端 nginx 默认均映射 80/443，同主机部署需通过 .env 的 NGINX_PORT/NGINX_SSL_PORT 错开"
+echo "  提醒: 上线后配置数据库备份 cron（bash scripts/backup.sh，详见 docs/OPS_RUNBOOK.md 1.2 与 docs/RECOVERY_RUNBOOK.md）"
