@@ -90,7 +90,7 @@ open-admin/
 │   ├── flutter/                # Flutter Web admin panel
 │   └── harmonyos/              # HarmonyOS client (auto token refresh)
 ├── config/                     # Config files
-├── database/migrations/        # SQL migrations (incl. permission seeds)
+└── docs/install.sql            # Full install SQL (66 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
 ```
 
@@ -131,13 +131,10 @@ Key environment variables:
 
 ### 3. Initialize Database
 
-Run the SQL migration files in order:
+Run the consolidated install script at repo root (66 tables + RBAC permission seeds, idempotent):
 
 ```bash
-# Create tables
-mysql -u root -p < database/migrations/2026_05_16_000000_init_tables.sql
-# Seed permissions
-mysql -u root -p < database/migrations/2026_05_20_000001_seed_permissions.sql
+mysql -u root -p < ../docs/install.sql
 ```
 
 ### 4. Start Server
@@ -174,8 +171,7 @@ cp .env.docker .env
 docker-compose up -d
 
 # 3. Initialize database (run inside the app container)
-docker-compose exec app mysql -h mysql -u root -p < database/migrations/2026_05_16_000000_init_tables.sql
-docker-compose exec app mysql -h mysql -u root -p < database/migrations/2026_05_20_000001_seed_permissions.sql
+docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 # 4. Access
 # http://localhost:8787  (webman)

@@ -134,13 +134,10 @@ open-admin/
 ├── config/                     # 配置文件
 │   ├── route.php               # 路由 + API 版本策略
 │   └── middleware.php           # 全局中间件注册
-├── database/
-│   ├── migrations/             # SQL 迁移文件
-│   │   ├── 2026_05_16_000000_init_tables.sql
-│   │   └── 2026_05_20_000001_seed_permissions.sql
-│   └── backup/                 # 数据库备份脚本
-│       ├── backup.sh           # mysqldump+gzip，30天保留
-│       └── restore.sh          # 交互式恢复
+├── docs/install.sql            # 全量建库 SQL（66 表 + 权限种子，唯一建库入口）
+├── database/backup/            # 数据库备份脚本
+│   ├── backup.sh               # mysqldump+gzip，30天保留
+│   └── restore.sh              # 交互式恢复
 ├── docs/                       # 文档
 │   ├── ARCHITECTURE.md         # Mermaid 架构图
 │   ├── DESIGN.md               # 设计文档

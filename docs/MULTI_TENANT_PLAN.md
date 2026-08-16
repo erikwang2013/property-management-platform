@@ -103,7 +103,7 @@
 - 共享库 + tenant_id 行隔离（方案 A），新建 `erik_platform_tenant` 表，community/admin_user 加列
 - TenantContext 中间件 + TenantScope 全局作用域 + Tenant::for() 工具
 - 试点顺序：集团 → 小区 → 业主 → 费用
-- 前置依赖：P1 版本化迁移机制（拆 install.sql）先落地，本方案迁移脚本依托它
+- 前置依赖：已完成 — 多租户表/列/回填已内联进 docs/install.sql（2026-08-16 合并落地，单一建库入口）
 
 **建议缓做**：
 - 独立库隔离（B）：仅在单租户 >500 万行或合规要求时启动，数据模型已预留

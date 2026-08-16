@@ -150,18 +150,15 @@ class MultiTenantTest extends TestCase
         $this->assertStringNotContainsString("'tenant_id'", $fillableBlock);
     }
 
-    public function test_schema_and_migration_have_tenant_columns(): void
+    public function test_schema_has_tenant_columns_and_backfill(): void
     {
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/docs/install.sql');
         $this->assertStringContainsString('CREATE TABLE IF NOT EXISTS `erik_platform_tenant`', $sql);
         $this->assertMatchesRegularExpression('/CREATE TABLE IF NOT EXISTS `erik_community`.*?`tenant_id` BIGINT UNSIGNED NOT NULL DEFAULT 0/s', $sql);
         $this->assertMatchesRegularExpression('/CREATE TABLE IF NOT EXISTS `erik_admin_user`.*?`tenant_id` BIGINT UNSIGNED NOT NULL DEFAULT 0/s', $sql);
         $this->assertStringContainsString('INSERT IGNORE INTO `erik_platform_tenant`', $sql);
-
-        $migration = (string) file_get_contents(__DIR__ . '/../database/migrations/2026_08_16_000006_multi_tenant.sql');
-        $this->assertStringContainsString('erik_platform_tenant', $migration);
-        $this->assertStringContainsString('UPDATE `erik_community` SET `tenant_id` = 1 WHERE `tenant_id` = 0', $migration);
-        $this->assertStringContainsString('UPDATE `erik_admin_user` SET `tenant_id` = 1 WHERE `tenant_id` = 0', $migration);
+        $this->assertStringContainsString('UPDATE `erik_community` SET `tenant_id` = 1 WHERE `tenant_id` = 0', $sql);
+        $this->assertStringContainsString('UPDATE `erik_admin_user` SET `tenant_id` = 1 WHERE `tenant_id` = 0', $sql);
     }
 
     public function test_login_and_refresh_carry_tenant_claim(): void

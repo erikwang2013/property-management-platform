@@ -24,7 +24,6 @@ property-management-platform/
 │   │   └── harmonyos/             # 管理后台 HarmonyOS App
 │   ├── config/                    # 配置文件（含中文注释）
 │   ├── database/
-│   │   ├── migrations/            # SQL 迁移文件
 │   │   └── backup/                # 数据库备份脚本
 │   ├── resource/
 │   │   └── translations/          # 国际化语言文件（zh_CN / en）
@@ -41,7 +40,6 @@ property-management-platform/
 │   ├── config/                    # 配置文件
 │   ├── resource/
 │   │   └── translations/          # 国际化语言文件
-│   └── database/migrations/       # SQL 迁移文件
 ├── apps/
 │   ├── flutter/                   # 业主端 Flutter Web（PC 风格）
 │   └── harmonyos/                 # 业主端 HarmonyOS App

@@ -24,7 +24,6 @@ property-management-platform/
 │   │   └── harmonyos/             # Admin HarmonyOS App
 │   ├── config/                    # Config files (with Chinese annotations)
 │   ├── database/
-│   │   ├── migrations/            # SQL migration files
 │   │   └── backup/                # Database backup scripts
 │   ├── resource/
 │   │   └── translations/          # i18n language files (zh_CN / en)
@@ -41,7 +40,6 @@ property-management-platform/
 │   ├── config/                    # Config files
 │   ├── resource/
 │   │   └── translations/          # i18n language files
-│   └── database/migrations/       # SQL migration files
 ├── apps/
 │   ├── flutter/                   # Owner portal Flutter Web (PC style)
 │   └── harmonyos/                 # Owner portal HarmonyOS App
