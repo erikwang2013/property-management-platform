@@ -108,11 +108,12 @@ class AuthController
             return json(['code' => 403, 'message' => '账号已被禁用', 'data' => []]);
         }
 
-        // 签发 JWT
+        // 签发 JWT（携带租户声明，TenantContext 依此隔离）
         $jwt = self::getJWT();
         $tokenExpire = (int)(config('plugin.erikwang2013.jwt.jwt.default_expire') ?: 7200);
-        $token = $jwt->encode(['sub' => $user->id, 'username' => $user->username]);
-        $refreshToken = $jwt->encode(['sub' => $user->id, 'token_type' => 'refresh'],
+        $claims = ['sub' => $user->id, 'username' => $user->username, 'tenant_id' => (int) ($user->tenant_id ?? 0)];
+        $token = $jwt->encode($claims);
+        $refreshToken = $jwt->encode(['sub' => $user->id, 'token_type' => 'refresh', 'tenant_id' => (int) ($user->tenant_id ?? 0)],
             (int)(config('plugin.erikwang2013.jwt.jwt.refresh_expire') ?: 1209600)
         );
 
@@ -232,8 +233,10 @@ class AuthController
             }
 
             $tokenExpire = (int)(config('plugin.erikwang2013.jwt.jwt.default_expire') ?: 7200);
-            $token = $jwt->encode(['sub' => $payload['sub'], 'username' => $payload['username'] ?? '']);
-            $newRefresh = $jwt->encode(['sub' => $payload['sub'], 'token_type' => 'refresh'],
+            // 租户声明随刷新延续，防止刷新后降级为平台(0)越权
+            $tenantId = (int) ($payload['tenant_id'] ?? 0);
+            $token = $jwt->encode(['sub' => $payload['sub'], 'username' => $payload['username'] ?? '', 'tenant_id' => $tenantId]);
+            $newRefresh = $jwt->encode(['sub' => $payload['sub'], 'token_type' => 'refresh', 'tenant_id' => $tenantId],
                 (int)(config('plugin.erikwang2013.jwt.jwt.refresh_expire') ?: 1209600)
             );
 

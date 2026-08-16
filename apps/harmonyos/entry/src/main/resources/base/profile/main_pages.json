@@ -6,6 +6,8 @@
     "pages/RepairListPage",
     "pages/RepairSubmitPage",
     "pages/AnnouncementPage",
-    "pages/ProfilePage"
+    "pages/ProfilePage",
+    "pages/VisitorPage",
+    "pages/ParkingPage"
   ]
 }

@@ -30,7 +30,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('智能问答')),
-    body: Center(child: SizedBox(width: 600, child: Column(children: [
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: Column(children: [
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: _messages.map((m) => Align(
         alignment: m['role'] == 'user' ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(margin: const EdgeInsets.symmetric(vertical: 4), padding: const EdgeInsets.all(12), decoration: BoxDecoration(

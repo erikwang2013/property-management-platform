@@ -6,6 +6,13 @@ import router from '@ohos.router';
 import { ApiService } from '../services/ApiService';
 import { Announcement } from '../model/Models';
 
+interface EntryItem {
+  label: string;
+  glyph: string;
+  color: string;
+  url: string;
+}
+
 @Entry
 @Component
 struct HomePage {
@@ -14,6 +21,14 @@ struct HomePage {
   @State pendingRepairs: number = 0;
   @State rooms: number = 0;
   private api: ApiService = ApiService.getInstance();
+  private entries: EntryItem[] = [
+    { label: '缴费', glyph: '¥', color: '#FF6B6B', url: 'pages/FeeBillsPage' },
+    { label: '报修', glyph: '修', color: '#4ECDC4', url: 'pages/RepairListPage' },
+    { label: '公告', glyph: '告', color: '#45B7D1', url: 'pages/AnnouncementPage' },
+    { label: '访客', glyph: '访', color: '#5470C6', url: 'pages/VisitorPage' },
+    { label: '停车', glyph: '停', color: '#13A8A8', url: 'pages/ParkingPage' },
+    { label: '我的', glyph: '我', color: '#722ED1', url: 'pages/ProfilePage' },
+  ];
 
   async aboutToAppear(): Promise<void> {
     await this.api.init();
@@ -58,6 +73,14 @@ struct HomePage {
       }
       .width('100%').padding({ left: 16, right: 16 }).justifyContent(FlexAlign.SpaceBetween)
 
+      // 功能入口
+      Flex({ wrap: FlexWrap.Wrap }) {
+        ForEach(this.entries, (item: EntryItem) => {
+          this.entryTile(item)
+        }, (item: EntryItem) => item.url)
+      }
+      .width('100%').padding({ left: 16, right: 16 }).margin({ top: 16 })
+
       // Announcements
       List() {
         ForEach(this.announcements, (item: Announcement) => {
@@ -82,6 +105,19 @@ struct HomePage {
       .layoutWeight(1).margin({ top: 16 }).padding({ left: 16, right: 16 })
     }
     .width('100%').height('100%').backgroundColor('#F5F5F5')
+  }
+
+  @Builder entryTile(item: EntryItem) {
+    Column() {
+      Text(item.glyph)
+        .fontSize(16).fontWeight(FontWeight.Bold).fontColor('#FFF')
+        .width(44).height(44).textAlign(TextAlign.Center)
+        .backgroundColor(item.color).borderRadius(22)
+        .margin({ bottom: 6 })
+      Text(item.label).fontSize(12).fontColor('#333')
+    }
+    .width('25%').margin({ bottom: 12 })
+    .onClick(() => { router.pushUrl({ url: item.url }); })
   }
 
   @Builder statCard(label: string, value: string, color: string) {

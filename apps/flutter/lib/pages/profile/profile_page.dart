@@ -238,8 +238,8 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(
-          child: SizedBox(
-            width: 600,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Column(
               children: [
                 // 头像 + 名称区域

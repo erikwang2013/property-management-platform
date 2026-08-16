@@ -23,7 +23,7 @@ class _ActivityListPageState extends State<ActivityListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: const Text('社区活动')),
-      body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((a) => Card(child: ListTile(
+      body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((a) => Card(child: ListTile(
         leading: const Icon(Icons.event, color: Colors.blue), title: Text(a['title'] ?? ''),
         subtitle: Text('${a['location'] ?? ''} | ${a['start_time'] ?? ''} | ${a['signup_count'] ?? 0}/${a['max_signup'] ?? '-'}人'),
         trailing: const Icon(Icons.chevron_right),

@@ -27,7 +27,7 @@ class _MallProductDetailPageState extends State<MallProductDetailPage> {
   }
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: Text(_detail?['name'] ?? '商品详情')),
-    body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Icon(Icons.shopping_bag, size: 80, color: Colors.blue), const SizedBox(height: 16),
       Text(_detail?['name'] ?? '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)), const SizedBox(height: 8),
       Text('¥${_detail?['price'] ?? '-'}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.red)), const SizedBox(height: 8),

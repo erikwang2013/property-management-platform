@@ -123,8 +123,8 @@ class _RepairSubmitPageState extends State<RepairSubmitPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(
-          child: SizedBox(
-            width: 600,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(32),

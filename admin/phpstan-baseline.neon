@@ -2317,6 +2317,12 @@ parameters:
 			path: app/middleware/AdminAuth.php
 
 		-
+			message: '#^Access to an undefined property support\\Request\:\:\$tenantId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/AdminAuth.php
+
+		-
 			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -2465,3 +2471,9 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: app/model/AdminUser.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Community\:\:\$tenant_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/model/Community.php

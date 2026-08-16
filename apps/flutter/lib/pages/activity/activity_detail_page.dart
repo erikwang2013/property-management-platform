@@ -27,7 +27,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   }
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: Text(_detail?['title'] ?? '活动详情')),
-    body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(_detail?['title'] ?? '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       const SizedBox(height: 16), _row('地点', _detail?['location']), _row('时间', '${_detail?['start_time']} - ${_detail?['end_time']}'),
       _row('报名', '${_detail?['signup_count'] ?? 0}/${_detail?['max_signup'] ?? '-'}'),

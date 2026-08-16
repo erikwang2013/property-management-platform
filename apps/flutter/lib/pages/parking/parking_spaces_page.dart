@@ -23,6 +23,6 @@ class _ParkingSpacesPageState extends State<ParkingSpacesPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('我的车位')),
-    body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((s) => Card(child: ListTile(leading: const Icon(Icons.local_parking), title: Text(s['space_number'] ?? ''), subtitle: Text('类型: ${s['type'] ?? '-'} | 面积: ${s['area'] ?? '-'}m²')))).toList()))),
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((s) => Card(child: ListTile(leading: const Icon(Icons.local_parking), title: Text(s['space_number'] ?? ''), subtitle: Text('类型: ${s['type'] ?? '-'} | 面积: ${s['area'] ?? '-'}m²')))).toList()))),
   );
 }

@@ -30,7 +30,7 @@ class _VisitorListPageState extends State<VisitorListPage> {
       appBar: AppBar(title: const Text('访客预约'), actions: [
         IconButton(icon: const Icon(Icons.add), onPressed: () => Get.toNamed('/visitor-create')?.then((_) => _load())),
       ]),
-      body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(child: ListTile(
+      body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(child: ListTile(
         leading: CircleAvatar(child: Text((v['visitor_name'] as String? ?? '?')[0])),
         title: Text(v['visitor_name'] ?? ''), subtitle: Text('访问时间: ${v['visit_time'] ?? '-'}'),
         trailing: Chip(label: Text(_statusLabel(v['status']), style: const TextStyle(fontSize: 12)), backgroundColor: _statusColor(v['status'])),

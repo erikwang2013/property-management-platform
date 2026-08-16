@@ -70,3 +70,46 @@ export interface Announcement {
   category: number;
   published_at: string;
 }
+
+export interface Visitor {
+  id: string;
+  visitor_name: string;
+  visitor_phone: string;
+  plate_number: string;
+  visitor_count: number;
+  purpose: string;
+  expected_start: string;
+  expected_end: string;
+  pass_code: string;
+  status: number;
+  created_at: string;
+}
+
+export interface ParkingSpace {
+  id: string;
+  space_number: string;
+  space_type: number;
+  area: number;
+  status: number;
+  fee_monthly: number;
+}
+
+export interface ParkingVehicle {
+  id: string;
+  plate_number: string;
+  vehicle_brand: string;
+  vehicle_color: string;
+  vehicle_type: number;
+  end_date: string;
+  status: number;
+  space: ParkingSpace | null;
+}
+
+export interface ParkingRecord {
+  id: string;
+  plate_number: string;
+  entry_time: string;
+  exit_time: string;
+  duration: number;
+  fee: number;
+}

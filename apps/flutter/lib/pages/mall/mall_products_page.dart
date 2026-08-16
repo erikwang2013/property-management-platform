@@ -31,8 +31,8 @@ class _MallProductsPageState extends State<MallProductsPage> {
         actions: [IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () => Get.toNamed('/mall-orders'))],
       ),
       body: Center(
-        child: SizedBox(
-          width: 800,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : GridView.builder(

@@ -52,6 +52,8 @@ class AdminAuth
             $payload = self::getJWT()->decode($token);
             $request->adminId = $payload['sub'] ?? 0;
             $request->adminUsername = $payload['username'] ?? '';
+            // 租户声明：旧 token 无声明时按平台(0)处理，重新登录后生效
+            $request->tenantId = (int) ($payload['tenant_id'] ?? 0);
         } catch (JWTException | \Exception $e) {
             return json(['code' => 401, 'message' => 'Token已过期或无效', 'data' => []]);
         }

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `erik_admin_user` (
     `phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '手机号（加密存储）',
     `id_card` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '身份证号（加密存储）',
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=禁用 1=启用',
+    `tenant_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属租户ID, 0=平台超级管理员',
     `last_login_at` DATETIME DEFAULT NULL COMMENT '最后登录时间',
     `last_login_ip` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '最后登录IP',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -27,9 +28,23 @@ CREATE TABLE IF NOT EXISTS `erik_admin_user` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_username` (`username`),
     KEY `idx_status` (`status`),
+    KEY `idx_tenant_id` (`tenant_id`),
     KEY `idx_deleted_at` (`deleted_at`),
     KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理用户表';
+
+-- ============================================================
+-- SaaS 租户表（与租客表 erik_tenant 语义区分）
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `erik_platform_tenant` (
+    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID（默认租户固定 1）',
+    `name` VARCHAR(100) NOT NULL COMMENT '租户名称',
+    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=停用 1=正常',
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SaaS租户表';
 
 -- ============================================================
 -- 角色表
@@ -568,13 +583,23 @@ CREATE TABLE IF NOT EXISTS `erik_community` (
     `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话（加密存储）',
     `description` TEXT COMMENT '小区简介',
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=停用 1=正常',
+    `tenant_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属租户ID, 0=平台',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `deleted_at` DATETIME DEFAULT NULL COMMENT '软删除',
     PRIMARY KEY (`id`),
     KEY `idx_status` (`status`),
+    KEY `idx_tenant_community` (`tenant_id`, `id`),
     KEY `idx_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小区表';
+
+-- ============================================================
+-- 多租户：默认租户初始化 + 存量回填（存量数据归入默认租户）
+-- ============================================================
+INSERT IGNORE INTO `erik_platform_tenant` (`id`, `name`, `status`, `created_at`, `updated_at`)
+VALUES (1, '默认租户', 1, NOW(), NOW());
+UPDATE `erik_community` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
+UPDATE `erik_admin_user` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
 
 -- 2. 楼栋表
 CREATE TABLE IF NOT EXISTS `erik_building` (

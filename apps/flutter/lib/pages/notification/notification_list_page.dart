@@ -28,8 +28,8 @@ class _NotificationListPageState extends State<NotificationListPage> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text(n['title'] ?? ''),
-        content: SizedBox(
-          width: 480,
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class _NotificationListPageState extends State<NotificationListPage> {
   }
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('消息通知'), actions: [TextButton(onPressed: _readAll, child: const Text('全部已读'))]),
-    body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((n) => Card(
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((n) => Card(
       color: n['read_at'] == null ? Colors.blue.shade50 : null,
       child: ListTile(leading: Icon(n['read_at'] == null ? Icons.markunread : Icons.drafts, color: n['read_at'] == null ? Colors.blue : Colors.grey), title: Text(n['title'] ?? ''), subtitle: Text(n['content'] ?? '', maxLines: 1, overflow: TextOverflow.ellipsis), trailing: Text(n['sent_at'] ?? '', style: const TextStyle(fontSize: 11, color: Colors.grey)), onTap: () => _showDetail(n)),
     )).toList()))),

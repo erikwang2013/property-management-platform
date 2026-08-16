@@ -22,7 +22,7 @@ class _VoteListPageState extends State<VoteListPage> {
   }
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('业主投票')),
-    body: Center(child: SizedBox(width: 600, child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(child: ListTile(
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(child: ListTile(
       leading: const Icon(Icons.how_to_vote, color: Colors.blue), title: Text(v['title'] ?? ''),
       subtitle: Text('${v['voted_count'] ?? 0}人已投票 | 截止: ${v['end_time'] ?? '-'}'),
       trailing: const Icon(Icons.chevron_right), onTap: () => Get.toNamed('/vote-detail', arguments: v),

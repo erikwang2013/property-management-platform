@@ -30,7 +30,7 @@ class _ParkingVehiclesPageState extends State<ParkingVehiclesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('我的车辆')),
-      body: Center(child: SizedBox(width: 600, child: _loading
+      body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading
         ? const Center(child: CircularProgressIndicator())
         : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(
           child: ListTile(leading: const Icon(Icons.directions_car), title: Text(v['plate_number'] ?? ''), subtitle: Text('车位: ${v['space_number'] ?? '-'}'), trailing: const Icon(Icons.chevron_right)),

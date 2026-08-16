@@ -296,6 +296,7 @@ if (edition_supports('full')) {
     }
 })->middleware([
     app\middleware\AdminAuth::class,
+    app\middleware\TenantContext::class,
     app\middleware\AdminPermission::class,
     app\middleware\OperationLog::class,
 ]);
