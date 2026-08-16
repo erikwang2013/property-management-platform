@@ -130,4 +130,14 @@ if (edition_supports('full')) {
     app\middleware\OperationLog::class,
 ]);
 
+// 开放 API（入站对外只读接口，X-API-Key 鉴权）
+Route::group('/open', function () {
+    Route::get('/announcements', [app\api\v1\controller\OpenApiController::class, 'announcements']);
+    Route::get('/bills', [app\api\v1\controller\OpenApiController::class, 'bills']);
+    Route::get('/repairs', [app\api\v1\controller\OpenApiController::class, 'repairs']);
+})->middleware([
+    app\middleware\ApiKeyAuth::class,
+    app\middleware\ApiVersion::class,
+]);
+
 Route::disableDefaultRoute();

@@ -145,3 +145,43 @@ sudo logrotate -d /etc/logrotate.d/pmp-app   # 试运行检查
 ```
 
 默认每日轮转、保留 30 天、gzip 压缩。
+
+## 5. 部署后压测冒烟
+
+部署完成后用 k6 冒烟验证登录链路与关键业务接口可达（低速率，非性能压测）。脚本：`scripts/loadtest/smoke.js`（默认 2 VU、30s，登录 + dashboard，均支持 `BASE_URL`/`VUS`/`DURATION`/`TOKEN` 环境变量覆盖）。
+
+### 5.1 本地冒烟
+
+```bash
+cd /path/to/property-management-platform/scripts/loadtest
+
+# 只探测登录链路（无需 token；422 验证码错误/429 限流均属防御生效，视为可达）
+k6 run -e BASE_URL=http://127.0.0.1:8790 smoke.js
+
+# 含鉴权业务接口：在部署服务器上签发压测 JWT（依赖 admin/.env 与 vendor）再传入
+TOKEN=$(php mint-token.php)
+k6 run -e BASE_URL=https://admin.example.com -e TOKEN="$TOKEN" smoke.js
+
+# 自定义并发/时长
+k6 run -e BASE_URL=https://admin.example.com -e TOKEN="$TOKEN" -e VUS=5 -e DURATION=60s smoke.js
+```
+
+全量压测（login + dashboard + fee 三脚本）仍用 `bash scripts/loadtest/run.sh [BASE_URL] [VUS] [DURATION]`。
+
+### 5.2 CI 冒烟（GitHub Actions 手动触发）
+
+仓库 Actions 页面 → **Loadtest Smoke** → **Run workflow**：
+
+| 输入 | 必填 | 说明 |
+|---|---|---|
+| `target_url` | 是 | 被测环境地址，如 `https://admin.example.com` |
+| `duration` | 否 | 冒烟时长，默认 `30s` |
+| `token` | 否 | 压测 JWT；留空则只探测登录链路 |
+
+token 获取（在部署服务器仓库根下执行，需 `admin/.env` 与 `admin/vendor/`）：
+
+```bash
+php scripts/loadtest/mint-token.php
+```
+
+> 注意：token 是压测专用 JWT（默认 erik 管理员账号），会明文出现在 workflow 日志中，请用压测专用账号签发；生产环境如不便暴露，改用 5.1 本地冒烟。

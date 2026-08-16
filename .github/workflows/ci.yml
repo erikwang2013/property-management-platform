@@ -178,6 +178,9 @@ jobs:
       - name: Analyze service Flutter
         run: cd apps/flutter && flutter pub get && flutter analyze
 
+      - name: Test service Flutter
+        run: cd apps/flutter && flutter test
+
   phpstan:
     name: PHPStan (Level 5)
     runs-on: ubuntu-latest

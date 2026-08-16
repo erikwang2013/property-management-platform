@@ -630,6 +630,49 @@ OpenAPI 文档。
 
 ---
 
+## 开放 API — API Key 鉴权
+
+入站对外只读接口，供第三方系统（物业平台对接、数据大屏等）调用。前缀 `/open`，全部只读。
+
+### 鉴权方式
+
+每个请求需携带请求头 `X-API-Key`，值为 `scripts/gen_api_key.php` 生成的 Key（64 位 hex，库中仅存 SHA-256 摘要）：
+
+```bash
+curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
+```
+
+- 缺失或错误的 Key 返回 `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
+- Key 管理：`php scripts/gen_api_key.php [--name=用途]` 生成；禁用/删除直接操作 `erik_api_key` 表（`status=0` 即禁用，密钥立即失效）
+
+### 端点
+
+#### GET /open/announcements — 公告列表
+
+参数：`page`（默认 1）、`category`（可选）。响应结构与 `/service/announcements` 一致。
+
+```bash
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/announcements?page=1"
+```
+
+#### GET /open/bills — 账单查询
+
+参数：`bill_number`（必填，账单编号）。返回单个账单详情（含费用类型、房间号、欠费金额）。不存在返回 404。
+
+```bash
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+```
+
+#### GET /open/repairs — 报修状态查询
+
+参数：`order_number`（必填，报修单号）。返回报修单当前状态及进度时间线（`progress` 数组）。不存在返回 404。
+
+```bash
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+```
+
+---
+
 ## 错误码
 
 | code | 含义 | 说明 |

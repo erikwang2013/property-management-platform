@@ -1695,3 +1695,16 @@ CREATE TABLE IF NOT EXISTS `erik_chat_record` (
     KEY `idx_user` (`user_id`, `user_type`),
     KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对话记录表';
+
+-- 开放 API Key 表（service 端入站对外接口鉴权，X-API-Key 头）
+CREATE TABLE IF NOT EXISTS `erik_api_key` (
+    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
+    `name` VARCHAR(64) NOT NULL COMMENT 'Key 名称/用途',
+    `api_key_hash` CHAR(64) NOT NULL COMMENT 'API Key SHA-256 摘要（明文不落库）',
+    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=禁用 1=启用',
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_api_key_hash` (`api_key_hash`),
+    KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='开放 API Key 表';

@@ -1,0 +1,45 @@
+# ============================================================
+# Loadtest Smoke — 部署后压测冒烟（仅手动触发，不在 push/PR 上跑）
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# ============================================================
+
+name: Loadtest Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: '被测环境地址，如 https://admin.example.com'
+        required: true
+        type: string
+      duration:
+        description: '冒烟时长（k6 格式，如 30s）'
+        required: false
+        default: '30s'
+        type: string
+      token:
+        description: '压测 JWT（部署服务器上 mint-token.php 签发）；留空则只探测登录链路'
+        required: false
+        type: string
+
+jobs:
+  smoke:
+    name: k6 Smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run k6 smoke
+        run: |
+          docker run --rm -v "${GITHUB_WORKSPACE}:/work" -w /work \
+            grafana/k6:latest run \
+            --summary-export=/work/smoke-summary.json \
+            -e BASE_URL="${{ inputs.target_url }}" \
+            -e TOKEN="${{ inputs.token }}" \
+            -e DURATION="${{ inputs.duration }}" \
+            scripts/loadtest/smoke.js
+
+      - name: Print result summary
+        run: |
+          jq '{p95_ms: .metrics.http_req_duration.values["p(95)"], req_failed_rate: .metrics.http_req_failed.values.rate, total_reqs: .metrics.http_reqs.values.count}' smoke-summary.json
