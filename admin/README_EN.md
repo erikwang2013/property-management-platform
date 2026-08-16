@@ -419,10 +419,7 @@ GitHub Actions CI pipeline: `.github/workflows/ci.yml`
 
 ### Database Backup
 
-`database/backup/` directory:
-
-- `backup.sh` — mysqldump + gzip backup, auto-clears backups older than 30 days
-- `restore.sh` — interactive restore, lists available backups for selection
+Backups use the repo-root `scripts/backup.sh` (reads connection from `admin/.env`, mysqldump inside the container by default, outputs `backups/backup_*.sql.gz`, keeps 7 days by default, `--keep-days=` configurable). Restore procedures: see `docs/RECOVERY_RUNBOOK.md`.
 
 ### Nginx Security
 

@@ -123,7 +123,7 @@ docker compose up -d prometheus grafana redis-exporter
 - **重载规则**：改完 alerts.yml 后 `curl -X POST localhost:9090/-/reload`（prometheus 需加 `--web.enable-lifecycle`，默认未加则重启容器）。
 - **本地验证**：`bash scripts/verify_monitoring.sh` — 校验 admin/service 两侧告警规则 YAML 语法、curl 两端 `/metrics`（admin:8787 / service:8788）指标输出、Prometheus（9090/9091）规则加载；应用/Prometheus 未运行时对应项提示 SKIP 并 exit 0。
 
-**状态**：admin 与 service 均已有 `/metrics` 端点（MetricsController，免认证）。**告警实测待部署**：规则已就绪但尚未在真实部署环境触发验证（依赖 `verify_monitoring.sh` 与 Prometheus 上线）。**已知缺口**：精确的 5xx 比例告警需要 `open_admin_http_requests_total` 输出带 status 标签的计数（当前仅声明 HELP/TYPE，无数值），属 admin/app 改造，待后续迭代。
+**状态**：admin 与 service 均已有 `/metrics` 端点（MetricsController，免认证）。MetricsCollector 中间件已按 `code="all"|"5xx"` 真实累计计数（admin 输出 `open_admin_http_requests_total`，service 输出 `property_service_http_requests_total`），两侧 alerts.yml 的 `Http5xxRatio` 规则（5xx 比例 >5% 持续 10 分钟）可直接生效。**告警实测待部署**：规则已就绪但尚未在真实部署环境触发验证（依赖 `verify_monitoring.sh` 与 Prometheus 上线）。
 
 ## 4. 日志轮转
 

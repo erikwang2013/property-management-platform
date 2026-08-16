@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 namespace app\admin\controller;
+use app\admin\validate\InstallValidator;
 use hg\apidoc\annotation as Apidoc;
 
 use support\Request;
@@ -63,12 +64,7 @@ class InstallController
             'password' => $request->post('password', ''),
         ];
 
-        $errors = [];
-        if ($db['host'] === '') $errors[] = '请输入数据库主机地址';
-        if ($db['port'] === '' || !ctype_digit($db['port'])) $errors[] = '请输入有效的端口号';
-        if ($db['database'] === '') $errors[] = '请输入数据库名';
-        if ($db['username'] === '') $errors[] = '请输入数据库用户名';
-
+        $errors = InstallValidator::validateDbConfig($db);
         if ($errors) {
             return $this->renderStep1($db, implode('；', $errors));
         }
@@ -106,17 +102,7 @@ class InstallController
             'es_password'         => trim($request->post('es_password', '')),
         ];
 
-        $errors = [];
-        if (mb_strlen($admin['admin_username']) < 3) $errors[] = '管理员用户名至少3个字符';
-        // 密码强度与登录校验保持一致：8-32 位 + 大小写字母 + 数字 + 特殊字符
-        if (strlen($admin['admin_password']) < 8 || strlen($admin['admin_password']) > 32) {
-            $errors[] = '管理员密码长度需 8-32 位';
-        }
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/', $admin['admin_password'])) {
-            $errors[] = '管理员密码需包含大小写字母、数字和特殊字符(@$!%*?&)';
-        }
-        if ($admin['admin_password'] !== $confirm) $errors[] = '两次输入的密码不一致';
-
+        $errors = InstallValidator::validateAdminConfig($admin, $confirm);
         if ($errors) {
             return $this->renderStep2($db, $admin, implode('；', $errors), $optional);
         }

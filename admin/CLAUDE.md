@@ -135,9 +135,6 @@ open-admin/
 │   ├── route.php               # 路由 + API 版本策略
 │   └── middleware.php           # 全局中间件注册
 ├── docs/install.sql            # 全量建库 SQL（66 表 + 权限种子，唯一建库入口）
-├── database/backup/            # 数据库备份脚本
-│   ├── backup.sh               # mysqldump+gzip，30天保留
-│   └── restore.sh              # 交互式恢复
 ├── docs/                       # 文档
 │   ├── ARCHITECTURE.md         # Mermaid 架构图
 │   ├── DESIGN.md               # 设计文档
@@ -261,8 +258,7 @@ docker-compose up -d
 
 ### 数据库备份
 
-`database/backup/backup.sh` — mysqldump + gzip，自动清理 30 天前旧备份。
-`database/backup/restore.sh` — 交互式恢复，列出可用备份供选择。
+备份统一走仓库根 `scripts/backup.sh`（从 `admin/.env` 读连接，默认容器内 mysqldump，输出 `backups/backup_*.sql.gz`，默认保留 7 天，`--keep-days=` 可调）；恢复流程见 `docs/RECOVERY_RUNBOOK.md`。
 
 ### 监控
 

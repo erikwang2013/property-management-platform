@@ -30,7 +30,7 @@
 
 ## 2. 现有缓解（已落地）
 
-- **备份**：admin/service 各自独立库备份脚本（`database/backup/backup.sh`），每日 crontab 全量备份、保留 30 天；恢复演练流程与 RPO/RTO 说明见 OPS_RUNBOOK §1。
+- **备份**：单入口备份脚本 `scripts/backup.sh`（从 `admin/.env` 读连接，默认容器内 mysqldump），每日 crontab 全量备份、默认保留 7 天（`--keep-days=30` 可配置）；恢复演练流程与 RPO/RTO 说明见 OPS_RUNBOOK §1 与 RECOVERY_RUNBOOK。
 - **监控告警**：Prometheus + Grafana + `deploy/monitoring/alerts.yml`，覆盖 AppDown / MysqlDown / RedisDown / ElasticsearchDown / QueueBacklog，见 OPS_RUNBOOK §3。
 - **日志轮转**：容器日志 `max-size 10m`，宿主机日志 logrotate 每日轮转保留 30 天，见 OPS_RUNBOOK §4。
 - **应用层**：webman 多进程常驻、队列任务解耦耗时操作、`/health` 健康检查。

@@ -1671,9 +1671,7 @@ docker-compose up -d
 
 ### 数据库备份
 
-`database/backup/` 目录提供备份与恢复脚本：
-- `backup.sh` — mysqldump + gzip 压缩备份，自动清理 30 天前的旧备份文件
-- `restore.sh` — 交互式恢复，列出现有备份供用户选择
+备份统一走仓库根 `scripts/backup.sh`（从 `admin/.env` 读连接，默认容器内 mysqldump，输出 `backups/backup_*.sql.gz`，默认保留 7 天，`--keep-days=` 可调）；恢复流程见 `docs/RECOVERY_RUNBOOK.md`。
 
 ### Nginx 安全配置
 
