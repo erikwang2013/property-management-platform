@@ -61,7 +61,7 @@ property-management-platform/
 | 层 | 数量 | 详情 |
 |----|------|------|
 | 数据库表 | 65张 | 全部 `erik_` 前缀，BIGINT 非自增主键 |
-| PHP 模型 | 64个 | 含 encryptable 加密字段 |
+| PHP 模型 | admin 64 / service 57 | 均为 Eloquent 模型，含 encryptable 加密字段；service 端 57 为模型文件数（含 BaseModel 基类） |
 | admin 控制器 | 58个 | 通用管理 + 22个物业模块 + 12个扩展功能 |
 | service 控制器 | 17个 | 业主端全部 API |
 | API 路由 | 178 | admin 125 + service 53 |

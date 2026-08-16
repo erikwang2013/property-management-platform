@@ -81,8 +81,8 @@ jobs:
       - name: Setup environment
         run: cp admin/.env.example admin/.env
 
-      - name: Run tests with coverage gate (min 1%)
-        # 实测基线 1.66%（pcov 本地），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；首次 CI 运行后按实际数值上调
+      - name: Run tests with coverage gate (min 3%)
+        # 实测基线 3.24%（pcov 本地，2026-08-16），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；CI xdebug 与 pcov 语句覆盖差异 <0.5pt，留 0.24pt 缓冲
         run: |
           cd admin
           php vendor/bin/phpunit --coverage-clover clover.xml --no-progress
@@ -92,7 +92,7 @@ jobs:
             $t = (int)$m["statements"]; $c = (int)$m["coveredstatements"];
             $p = $t > 0 ? $c / $t * 100 : 0;
             printf("statement coverage: %.1f%% (%d/%d)\n", $p, $c, $t);
-            if ($p < 1) { fwrite(STDERR, "coverage gate failed: $p% < 1%\n"); exit(1); }
+            if ($p < 3) { fwrite(STDERR, "coverage gate failed: $p% < 3%\n"); exit(1); }
           '
 
   service-tests:
@@ -147,7 +147,7 @@ jobs:
         run: cp service/.env.example service/.env
 
       - name: Run tests with coverage gate (min 3%)
-        # 实测基线 3.21%（pcov 本地），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；首次 CI 运行后按实际数值上调
+        # 实测基线 3.12%（pcov 本地，2026-08-16），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；CI xdebug 与 pcov 语句覆盖差异 <0.5pt，留 0.12pt 缓冲
         run: |
           cd service
           php vendor/bin/phpunit --coverage-clover clover.xml --no-progress
@@ -212,3 +212,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_CONFIG: .gitleaks.toml
+
+  monitoring-config:
+    name: Monitoring Config Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate monitoring YAML syntax
+        # CI 无应用/Prometheus 运行，脚本仅执行 YAML 语法校验（其余检查 SKIP 不计失败），坏 YAML 时 exit 1
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq python3-yaml
+          bash scripts/verify_monitoring.sh

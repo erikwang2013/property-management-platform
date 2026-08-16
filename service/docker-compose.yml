@@ -32,7 +32,9 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - app-runtime:/app/runtime
+      # 绑定挂载而非命名卷: 容器内日志(workerman/webman)落盘到主机
+      # ./runtime/logs，由主机 logrotate (scripts/logrotate.conf) 轮转
+      - ./runtime:/app/runtime
     command: ["php", "start.php", "start"]
     env_file:
       - .env.docker
@@ -212,7 +214,6 @@ volumes:
   mysql-data:
   redis-data:
   es-data:
-  app-runtime:
   prometheus-data:
   grafana-data:
 

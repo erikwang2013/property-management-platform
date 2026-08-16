@@ -91,3 +91,42 @@
 ```
 
 升级只需执行对应批次的 SQL 迁移文件，无需数据迁移或破坏性变更。
+
+---
+
+## 演示流程
+
+**准备**：已执行 `docs/install.sql`（全量表结构，含全部版本的表）；`admin/.env` 已配置数据库连接。版本差异在路由注册与功能可见性，表结构统一为全量。
+
+### 基础版 (Lite)
+
+1. 执行演示数据：`cd admin && php ../scripts/demo_data.php`（幂等，可重复执行）
+2. 演示数据范围：小区/楼栋/单元/户型/房产/业主/租户/费用/账单/公告 + 演示账号，覆盖 Lite 核心模块
+3. 看什么：管理端仪表盘 + 用户/角色/权限/配置/日志 + 房产/业主/租户/费用/报修/公告 CRUD；业主端注册/登录、首页、我的房产、账单缴费、报修、公告
+4. 路由差异：仅 Lite 分组注册，`edition_supports('standard'/'full')` 包裹的块不注册（`admin/config/route.php`）
+
+### 标准版 (Standard)
+
+1. 执行演示数据：`cd admin && php ../scripts/demo_data.php`（幂等，重复执行只补缺不重复造数）
+2. 辅助模块数据量少，停车/设备/投诉/访客/合同/收支由演示录入少量即可
+3. 看什么：管理端新增停车位/车辆、设备台账+维保、投诉处理+回访、访客审批、合同管理、收支管理+统计；业主端新增我的车辆/车位、停车记录、访客预约/通行码
+4. 路由差异：追加 `edition_supports('standard')` 分组，Lite 分组保留
+
+### 完整版 (Full)
+
+1. 执行演示数据：`cd admin && php ../scripts/demo_data.php`（幂等）
+2. 高级模块（支付/审批/投票/商城/巡检/人脸/集团/知识库）演示数据按需录入，或用演示账号直接造数
+3. 看什么：Standard 之上新增巡逻/保洁/绿化/能耗/员工/通知模板/审批引擎/支付订单/投票/SLA/催缴/巡检/商城/人脸/集团/知识库；业主端活动报名、消息通知、投票、商城下单、智能问答、人脸注册
+4. 路由差异：全量注册，`edition_supports('full')` 分组生效（`admin/config/route.php`）
+
+### 切换版本
+
+```bash
+# admin/.env 设置目标版本（逐级累进，full 包含全部功能）
+EDITIONS=lite|standard|full
+
+# 重启 webman 生效（容器部署: docker compose restart app；裸机: php start.php restart）
+```
+
+- 配置 fail-fast：`EDITIONS` 值无效直接抛错（`admin/config/edition.php`），不会静默回退到错误版本。
+- 演示数据脚本幂等，跨版本切换无需清库；Standard/Full 模块数据量少，由真实业务录入即可。
