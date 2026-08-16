@@ -197,17 +197,10 @@ class SlaController extends BaseController
         $activeOrders = RepairOrder::whereIn('status', [0, 1])->get();
 
         foreach ($activeOrders as $order) {
-            // 匹配SLA规则（按category和urgency）
-            $rule = $rules->first(function ($r) use ($order) {
-                return $r->category === $order->category && $r->urgency === $order->urgency;
-            });
+            $createdAt = $order->created_at->format('Y-m-d H:i:s');
 
-            if (!$rule) {
-                // 尝试按category匹配，忽略urgency
-                $rule = $rules->first(function ($r) use ($order) {
-                    return $r->category === $order->category;
-                });
-            }
+            // 匹配SLA规则：先 category+urgency 精确，再 category 兜底
+            $rule = self::matchRule($rules, (int) $order->category, (int) $order->urgency);
 
             if (!$rule) {
                 continue;
@@ -216,8 +209,8 @@ class SlaController extends BaseController
             // 查找或创建SLA记录
             $slaRecord = SlaRecord::where('repair_order_id', $order->id)->first();
             if (!$slaRecord) {
-                $responseDeadline = date('Y-m-d H:i:s', strtotime($order->created_at->format('Y-m-d H:i:s')) + ($rule->response_minutes * 60));
-                $resolveDeadline  = date('Y-m-d H:i:s', strtotime($order->created_at->format('Y-m-d H:i:s')) + ($rule->resolve_minutes * 60));
+                $responseDeadline = self::addMinutes($createdAt, (int) $rule->response_minutes);
+                $resolveDeadline  = self::addMinutes($createdAt, (int) $rule->resolve_minutes);
 
                 $slaRecord = SlaRecord::create([
                     'id'              => SnowflakeService::generate(),
@@ -233,20 +226,19 @@ class SlaController extends BaseController
             }
 
             // 检查响应超时
-            if (!$slaRecord->is_response_overtime && $now > $slaRecord->response_deadline->format('Y-m-d H:i:s')) {
+            if (!$slaRecord->is_response_overtime && self::isPast($slaRecord->response_deadline->format('Y-m-d H:i:s'), $now)) {
                 $slaRecord->is_response_overtime = 1;
                 $slaRecord->save();
             }
 
             // 检查解决超时
-            if (!$slaRecord->is_resolve_overtime && $now > $slaRecord->resolve_deadline->format('Y-m-d H:i:s')) {
+            if (!$slaRecord->is_resolve_overtime && self::isPast($slaRecord->resolve_deadline->format('Y-m-d H:i:s'), $now)) {
                 $slaRecord->is_resolve_overtime = 1;
                 $slaRecord->save();
             }
 
             // 检查是否需要升级
-            $escalateDeadline = date('Y-m-d H:i:s', strtotime($order->created_at->format('Y-m-d H:i:s')) + ($rule->escalate_minutes * 60));
-            if (!$slaRecord->escalated_at && $rule->escalate_minutes > 0 && $now > $escalateDeadline) {
+            if (self::shouldEscalate((int) $rule->escalate_minutes, $createdAt, $now, (bool) $slaRecord->escalated_at)) {
                 $slaRecord->escalated_at    = $now;
                 $slaRecord->escalate_level  = $slaRecord->escalate_level + 1;
                 $slaRecord->penalty_amount  = ($slaRecord->penalty_amount ?? 0) + ($rule->penalty_amount ?? 0);
@@ -271,5 +263,49 @@ class SlaController extends BaseController
         }
 
         return $this->success(['escalate_count' => $escalateCount], '超时检查完成');
+    }
+
+    /**
+     * 匹配SLA规则：先按 category+urgency 精确匹配，再按 category 兜底；无匹配返回 null
+     */
+    public static function matchRule(iterable $rules, int $category, int $urgency): mixed
+    {
+        foreach ($rules as $rule) {
+            if ((int) $rule->category === $category && (int) $rule->urgency === $urgency) {
+                return $rule;
+            }
+        }
+        foreach ($rules as $rule) {
+            if ((int) $rule->category === $category) {
+                return $rule;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 在给定时间上增加分钟数，返回 'Y-m-d H:i:s'
+     */
+    public static function addMinutes(string $datetime, int $minutes): string
+    {
+        return date('Y-m-d H:i:s', strtotime($datetime) + $minutes * 60);
+    }
+
+    /**
+     * 是否已过截止时间（'Y-m-d H:i:s' 字典序即时间序）
+     */
+    public static function isPast(string $deadline, string $now): bool
+    {
+        return $now > $deadline;
+    }
+
+    /**
+     * 是否触发升级：未升级过、配置了升级时限且已超过升级截止时间
+     */
+    public static function shouldEscalate(int $escalateMinutes, string $createdAt, string $now, bool $alreadyEscalated): bool
+    {
+        return !$alreadyEscalated
+            && $escalateMinutes > 0
+            && self::isPast(self::addMinutes($createdAt, $escalateMinutes), $now);
     }
 }

@@ -9,6 +9,7 @@ namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
+use app\common\WebhookService;
 use app\model\RepairOrder;
 use app\model\RepairProgress;
 use app\model\Staff;
@@ -162,6 +163,7 @@ class RepairController extends BaseController
         $data['images']      = $data['images'] ?? [];
 
         RepairOrder::create($data);
+        WebhookService::dispatch('repair_created', $data);
 
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }

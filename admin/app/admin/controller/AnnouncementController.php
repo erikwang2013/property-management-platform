@@ -9,6 +9,7 @@ namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
+use app\common\WebhookService;
 use app\model\Announcement;
 use app\model\Community;
 use support\Request;
@@ -142,6 +143,9 @@ class AnnouncementController extends BaseController
         $data['is_published']  = (int) ($data['is_published'] ?? 0);
 
         Announcement::create($data);
+        if ($data['is_published']) {
+            WebhookService::dispatch('announcement_published', $data);
+        }
 
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
@@ -162,7 +166,11 @@ class AnnouncementController extends BaseController
             'title', 'content', 'category', 'is_top',
             'is_published', 'published_at',
         ]));
+        $wasPublished = (int) $item->getOriginal('is_published') === 1;
         $item->save();
+        if (!$wasPublished && (int) $item->is_published === 1) {
+            WebhookService::dispatch('announcement_published', $item->toArray());
+        }
 
         return $this->success([], '更新成功');
     }

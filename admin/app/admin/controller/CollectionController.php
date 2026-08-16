@@ -199,7 +199,7 @@ class CollectionController extends BaseController
         $recordCount = 0;
 
         foreach ($overdueBills as $bill) {
-            $overdueDays = (int) ceil((strtotime($now) - strtotime($bill->due_date->format('Y-m-d'))) / 86400);
+            $overdueDays = self::calcOverdueDays($bill->due_date->format('Y-m-d'), $now);
 
             // 匹配策略：找overdue_days最接近且不大于overdueDays的记录
             $matchedStrategy = null;
@@ -271,7 +271,7 @@ class CollectionController extends BaseController
             ->get();
 
         foreach ($overdueBills as $bill) {
-            $overdueDays = (int) ceil((strtotime($now) - strtotime($bill->due_date->format('Y-m-d'))) / 86400);
+            $overdueDays = self::calcOverdueDays($bill->due_date->format('Y-m-d'), $now);
 
             // 找匹配策略的滞纳金率
             $feeRate = 0;
@@ -287,7 +287,7 @@ class CollectionController extends BaseController
 
             // 按滞纳金率计算：未缴金额 * 费率 * 天数
             $unpaidAmount = $bill->amount - $bill->paid_amount;
-            $newLateFee   = round($unpaidAmount * $feeRate * $overdueDays, 2);
+            $newLateFee   = self::calcLateFee((float) $unpaidAmount, $feeRate, $overdueDays);
 
             if ($newLateFee != $bill->late_fee) {
                 $bill->late_fee = $newLateFee;
@@ -297,5 +297,21 @@ class CollectionController extends BaseController
         }
 
         return $this->success(['updated_count' => $updatedCount], '滞纳金计算完成');
+    }
+
+    /**
+     * 逾期天数：截止日期距今天的自然日差（向上取整，当天为 0）
+     */
+    public static function calcOverdueDays(string $dueDate, string $nowDate): int
+    {
+        return (int) ceil((strtotime($nowDate) - strtotime($dueDate)) / 86400);
+    }
+
+    /**
+     * 滞纳金：未缴金额 × 日费率 × 逾期天数，保留两位小数
+     */
+    public static function calcLateFee(float $unpaidAmount, float $feeRate, int $overdueDays): float
+    {
+        return round($unpaidAmount * $feeRate * $overdueDays, 2);
     }
 }

@@ -85,7 +85,8 @@ class PaymentService
             return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
         }
 
-        Db::transaction(function () use ($notify, $body) {
+        $paidBill = null;
+        Db::transaction(function () use ($notify, $body, &$paidBill) {
             $order = PaymentOrder::where('order_number', $notify['order_number'])->first();
             // 幂等：订单不存在或非待支付状态（重复回调）→ 不重复入账，直接应答成功
             if (!$order || !self::canApplyNotify((int) $order->status)) {
@@ -110,9 +111,16 @@ class PaymentService
                         $bill->paid_at = date('Y-m-d H:i:s');
                     }
                     $bill->save();
+                    if ((int) $bill->status === 1) {
+                        $paidBill = $bill;
+                    }
                 }
             }
         });
+
+        if ($paidBill) {
+            $this->fireFeePaid($paidBill, $notify['order_number'] ?? '', $notify['trade_no'] ?? '');
+        }
 
         Log::info('payment_notify_processed', ['channel' => $channel, 'order' => $notify['order_number'], 'paid' => $notify['paid']]);
         return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
@@ -224,7 +232,8 @@ class PaymentService
 
     private function handleGatewayPaid(PaymentOrder $order, string $tradeNo): void
     {
-        Db::transaction(function () use ($order, $tradeNo) {
+        $paidBill = null;
+        Db::transaction(function () use ($order, $tradeNo, &$paidBill) {
             $updated = PaymentOrder::where('order_number', $order->order_number)
                 ->where('status', 0)
                 ->update(['status' => 1, 'trade_no' => $tradeNo, 'paid_at' => date('Y-m-d H:i:s')]);
@@ -235,8 +244,26 @@ class PaymentService
             if ($bill && (int) $bill->status === 0) {
                 [$bill->paid_amount, $bill->status] = self::applyBillPayment((float) $bill->paid_amount, (float) $bill->amount, (float) $order->amount);
                 $bill->save();
+                if ((int) $bill->status === 1) {
+                    $paidBill = $bill;
+                }
             }
         });
+        if ($paidBill) {
+            $this->fireFeePaid($paidBill, (string) $order->order_number, $tradeNo);
+        }
+    }
+
+    /** 费用账单缴清事件（幂等入账路径复用，仅账单由待支付转已缴清时触发） */
+    private function fireFeePaid(FeeBill $bill, string $orderNumber, string $tradeNo): void
+    {
+        WebhookService::dispatch('fee_paid', [
+            'bill_id'      => $bill->id,
+            'order_number' => $orderNumber,
+            'trade_no'     => $tradeNo,
+            'amount'       => (float) $bill->paid_amount,
+            'paid_at'      => (string) $bill->paid_at,
+        ]);
     }
 
     private function channel(string $channel): WechatPayChannel|AlipayChannel

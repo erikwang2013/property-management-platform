@@ -278,7 +278,7 @@ class FeeBillController extends BaseController
 
             $amount = $overrideAmount > 0
                 ? $overrideAmount
-                : $this->calcBillAmount($feeType, $room);
+                : self::calcBillAmount($feeType, $room);
 
             FeeBill::create([
                 'id'          => SnowflakeService::generate(),
@@ -303,7 +303,7 @@ class FeeBillController extends BaseController
     /**
      * 计算账单金额：按面积计费(unit_type=1)时 = 单价 × 总面积，否则取单价
      */
-    private function calcBillAmount(FeeType $feeType, Room $room): float
+    public static function calcBillAmount(FeeType $feeType, Room $room): float
     {
         if ((int) $feeType->unit_type === 1) {
             return round((float) $feeType->unit_price * (float) $room->area_total, 2);

@@ -84,6 +84,8 @@ class SecurityRegressionTest extends TestCase
     public function test_security_php_guard_blocks_known_attack(): void
     {
         \Erikwang2013\Security\SecurityGuard::reset();
+        // 清掉共享文件存储的历史黑名单状态，避免跨测试进程累积导致 127.0.0.1 被误禁
+        @unlink(sys_get_temp_dir() . '/security_storage.json');
         \Erikwang2013\Security\SecurityGuard::init(require __DIR__ . '/../config/plugin/erikwang2013/security-php/app.php');
         $threats = \Erikwang2013\Security\SecurityGuard::guard(
             ['keyword' => '<script>alert(1)</script>', 'q' => '1\' OR 1=1 -- '],

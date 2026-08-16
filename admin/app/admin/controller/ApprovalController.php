@@ -13,6 +13,7 @@ use app\model\Approval;
 use app\model\ApprovalRecord;
 use app\model\ApprovalType;
 use app\model\Notification;
+use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
@@ -253,51 +254,75 @@ class ApprovalController extends BaseController
         $record->acted_at = date('Y-m-d H:i:s');
         $record->save();
 
+        // 状态机决策：驳回=2 / 进入下一步 / 全部通过=1
+        $approvalType = ApprovalType::find($approval->approval_type_id);
+        [$newStatus, $newStep, $hasNext] = self::transition(
+            $action,
+            (int) $approval->status,
+            is_array($approvalType->steps ?? null) ? $approvalType->steps : [],
+            (int) $approval->current_step
+        );
+
         if ($action == 2) {
             // 驳回：结束审批
-            $approval->status       = 2;
+            $approval->status       = $newStatus;
             $approval->completed_at = date('Y-m-d H:i:s');
             $approval->save();
+        } elseif ($hasNext) {
+            // 有下一步，创建下一条审批记录
+            $approval->current_step = $newStep;
+            $approval->save();
+
+            $next = $approvalType->steps[$newStep - 1];
+            ApprovalRecord::create([
+                'id'          => SnowflakeService::generate(),
+                'approval_id' => $id,
+                'step'        => $newStep,
+                'approver_id' => $next['approver_id'] ?? 0,
+            ]);
+
+            // 通知下一级审批人
+            Notification::create([
+                'id'        => SnowflakeService::generate(),
+                'user_id'   => $next['approver_id'] ?? 0,
+                'user_type' => $next['approver_type'] ?? 1,
+                'title'     => '待审批: ' . $approval->title,
+                'content'   => '您有一条新的审批待处理: ' . $approval->title,
+                'type'      => 2,
+                'channel'   => 'in_app',
+                'ref_type'  => 'approval',
+                'ref_id'    => $id,
+            ]);
         } else {
-            // 通过：检查是否有下一步
-            $approvalType = ApprovalType::find($approval->approval_type_id);
-            $steps = $approvalType->steps ?? [];
-            $nextStep = $approval->current_step + 1;
-
-            if (isset($steps[$nextStep - 1])) {
-                // 有下一步，创建下一条审批记录
-                $approval->current_step = $nextStep;
-                $approval->save();
-
-                $next = $steps[$nextStep - 1];
-                ApprovalRecord::create([
-                    'id'          => SnowflakeService::generate(),
-                    'approval_id' => $id,
-                    'step'        => $nextStep,
-                    'approver_id' => $next['approver_id'] ?? 0,
-                ]);
-
-                // 通知下一级审批人
-                Notification::create([
-                    'id'        => SnowflakeService::generate(),
-                    'user_id'   => $next['approver_id'] ?? 0,
-                    'user_type' => $next['approver_type'] ?? 1,
-                    'title'     => '待审批: ' . $approval->title,
-                    'content'   => '您有一条新的审批待处理: ' . $approval->title,
-                    'type'      => 2,
-                    'channel'   => 'in_app',
-                    'ref_type'  => 'approval',
-                    'ref_id'    => $id,
-                ]);
-            } else {
-                // 所有步骤通过
-                $approval->status       = 1;
-                $approval->completed_at = date('Y-m-d H:i:s');
-                $approval->save();
-            }
+            // 所有步骤通过
+            $approval->status       = $newStatus;
+            $approval->completed_at = date('Y-m-d H:i:s');
+            $approval->save();
         }
 
         return $this->success([], '操作成功');
+    }
+
+    /**
+     * 审批状态机：action=1通过/2驳回，status=0处理中，steps 为 0 起始的步骤数组。
+     * 返回 [newStatus, newCurrentStep, hasNextStep]；非法流转抛 InvalidArgumentException。
+     */
+    public static function transition(int $action, int $status, array $steps, int $currentStep): array
+    {
+        if (!in_array($action, [1, 2], true)) {
+            throw new InvalidArgumentException('无效的操作');
+        }
+        if ($status !== 0) {
+            throw new InvalidArgumentException('该审批已处理');
+        }
+        if ($action === 2) {
+            return [2, $currentStep, false];
+        }
+        $nextStep = $currentStep + 1;
+        if (isset($steps[$nextStep - 1])) {
+            return [0, $nextStep, true];
+        }
+        return [1, $currentStep, false];
     }
 
     /**
