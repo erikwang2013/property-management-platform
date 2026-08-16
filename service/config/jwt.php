@@ -11,9 +11,14 @@ declare(strict_types=1);
  * 此文件为应用层参考配置，需与插件配置保持一致的 env 变量名
  * @link https://github.com/erikwang2013/jwt-webman
  */
+$secret = getenv('JWT_SECRET_KEY') ?: '';
+if ($secret === '' || str_starts_with($secret, 'change-me')) {
+    throw new RuntimeException('JWT_SECRET_KEY 未配置或仍为占位符，请在 .env 中配置 64 位以上随机密钥');
+}
+
 return [
     // JWT 签名密钥，生产环境请使用 64 位以上随机字符串并通过环境变量注入
-    'secret' => getenv('JWT_SECRET_KEY') ?: 'change-me-64-char-random-string-please',
+    'secret' => $secret,
 
     // 签名算法，支持 HS256/HS384/HS512/RS256
     'algorithm' => getenv('JWT_ALGORITHM') ?: 'HS256',

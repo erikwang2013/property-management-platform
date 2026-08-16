@@ -10,9 +10,14 @@ declare(strict_types=1);
  * 用于接口传输层的数据加解密，与数据库存储层加密（encryptable）是独立的密钥体系
  * @link https://github.com/erikwang2013/encryption
  */
+$key = getenv('ENCRYPTION_KEY') ?: '';
+if ($key === '' || str_starts_with($key, 'change-me')) {
+    throw new RuntimeException('ENCRYPTION_KEY 未配置或仍为占位符，请在 .env 中配置 32 字节随机密钥');
+}
+
 return [
     // AES 加密密钥，生产环境请使用 32 字节随机字符串并通过环境变量注入
-    'key' => getenv('ENCRYPTION_KEY') ?: 'change-me-32-byte-encryption-key!!',
+    'key' => $key,
 
     // 加密算法，推荐 AES-256-CBC。也支持 sm4-ecb/sm4-cbc（国密）
     'cipher' => getenv('ENCRYPTION_CIPHER') ?: 'AES-256-CBC',

@@ -22,7 +22,10 @@ class EncryptionService
     {
         if (self::$instance === null) {
             $config = config('encryption', []);
-            $key = $config['key'] ?? 'open-admin-api-encryption-key32b';
+            $key = $config['key'] ?? '';
+            if ($key === '') {
+                throw new \RuntimeException('ENCRYPTION_KEY 未配置，请在 .env 中配置 32 字节随机密钥');
+            }
 
             // EncryptionManagerFactory 要求主密钥恰好 32 字节
             if (strlen($key) !== 32) {

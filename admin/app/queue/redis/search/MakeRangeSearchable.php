@@ -43,6 +43,11 @@ class MakeRangeSearchable implements Consumer
             return;
         }
 
-        $models->first()->makeSearchableUsing($models)->first()->searchableUsing()->update($models);
+        try {
+            $models->first()->makeSearchableUsing($models)->first()->searchableUsing()->update($models);
+        } catch (\Throwable $e) {
+            // ES 不可用时降级：跳过本次索引写入，避免队列消费崩溃；ES 恢复后需重跑全量索引
+            \support\Log::info('search_fallback', ['op' => 'make_range_searchable', 'error' => $e->getMessage()]);
+        }
     }
 }

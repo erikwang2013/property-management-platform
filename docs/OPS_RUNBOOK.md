@@ -1,0 +1,111 @@
+# 运维手册（OPS Runbook）
+
+> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+> 适用: property-management-platform（admin 端 + service 端，PHP 8.3 webman）
+
+## 1. 数据库备份与恢复
+
+两端各自独立备份，库名不同：
+
+| 端 | 库名 | 备份脚本 |
+|---|---|---|
+| admin | `open_admin` | `admin/database/backup/backup.sh` |
+| service | `property_management` | `service/database/backup/backup.sh` |
+
+脚本通过环境变量读取数据库连接（`DB_HOST`/`DB_PORT`/`DB_DATABASE`/`DB_USERNAME`/`DB_PASSWORD`），未设置时用默认值（127.0.0.1:3306）。备份输出 `database/backup/backup_YYYYMMDD_HHMMSS.sql.gz`，自动保留最近 30 天。
+
+### 1.1 全量备份
+
+```bash
+cd /path/to/property-management-platform/admin
+bash database/backup/backup.sh
+
+cd /path/to/property-management-platform/service
+bash database/backup/backup.sh
+```
+
+### 1.2 定时任务（crontab）
+
+```cron
+# 每天 02:00 备份 service，02:30 备份 admin（错峰执行）
+0 2 * * * cd /path/to/property-management-platform/service && bash database/backup/backup.sh >> /var/log/pmp-backup.log 2>&1
+30 2 * * * cd /path/to/property-management-platform/admin && bash database/backup/backup.sh >> /var/log/pmp-backup.log 2>&1
+```
+
+生产建议：将备份目录挂载到独立磁盘/异地存储，并定期抽查备份文件完整性（`gzip -t` 校验）。
+
+### 1.3 恢复演练流程（每季度至少一次）
+
+1. 选取最近一份备份：`ls -t database/backup/backup_*.sql.gz`
+2. 在**独立环境**（或临时库）执行恢复：
+   ```bash
+   cd /path/to/property-management-platform/service
+   DB_DATABASE=property_management_drill bash database/backup/restore.sh database/backup/backup_20260815_020000.sql.gz
+   ```
+   > 脚本默认交互确认，防止误覆盖；演练时先建一个空库 `property_management_drill` 再恢复。
+3. 验证：
+   - 行数对比：`SELECT COUNT(*) FROM erik_user;` 与备份前记录一致
+   - 加密字段可正常解密：查一条含 encryptable 字段的记录，值正确、日志无 decrypt 报错
+   - 业务冒烟：登录、拉取列表接口正常
+4. 记录演练耗时与结果（用于 RTO 评估）。
+
+### 1.4 RPO / RTO 说明
+
+- **RPO（数据可丢失量）**：由备份频率决定。每日全量备份 → RPO ≤ 24 小时，即最多丢失最近一天的数据。需要更小 RPO 可增加备份频率（如每天 2 次）或启用 binlog 增量备份。
+- **RTO（恢复所需时间）**：取决于库大小与恢复速度，目标 ≤ 1 小时（恢复 + 校验 + 服务重启）。每次演练后更新实际测量值。
+- 恢复失败应急：先回滚应用代码，再用最近的可用备份重试；如备份损坏，用更早的备份并接受更大 RPO。
+
+## 2. 密钥管理
+
+项目依赖 5 个密钥，均在 `.env` 中（admin 与 service 各自独立，勿共用同一套）：
+
+| 变量 | 长度 | 用途 |
+|---|---|---|
+| `ENCRYPTION_KEY` | 32 字节 | API 传输加密（config/encryption.php） |
+| `ENCRYPTABLE_KEY` | 32 字节 | 数据库敏感字段加密（encryptable 插件，**勿与 ENCRYPTION_KEY 共用**） |
+| `JWT_SECRET_KEY` | 64 位以上 | JWT 签名 |
+| `HASHIDS_SALT` | — | ID 加解密 |
+| `HASHIDS_ALT_SALT` | — | ID 加解密备用 |
+
+### 2.1 生成密钥
+
+```bash
+# 输出 5 个 KEY=VALUE 到 stdout，可直接追加到 .env
+php scripts/gen_env_keys.php
+
+# 直接写入 .env：已存在的密钥不覆盖，只追加缺失的
+php scripts/gen_env_keys.php --file=.env
+```
+
+> 若 .env 中某密钥仍是 `change-me` 占位符，先删除该行再运行（占位符被视为"已存在"，不会覆盖）。
+
+### 2.2 密钥轮换（encryptable）
+
+```bash
+bash scripts/rotate_keys.sh            # 默认操作当前目录 .env
+bash scripts/rotate_keys.sh /path/to/service/.env
+```
+
+脚本自动完成：备份 .env → 生成新 `ENCRYPTABLE_KEY` → 旧 key 追加到 `ENCRYPTION_PREVIOUS_KEYS`（逗号分隔，最近轮换的排最前）→ 写入新 key。然后按提示手动：重启服务 → 验证解密 → 确认后删备份。
+
+**`ENCRYPTION_PREVIOUS_KEYS` 说明**：encryptable 解密时先用当前 `ENCRYPTABLE_KEY`，失败后按列表顺序逐个尝试历史 key。因此**轮换时旧 key 必须在新 key 生效前加入该列表**，否则重启后旧数据无法解密（数据不会丢，回滚 .env 即可恢复）。列表只增不减，删除历史 key 前必须确认所有旧数据已完成重加密。
+
+**不做自动数据迁移**：轮换后旧数据仍以旧 key 加密、可正常读写。如需用新 key 重写存量数据，另行执行数据迁移任务（逐表读取 → 写入触发重加密）。
+
+### 2.3 Fail-fast 启动校验
+
+以下配置在服务启动时校验，密钥**缺失或仍为 `change-me` 占位符**会直接抛 `RuntimeException` 拒绝启动（防止带着占位密钥上线）：
+
+| 配置 | 校验的密钥 |
+|---|---|
+| `service/config/encryption.php` | `ENCRYPTION_KEY` |
+| `service/config/encryptable.php`、`service/config/plugin/erikwang2013/encryptable/app.php` | `ENCRYPTABLE_KEY` |
+| `service/config/jwt.php`、`service/config/plugin/erikwang2013/jwt/jwt.php` | `JWT_SECRET_KEY` |
+
+启动报错示例：`ENCRYPTABLE_KEY 未配置或仍为占位符，请在 .env 中配置 32 字节随机密钥`。
+
+**日常操作清单**：
+
+1. 部署新环境：`cp .env.example .env` → 删除 `change-me` 占位行 → `php scripts/gen_env_keys.php --file=.env` → 启动服务确认无密钥报错。
+2. 例行轮换：按 2.2 执行，季度一次即可（无强制周期，泄漏时立即轮换）。
+3. 备份的 `.env.bak.*` 含明文密钥，与数据库备份同等对待（权限 600、异地存放）。

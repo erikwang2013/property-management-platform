@@ -1,0 +1,12 @@
+# Gitleaks 配置
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# 基于默认规则集扩展；.env.example/.env.docker 是 CI 用的环境模板（cp 后配合 fail-fast 配置加载真实密钥），不属于泄露
+
+[extend]
+useDefault = true
+
+[[allowlist]]
+files = [
+    '''\.env\.example$''',
+    '''\.env\.docker$''',
+]

@@ -11,6 +11,7 @@ use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
 use support\Redis;
+use Erikwang2013\Security\SecurityGuard;
 
 /**
  * Web/API 安全攻击检测拦截中间件
@@ -27,6 +28,8 @@ class SecurityFilter implements MiddlewareInterface
     private const ESCALATE_LIMIT = 5;   // 60秒内触发次数
     private const ESCALATE_WINDOW = 60;
     private const BAN_DURATION = 900;   // 黑名单 15 分钟
+
+    private static bool $guardReady = false;
 
     private const PATTERNS = [
         'XSS' => [
@@ -112,6 +115,14 @@ class SecurityFilter implements MiddlewareInterface
             }
         }
 
+        // 4b. security-php 深度扫描（正则层之外的多向量检测：SSRF/XXE/SSTI/JNDI 等）
+        $threats = $this->guardScan($request, $ip);
+        if (!empty($threats) && SecurityGuard::shouldBlock($threats)) {
+            $this->logBlock($request, 'security-php:' . $threats[0]->type, (string) $threats[0]->field, 'guard', substr((string) $threats[0]->payload, 0, 200));
+            $this->escalate($ip);
+            return response('<h1>403 Forbidden</h1>', self::BLOCK_CODE);
+        }
+
         // 5. CSRF 检查
         if ($this->checkCsrf($request)) {
             return response('<h1>403 Forbidden</h1>', self::BLOCK_CODE);
@@ -183,6 +194,34 @@ class SecurityFilter implements MiddlewareInterface
             }
         }
         return null;
+    }
+
+    /**
+     * security-php 深度扫描：进程内仅初始化一次配置，返回 ThreatResult[]
+     */
+    private function guardScan(Request $request, string $ip): array
+    {
+        if (!class_exists(SecurityGuard::class)) {
+            return [];
+        }
+        if (!self::$guardReady) {
+            self::$guardReady = true;
+            $configFile = config_path() . '/plugin/erikwang2013/security-php/app.php';
+            SecurityGuard::init(file_exists($configFile)
+                ? require $configFile
+                : require base_path() . '/vendor/erikwang2013/security-php/config/security.php');
+        }
+        $data = array_merge($request->cookie() ?? [], $request->get() ?? [], $request->post() ?? []);
+        foreach ($request->file() ?? [] as $key => $file) {
+            if (is_array($file) && isset($file['tmp_name'], $file['name'])) {
+                $data[$key] = ['name' => $file['name'], 'tmp_name' => $file['tmp_name']];
+            }
+        }
+        return SecurityGuard::guard($data, [
+            'ip'     => $ip,
+            'method' => $request->method(),
+            'uri'    => $request->path(),
+        ]);
     }
 
     private function checkCsrf(Request $request): bool

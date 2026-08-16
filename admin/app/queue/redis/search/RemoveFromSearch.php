@@ -25,7 +25,12 @@ class RemoveFromSearch implements Consumer
         $models = unserialize($models);
         $models = RemoveableScoutCollection::make($models);
         if ($models->isNotEmpty()) {
-            $models->first()->searchableUsing()->delete($models);
+            try {
+                $models->first()->searchableUsing()->delete($models);
+            } catch (\Throwable $e) {
+                // ES 不可用时降级：跳过本次索引删除，避免队列消费崩溃
+                \support\Log::info('search_fallback', ['op' => 'remove_from_search', 'error' => $e->getMessage()]);
+            }
         }
     }
 }

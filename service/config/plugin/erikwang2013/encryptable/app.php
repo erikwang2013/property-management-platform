@@ -12,10 +12,15 @@
  *
  * @see https://github.com/erikwang2013/encryptable
  */
+$encryptableKey = getenv('ENCRYPTABLE_KEY') ?: '';
+if ($encryptableKey === '' || str_starts_with($encryptableKey, 'change-me')) {
+    throw new RuntimeException('ENCRYPTABLE_KEY 未配置或仍为占位符，请在 .env 中配置 32 字节随机密钥（勿与 ENCRYPTION_KEY 共用）');
+}
+
 return [
     // 数据库加密密钥，生产环境请使用 32 字节随机字符串并通过环境变量注入
     // 注意: 与 API 传输加密密钥 ENCRYPTION_KEY 独立，两者不可共用
-    'key' => getenv('ENCRYPTABLE_KEY') ?: 'open-admin-db-encryption-key-32b',
+    'key' => $encryptableKey,
 
     // 加密算法，默认 aes-128-ecb。也支持 aes-256-cbc, sm4-ecb
     'cipher' => getenv('ENCRYPTABLE_CIPHER') ?: 'aes-128-ecb',

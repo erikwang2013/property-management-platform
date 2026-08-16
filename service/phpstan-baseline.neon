@@ -1,0 +1,643 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$activity_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$contact_phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$owner_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$participant_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$remark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$signup_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$signup_status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ActivitySignup\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 4
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:withCount\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ActivityController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Announcement\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/AnnouncementController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$locked_until\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$login_failures\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Call to an undefined method Erikwang2013\\Jwt\\JWT\:\:create\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Call to an undefined method Erikwang2013\\Jwt\\JWT\:\:createRefresh\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FaceInfo\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/FaceController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FaceInfo\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/FaceController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 6
+			path: app/api/v1/controller/FeeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeePayment\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/FeeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeePayment\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/FeeController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:raw\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 5
+			path: app/api/v1/controller/FeeController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/FeeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Announcement\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ChatRecord\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/KnowledgeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\KnowledgeBase\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/KnowledgeController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$category_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$community_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$images\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$is_recommend\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$original_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$sales\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\MallProduct\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\MallOrder\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\MallOrder\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\MallProduct\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\MallProduct\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Notification\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/NotificationController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ParkingRecord\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ParkingController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ParkingSpace\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ParkingController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ParkingVehicle\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/ParkingController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/ProfileController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:del\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ProfileController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/ProfileController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/RepairController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 4
+			path: app/api/v1/controller/RepairController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$area_indoor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$area_shared\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$area_total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$community\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$decoration\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$floor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$orientation\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$owners\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$remark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$room_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Room\:\:\$usage_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/RoomController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Visitor\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/VisitorController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Visitor\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/VisitorController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\RoomOwner\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Vote\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Vote\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\VoteOption\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/BaseController.php
+
+		-
+			message: '#^Call to an undefined method Erikwang2013\\Hashids\\HashidsManager\:\:decode\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/common/HashidsService.php
+
+		-
+			message: '#^Call to an undefined method Erikwang2013\\Hashids\\HashidsManager\:\:encode\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/common/HashidsService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between mixed and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 2
+			path: app/common/Validator.php
+
+		-
+			message: '#^Access to an undefined property support\\Request\:\:\$apiVersion\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/ApiVersion.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$action\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$input\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$ip\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$method\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between false and false will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: app/middleware/OperationLog.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:eval\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/RateLimit.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:del\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:expire\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:incr\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Access to an undefined property support\\Request\:\:\$ownerId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php
+
+		-
+			message: '#^Access to an undefined property support\\Request\:\:\$ownerPhone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php
+
+		-
+			message: '#^Call to function is_array\(\) with Webman\\Http\\UploadFile will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Offset ''name'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Offset ''tmp_name'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: app/middleware/SecurityFilter.php

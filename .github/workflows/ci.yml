@@ -67,7 +67,7 @@ jobs:
         with:
           php-version: '8.3'
           extensions: pdo, pdo_mysql, redis, gd, mbstring
-          coverage: none
+          coverage: xdebug
 
       - name: Validate composer.json
         run: cd admin && composer validate --strict
@@ -81,8 +81,19 @@ jobs:
       - name: Setup environment
         run: cp admin/.env.example admin/.env
 
-      - name: Run tests
-        run: cd admin && php vendor/bin/phpunit
+      - name: Run tests with coverage gate (min 1%)
+        # 实测基线 1.66%（pcov 本地），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；首次 CI 运行后按实际数值上调
+        run: |
+          cd admin
+          php vendor/bin/phpunit --coverage-clover clover.xml --no-progress
+          php -r '
+            $x = simplexml_load_file("clover.xml");
+            $m = $x->project->metrics;
+            $t = (int)$m["statements"]; $c = (int)$m["coveredstatements"];
+            $p = $t > 0 ? $c / $t * 100 : 0;
+            printf("statement coverage: %.1f%% (%d/%d)\n", $p, $c, $t);
+            if ($p < 1) { fwrite(STDERR, "coverage gate failed: $p% < 1%\n"); exit(1); }
+          '
 
   service-tests:
     name: Service Tests
@@ -121,7 +132,7 @@ jobs:
         with:
           php-version: '8.3'
           extensions: pdo, pdo_mysql, redis, gd, mbstring
-          coverage: none
+          coverage: xdebug
 
       - name: Validate composer.json
         run: cd service && composer validate --strict
@@ -135,8 +146,19 @@ jobs:
       - name: Setup environment
         run: cp service/.env.example service/.env
 
-      - name: Run tests
-        run: cd service && php vendor/bin/phpunit
+      - name: Run tests with coverage gate (min 3%)
+        # 实测基线 3.21%（pcov 本地），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；首次 CI 运行后按实际数值上调
+        run: |
+          cd service
+          php vendor/bin/phpunit --coverage-clover clover.xml --no-progress
+          php -r '
+            $x = simplexml_load_file("clover.xml");
+            $m = $x->project->metrics;
+            $t = (int)$m["statements"]; $c = (int)$m["coveredstatements"];
+            $p = $t > 0 ? $c / $t * 100 : 0;
+            printf("statement coverage: %.1f%% (%d/%d)\n", $p, $c, $t);
+            if ($p < 3) { fwrite(STDERR, "coverage gate failed: $p% < 3%\n"); exit(1); }
+          '
 
   flutter-analyze:
     name: Flutter Analyze
@@ -155,3 +177,38 @@ jobs:
 
       - name: Analyze service Flutter
         run: cd apps/flutter && flutter pub get && flutter analyze
+
+  phpstan:
+    name: PHPStan (Level 5)
+    runs-on: ubuntu-latest
+    needs: php-syntax
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo, pdo_mysql, redis, gd, mbstring
+
+      - name: Admin analysis
+        run: cd admin && composer install --prefer-dist --no-progress --no-interaction && vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
+      - name: Service analysis
+        run: cd service && composer install --prefer-dist --no-progress --no-interaction && vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
+  secrets-scan:
+    name: Gitleaks Secrets Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml

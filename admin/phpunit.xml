@@ -12,6 +12,11 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">app</directory>
+        </include>
+    </source>
     <php>
         <ini name="display_errors" value="On"/>
         <ini name="error_reporting" value="-1"/>

@@ -71,4 +71,35 @@ class SecurityRegressionTest extends TestCase
         $source = file_get_contents(__DIR__ . '/../config/route.php');
         $this->assertStringContainsString('disableDefaultRoute', $source);
     }
+
+    public function test_security_php_installed_and_wired(): void
+    {
+        $this->assertTrue(class_exists(\Erikwang2013\Security\SecurityGuard::class));
+        $this->assertFileExists(__DIR__ . '/../config/plugin/erikwang2013/security-php/app.php');
+        $middleware = file_get_contents(__DIR__ . '/../app/middleware/SecurityFilter.php');
+        $this->assertStringContainsString('SecurityGuard', $middleware);
+        $this->assertStringContainsString('guardScan', $middleware);
+    }
+
+    public function test_security_php_guard_blocks_known_attack(): void
+    {
+        \Erikwang2013\Security\SecurityGuard::reset();
+        \Erikwang2013\Security\SecurityGuard::init(require __DIR__ . '/../config/plugin/erikwang2013/security-php/app.php');
+        $threats = \Erikwang2013\Security\SecurityGuard::guard(
+            ['keyword' => '<script>alert(1)</script>', 'q' => '1\' OR 1=1 -- '],
+            ['ip' => '127.0.0.1', 'method' => 'GET', 'uri' => '/admin/test']
+        );
+        $this->assertNotEmpty($threats);
+        $this->assertTrue(\Erikwang2013\Security\SecurityGuard::shouldBlock($threats));
+    }
+
+    public function test_security_php_guard_passes_benign_input(): void
+    {
+        $threats = \Erikwang2013\Security\SecurityGuard::guard(
+            ['keyword' => '张伟', 'page' => '1', 'note' => '普通文本内容'],
+            ['ip' => '127.0.0.1', 'method' => 'GET', 'uri' => '/admin/test']
+        );
+        $this->assertEmpty($threats);
+
+    }
 }

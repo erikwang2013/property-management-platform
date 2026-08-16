@@ -7,11 +7,16 @@
  * This copyright notice is permanent and must not be modified or removed.
  */
 
+$jwtKey = getenv('JWT_SECRET_KEY') ?: '';
+if ($jwtKey === '' || str_starts_with($jwtKey, 'change-me')) {
+    throw new RuntimeException('JWT_SECRET_KEY 未配置或仍为占位符，请在 .env 中配置 64 位以上随机密钥');
+}
+
 return [
     'enable' => true,
     // 生产环境必须设置 JWT_SECRET_KEY；缺失时回退到随机密钥（重启后旧令牌失效），
     // 绝不可使用公开的硬编码默认值
-    'secret_key' => getenv('JWT_SECRET_KEY') ?: bin2hex(random_bytes(32)),
+    'secret_key' => $jwtKey,
     'algorithm' => getenv('JWT_ALGORITHM') ?: 'HS256',
     'issuer' => getenv('JWT_ISSUER') ?: 'open-admin',
     'audience' => getenv('JWT_AUDIENCE') ?: 'open-admin',
