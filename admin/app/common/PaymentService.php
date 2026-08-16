@@ -85,45 +85,56 @@ class PaymentService
             return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
         }
 
-        $paidBill = null;
-        Db::transaction(function () use ($notify, $body, &$paidBill) {
-            $order = PaymentOrder::where('order_number', $notify['order_number'])->first();
-            // 幂等：订单不存在或非待支付状态（重复回调）→ 不重复入账，直接应答成功
-            if (!$order || !self::canApplyNotify((int) $order->status)) {
-                return;
-            }
-            $updated = PaymentOrder::where('order_number', $notify['order_number'])
-                ->where('status', 0)
-                ->update([
-                    'status'      => 1,
-                    'trade_no'    => $notify['trade_no'],
-                    'paid_at'     => date('Y-m-d H:i:s'),
-                    'notify_data' => $body,
-                ]);
-            if ($updated === 0) {
-                return; // 并发兜底：原子更新失败说明已被其他回调处理
-            }
-            if ($order->bill_id) {
-                $bill = FeeBill::find($order->bill_id);
-                if ($bill && (int) $bill->status === 0) {
-                    [$bill->paid_amount, $bill->status] = self::applyBillPayment((float) $bill->paid_amount, (float) $bill->amount, (float) $order->amount);
-                    if ($bill->status === 1) {
-                        $bill->paid_at = date('Y-m-d H:i:s');
-                    }
-                    $bill->save();
-                    if ((int) $bill->status === 1) {
-                        $paidBill = $bill;
-                    }
-                }
-            }
-        });
-
-        if ($paidBill) {
-            $this->fireFeePaid($paidBill, $notify['order_number'] ?? '', $notify['trade_no'] ?? '');
+        // 单订单串行化回调处理：获取失败应答失败，渠道会重试（微信/支付宝回调重试语义）
+        $orderNumber = (string) $notify['order_number'];
+        $token       = LockService::acquire("lock:payment_notify:{$orderNumber}", 30);
+        if ($token === null) {
+            return $channel === 'wechat' ? '{"code":"FAIL","message":"处理中，请稍后重试"}' : 'failure';
         }
 
-        Log::info('payment_notify_processed', ['channel' => $channel, 'order' => $notify['order_number'], 'paid' => $notify['paid']]);
-        return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
+        try {
+            $paidBill = null;
+            Db::transaction(function () use ($notify, $body, &$paidBill) {
+                $order = PaymentOrder::where('order_number', $notify['order_number'])->first();
+                // 幂等：订单不存在或非待支付状态（重复回调）→ 不重复入账，直接应答成功
+                if (!$order || !self::canApplyNotify((int) $order->status)) {
+                    return;
+                }
+                $updated = PaymentOrder::where('order_number', $notify['order_number'])
+                    ->where('status', 0)
+                    ->update([
+                        'status'      => 1,
+                        'trade_no'    => $notify['trade_no'],
+                        'paid_at'     => date('Y-m-d H:i:s'),
+                        'notify_data' => $body,
+                    ]);
+                if ($updated === 0) {
+                    return; // 并发兜底：原子更新失败说明已被其他回调处理
+                }
+                if ($order->bill_id) {
+                    $bill = FeeBill::find($order->bill_id);
+                    if ($bill && (int) $bill->status === 0) {
+                        [$bill->paid_amount, $bill->status] = self::applyBillPayment((float) $bill->paid_amount, (float) $bill->amount, (float) $order->amount);
+                        if ($bill->status === 1) {
+                            $bill->paid_at = date('Y-m-d H:i:s');
+                        }
+                        $bill->save();
+                        if ((int) $bill->status === 1) {
+                            $paidBill = $bill;
+                        }
+                    }
+                }
+            });
+
+            if ($paidBill) {
+                $this->fireFeePaid($paidBill, $notify['order_number'] ?? '', $notify['trade_no'] ?? '');
+            }
+
+            Log::info('payment_notify_processed', ['channel' => $channel, 'order' => $notify['order_number'], 'paid' => $notify['paid']]);
+            return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
+        } finally {
+            LockService::release("lock:payment_notify:{$orderNumber}", $token);
+        }
     }
 
     /** 退款：先调渠道退款，成功后再更新本地 */

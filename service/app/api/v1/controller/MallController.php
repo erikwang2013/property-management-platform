@@ -9,6 +9,7 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\LockService;
 use app\model\MallOrder;
 use app\model\MallProduct;
 use InvalidArgumentException;
@@ -142,8 +143,16 @@ class MallController extends BaseController
         $orderNumber  = 'MALL' . date('YmdHis') . str_pad((string) mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
         $amount       = round((float) $product->price * $quantity, 2);
 
-        // 原子扣库存防超卖：条件满足才扣减，0 影响行说明库存不足
+        // 用户级防重复提交锁（事务外，不干扰原子扣库存语义）
+        $lockKey = "lock:mall_order:{$ownerId}";
+        $token   = LockService::acquire($lockKey, 5);
+        if ($token === null) {
+            return $this->fail('正在处理中', 429);
+        }
+
         try {
+            // 原子扣库存防超卖：条件满足才扣减，0 影响行说明库存不足
+            try {
             Db::transaction(function () use ($orderId, $orderNumber, $ownerId, $productId, $quantity, $amount, $address, $contactPhone) {
                 $affected = MallProduct::where('id', $productId)
                     ->where('status', 1)
@@ -166,17 +175,20 @@ class MallController extends BaseController
                     'contact_phone' => $contactPhone,
                 ]);
             });
-        } catch (\RuntimeException $e) {
-            return $this->fail($e->getMessage(), 422);
-        } catch (\Throwable) {
-            return $this->fail('下单失败，请稍后重试', 500);
-        }
+            } catch (\RuntimeException $e) {
+                return $this->fail($e->getMessage(), 422);
+            } catch (\Throwable) {
+                return $this->fail('下单失败，请稍后重试', 500);
+            }
 
-        return $this->success([
-            'id'           => $this->encodeId($orderId),
-            'order_number' => $orderNumber,
-            'amount'       => $amount,
-        ], '下单成功');
+            return $this->success([
+                'id'           => $this->encodeId($orderId),
+                'order_number' => $orderNumber,
+                'amount'       => $amount,
+            ], '下单成功');
+        } finally {
+            LockService::release($lockKey, $token);
+        }
     }
 
     /**

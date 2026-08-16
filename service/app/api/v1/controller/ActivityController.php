@@ -9,6 +9,7 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\LockService;
 use app\model\ActivitySignup;
 use app\model\CommunityActivity;
 use support\Request;
@@ -140,41 +141,52 @@ class ActivityController extends BaseController
             return $this->fail('当前活动暂未开放报名', 422);
         }
 
-        // 名额校验
-        $signupCount = ActivitySignup::where('activity_id', $activityId)
-            ->where('signup_status', '<>', 2)
-            ->count();
-        if ($activity->max_participants > 0 && $signupCount >= $activity->max_participants) {
-            return $this->fail('报名已满', 422);
+        // 秒杀类临界区：名额校验→创建报名串行化，防并发超员/重复报名
+        $lockKey = "lock:activity_signup:{$activityId}";
+        $token   = LockService::acquire($lockKey);
+        if ($token === null) {
+            return $this->fail('活动太火爆，请稍后重试', 429);
         }
 
-        // 是否已报名
-        $exists = ActivitySignup::where('activity_id', $activityId)
-            ->where('owner_id', $ownerId)
-            ->exists();
-        if ($exists) {
-            return $this->fail('您已报名该活动', 422);
+        try {
+            // 名额校验
+            $signupCount = ActivitySignup::where('activity_id', $activityId)
+                ->where('signup_status', '<>', 2)
+                ->count();
+            if ($activity->max_participants > 0 && $signupCount >= $activity->max_participants) {
+                return $this->fail('报名已满', 422);
+            }
+
+            // 是否已报名
+            $exists = ActivitySignup::where('activity_id', $activityId)
+                ->where('owner_id', $ownerId)
+                ->exists();
+            if ($exists) {
+                return $this->fail('您已报名该活动', 422);
+            }
+
+            $participantCount = (int) $request->input('participant_count', 1);
+            $contactPhone     = $request->input('contact_phone', '');
+            $remark           = $request->input('remark', '');
+
+            $signup = new ActivitySignup();
+            $signup->id                = $this->generateId();
+            $signup->activity_id       = $activityId;
+            $signup->owner_id          = $ownerId;
+            $signup->participant_count = max(1, $participantCount);
+            $signup->contact_phone     = $contactPhone;
+            $signup->remark            = $remark;
+            $signup->signup_status     = 0;
+            $signup->signup_at         = date('Y-m-d H:i:s');
+            $signup->save();
+
+            return $this->success([
+                'id'           => $this->encodeId($signup->id),
+                'signup_count' => ActivitySignup::where('activity_id', $activityId)->count(),
+            ], '报名成功');
+        } finally {
+            LockService::release($lockKey, $token);
         }
-
-        $participantCount = (int) $request->input('participant_count', 1);
-        $contactPhone     = $request->input('contact_phone', '');
-        $remark           = $request->input('remark', '');
-
-        $signup = new ActivitySignup();
-        $signup->id                = $this->generateId();
-        $signup->activity_id       = $activityId;
-        $signup->owner_id          = $ownerId;
-        $signup->participant_count = max(1, $participantCount);
-        $signup->contact_phone     = $contactPhone;
-        $signup->remark            = $remark;
-        $signup->signup_status     = 0;
-        $signup->signup_at         = date('Y-m-d H:i:s');
-        $signup->save();
-
-        return $this->success([
-            'id'           => $this->encodeId($signup->id),
-            'signup_count' => ActivitySignup::where('activity_id', $activityId)->count(),
-        ], '报名成功');
     }
 
     /**

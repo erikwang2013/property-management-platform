@@ -9,29 +9,30 @@ namespace app\common;
 
 use app\model\SystemConfig;
 use support\Log;
-use Workerman\Timer;
+use Webman\RedisQueue\Redis as QueueRedis;
 
 /**
- * Webhook 投递：订阅配置 → HMAC-SHA256 签名 → POST JSON → 失败重试（最多 3 次）
+ * Webhook 投递：订阅配置 → HMAC-SHA256 签名 → POST JSON → 失败入队异步重试
  *
  * 配置存 erik_system_config（group=webhook, key=webhook_config, type=json）：
  *   {"url":"https://example.com/hook","secret":"...","events":["fee_paid"],"enabled":true}
  *
- * 首次投递同步执行（保持调用方语义），失败后由 workerman Timer 延迟重试（1s → 2s），
- * 请求路径内无 sleep；重试耗尽仅记日志，不影响主流程结果。
+ * 首次投递同步执行（保持调用方语义，"一次成功零延迟"），失败后把事件入队
+ * （webhook_delivery），由 queue 消费进程异步重试（框架自带退避，见
+ * WebhookDelivery）；请求路径内无 sleep、无 Timer。重试耗尽仅记日志。
  */
 class WebhookService
 {
     public const EVENTS = ['fee_paid', 'repair_created', 'announcement_published'];
-
-    /** 失败重试间隔（秒，指数退避）；总尝试次数 = 数组长度 + 1，默认 3 次 */
-    public static array $retryDelays = [1, 2];
 
     /** 可测注入点：返回配置数组（默认读 erik_system_config），null 表示未配置 */
     public static $configResolver = null;
 
     /** 可测注入点：fn(string $url, string $payload, string $signature): int 返回 HTTP 状态码，0=网络失败 */
     public static $httpClient = null;
+
+    /** 可测注入点：fn(array $payload): void 投递失败后入队（默认 Webman\RedisQueue\Redis::send） */
+    public static $queueSender = null;
 
     public static function sign(string $payload, string $secret): string
     {
@@ -47,6 +48,29 @@ class WebhookService
     /** 触发业务事件：未配置/未启用/未订阅时静默跳过，返回 false */
     public static function dispatch(string $event, array $data): bool
     {
+        if (!self::isSubscribed($event)) {
+            return false;
+        }
+        if (!self::deliver($event, $data)) {
+            self::enqueue($event, $data);
+            return false;
+        }
+        return true;
+    }
+
+    /** 是否已配置、启用且订阅了该事件（入队前校验，避免禁用事件进入重试队列） */
+    public static function isSubscribed(string $event): bool
+    {
+        $config = self::config();
+        return (bool) ($config && !empty($config['enabled']) && in_array($event, $config['events'] ?? [], true));
+    }
+
+    /**
+     * 实际 HTTP 投递（供请求路径与队列任务共用）：
+     * 成功返回 true；失败返回 false，由调用方决定是否重试。
+     */
+    public static function deliver(string $event, array $data): bool
+    {
         $config = self::config();
         if (!$config || empty($config['enabled']) || !in_array($event, $config['events'] ?? [], true)) {
             return false;
@@ -61,42 +85,21 @@ class WebhookService
 
         $status = $client((string) $config['url'], $payload, $signature);
         if ($status >= 200 && $status < 300) {
-            Log::info('webhook_delivered', ['event' => $event, 'attempt' => 1, 'status' => $status]);
+            Log::info('webhook_delivered', ['event' => $event, 'status' => $status]);
             return true;
         }
-        self::scheduleRetry($event, (string) $config['url'], $payload, $signature, $status);
+        Log::info('webhook_failed', ['event' => $event, 'status' => $status]);
         return false;
     }
 
-    /** 首次投递失败后调度 Timer 延迟重试；非 workerman 环境（CLI/测试）无 Timer 可用时仅记日志 */
-    private static function scheduleRetry(string $event, string $url, string $payload, string $signature, int $lastStatus): void
+    /** 投递失败后入队（事件名 + 原始 data），重试策略由队列框架负责 */
+    private static function enqueue(string $event, array $data): void
     {
-        $client = self::$httpClient ?? fn (string $u, string $b, string $s): int => self::post($u, $b, $s);
-        $attempt  = 1; // 首次同步尝试已消耗
-        $attempts = count(self::$retryDelays) + 1;
-        if ($attempt >= $attempts) {
-            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus]);
-            return;
-        }
-
-        $retry = function () use (&$retry, &$attempt, &$lastStatus, $event, $url, $payload, $signature, $client, $attempts): void {
-            $attempt++;
-            $lastStatus = $client($url, $payload, $signature);
-            if ($lastStatus >= 200 && $lastStatus < 300) {
-                Log::info('webhook_delivered', ['event' => $event, 'attempt' => $attempt, 'status' => $lastStatus]);
-                return;
-            }
-            if ($attempt < $attempts) {
-                Timer::add(self::$retryDelays[$attempt - 1], $retry, [], false);
-                return;
-            }
-            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus]);
-        };
-
         try {
-            Timer::add(self::$retryDelays[0], $retry, [], false);
+            $sender = self::$queueSender ?? function (array $payload): void { QueueRedis::send('webhook_delivery', $payload); };
+            $sender(['event' => $event, 'data' => $data]);
         } catch (\Throwable $e) {
-            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus, 'error' => $e->getMessage()]);
+            Log::error('webhook_enqueue_failed', ['event' => $event, 'error' => $e->getMessage()]);
         }
     }
 

@@ -9,6 +9,7 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\LockService;
 use app\model\RoomOwner;
 use app\model\Vote;
 use app\model\VoteOption;
@@ -166,14 +167,6 @@ class VoteController extends BaseController
             return $this->fail('投票已结束', 422);
         }
 
-        // 检查是否已投票
-        $existing = VoteRecord::where('vote_id', $voteId)
-            ->where('owner_id', $ownerId)
-            ->first();
-        if ($existing) {
-            return $this->fail('您已经投过票了', 422);
-        }
-
         $optionHashid = $request->input('option_id', '');
         if (empty($optionHashid)) {
             return $this->fail('请选择投票选项', 422);
@@ -190,42 +183,61 @@ class VoteController extends BaseController
             return $this->fail('选项不存在', 404);
         }
 
-        // 获取业主的房产面积权重
-        $areaRatio = 0.0;
-        $roomId    = 0;
+        // 选项级锁：串行化"检查已投→建记录→计数++"，防计数读改写丢失（重复投票由唯一索引 uk_vote_owner 兜底）
+        $lockKey = "lock:vote_cast_option:{$optionId}";
+        $token   = LockService::acquire($lockKey);
+        if ($token === null) {
+            return $this->fail('投票人数较多，请稍后重试', 429);
+        }
 
-        if ($vote->vote_type === 2) {
-            // 面积加权投票：获取业主名下在该小区的房产
-            $room = RoomOwner::where('owner_id', $ownerId)
-                ->join('erik_room', 'erik_room_owner.room_id', '=', 'erik_room.id')
-                ->where('erik_room.community_id', $vote->community_id)
-                ->select('erik_room.id', 'erik_room.area_total')
+        try {
+            // 检查是否已投票
+            $existing = VoteRecord::where('vote_id', $voteId)
+                ->where('owner_id', $ownerId)
                 ->first();
-
-            if ($room) {
-                $roomId    = $room->id;
-                $areaRatio = (float) $room->area_total;
+            if ($existing) {
+                return $this->fail('您已经投过票了', 422);
             }
+
+            // 获取业主的房产面积权重
+            $areaRatio = 0.0;
+            $roomId    = 0;
+
+            if ($vote->vote_type === 2) {
+                // 面积加权投票：获取业主名下在该小区的房产
+                $room = RoomOwner::where('owner_id', $ownerId)
+                    ->join('erik_room', 'erik_room_owner.room_id', '=', 'erik_room.id')
+                    ->where('erik_room.community_id', $vote->community_id)
+                    ->select('erik_room.id', 'erik_room.area_total')
+                    ->first();
+
+                if ($room) {
+                    $roomId    = $room->id;
+                    $areaRatio = (float) $room->area_total;
+                }
+            }
+
+            // 创建投票记录
+            VoteRecord::create([
+                'id'         => $this->generateId(),
+                'vote_id'    => $voteId,
+                'option_id'  => $optionId,
+                'owner_id'   => $ownerId,
+                'room_id'    => $roomId,
+                'area_ratio' => $areaRatio,
+                'voted_at'   => $now,
+            ]);
+
+            // 更新选项计数
+            $option->vote_count = $option->vote_count + 1;
+            if ($vote->vote_type === 2) {
+                $option->area_weighted_count = $option->area_weighted_count + $areaRatio;
+            }
+            $option->save();
+
+            return $this->success([], '投票成功');
+        } finally {
+            LockService::release($lockKey, $token);
         }
-
-        // 创建投票记录
-        VoteRecord::create([
-            'id'         => $this->generateId(),
-            'vote_id'    => $voteId,
-            'option_id'  => $optionId,
-            'owner_id'   => $ownerId,
-            'room_id'    => $roomId,
-            'area_ratio' => $areaRatio,
-            'voted_at'   => $now,
-        ]);
-
-        // 更新选项计数
-        $option->vote_count = $option->vote_count + 1;
-        if ($vote->vote_type === 2) {
-            $option->area_weighted_count = $option->area_weighted_count + $areaRatio;
-        }
-        $option->save();
-
-        return $this->success([], '投票成功');
     }
 }

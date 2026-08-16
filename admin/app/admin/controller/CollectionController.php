@@ -12,9 +12,9 @@ use app\common\SnowflakeService;
 use app\model\CollectionRecord;
 use app\model\CollectionStrategy;
 use app\model\FeeBill;
-use app\model\Notification;
 use InvalidArgumentException;
 use support\Request;
+use Webman\RedisQueue\Redis as QueueRedis;
 
 /**
  * 扩展功能
@@ -178,80 +178,17 @@ class CollectionController extends BaseController
 
     /**
      * 手动触发催缴
-     * 扫描逾期账单，匹配策略，生成催缴记录和通知
+     * 全量扫描/匹配/通知逻辑移入队列（CollectionNotify 消费进程执行），
+     * 请求路径仅入队后立即返回，避免同步阻塞。
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/admin/collection/run")
      */
     public function run(Request $request)
     {
-        $now = date('Y-m-d');
+        QueueRedis::send('collection_notify', []);
 
-        // 获取所有启用的催缴策略，按overdue_days排序
-        $strategies = CollectionStrategy::where('status', 1)
-            ->orderBy('overdue_days', 'asc')
-            ->get();
-
-        // 获取所有逾期未缴清的账单
-        // 只纳入未缴(0)/逾期(3)，排除部分缴(1)、已缴(2)、豁免(4)
-        $overdueBills = FeeBill::whereIn('status', [0, 3])
-            ->where('due_date', '<', $now)
-            ->get();
-
-        $recordCount = 0;
-
-        foreach ($overdueBills as $bill) {
-            $overdueDays = self::calcOverdueDays($bill->due_date->format('Y-m-d'), $now);
-
-            // 匹配策略：找overdue_days最接近且不大于overdueDays的记录
-            $matchedStrategy = null;
-            foreach ($strategies as $strategy) {
-                if ($strategy->overdue_days <= $overdueDays) {
-                    $matchedStrategy = $strategy;
-                }
-            }
-
-            if (!$matchedStrategy) {
-                continue;
-            }
-
-            // 检查是否已执行过该策略（避免重复）
-            $existingRecord = CollectionRecord::where('bill_id', $bill->id)
-                ->where('strategy_id', $matchedStrategy->id)
-                ->first();
-
-            if ($existingRecord) {
-                continue;
-            }
-
-            // 创建催缴记录
-            CollectionRecord::create([
-                'id'          => SnowflakeService::generate(),
-                'bill_id'     => $bill->id,
-                'strategy_id' => $matchedStrategy->id,
-                'action'      => $matchedStrategy->action,
-                'executed_by' => 0,
-                'remark'      => "逾期{$overdueDays}天，触发策略：{$matchedStrategy->name}",
-                'executed_at' => date('Y-m-d H:i:s'),
-            ]);
-
-            // 创建通知
-            Notification::create([
-                'id'        => SnowflakeService::generate(),
-                'user_id'   => $bill->owner_id,
-                'user_type' => 1,
-                'title'     => '缴费提醒',
-                'content'   => "您的账单 {$bill->bill_number} 已逾期{$overdueDays}天，金额：{$bill->amount}元，请尽快缴费。",
-                'type'      => 2,
-                'channel'   => '["system"]',
-                'is_read'   => 0,
-                'ref_type'  => 'bill',
-                'ref_id'    => $bill->id,
-            ]);
-
-            $recordCount++;
-        }
-
-        return $this->success(['record_count' => $recordCount], '催缴执行完成');
+        // 处理异步执行，record_count 无法即时返回，恒为 0；前端只展示结果消息
+        return $this->success(['record_count' => 0], '催缴已提交，后台处理中');
     }
 
     /**

@@ -14,11 +14,14 @@ class WebhookServiceTest extends TestCase
 {
     private array $calls = [];
 
+    /** 入队捕获：断言失败后的重试投递内容 */
+    private array $queued = [];
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calls = [];
-        WebhookService::$retryDelays = [0, 0];
+        $this->calls  = [];
+        $this->queued = [];
         WebhookService::$configResolver = fn (): array => [
             'url'     => 'https://example.com/hook',
             'secret'  => 'test-secret',
@@ -29,13 +32,16 @@ class WebhookServiceTest extends TestCase
             $this->calls[] = [$url, $payload, $signature];
             return 200;
         };
+        WebhookService::$queueSender = function (array $payload): void {
+            $this->queued[] = $payload;
+        };
     }
 
     protected function tearDown(): void
     {
-        WebhookService::$retryDelays = [1, 2];
         WebhookService::$configResolver = null;
         WebhookService::$httpClient = null;
+        WebhookService::$queueSender = null;
         parent::tearDown();
     }
 
@@ -64,17 +70,18 @@ class WebhookServiceTest extends TestCase
         $this->assertTrue(WebhookService::verify($payload, $signature, 'test-secret'));
     }
 
-    public function test_failure_schedules_retry_without_blocking(): void
+    public function test_failure_enqueues_retry_without_blocking(): void
     {
         $attempts = 0;
         WebhookService::$httpClient = function () use (&$attempts): int {
             $attempts++;
-            return $attempts < 3 ? 500 : 200;
+            return 500;
         };
-        // 首次同步尝试失败 → 返回 false 不阻塞；重试由 workerman Timer 异步执行
-        // （phpunit 非 workerman 环境无 Timer，仅记日志，不抛异常）
+        // 首次同步尝试失败 → 返回 false 不阻塞；重试入队（webhook_delivery），
+        // 由 queue 消费进程异步执行（phpunit 中仅捕获入队载荷，不触 Redis）
         $this->assertFalse(WebhookService::dispatch('repair_created', ['id' => 9]));
         $this->assertSame(1, $attempts);
+        $this->assertSame([['event' => 'repair_created', 'data' => ['id' => 9]]], $this->queued);
     }
 
     public function test_first_attempt_failure_returns_false(): void
@@ -85,18 +92,21 @@ class WebhookServiceTest extends TestCase
         };
         $this->assertFalse(WebhookService::dispatch('fee_paid', []));
         $this->assertCount(1, $this->calls); // 请求路径内仅 1 次同步投递，无 sleep
+        $this->assertCount(1, $this->queued); // 失败载荷已入队待异步重试
     }
 
     public function test_unsubscribed_or_disabled_event_not_delivered(): void
     {
         WebhookService::dispatch('announcement_published', []); // 未订阅
         $this->assertCount(0, $this->calls);
+        $this->assertCount(0, $this->queued); // 未订阅不入队
 
         WebhookService::$configResolver = fn (): array => [
             'url' => 'https://example.com/hook', 'secret' => 's', 'events' => ['fee_paid'], 'enabled' => false,
         ];
         WebhookService::dispatch('fee_paid', []);
         $this->assertCount(0, $this->calls);
+        $this->assertCount(0, $this->queued); // 已禁用不入队
     }
 
     public function test_no_config_skips_silently(): void
