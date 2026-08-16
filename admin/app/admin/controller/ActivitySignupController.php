@@ -9,7 +9,6 @@ namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\model\ActivitySignup;
-use support\Carbon;
 use support\Request;
 
 /**

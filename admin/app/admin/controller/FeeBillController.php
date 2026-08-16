@@ -280,12 +280,13 @@ class FeeBillController extends BaseController
                 ? $overrideAmount
                 : self::calcBillAmount($feeType, $room);
 
+            $billId = SnowflakeService::generate();
             FeeBill::create([
-                'id'          => SnowflakeService::generate(),
+                'id'          => $billId,
                 'room_id'     => $room->id,
                 'owner_id'    => (int) (RoomOwner::where('room_id', $room->id)->value('owner_id') ?? 0),
                 'fee_type_id' => $feeTypeId,
-                'bill_number' => 'FB' . date('YmdHis') . str_pad((string) ($created + 1), 3, '0', STR_PAD_LEFT) . rand(10, 99),
+                'bill_number' => 'FB' . date('YmdHis') . substr((string) $billId, -8),
                 'amount'      => $amount,
                 'paid_amount' => 0,
                 'late_fee'    => 0,

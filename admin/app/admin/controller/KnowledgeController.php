@@ -12,7 +12,6 @@ use app\common\SnowflakeService;
 use app\model\ChatRecord;
 use app\model\KnowledgeBase;
 use InvalidArgumentException;
-use support\Db;
 use support\Request;
 
 /**

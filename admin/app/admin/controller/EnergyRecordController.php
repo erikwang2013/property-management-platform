@@ -10,7 +10,6 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\common\SnowflakeService;
 use app\model\EnergyRecord;
-use app\model\EnergyMeter;
 use support\Request;
 
 /**

@@ -9,7 +9,6 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
-use app\model\MallCategory;
 use app\model\MallOrder;
 use app\model\MallProduct;
 use InvalidArgumentException;

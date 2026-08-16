@@ -9,7 +9,6 @@ namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
-use app\common\EncryptionService;
 use app\model\OperationLog;
 use support\Redis;
 use support\Request;

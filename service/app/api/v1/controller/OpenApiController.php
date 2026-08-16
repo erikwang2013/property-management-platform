@@ -63,7 +63,7 @@ class OpenApiController extends BaseController
             return $this->fail('缺少 bill_number 参数', 400)->withStatus(400);
         }
 
-        $bill = FeeBill::with(['feeType', 'room'])
+        $bill = FeeBill::with(['feeType'])
             ->where('bill_number', $billNumber)
             ->first();
 
@@ -81,7 +81,6 @@ class OpenApiController extends BaseController
             'status'        => $bill->status,
             'due_date'      => $bill->due_date ? $bill->due_date->format('Y-m-d') : '',
             'fee_type_name' => $bill->feeType->name ?? '',
-            'room_number'   => $bill->room->room_number ?? '',
             'start_date'    => $bill->start_date ? $bill->start_date->format('Y-m-d') : '',
             'end_date'      => $bill->end_date ? $bill->end_date->format('Y-m-d') : '',
         ]);
@@ -98,7 +97,7 @@ class OpenApiController extends BaseController
             return $this->fail('缺少 order_number 参数', 400)->withStatus(400);
         }
 
-        $repair = RepairOrder::with(['room', 'progress'])
+        $repair = RepairOrder::with(['progress'])
             ->where('order_number', $orderNumber)
             ->first();
 
@@ -120,8 +119,6 @@ class OpenApiController extends BaseController
             'category'     => $repair->category,
             'urgency'      => $repair->urgency,
             'status'       => $repair->status,
-            'room_number'  => $repair->room->room_number ?? '',
-            'description'  => $repair->description,
             'created_at'   => $repair->created_at ? $repair->created_at->format('Y-m-d H:i') : '',
             'progress'     => $progress,
         ]);

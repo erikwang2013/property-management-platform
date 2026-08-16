@@ -10,8 +10,8 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\model\AdminUser;
 use app\common\SnowflakeService;
-use app\common\EncryptionService;
 use support\Container;
+use support\Log;
 use support\Redis;
 use support\Request;
 use support\Response;
@@ -84,7 +84,9 @@ class AuthController
             if (Redis::get($lockKey)) {
                 return json(['code' => 429, 'message' => '账号已被临时锁定，请15分钟后再试', 'data' => []]);
             }
-        } catch (\Throwable) {}
+        } catch (\Throwable $e) {
+            Log::error('auth_lock_check_failed', ['username' => $username, 'error' => $e->getMessage()]);
+        }
 
         if (!$user || !password_verify($request->input('password'), $user->password)) {
             // 登录失败：计数 + 锁定
@@ -97,12 +99,19 @@ class AuthController
                     Redis::del($failKey);
                     return json(['code' => 429, 'message' => '账号已被临时锁定，请15分钟后再试', 'data' => []]);
                 }
-            } catch (\Throwable) {}
+            } catch (\Throwable $e) {
+                Log::error('auth_fail_count_failed', ['username' => $username, 'error' => $e->getMessage()]);
+            }
             return json(['code' => 401, 'message' => '用户名或密码错误', 'data' => []]);
         }
 
         // 登录成功：清除失败计数
-        try { Redis::del("login_fail:{$username}"); Redis::del($lockKey); } catch (\Throwable) {}
+        try {
+            Redis::del("login_fail:{$username}");
+            Redis::del($lockKey);
+        } catch (\Throwable $e) {
+            Log::error('auth_fail_count_reset_failed', ['username' => $username, 'error' => $e->getMessage()]);
+        }
 
         if ($user->status === 0) {
             return json(['code' => 403, 'message' => '账号已被禁用', 'data' => []]);
@@ -242,7 +251,11 @@ class AuthController
 
             // 并发会话限制：注册新 token，移除旧 refresh token 的活跃状态
             $this->trackSession($userId, $token, $tokenExpire);
-            try { Redis::zrem("user_tokens:{$userId}", md5($refreshToken)); } catch (\Throwable) {}
+            try {
+                Redis::zrem("user_tokens:{$userId}", md5($refreshToken));
+            } catch (\Throwable $e) {
+                Log::error('auth_session_cleanup_failed', ['user_id' => $userId, 'error' => $e->getMessage()]);
+            }
 
             return json([
                 'code'    => 0,

@@ -124,6 +124,9 @@ if ! { if [ "$DOCKER_MODE" -eq 1 ]; then
     exit 1
 fi
 
+# 备份含全库明文，收紧权限防止同机其他用户读取
+chmod 600 "$BACKUP_FILE"
+
 echo "[$(now)] 备份完成: $(du -h "$BACKUP_FILE" | cut -f1)"
 
 find "$BACKUP_DIR" -name "backup_*.sql.gz" -type f -mtime +"$KEEP_DAYS" -delete 2>/dev/null || true

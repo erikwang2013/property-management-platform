@@ -134,7 +134,7 @@ open-admin/
 ├── config/                     # 配置文件
 │   ├── route.php               # 路由 + API 版本策略
 │   └── middleware.php           # 全局中间件注册
-├── docs/install.sql            # 全量建库 SQL（66 表 + 权限种子，唯一建库入口）
+├── docs/install.sql            # 全量建库 SQL（68 表 + 权限种子，唯一建库入口）
 ├── docs/                       # 文档
 │   ├── ARCHITECTURE.md         # Mermaid 架构图
 │   ├── DESIGN.md               # 设计文档

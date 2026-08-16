@@ -10,6 +10,7 @@ namespace app\middleware;
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
+use support\Log;
 use support\Redis;
 use Erikwang2013\Security\SecurityGuard;
 
@@ -159,7 +160,9 @@ class SecurityFilter implements MiddlewareInterface
                 Redis::del($key);
                 $this->logBan($ip, $count);
             }
-        } catch (\Throwable) {}
+        } catch (\Throwable $e) {
+            Log::error('security_block_failed', ['ip' => $ip, 'error' => $e->getMessage()]);
+        }
     }
 
     private function logBan(string $ip, int $count): void

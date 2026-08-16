@@ -64,25 +64,27 @@ class WebhookServiceTest extends TestCase
         $this->assertTrue(WebhookService::verify($payload, $signature, 'test-secret'));
     }
 
-    public function test_retry_succeeds_after_failures(): void
+    public function test_failure_schedules_retry_without_blocking(): void
     {
         $attempts = 0;
         WebhookService::$httpClient = function () use (&$attempts): int {
             $attempts++;
             return $attempts < 3 ? 500 : 200;
         };
-        $this->assertTrue(WebhookService::dispatch('repair_created', ['id' => 9]));
-        $this->assertSame(3, $attempts);
+        // 首次同步尝试失败 → 返回 false 不阻塞；重试由 workerman Timer 异步执行
+        // （phpunit 非 workerman 环境无 Timer，仅记日志，不抛异常）
+        $this->assertFalse(WebhookService::dispatch('repair_created', ['id' => 9]));
+        $this->assertSame(1, $attempts);
     }
 
-    public function test_retry_exhausted_returns_false(): void
+    public function test_first_attempt_failure_returns_false(): void
     {
         WebhookService::$httpClient = function (): int { // 网络失败
             $this->calls[] = [];
             return 0;
         };
         $this->assertFalse(WebhookService::dispatch('fee_paid', []));
-        $this->assertCount(3, $this->calls); // 最多 3 次
+        $this->assertCount(1, $this->calls); // 请求路径内仅 1 次同步投递，无 sleep
     }
 
     public function test_unsubscribed_or_disabled_event_not_delivered(): void

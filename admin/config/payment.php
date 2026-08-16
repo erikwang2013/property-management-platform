@@ -22,6 +22,8 @@ return [
     'notify_host' => env('PAYMENT_NOTIFY_HOST', ''),
     // HTTP 请求超时（秒）
     'timeout'     => (int) env('PAYMENT_TIMEOUT', 10),
+    // 支付订单有效分钟数（超时自动关闭）
+    'expire_minutes' => (int) env('PAYMENT_EXPIRE_MINUTES', 15),
 
     'channels' => [
         'wechat' => [
@@ -47,11 +49,9 @@ return [
         ],
     ],
 
-    // 对账与订单参数
+    // 对账参数
     'reconcile' => [
         // 默认回溯天数
-        'default_days'   => 7,
-        // 支付订单有效分钟数（超时自动关闭）
-        'expire_minutes' => 15,
+        'default_days' => 7,
     ],
 ];

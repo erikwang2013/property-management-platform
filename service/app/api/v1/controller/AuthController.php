@@ -12,10 +12,8 @@ use app\common\BaseController;
 use app\common\SnowflakeService;
 use app\model\Owner;
 use app\model\Room;
-use app\model\RoomOwner;
 use support\Request;
 use support\Response;
-use support\Redis;
 use Erikwang2013\Jwt\JWTFactory;
 
 /**

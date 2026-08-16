@@ -38,7 +38,7 @@ class PaymentService
         }
 
         $orderNumber = (string) \app\common\SnowflakeService::generate();
-        $expireAt = date('Y-m-d H:i:s', time() + (int) config('payment.reconcile.expire_minutes', 15) * 60);
+        $expireAt = date('Y-m-d H:i:s', time() + (int) config('payment.expire_minutes', 15) * 60);
         $notifyUrl = rtrim((string) config('payment.notify_host', ''), '/') . "/payment/{$channel}/callback";
 
         $order = new PaymentOrder();

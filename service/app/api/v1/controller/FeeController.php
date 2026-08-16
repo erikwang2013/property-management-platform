@@ -11,7 +11,6 @@ use hg\apidoc\annotation as Apidoc;
 use app\common\BaseController;
 use app\model\FeeBill;
 use app\model\FeePayment;
-use app\model\FeeType;
 use support\Request;
 use support\Response;
 use support\Db;

@@ -9,6 +9,7 @@ namespace app\common;
 
 use app\model\SystemConfig;
 use support\Log;
+use Workerman\Timer;
 
 /**
  * Webhook 投递：订阅配置 → HMAC-SHA256 签名 → POST JSON → 失败重试（最多 3 次）
@@ -16,7 +17,8 @@ use support\Log;
  * 配置存 erik_system_config（group=webhook, key=webhook_config, type=json）：
  *   {"url":"https://example.com/hook","secret":"...","events":["fee_paid"],"enabled":true}
  *
- * 同步投递 + 请求内重试，不引入队列依赖；重试耗尽仅记日志，不影响主流程结果。
+ * 首次投递同步执行（保持调用方语义），失败后由 workerman Timer 延迟重试（1s → 2s），
+ * 请求路径内无 sleep；重试耗尽仅记日志，不影响主流程结果。
  */
 class WebhookService
 {
@@ -57,19 +59,45 @@ class WebhookService
         $signature = self::sign($payload, (string) ($config['secret'] ?? ''));
         $client = self::$httpClient ?? fn (string $url, string $body, string $sig): int => self::post($url, $body, $sig);
 
+        $status = $client((string) $config['url'], $payload, $signature);
+        if ($status >= 200 && $status < 300) {
+            Log::info('webhook_delivered', ['event' => $event, 'attempt' => 1, 'status' => $status]);
+            return true;
+        }
+        self::scheduleRetry($event, (string) $config['url'], $payload, $signature, $status);
+        return false;
+    }
+
+    /** 首次投递失败后调度 Timer 延迟重试；非 workerman 环境（CLI/测试）无 Timer 可用时仅记日志 */
+    private static function scheduleRetry(string $event, string $url, string $payload, string $signature, int $lastStatus): void
+    {
+        $client = self::$httpClient ?? fn (string $u, string $b, string $s): int => self::post($u, $b, $s);
+        $attempt  = 1; // 首次同步尝试已消耗
         $attempts = count(self::$retryDelays) + 1;
-        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-            $status = $client((string) $config['url'], $payload, $signature);
-            if ($status >= 200 && $status < 300) {
-                Log::info('webhook_delivered', ['event' => $event, 'attempt' => $attempt, 'status' => $status]);
-                return true;
+        if ($attempt >= $attempts) {
+            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus]);
+            return;
+        }
+
+        $retry = function () use (&$retry, &$attempt, &$lastStatus, $event, $url, $payload, $signature, $client, $attempts): void {
+            $attempt++;
+            $lastStatus = $client($url, $payload, $signature);
+            if ($lastStatus >= 200 && $lastStatus < 300) {
+                Log::info('webhook_delivered', ['event' => $event, 'attempt' => $attempt, 'status' => $lastStatus]);
+                return;
             }
             if ($attempt < $attempts) {
-                sleep(self::$retryDelays[$attempt - 1]);
+                Timer::add(self::$retryDelays[$attempt - 1], $retry, [], false);
+                return;
             }
+            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus]);
+        };
+
+        try {
+            Timer::add(self::$retryDelays[0], $retry, [], false);
+        } catch (\Throwable $e) {
+            Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $lastStatus, 'error' => $e->getMessage()]);
         }
-        Log::error('webhook_failed', ['event' => $event, 'attempts' => $attempts, 'last_status' => $status ?? 0]);
-        return false;
     }
 
     private static function config(): ?array

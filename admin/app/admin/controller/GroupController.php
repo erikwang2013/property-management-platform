@@ -16,7 +16,6 @@ use app\model\GroupCommunity;
 use app\model\Owner;
 use app\model\Room;
 use InvalidArgumentException;
-use support\Db;
 use support\Request;
 
 /**

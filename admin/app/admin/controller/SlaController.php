@@ -14,7 +14,6 @@ use app\model\RepairOrder;
 use app\model\SlaRecord;
 use app\model\SlaRule;
 use InvalidArgumentException;
-use support\Db;
 use support\Request;
 
 /**
