@@ -32,8 +32,8 @@ return [
             'charset' => 'utf8mb4',
             // 排序规则
             'collation' => 'utf8mb4_unicode_ci',
-            // 表前缀
-            'prefix' => 'erik_',
+            // 表前缀（模型 $table 已含 erik_ 前缀，此处为空避免双前缀）
+            'prefix' => '',
             // 严格模式
             'strict' => true,
             // 引擎

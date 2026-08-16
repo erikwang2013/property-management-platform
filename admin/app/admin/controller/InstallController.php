@@ -92,6 +92,19 @@ class InstallController
         ];
         $confirm = $request->post('admin_password_confirm', '');
 
+        // 可选：支付 + ES 配置（留空则不写入 .env）
+        $optional = [
+            'payment_env'      => trim($request->post('payment_env', 'sandbox')),
+            'wechat_app_id'    => trim($request->post('wechat_app_id', '')),
+            'wechat_mch_id'    => trim($request->post('wechat_mch_id', '')),
+            'wechat_api_v3'    => trim($request->post('wechat_api_v3', '')),
+            'alipay_app_id'    => trim($request->post('alipay_app_id', '')),
+            'alipay_private'   => trim($request->post('alipay_private', '')),
+            'es_host'          => trim($request->post('es_host', '')),
+            'es_username'      => trim($request->post('es_username', '')),
+            'es_password'      => trim($request->post('es_password', '')),
+        ];
+
         $errors = [];
         if (mb_strlen($admin['admin_username']) < 3) $errors[] = '管理员用户名至少3个字符';
         // 密码强度与登录校验保持一致：8-32 位 + 大小写字母 + 数字 + 特殊字符
@@ -104,14 +117,14 @@ class InstallController
         if ($admin['admin_password'] !== $confirm) $errors[] = '两次输入的密码不一致';
 
         if ($errors) {
-            return $this->renderStep2($db, $admin, implode('；', $errors));
+            return $this->renderStep2($db, $admin, implode('；', $errors), $optional);
         }
 
         if ($request->post('_confirm') === '1') {
-            return $this->executeAndRender($db, $admin);
+            return $this->executeAndRender($db, $admin, $optional);
         }
 
-        return $this->renderStep3($db, $admin, false, [], true);
+        return $this->renderStep3($db, $admin, false, [], true, $optional);
     }
 
     private function renderStep1(array $old = [], string $error = ''): Response
@@ -119,16 +132,17 @@ class InstallController
         return view('install/step1', ['old' => $old, 'error' => $error]);
     }
 
-    private function renderStep2(array $dbConfig, array $old = [], string $error = ''): Response
+    private function renderStep2(array $dbConfig, array $old = [], string $error = '', array $optional = []): Response
     {
         return view('install/step2', [
             'dbConfig' => $dbConfig,
             'old'      => $old,
             'error'    => $error,
+            'optional' => $optional,
         ]);
     }
 
-    private function renderStep3(array $dbConfig, array $adminConfig, bool $executed, array $results, bool $allSuccess): Response
+    private function renderStep3(array $dbConfig, array $adminConfig, bool $executed, array $results, bool $allSuccess, array $optional = []): Response
     {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8787';
@@ -144,9 +158,9 @@ class InstallController
         ]);
     }
 
-    private function executeAndRender(array $dbConfig, array $adminConfig): Response
+    private function executeAndRender(array $dbConfig, array $adminConfig, array $optional = []): Response
     {
-        $results = $this->executeInstall($dbConfig, $adminConfig);
+        $results = $this->executeInstall($dbConfig, $adminConfig, $optional);
         $allSuccess = true;
         foreach ($results as $r) {
             if ($r['status'] !== 'success') {
@@ -157,7 +171,7 @@ class InstallController
         return $this->renderStep3($dbConfig, $adminConfig, true, $results, $allSuccess);
     }
 
-    private function executeInstall(array $dbConfig, array $adminConfig): array
+    private function executeInstall(array $dbConfig, array $adminConfig, array $optional = []): array
     {
         $results = [];
 
@@ -166,7 +180,7 @@ class InstallController
         if ($conn['status'] === 'error') return $results;
         $pdo = $conn['pdo'];
 
-        $env = $this->writeEnvFile($dbConfig);
+        $env = $this->writeEnvFile($dbConfig, $optional);
         $results[] = $env;
         if ($env['status'] === 'error') return $results;
 
@@ -205,7 +219,7 @@ class InstallController
         }
     }
 
-    private function writeEnvFile(array $dbConfig): array
+    private function writeEnvFile(array $dbConfig, array $optional = []): array
     {
         $envPath = base_path() . '/.env';
         if (!file_exists($envPath)) {
@@ -229,6 +243,25 @@ class InstallController
             '/^DB_USERNAME=.*$/m' => "DB_USERNAME={$dbConfig['username']}",
             '/^DB_PASSWORD=.*$/m' => "DB_PASSWORD={$dbConfig['password']}",
         ];
+
+        // 可选配置：仅覆盖非空值，避免把已填写的 .env 置空
+        $optionalMap = [
+            'payment_env'    => 'PAYMENT_ENVIRONMENT',
+            'wechat_app_id'  => 'WECHAT_PAY_APP_ID',
+            'wechat_mch_id'  => 'WECHAT_PAY_MCH_ID',
+            'wechat_api_v3'  => 'WECHAT_PAY_API_V3_KEY',
+            'alipay_app_id'  => 'ALIPAY_APP_ID',
+            'alipay_private' => 'ALIPAY_PRIVATE_KEY',
+            'es_host'        => 'OPENSEARCH_HTTP_HOST',
+            'es_username'    => 'OPENSEARCH_USERNAME',
+            'es_password'    => 'OPENSEARCH_PASSWORD',
+        ];
+        foreach ($optionalMap as $field => $key) {
+            $value = $optional[$field] ?? '';
+            if ($value !== '') {
+                $replacements["/^{$key}=.*$/m"] = "{$key}={$value}";
+            }
+        }
 
         $contents = preg_replace(array_keys($replacements), array_values($replacements), $contents);
 

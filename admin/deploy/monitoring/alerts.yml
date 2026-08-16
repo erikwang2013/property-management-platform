@@ -1,0 +1,68 @@
+# ============================================================
+# 告警规则 — open-admin 监控
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# 生效: prometheus 启动时加载; 改后可用 --web.enable-lifecycle + curl -XPOST /-/reload
+# ============================================================
+
+groups:
+  - name: open-admin
+    rules:
+      # 应用不可达 = 全站故障（当前所有请求 5xx）
+      - alert: AppDown
+        expr: up{job="open-admin"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "open-admin 应用不可达"
+          description: "Prometheus 连续 5 分钟无法抓取 open-admin /metrics，服务疑似宕机"
+
+      - alert: MysqlDown
+        expr: open_admin_db_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MySQL 连接失败"
+          description: "应用连续 2 分钟探测 MySQL 失败 (SELECT 1 异常)"
+
+      - alert: RedisDown
+        expr: open_admin_redis_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis 连接失败"
+          description: "应用连续 2 分钟探测 Redis 失败 (PING 异常)"
+
+      - alert: ElasticsearchDown
+        expr: up{job="elasticsearch"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Elasticsearch 连接失败"
+          description: "连续 5 分钟无法抓取 ES 原生 /_prometheus/metrics"
+
+      # 0=green 1=yellow 2=red（label: color）
+      - alert: ElasticsearchHealthYellow
+        expr: elasticsearch_cluster_health_status > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Elasticsearch 集群非绿色"
+          description: "集群 10 分钟未恢复绿色，分片可能未分配"
+
+      # scout 搜索队列堆积（webman/redis-queue 列表键 queues:scout_*）
+      - alert: QueueBacklog
+        expr: sum(redis_key_size{key=~"queues:scout_(make|remove|make_range)$"}) > 100
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "scout 队列堆积"
+          description: "待处理消息持续超过 100 条，消费者可能异常"
+
+# 说明: 精确的 5xx 比例告警需要 open_admin_http_requests_total 输出带 status 标签的
+# 计数（当前仅声明 HELP/TYPE 无数值），属 admin/app 改造，待相关改造完成后补充规则。

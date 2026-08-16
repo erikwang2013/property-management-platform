@@ -1,0 +1,17 @@
+# ============================================================
+# 应用日志轮转 — open-admin + service（宿主机 logrotate）
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+#
+# 安装: sudo cp pmp-app /etc/logrotate.d/pmp-app
+# 注意: 路径按实际部署位置调整; copytruncate 使 webman 无需重启即可轮转
+# ============================================================
+/path/to/property-management-platform/admin/runtime/*.log
+/path/to/property-management-platform/service/runtime/*.log
+/path/to/property-management-platform/service/workerman.log {
+    daily
+    rotate 30
+    compress
+    missingok
+    notifempty
+    copytruncate
+}

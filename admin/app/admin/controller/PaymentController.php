@@ -8,8 +8,11 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\common\PaymentService;
 use app\model\FeeBill;
 use app\model\PaymentOrder;
+use RuntimeException;
+use support\Log;
 use support\Request;
 use support\Response;
 
@@ -101,150 +104,97 @@ class PaymentController extends BaseController
     }
 
     /**
-     * 退款
+     * 创建支付订单（渠道下单，返回收款二维码）
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/admin/payment-order/create")
+     */
+    public function create(Request $request): Response
+    {
+        $billId = $this->decodeId((string) $request->input('bill_id', ''));
+        $channel = (string) $request->input('channel', '');
+        $userId = (int) $request->input('user_id', 0);
+        $userType = (int) $request->input('user_type', 1);
+        $subject = (string) $request->input('subject', '物业缴费');
+
+        if (!$billId || !$userId) {
+            return $this->fail('缺少账单或支付人', 422);
+        }
+        if (!in_array($channel, ['wechat', 'alipay'], true)) {
+            return $this->fail('不支持的支付渠道', 422);
+        }
+
+        try {
+            $result = (new PaymentService())->createOrder($channel, $billId, $userId, $userType, $subject);
+            return $this->success($result);
+        } catch (RuntimeException $e) {
+            return $this->fail($e->getMessage(), 422);
+        }
+    }
+
+    /**
+     * 退款（先调渠道退款，成功后再更新本地）
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/admin/payment-order/{hashid}/refund")
      */
     public function refund(Request $request, string $hashid): Response
     {
         $id = $this->decodeId($hashid);
-        $order = PaymentOrder::findOrFail($id);
-
-        if ($order->status != 1) {
-            return $this->fail('仅已支付订单可退款', 422);
-        }
-
         $amount = (float) $request->input('amount', 0);
-        if ($amount <= 0 || $amount > $order->amount) {
-            return $this->fail('退款金额无效', 422);
+
+        try {
+            $result = (new PaymentService())->refund($id, $amount);
+            return $this->success($result, '退款成功');
+        } catch (RuntimeException $e) {
+            return $this->fail($e->getMessage(), 422);
         }
-
-        $order->status        = 3;
-        $order->refund_at     = date('Y-m-d H:i:s');
-        $order->refund_amount = $amount;
-        $order->save();
-
-        // 同步更新账单的已付金额
-        if ($order->bill_id) {
-            $bill = FeeBill::find($order->bill_id);
-            if ($bill) {
-                $bill->paid_amount = max(0, $bill->paid_amount - $amount);
-                if ($bill->paid_amount <= 0) {
-                    $bill->status = 0;
-                }
-                $bill->save();
-            }
-        }
-
-        return $this->success([], '退款成功');
     }
 
     /**
-     * 微信支付回调
+     * 对账：回溯 N 天订单，逐单与渠道核对并自动补齐漏单
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/payment/wechat/callback")
+     * @Apidoc\Url("/admin/payment-order/reconcile")
+     */
+    public function reconcile(Request $request): Response
+    {
+        $days = min((int) $request->input('days', 7), 30);
+        $days = max($days, 1);
+
+        try {
+            return $this->success((new PaymentService())->reconcile($days));
+        } catch (RuntimeException $e) {
+            return $this->fail($e->getMessage(), 422);
+        }
+    }
+
+    /**
+     * 微信支付回调（v3 验签 + 幂等处理）
+     * @Apidoc\Method("POST")
+     * @Apidoc\Url("/payment/wechat/callback")
      */
     public function callbackWechat(Request $request): Response
     {
-        $notifyData = $request->all();
-
-        // 记录回调数据用于排查
-        if (empty($notifyData)) {
-            $notifyData = $request->rawBody();
+        try {
+            $ack = (new PaymentService())->handleNotify('wechat', $request);
+            return response($ack, 200, ['Content-Type' => 'application/json']);
+        } catch (RuntimeException $e) {
+            Log::warning('payment_callback_rejected', ['channel' => 'wechat', 'error' => $e->getMessage()]);
+            return response('', 403);
         }
-
-        // 验证签名（实际项目中应使用微信SDK验签）
-        // $verified = $this->verifyWechatSign($notifyData);
-        // if (!$verified) { return $this->fail('签名验证失败', 400); }
-
-        // 解析订单号并更新状态
-        $orderNumber = $notifyData['out_trade_no'] ?? '';
-        if (empty($orderNumber)) {
-            return $this->fail('缺少订单号', 400);
-        }
-
-        $order = PaymentOrder::where('order_number', $orderNumber)->first();
-        if (!$order) {
-            return $this->fail('订单不存在', 404);
-        }
-
-        if ($order->status == 0) {
-            $order->status    = 1;
-            $order->trade_no  = $notifyData['transaction_id'] ?? '';
-            $order->paid_at   = date('Y-m-d H:i:s');
-            $order->notify_data = $notifyData;
-            $order->save();
-
-            // 更新账单状态
-            if ($order->bill_id) {
-                $bill = FeeBill::find($order->bill_id);
-                if ($bill && $bill->status == 0) {
-                    $bill->paid_amount = $bill->paid_amount + $order->amount;
-                    $bill->status = $bill->paid_amount >= $bill->amount ? 1 : 0;
-                    if ($bill->status == 1) {
-                        $bill->paid_at = date('Y-m-d H:i:s');
-                    }
-                    $bill->save();
-                }
-            }
-        }
-
-        // 返回成功应答给微信
-        return response('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>', 200, ['Content-Type' => 'application/xml']);
     }
 
     /**
-     * 支付宝支付回调
+     * 支付宝支付回调（RSA2 验签 + 幂等处理）
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/payment/alipay/callback")
+     * @Apidoc\Url("/payment/alipay/callback")
      */
     public function callbackAlipay(Request $request): Response
     {
-        $notifyData = $request->all();
-
-        if (empty($notifyData)) {
-            $notifyData = $request->rawBody();
+        try {
+            return response((new PaymentService())->handleNotify('alipay', $request));
+        } catch (RuntimeException $e) {
+            Log::warning('payment_callback_rejected', ['channel' => 'alipay', 'error' => $e->getMessage()]);
+            return response('failure', 400);
         }
-
-        // 验证签名（实际项目中应使用支付宝SDK验签）
-        // $verified = $this->verifyAlipaySign($notifyData);
-        // if (!$verified) { return $this->fail('签名验证失败', 400); }
-
-        $orderNumber = $notifyData['out_trade_no'] ?? '';
-        $tradeStatus = $notifyData['trade_status'] ?? '';
-
-        if (empty($orderNumber)) {
-            return $this->fail('缺少订单号', 400);
-        }
-
-        $order = PaymentOrder::where('order_number', $orderNumber)->first();
-        if (!$order) {
-            return $this->fail('订单不存在', 404);
-        }
-
-        // TRADE_SUCCESS 或 TRADE_FINISHED 表示支付成功
-        if (in_array($tradeStatus, ['TRADE_SUCCESS', 'TRADE_FINISHED']) && $order->status == 0) {
-            $order->status      = 1;
-            $order->trade_no    = $notifyData['trade_no'] ?? '';
-            $order->paid_at     = date('Y-m-d H:i:s');
-            $order->notify_data = $notifyData;
-            $order->save();
-
-            // 更新账单状态
-            if ($order->bill_id) {
-                $bill = FeeBill::find($order->bill_id);
-                if ($bill && $bill->status == 0) {
-                    $bill->paid_amount = $bill->paid_amount + $order->amount;
-                    $bill->status = $bill->paid_amount >= $bill->amount ? 1 : 0;
-                    if ($bill->status == 1) {
-                        $bill->paid_at = date('Y-m-d H:i:s');
-                    }
-                    $bill->save();
-                }
-            }
-        }
-
-        return response('success');
     }
 
     /**

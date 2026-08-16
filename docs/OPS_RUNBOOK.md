@@ -109,3 +109,38 @@ bash scripts/rotate_keys.sh /path/to/service/.env
 1. 部署新环境：`cp .env.example .env` → 删除 `change-me` 占位行 → `php scripts/gen_env_keys.php --file=.env` → 启动服务确认无密钥报错。
 2. 例行轮换：按 2.2 执行，季度一次即可（无强制周期，泄漏时立即轮换）。
 3. 备份的 `.env.bak.*` 含明文密钥，与数据库备份同等对待（权限 600、异地存放）。
+
+## 3. 监控告警（Prometheus + Grafana）
+
+编排在 `admin/docker-compose.yml`（新增 prometheus / grafana / redis-exporter 三个服务），配置均在 `admin/deploy/monitoring/`：
+
+```bash
+cd admin
+docker compose up -d prometheus grafana redis-exporter
+# Prometheus: http://host:9090   Grafana: http://host:3000
+# 首次登录 Grafana: admin / ${GRAFANA_ADMIN_PASSWORD}（默认 change-me-grafana-password）
+```
+
+- **数据源**：Grafana 启动时自动配置 Prometheus 数据源（provisioning），面板在 UI 中创建。
+- **告警规则**：`deploy/monitoring/alerts.yml`，覆盖：
+  - `AppDown`（应用不可达，等价全站 5xx）— critical
+  - `MysqlDown` / `RedisDown`（应用侧探测失败）— critical
+  - `ElasticsearchDown`（ES 原生 `/_prometheus/metrics` 抓取失败）+ `ElasticsearchHealthYellow`（集群非绿色）— critical/warning
+  - `QueueBacklog`（scout 搜索队列 `queues:scout_*` 堆积 >100 条持续 10 分钟）— warning
+- **ES 密码注入**：prometheus 经 compose `secrets` 读取 `ELASTIC_PASSWORD`（需 Docker Compose ≥ 2.24），配置文件不写死密码；未设置时用 change-me 占位，ES 抓取 401 会触发 ElasticsearchDown。
+- **重载规则**：改完 alerts.yml 后 `curl -X POST localhost:9090/-/reload`（prometheus 需加 `--web.enable-lifecycle`，默认未加则重启容器）。
+
+**已知缺口**：精确的 5xx 比例告警需要 `open_admin_http_requests_total` 输出带 status 标签的计数（当前仅声明 HELP/TYPE，无数值），属 admin/app 改造；service 端暂无 `/metrics` 端点，接入监控需先补端点。两者均待后续迭代。
+
+## 4. 日志轮转
+
+- **容器日志**：compose 中所有服务已配 `json-file` + `max-size 10m / max-file 3`，无需额外处理。
+- **宿主机应用日志**（`runtime/*.log`、`service/workerman.log`）：使用 `admin/deploy/logrotate/pmp-app`：
+
+```bash
+sudo cp admin/deploy/logrotate/pmp-app /etc/logrotate.d/pmp-app
+# 按实际部署路径修改文件内的路径后生效；copytruncate 使 webman 免重启轮转
+sudo logrotate -d /etc/logrotate.d/pmp-app   # 试运行检查
+```
+
+默认每日轮转、保留 30 天、gzip 压缩。

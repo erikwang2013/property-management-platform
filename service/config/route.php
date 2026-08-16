@@ -5,6 +5,14 @@
 
 use Webman\Route;
 
+// 商业版本开关（config/edition.php，env EDITIONS: lite/standard/full，逐级累进）
+function edition_supports(string $minEdition): bool
+{
+    $config = config('edition', []);
+    $current = $config['levels'][strtolower($config['default'] ?? 'full')] ?? 3;
+    return $current >= ($config['levels'][strtolower($minEdition)] ?? 9);
+}
+
 /**
  * 物业管理系统-业务端 API 路由配置
  *
@@ -69,40 +77,50 @@ Route::group('/service', function () {
     Route::put('/profile/password', [app\api\v1\controller\ProfileController::class, 'updatePassword']);
     Route::post('/profile/logout', [app\api\v1\controller\ProfileController::class, 'logout']);
 
-    // 停车管理
-    Route::get('/parking/vehicles', [app\api\v1\controller\ParkingController::class, 'vehicles']);
-    Route::get('/parking/spaces', [app\api\v1\controller\ParkingController::class, 'spaces']);
-    Route::get('/parking/records', [app\api\v1\controller\ParkingController::class, 'records']);
-    // 访客管理
-    Route::get('/visitors', [app\api\v1\controller\VisitorController::class, 'index']);
-    Route::post('/visitor', [app\api\v1\controller\VisitorController::class, 'store']);
-    Route::put('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'update']);
-    Route::delete('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'destroy']);
+    // ============================================================
+    // 标准版(Standard) 及以上：停车/访客
+    // ============================================================
+if (edition_supports('standard')) {
+        // 停车管理
+        Route::get('/parking/vehicles', [app\api\v1\controller\ParkingController::class, 'vehicles']);
+        Route::get('/parking/spaces', [app\api\v1\controller\ParkingController::class, 'spaces']);
+        Route::get('/parking/records', [app\api\v1\controller\ParkingController::class, 'records']);
+        // 访客管理
+        Route::get('/visitors', [app\api\v1\controller\VisitorController::class, 'index']);
+        Route::post('/visitor', [app\api\v1\controller\VisitorController::class, 'store']);
+        Route::put('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'update']);
+        Route::delete('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'destroy']);
+    }
 
-    // 社区活动
-    Route::get('/activities', [app\api\v1\controller\ActivityController::class, 'index']);
-    Route::get('/activity/{hashid}', [app\api\v1\controller\ActivityController::class, 'show']);
-    Route::post('/activity/{hashid}/signup', [app\api\v1\controller\ActivityController::class, 'signup']);
-    Route::post('/activity/{hashid}/cancel', [app\api\v1\controller\ActivityController::class, 'cancel']);
+    // ============================================================
+    // 完整版(Full) 及以上：活动/通知/投票/商城/问答/人脸
+    // ============================================================
+if (edition_supports('full')) {
+        // 社区活动
+        Route::get('/activities', [app\api\v1\controller\ActivityController::class, 'index']);
+        Route::get('/activity/{hashid}', [app\api\v1\controller\ActivityController::class, 'show']);
+        Route::post('/activity/{hashid}/signup', [app\api\v1\controller\ActivityController::class, 'signup']);
+        Route::post('/activity/{hashid}/cancel', [app\api\v1\controller\ActivityController::class, 'cancel']);
 
-    // 消息通知
-    Route::get('/notifications', [app\api\v1\controller\NotificationController::class, 'index']);
-    Route::put('/notification/{hashid}/read', [app\api\v1\controller\NotificationController::class, 'markRead']);
-    Route::put('/notifications/read-all', [app\api\v1\controller\NotificationController::class, 'markAllRead']);
-    // 投票
-    Route::get('/votes', [app\api\v1\controller\VoteController::class, 'index']);
-    Route::get('/vote/{hashid}', [app\api\v1\controller\VoteController::class, 'show']);
-    Route::post('/vote/{hashid}/cast', [app\api\v1\controller\VoteController::class, 'cast']);
-    // 商城
-    Route::get('/mall/products', [app\api\v1\controller\MallController::class, 'products']);
-    Route::get('/mall/product/{hashid}', [app\api\v1\controller\MallController::class, 'productDetail']);
-    Route::post('/mall/order', [app\api\v1\controller\MallController::class, 'createOrder']);
-    Route::get('/mall/orders', [app\api\v1\controller\MallController::class, 'myOrders']);
-    // 智能问答
-    Route::post('/chat/ask', [app\api\v1\controller\KnowledgeController::class, 'ask']);
-    // 人脸
-    Route::post('/face/register', [app\api\v1\controller\FaceController::class, 'register']);
-    Route::get('/face/status', [app\api\v1\controller\FaceController::class, 'status']);
+        // 消息通知
+        Route::get('/notifications', [app\api\v1\controller\NotificationController::class, 'index']);
+        Route::put('/notification/{hashid}/read', [app\api\v1\controller\NotificationController::class, 'markRead']);
+        Route::put('/notifications/read-all', [app\api\v1\controller\NotificationController::class, 'markAllRead']);
+        // 投票
+        Route::get('/votes', [app\api\v1\controller\VoteController::class, 'index']);
+        Route::get('/vote/{hashid}', [app\api\v1\controller\VoteController::class, 'show']);
+        Route::post('/vote/{hashid}/cast', [app\api\v1\controller\VoteController::class, 'cast']);
+        // 商城
+        Route::get('/mall/products', [app\api\v1\controller\MallController::class, 'products']);
+        Route::get('/mall/product/{hashid}', [app\api\v1\controller\MallController::class, 'productDetail']);
+        Route::post('/mall/order', [app\api\v1\controller\MallController::class, 'createOrder']);
+        Route::get('/mall/orders', [app\api\v1\controller\MallController::class, 'myOrders']);
+        // 智能问答
+        Route::post('/chat/ask', [app\api\v1\controller\KnowledgeController::class, 'ask']);
+        // 人脸
+        Route::post('/face/register', [app\api\v1\controller\FaceController::class, 'register']);
+        Route::get('/face/status', [app\api\v1\controller\FaceController::class, 'status']);
+    }
 })->middleware([
     app\middleware\ServiceAuth::class,
     app\middleware\ApiVersion::class,

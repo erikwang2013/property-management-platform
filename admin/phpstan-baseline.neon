@@ -1567,12 +1567,6 @@ parameters:
 			path: app/admin/controller/PaymentController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:find\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 3
-			path: app/admin/controller/PaymentController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:count\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -1581,7 +1575,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:findOrFail\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 1
 			path: app/admin/controller/PaymentController.php
 
 		-
@@ -1593,7 +1587,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 5
+			count: 3
 			path: app/admin/controller/PaymentController.php
 
 		-
@@ -2225,6 +2219,78 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/common/HashidsService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$bill_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$channel\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$expire_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$order_number\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$user_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 4
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 4
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/common/PaymentService.php
 
 		-
 			message: '#^Trait app\\common\\TransTrait is used zero times and is not analysed\.$#'
