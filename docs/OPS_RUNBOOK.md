@@ -129,8 +129,9 @@ docker compose up -d prometheus grafana redis-exporter
   - `QueueBacklog`（scout 搜索队列 `queues:scout_*` 堆积 >100 条持续 10 分钟）— warning
 - **ES 密码注入**：prometheus 经 compose `secrets` 读取 `ELASTIC_PASSWORD`（需 Docker Compose ≥ 2.24），配置文件不写死密码；未设置时用 change-me 占位，ES 抓取 401 会触发 ElasticsearchDown。
 - **重载规则**：改完 alerts.yml 后 `curl -X POST localhost:9090/-/reload`（prometheus 需加 `--web.enable-lifecycle`，默认未加则重启容器）。
+- **本地验证**：`bash scripts/verify_monitoring.sh` — 校验 admin/service 两侧告警规则 YAML 语法、curl 两端 `/metrics`（admin:8787 / service:8788）指标输出、Prometheus（9090/9091）规则加载；应用/Prometheus 未运行时对应项提示 SKIP 并 exit 0。
 
-**已知缺口**：精确的 5xx 比例告警需要 `open_admin_http_requests_total` 输出带 status 标签的计数（当前仅声明 HELP/TYPE，无数值），属 admin/app 改造；service 端暂无 `/metrics` 端点，接入监控需先补端点。两者均待后续迭代。
+**状态**：admin 与 service 均已有 `/metrics` 端点（MetricsController，免认证）。**告警实测待部署**：规则已就绪但尚未在真实部署环境触发验证（依赖 `verify_monitoring.sh` 与 Prometheus 上线）。**已知缺口**：精确的 5xx 比例告警需要 `open_admin_http_requests_total` 输出带 status 标签的计数（当前仅声明 HELP/TYPE，无数值），属 admin/app 改造，待后续迭代。
 
 ## 4. 日志轮转
 

@@ -19,7 +19,7 @@ class RoomOwner extends BaseModel
     protected $casts = [
         'room_id'          => 'integer',
         'owner_id'         => 'integer',
-        'ownership_ratio'  => 'decimal',
+        'ownership_ratio'  => 'decimal:2',
         'start_date'       => 'date',
         'end_date'         => 'date',
         'created_at'       => 'datetime',

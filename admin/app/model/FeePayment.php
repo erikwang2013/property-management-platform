@@ -20,7 +20,7 @@ class FeePayment extends BaseModel
     protected $casts = [
         'bill_id'     => 'integer',
         'owner_id'    => 'integer',
-        'amount'      => 'decimal',
+        'amount'      => 'decimal:2',
         'paid_at'     => 'datetime',
         'operator_id' => 'integer',
         'created_at'  => 'datetime',

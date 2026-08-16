@@ -23,7 +23,7 @@ class Tenant extends BaseModel
         'id_card'     => Encryptable::class,
         'room_id'     => 'integer',
         'owner_id'    => 'integer',
-        'rent_amount' => 'decimal',
+        'rent_amount' => 'decimal:2',
         'status'      => 'integer',
         'lease_start' => 'date',
         'lease_end'   => 'date',

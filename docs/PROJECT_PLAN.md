@@ -47,6 +47,8 @@
 |------|---------|---------|
 | 支付闭环、可监控、可交付 | ① 支付生产化：微信/支付宝沙箱全流程（下单→回调幂等→退款→对账），凭证集中到 config/payment.php + env ② 监控告警：Prometheus+Grafana 编排 + 告警规则（5xx、ES/Redis 连接、队列堆积）+ 日志轮转 ③ 商业版控制：基于 EDITIONS 的版本开关（Lite/Standard/Full 路由分组激活）+ Demo 数据 ④ 安装向导覆盖支付/ES 配置 | 沙箱支付全流程通过（含重复回调幂等）；告警实测触发；三版本开关可演示；新环境 10 分钟装完 |
 
+**P2 当前状态**：支付全链路代码完成（PaymentService 下单/回调幂等/退款/对账 + config/payment.php 凭证集中化 + PaymentServiceTest 纯函数覆盖），**沙箱联调待凭证**——取得 WECHAT_PAY_* / ALIPAY_* 沙箱凭证后运行 `scripts/payment_sandbox_smoke.php`（cd admin && php ../scripts/payment_sandbox_smoke.php）；监控编排完成（admin:9090 / service:9091 双 Prometheus 栈 + 告警规则），**告警实测待部署**——`scripts/verify_monitoring.sh` 本地可校验 YAML 语法、两端 /metrics 与规则加载，真实触发验证待部署后执行。
+
 ### P3 规模化（8-12 周）— 让系统"能卖多"
 
 | 目标 | 关键任务 | 验收标准 |

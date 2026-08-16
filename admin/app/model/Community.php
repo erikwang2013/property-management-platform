@@ -25,7 +25,7 @@ class Community extends BaseModel
     ];
 
     protected $casts = [
-        'area_total'     => 'decimal',
+        'area_total'     => 'decimal:2',
         'building_count' => 'integer',
         'room_count'     => 'integer',
         'status'         => 'integer',
