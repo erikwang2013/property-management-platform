@@ -27,6 +27,9 @@ Route::get('/health', function () {
     return json(['code' => 0, 'message' => 'ok', 'data' => ['service' => 'property-service']]);
 });
 
+// Prometheus 指标
+Route::get('/metrics', [app\api\v1\controller\MetricsController::class, 'index']);
+
 // 公开接口
 Route::group('/api', function () {
     Route::post('/captcha/generate', [app\api\v1\controller\CaptchaController::class, 'generate']);

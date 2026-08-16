@@ -15,5 +15,6 @@ return [
         app\middleware\Cors::class,
         app\middleware\SecurityFilter::class,
         app\middleware\RateLimit::class,
+        app\middleware\MetricsCollector::class,
     ],
 ];

@@ -1,0 +1,35 @@
+# ============================================================
+# Prometheus 配置 — property-service 监控
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# 挂载路径: /etc/prometheus/prometheus.yml (service/docker-compose.yml)
+# ============================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/alerts.yml
+
+scrape_configs:
+  # 业务端应用指标 (GET /metrics, webman 端口 8788)
+  - job_name: property-service
+    static_configs:
+      - targets: ["app:8788"]
+        labels:
+          app: property-service
+
+  # Elasticsearch 原生 Prometheus 端点 (xpack 已启用, 需 basic_auth;
+  # 密码经 compose secrets 注入 /run/secrets/es_password, 不写死在配置里)
+  - job_name: elasticsearch
+    metrics_path: /_prometheus/metrics
+    basic_auth:
+      username: elastic
+      password_file: /run/secrets/es_password
+    static_configs:
+      - targets: ["elasticsearch:9200"]
+
+  # redis_exporter: 连接状态 redis_up
+  - job_name: redis-exporter
+    static_configs:
+      - targets: ["redis-exporter:9121"]

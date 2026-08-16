@@ -33,9 +33,18 @@ class MetricsController
     {
         $metrics = [];
 
-        // HTTP 请求计数（简化版：按 webman worker 状态估算）
-        $metrics[] = '# HELP open_admin_http_requests_total Total HTTP requests processed';
-        $metrics[] = '# TYPE open_admin_http_requests_total counter';
+        // HTTP 请求计数（MetricsCollector 中间件累计到 Redis）
+        try {
+            $all = (int)(Redis::get('open_admin_metrics:http_all') ?: 0);
+            $fails = (int)(Redis::get('open_admin_metrics:http_5xx') ?: 0);
+        } catch (Throwable) {
+            $all = 0;
+            $fails = 0;
+        }
+        $metrics[] = "# HELP open_admin_http_requests_total Total HTTP requests processed";
+        $metrics[] = "# TYPE open_admin_http_requests_total counter";
+        $metrics[] = "open_admin_http_requests_total{code=\"all\"} {$all}";
+        $metrics[] = "open_admin_http_requests_total{code=\"5xx\"} {$fails}";
 
         // 活跃用户数
         try {

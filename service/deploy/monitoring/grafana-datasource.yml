@@ -1,0 +1,15 @@
+# ============================================================
+# Grafana 数据源自动配置
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# 挂载路径: /etc/grafana/provisioning/datasources/datasource.yml
+# ============================================================
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false

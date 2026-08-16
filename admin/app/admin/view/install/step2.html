@@ -72,6 +72,10 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
           <input type="text" id="payment_env" name="payment_env" value="<?= htmlspecialchars($optional['payment_env'] ?? 'sandbox') ?>" placeholder="sandbox（沙箱）或 production（生产）">
         </div>
         <div class="form-group">
+          <label for="payment_notify_host">支付回调公网地址</label>
+          <input type="text" id="payment_notify_host" name="payment_notify_host" value="<?= htmlspecialchars($optional['payment_notify_host'] ?? '') ?>" placeholder="https://pay.example.com（不带末尾斜杠）">
+        </div>
+        <div class="form-group">
           <label for="wechat_app_id">微信支付 AppID</label>
           <input type="text" id="wechat_app_id" name="wechat_app_id" value="<?= htmlspecialchars($optional['wechat_app_id'] ?? '') ?>" placeholder="wx 开头的应用ID">
         </div>

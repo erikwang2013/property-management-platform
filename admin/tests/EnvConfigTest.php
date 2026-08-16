@@ -85,4 +85,23 @@ class EnvConfigTest extends TestCase
         $this->assertIsString(getenv('JWT_SECRET_KEY') ?: 'x', 'JWT_SECRET_KEY 应为字符串');
         $this->assertIsString(getenv('HASHIDS_SALT') ?: 'x', 'HASHIDS_SALT 应为字符串');
     }
+
+    #[Test]
+    public function install_wizard_keys_exist_in_env_example(): void
+    {
+        // 安装向导 writeEnvFile 依赖模板中的这些键（存在则替换，缺失则追加到末尾），
+        // 模板缺键会让生成的 .env 结构不完整，此处保证 .env.example 键位齐全
+        $wizardKeys = [
+            'PAYMENT_ENABLED', 'PAYMENT_ENVIRONMENT', 'PAYMENT_NOTIFY_HOST',
+            'WECHAT_PAY_ENABLED', 'WECHAT_PAY_APP_ID', 'WECHAT_PAY_MCH_ID', 'WECHAT_PAY_API_V3_KEY',
+            'ALIPAY_ENABLED', 'ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY',
+            'OPENSEARCH_HTTP_HOST', 'OPENSEARCH_USERNAME', 'OPENSEARCH_PASSWORD',
+        ];
+        $example = file_get_contents(__DIR__ . '/../.env.example');
+        preg_match_all('/^([A-Z_][A-Z0-9_]*)=/m', $example, $matches);
+        $exampleKeys = array_flip($matches[1]);
+
+        $missing = array_values(array_filter($wizardKeys, fn(string $k) => !isset($exampleKeys[$k])));
+        $this->assertEmpty($missing, '向导写入键在 .env.example 中缺失: ' . implode(', ', $missing));
+    }
 }

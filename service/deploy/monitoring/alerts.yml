@@ -1,24 +1,24 @@
 # ============================================================
-# 告警规则 — open-admin 监控
+# 告警规则 — property-service 监控
 # Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 # 生效: prometheus 启动时加载; 改后可用 --web.enable-lifecycle + curl -XPOST /-/reload
 # ============================================================
 
 groups:
-  - name: open-admin
+  - name: property-service
     rules:
       # 应用不可达 = 全站故障（当前所有请求 5xx）
       - alert: AppDown
-        expr: up{job="open-admin"} == 0
+        expr: up{job="property-service"} == 0
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "open-admin 应用不可达"
-          description: "Prometheus 连续 5 分钟无法抓取 open-admin /metrics，服务疑似宕机"
+          summary: "property-service 应用不可达"
+          description: "Prometheus 连续 5 分钟无法抓取 property-service /metrics，服务疑似宕机"
 
       - alert: MysqlDown
-        expr: open_admin_db_up == 0
+        expr: property_service_db_up == 0
         for: 2m
         labels:
           severity: critical
@@ -27,7 +27,7 @@ groups:
           description: "应用连续 2 分钟探测 MySQL 失败 (SELECT 1 异常)"
 
       - alert: RedisDown
-        expr: open_admin_redis_up == 0
+        expr: property_service_redis_up == 0
         for: 2m
         labels:
           severity: critical
@@ -54,22 +54,16 @@ groups:
           summary: "Elasticsearch 集群非绿色"
           description: "集群 10 分钟未恢复绿色，分片可能未分配"
 
-      # scout 搜索队列堆积（webman/redis-queue 列表键 queues:scout_*）
-      - alert: QueueBacklog
-        expr: sum(redis_key_size{key=~"queues:scout_(make|remove|make_range)$"}) > 100
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "scout 队列堆积"
-          description: "待处理消息持续超过 100 条，消费者可能异常"
-
       # 5xx 比例过高（MetricsCollector 中间件按 code=all/5xx 累计，见 /metrics）
       - alert: Http5xxRatio
-        expr: sum(rate(open_admin_http_requests_total{code="5xx"}[5m])) / sum(rate(open_admin_http_requests_total{code="all"}[5m])) > 0.05
+        expr: sum(rate(property_service_http_requests_total{code="5xx"}[5m])) / sum(rate(property_service_http_requests_total{code="all"}[5m])) > 0.05
         for: 10m
         labels:
           severity: warning
         annotations:
           summary: "HTTP 5xx 比例超过 5%"
           description: "过去 5 分钟 5xx 请求占比持续超过 5%，接口可能批量报错"
+
+# 说明: 未配置队列堆积告警 — 业务端未启用 redis-queue 消费者（无 plugin/webman/redis-queue
+# 与 app/queue 目录，scout 同步为同步直写模式），无队列指标可监控。若后续引入队列，
+# 参考 admin 端规则增加: sum(redis_key_size{key=~"queues:.*"}) > 100。

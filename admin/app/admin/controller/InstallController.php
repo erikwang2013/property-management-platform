@@ -94,15 +94,16 @@ class InstallController
 
         // 可选：支付 + ES 配置（留空则不写入 .env）
         $optional = [
-            'payment_env'      => trim($request->post('payment_env', 'sandbox')),
-            'wechat_app_id'    => trim($request->post('wechat_app_id', '')),
-            'wechat_mch_id'    => trim($request->post('wechat_mch_id', '')),
-            'wechat_api_v3'    => trim($request->post('wechat_api_v3', '')),
-            'alipay_app_id'    => trim($request->post('alipay_app_id', '')),
-            'alipay_private'   => trim($request->post('alipay_private', '')),
-            'es_host'          => trim($request->post('es_host', '')),
-            'es_username'      => trim($request->post('es_username', '')),
-            'es_password'      => trim($request->post('es_password', '')),
+            'payment_env'         => trim($request->post('payment_env', 'sandbox')),
+            'payment_notify_host' => trim($request->post('payment_notify_host', '')),
+            'wechat_app_id'       => trim($request->post('wechat_app_id', '')),
+            'wechat_mch_id'       => trim($request->post('wechat_mch_id', '')),
+            'wechat_api_v3'       => trim($request->post('wechat_api_v3', '')),
+            'alipay_app_id'       => trim($request->post('alipay_app_id', '')),
+            'alipay_private'      => trim($request->post('alipay_private', '')),
+            'es_host'             => trim($request->post('es_host', '')),
+            'es_username'         => trim($request->post('es_username', '')),
+            'es_password'         => trim($request->post('es_password', '')),
         ];
 
         $errors = [];
@@ -243,27 +244,43 @@ class InstallController
             '/^DB_USERNAME=.*$/m' => "DB_USERNAME={$dbConfig['username']}",
             '/^DB_PASSWORD=.*$/m' => "DB_PASSWORD={$dbConfig['password']}",
         ];
+        $contents = preg_replace(array_keys($replacements), array_values($replacements), $contents);
 
-        // 可选配置：仅覆盖非空值，避免把已填写的 .env 置空
+        // 可选配置：键存在则替换、缺失则追加（兼容 .env.docker 等缺键模板，避免替换静默失效）
+        $setKey = static function (string $key, string $value) use (&$contents): void {
+            if (preg_match("/^{$key}=/m", $contents)) {
+                $contents = preg_replace("/^{$key}=.*$/m", "{$key}={$value}", $contents);
+            } else {
+                $contents .= "\n{$key}={$value}";
+            }
+        };
+
+        // 仅写入非空值，避免把已填写的 .env 置空
         $optionalMap = [
-            'payment_env'    => 'PAYMENT_ENVIRONMENT',
-            'wechat_app_id'  => 'WECHAT_PAY_APP_ID',
-            'wechat_mch_id'  => 'WECHAT_PAY_MCH_ID',
-            'wechat_api_v3'  => 'WECHAT_PAY_API_V3_KEY',
-            'alipay_app_id'  => 'ALIPAY_APP_ID',
-            'alipay_private' => 'ALIPAY_PRIVATE_KEY',
-            'es_host'        => 'OPENSEARCH_HTTP_HOST',
-            'es_username'    => 'OPENSEARCH_USERNAME',
-            'es_password'    => 'OPENSEARCH_PASSWORD',
+            'payment_env'         => 'PAYMENT_ENVIRONMENT',
+            'payment_notify_host' => 'PAYMENT_NOTIFY_HOST',
+            'wechat_app_id'       => 'WECHAT_PAY_APP_ID',
+            'wechat_mch_id'       => 'WECHAT_PAY_MCH_ID',
+            'wechat_api_v3'       => 'WECHAT_PAY_API_V3_KEY',
+            'alipay_app_id'       => 'ALIPAY_APP_ID',
+            'alipay_private'      => 'ALIPAY_PRIVATE_KEY',
+            'es_host'             => 'OPENSEARCH_HTTP_HOST',
+            'es_username'         => 'OPENSEARCH_USERNAME',
+            'es_password'         => 'OPENSEARCH_PASSWORD',
         ];
         foreach ($optionalMap as $field => $key) {
             $value = $optional[$field] ?? '';
             if ($value !== '') {
-                $replacements["/^{$key}=.*$/m"] = "{$key}={$value}";
+                $setKey($key, $value);
             }
         }
 
-        $contents = preg_replace(array_keys($replacements), array_values($replacements), $contents);
+        // 支付总开关与渠道开关：凭证已填写即启用，避免装完仍是 PAYMENT_ENABLED=false 被拒绝
+        $wechatFilled = ($optional['wechat_app_id'] ?? '') !== '' || ($optional['wechat_mch_id'] ?? '') !== '' || ($optional['wechat_api_v3'] ?? '') !== '';
+        $alipayFilled = ($optional['alipay_app_id'] ?? '') !== '' || ($optional['alipay_private'] ?? '') !== '';
+        if ($wechatFilled) $setKey('WECHAT_PAY_ENABLED', 'true');
+        if ($alipayFilled) $setKey('ALIPAY_ENABLED', 'true');
+        if ($wechatFilled || $alipayFilled) $setKey('PAYMENT_ENABLED', 'true');
 
         if (file_put_contents($envPath, $contents, LOCK_EX) === false) {
             return ['title' => '.env 配置', 'status' => 'error', 'message' => '无法写入 .env 文件'];
