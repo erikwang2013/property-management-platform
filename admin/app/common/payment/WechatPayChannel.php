@@ -106,7 +106,8 @@ class WechatPayChannel
         return [
             'order_number' => $data['out_trade_no'] ?? '',
             'trade_no'     => $data['transaction_id'] ?? '',
-            'paid'         => $tradeState === 'SUCCESS' || $tradeState === '',
+            // 空/未知交易状态视为未支付：宁可等渠道重试，不可把未付款挂起回调当已支付入账
+            'paid'         => $tradeState === 'SUCCESS',
         ];
     }
 

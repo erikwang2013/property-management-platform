@@ -32,7 +32,11 @@ RUN docker-php-ext-install -j$(nproc) \
         xml \
         dom \
         xmlwriter \
-    && docker-php-ext-enable opcache pcntl
+    && docker-php-ext-enable opcache pcntl \
+    && apk add --no-cache $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del $PHPIZE_DEPS
 
 # OPcache 生产配置
 RUN echo "opcache.enable=1" >> "$PHP_INI_DIR/php.ini" \

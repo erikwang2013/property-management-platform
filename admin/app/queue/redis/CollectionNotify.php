@@ -13,6 +13,7 @@ use app\model\CollectionRecord;
 use app\model\CollectionStrategy;
 use app\model\FeeBill;
 use app\model\Notification;
+use Illuminate\Database\QueryException;
 use Webman\RedisQueue\Consumer;
 
 /**
@@ -68,16 +69,23 @@ class CollectionNotify implements Consumer
                 continue;
             }
 
-            // 创建催缴记录
-            CollectionRecord::create([
-                'id'          => SnowflakeService::generate(),
-                'bill_id'     => $bill->id,
-                'strategy_id' => $matchedStrategy->id,
-                'action'      => $matchedStrategy->action,
-                'executed_by' => 0,
-                'remark'      => "逾期{$overdueDays}天，触发策略：{$matchedStrategy->name}",
-                'executed_at' => date('Y-m-d H:i:s'),
-            ]);
+            // 创建催缴记录（唯一键 uk_collection_bill_strategy 兜底：并发/重跑撞键即跳过，不重复催缴）
+            try {
+                CollectionRecord::create([
+                    'id'          => SnowflakeService::generate(),
+                    'bill_id'     => $bill->id,
+                    'strategy_id' => $matchedStrategy->id,
+                    'action'      => $matchedStrategy->action,
+                    'executed_by' => 0,
+                    'remark'      => "逾期{$overdueDays}天，触发策略：{$matchedStrategy->name}",
+                    'executed_at' => date('Y-m-d H:i:s'),
+                ]);
+            } catch (QueryException $e) {
+                if (($e->errorInfo[1] ?? 0) === 1062) {
+                    continue;
+                }
+                throw $e;
+            }
 
             // 创建通知
             Notification::create([

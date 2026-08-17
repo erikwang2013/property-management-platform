@@ -1207,7 +1207,8 @@ CREATE TABLE IF NOT EXISTS `erik_activity_signup` (
     `signup_at` DATETIME DEFAULT NULL COMMENT '报名时间',
     `checkin_at` DATETIME DEFAULT NULL COMMENT '签到时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), KEY `idx_activity_id` (`activity_id`), KEY `idx_owner_id` (`owner_id`)
+    PRIMARY KEY (`id`), KEY `idx_activity_id` (`activity_id`), KEY `idx_owner_id` (`owner_id`),
+    UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='活动报名表';
 
 -- 33. 能耗仪表表
@@ -1508,7 +1509,8 @@ CREATE TABLE IF NOT EXISTS `erik_collection_record` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_bill_id` (`bill_id`),
-    KEY `idx_executed_at` (`executed_at`)
+    KEY `idx_executed_at` (`executed_at`),
+    UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴记录表';
 
 -- ============================================================
@@ -1738,4 +1740,13 @@ PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_equipment' AND index_name = 'idx_community_status');
 SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_equipment` ADD INDEX `idx_community_status` (`community_id`, `status`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+-- P13 审计补充：唯一键兜底（活动报名重复 / 催缴重复），旧库幂等追加
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_activity_signup' AND index_name = 'uk_activity_signup_owner');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_activity_signup` ADD UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)', 'DO 0');
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_collection_record' AND index_name = 'uk_collection_bill_strategy');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_collection_record` ADD UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;

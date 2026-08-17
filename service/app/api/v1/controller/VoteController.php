@@ -183,8 +183,9 @@ class VoteController extends BaseController
             return $this->fail('选项不存在', 404);
         }
 
-        // 选项级锁：串行化"检查已投→建记录→计数++"，防计数读改写丢失（重复投票由唯一索引 uk_vote_owner 兜底）
-        $lockKey = "lock:vote_cast_option:{$optionId}";
+        // 投票级锁（vote+owner 维度，与去重检查同粒度）：串行化"检查已投→建记录→计数++"，
+        // 防同一业主并发投不同选项时双请求均通过检查（唯一索引 uk_vote_owner 兜底数据，锁保证返回友好 422）
+        $lockKey = "lock:vote_cast:{$voteId}:{$ownerId}";
         $token   = LockService::acquire($lockKey);
         if ($token === null) {
             return $this->fail('投票人数较多，请稍后重试', 429);

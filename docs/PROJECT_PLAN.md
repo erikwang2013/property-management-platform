@@ -6,7 +6,7 @@
 
 **功能面：与声明一致。** 22 业务模块 + 12 扩展功能全部完成，68 张表 / 178 API，admin 58 控制器 / 127 路由、service 19 控制器 / 57 路由，Flutter Web 管理后台 42 页 + 业主端 13 页，HarmonyOS 5 页。docs/ 14 份文档 + 35 张 SVG 均有代码支撑，未发现"声明未实现"的功能。
 
-**测试：全绿（截至 2026-08-17）。** admin 169 tests / 381 assertions、service 82 tests / 350 assertions（7 skip 为环境依赖）、Flutter widget 测试 9 例（登录/首页/账单页）。
+**测试：全绿（截至 2026-08-17）。** admin 193 tests / 452 assertions、service 101 tests / 385 assertions（7 skip 为环境依赖）、Flutter widget 测试 9 例（登录/首页/账单页）。
 
 **工程面已具备：** 双端 docker-compose、GitHub Actions CI（PHP 语法 + 双端 phpunit + composer audit + Flutter analyze）、Dependabot、Prometheus 指标端点。
 
@@ -68,9 +68,9 @@
 | P6 部署收尾 | 一键部署脚本（deploy.sh：pull → .env → compose → install.sql 幂等导入 → 监控冒烟）、容器日志挂载修复、CI 覆盖率门禁上调、扩容预案（SCALING_PLAN） | ✅ 完成 |
 | P7 测试纵深 | service 单测 43→82、Flutter widget 测试 3 页 8 用例（CI 集成）、开放 API（/open 3 只读端点 + X-API-Key 鉴权 + gen_api_key.php）、压测冒烟（k6 smoke.js + workflow_dispatch 手动 workflow） | ✅ 完成 |
 | P8 运维收尾 | 备份恢复落地（backup.sh + RECOVERY_RUNBOOK）、Grafana dashboard（service 端 7 面板 provisioning）、admin 单测 +11（152 全绿）、**安装向导模板路径 bug 修复**（模板移至 app/view/install，curl 实测渲染 200） | ✅ 完成 |
-| P9 工程收尾 | 失实备份脚本清理（git rm 两端 4 文件 + 8 处文档统一）、admin 端 Grafana dashboard（open_admin_* 前缀 7 面板）、InstallValidator 校验纯函数抽取 + 17 用例（admin 169 全绿） | ✅ 完成 |
+| P9 工程收尾 | 失实备份脚本清理（git rm 两端 4 文件 + 8 处文档统一）、admin 端 Grafana dashboard（open_admin_* 前缀 7 面板）、InstallValidator 校验纯函数抽取 + 17 用例（admin 193 全绿） | ✅ 完成 |
 
-**P4-P9 汇总**：admin 单测 93→169、service 单测 43→82、Flutter widget 测试 9/9、开放 API 3 端点、双端监控面板对称、备份/恢复/密钥/部署全套运维脚本就绪。
+**P4-P9 汇总**：admin 单测 93→193、service 单测 43→101、Flutter widget 测试 9/9、开放 API 3 端点、双端监控面板对称、备份/恢复/密钥/部署全套运维脚本就绪。
 
 ## 五、Top 10 优先级行动项（按投入产出比）
 
@@ -96,7 +96,7 @@
 | 密钥管理 | 占位符 + 硬编码回退密钥，无轮换 | 生成器 + 轮换脚本；生产用环境变量注入 | ✅ 已解决（fail-fast 校验 + gen_env_keys.sh + rotate_keys.sh） |
 | 支付凭证散落 | 支付模块无集中配置、沙箱未验证 | 配置集中化 + 沙箱先行 | 🔶 配置已集中（config/payment.php），沙箱联调待凭证 |
 | 迁移管理 | 单文件 install.sql（IF NOT EXISTS 幂等） | 已统一为单一全量入口；如需增量升级路径另议 | ✅ 已统一（2026-08-16 合并落地） |
-| 测试覆盖偏结构 | 133 测试集中在 schema/安全/往返 | 覆盖率门禁 + 核心业务（费用/审批/SLA）补单测 | ✅ 已加强（admin 169 / service 82 / Flutter 9；门禁防零插桩回归） |
+| 测试覆盖偏结构 | 133 测试集中在 schema/安全/往返 | 覆盖率门禁 + 核心业务（费用/审批/SLA）补单测 | ✅ 已加强（admin 193 / service 101 / Flutter 9；门禁防零插桩回归） |
 | 移动端缺口 | HarmonyOS 仅 5 页，业主端无原生 App | P3 核心路径补齐；依赖：HarmonyOS 测试设备 | ✅ 核心路径补齐（5 页：缴费/报修/公告/访客/停车）；真机验证待设备 |
 
 ## 七、团队分工（pmp-team）

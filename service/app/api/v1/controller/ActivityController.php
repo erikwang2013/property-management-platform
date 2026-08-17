@@ -12,6 +12,7 @@ use app\common\BaseController;
 use app\common\LockService;
 use app\model\ActivitySignup;
 use app\model\CommunityActivity;
+use Illuminate\Database\QueryException;
 use support\Request;
 use support\Response;
 use InvalidArgumentException;
@@ -149,10 +150,10 @@ class ActivityController extends BaseController
         }
 
         try {
-            // 名额校验
-            $signupCount = ActivitySignup::where('activity_id', $activityId)
+            // 名额校验：按实际人数 SUM(participant_count)（单行 count 会漏算一次报多人）
+            $signupCount = (int) ActivitySignup::where('activity_id', $activityId)
                 ->where('signup_status', '<>', 2)
-                ->count();
+                ->sum('participant_count');
             if ($activity->max_participants > 0 && $signupCount >= $activity->max_participants) {
                 return $this->fail('报名已满', 422);
             }
@@ -178,7 +179,15 @@ class ActivityController extends BaseController
             $signup->remark            = $remark;
             $signup->signup_status     = 0;
             $signup->signup_at         = date('Y-m-d H:i:s');
-            $signup->save();
+            try {
+                $signup->save();
+            } catch (QueryException $e) {
+                // 唯一键 uk_activity_signup_owner 兜底：锁过期竞态下重复报名撞键 → 友好 422
+                if (($e->errorInfo[1] ?? 0) === 1062) {
+                    return $this->fail('您已报名该活动', 422);
+                }
+                throw $e;
+            }
 
             return $this->success([
                 'id'           => $this->encodeId($signup->id),

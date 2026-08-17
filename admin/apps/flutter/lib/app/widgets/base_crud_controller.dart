@@ -8,6 +8,7 @@ import '../services/api_service.dart';
 abstract class BaseCrudController extends GetxController {
   final api = ApiService();
   final isLoading = false.obs;
+  final isSubmitting = false.obs;
   final total = 0.obs;
   final page = 1.obs;
   final limit = 15.obs;
@@ -63,7 +64,14 @@ abstract class BaseCrudController extends GetxController {
     }
   }
 
+  bool _beginSubmit() {
+    if (isSubmitting.value) return false;
+    isSubmitting.value = true;
+    return true;
+  }
+
   Future<bool> deleteItem(String id, String password) async {
+    if (!_beginSubmit()) return false;
     try {
       await api.delete('$basePath/$id', data: {'password': password});
       await loadItems();
@@ -71,12 +79,19 @@ abstract class BaseCrudController extends GetxController {
     } catch (e) {
       Get.snackbar('错误', '删除失败: $e');
       return false;
+    } finally {
+      isSubmitting.value = false;
     }
   }
 
   Future<void> updateItem(String hid, Map<String, dynamic> data) async {
-    await api.put('$basePath/$hid', data: data);
-    await loadItems();
+    if (!_beginSubmit()) return;
+    try {
+      await api.put('$basePath/$hid', data: data);
+      await loadItems();
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 
   Future<bool> batchDelete(String password) async {
@@ -84,6 +99,7 @@ abstract class BaseCrudController extends GetxController {
       Get.snackbar('提示', '请先选择项目');
       return false;
     }
+    if (!_beginSubmit()) return false;
     try {
       await api.post('$basePath/batch/destroy', data: {
         'ids': selectedIds.toList(),
@@ -96,6 +112,8 @@ abstract class BaseCrudController extends GetxController {
     } catch (e) {
       Get.snackbar('错误', '批量删除失败: $e');
       return false;
+    } finally {
+      isSubmitting.value = false;
     }
   }
 

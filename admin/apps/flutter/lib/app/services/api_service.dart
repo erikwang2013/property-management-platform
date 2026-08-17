@@ -53,7 +53,14 @@ class ApiService {
           try {
             handler.resolve(await dio.fetch(opts));
             return;
-          } catch (_) {}
+          } catch (e) {
+            // 重试仍失败：仅 401（凭证过期）强制登出；网络错误保留会话
+            if (e is DioException && e.response?.statusCode == 401) {
+              await _forceLogout();
+            }
+            handler.next(error);
+            return;
+          }
         }
         await _forceLogout();
         handler.next(error);

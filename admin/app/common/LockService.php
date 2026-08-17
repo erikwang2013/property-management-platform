@@ -12,7 +12,7 @@ use support\Log;
 
 /**
  * Redis 分布式锁：NX+EX 原子获取，Lua 校验 token 后释放，防误删他人锁。
- * 覆盖多进程（workerman）与多机部署。Redis 异常时 acquire 返回 null（fail-open），由调用方决定兜底策略。
+ * 覆盖多进程（workerman）与多机部署。Redis 异常时 acquire 返回 null（fail-closed：视同未抢到锁，调用方返回 429）。
  */
 class LockService
 {

@@ -13,7 +13,7 @@ declare(strict_types=1);
  *   auth: 无密码时留空字符串（phpredis auth 传 null/'' 均视为无密码）
  *   db:   REDIS_DATABASE（与缓存/限流共用库，队列键带业务前缀避免冲突）
  *
- * max_attempts：消费失败自动重试上限（不含首次）；retry_seconds：重试退避基数，
+ * max_attempts：消费失败自动重试上限（含首次，5 = 首次 + 4 次重试）；retry_seconds：重试退避基数，
  * 第 n 次重试延迟 = retry_seconds × n 秒。超过上限的消息进入 failed 队列（QUEUE_FAILED）。
  */
 return [

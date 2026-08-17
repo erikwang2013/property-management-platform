@@ -29,12 +29,35 @@ class PaymentService
     {
         $this->assertChannelReady($channel);
 
+        // 同一账单建单串行化：防止双击/多端并发生成多笔支付单导致超收
+        $token = LockService::acquire("lock:payment_create:{$billId}", 15);
+        if ($token === null) {
+            throw new RuntimeException('创建支付单繁忙，请稍后重试');
+        }
+        try {
+            return $this->createOrderLocked($channel, $billId, $userId, $userType, $subject);
+        } finally {
+            LockService::release("lock:payment_create:{$billId}", $token);
+        }
+    }
+
+    private function createOrderLocked(string $channel, int $billId, int $userId, int $userType, string $subject): array
+    {
         $bill = FeeBill::find($billId);
         if (!$bill) {
             throw new RuntimeException('账单不存在');
         }
         if ((int) $bill->status !== 0) {
             throw new RuntimeException('账单非待支付状态');
+        }
+
+        // 已过期的旧待支付单关闭重建，仍在有效期内的拒绝重复建单
+        PaymentOrder::where('bill_id', $billId)
+            ->where('status', 0)
+            ->where('expire_at', '<', date('Y-m-d H:i:s'))
+            ->update(['status' => 4]);
+        if (PaymentOrder::where('bill_id', $billId)->where('status', 0)->exists()) {
+            throw new RuntimeException('该账单已有待支付订单');
         }
 
         $orderNumber = (string) \app\common\SnowflakeService::generate();
@@ -85,6 +108,12 @@ class PaymentService
             return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
         }
 
+        // 未支付事件回调（挂起/关闭等）应答成功但不入账，避免 WAIT_BUYER_PAY 等被当作已支付
+        if (empty($notify['paid'])) {
+            Log::info('payment_notify_skipped', ['channel' => $channel, 'order' => $notify['order_number']]);
+            return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
+        }
+
         // 单订单串行化回调处理：获取失败应答失败，渠道会重试（微信/支付宝回调重试语义）
         $orderNumber = (string) $notify['order_number'];
         $token       = LockService::acquire("lock:payment_notify:{$orderNumber}", 30);
@@ -92,8 +121,8 @@ class PaymentService
             return $channel === 'wechat' ? '{"code":"FAIL","message":"处理中，请稍后重试"}' : 'failure';
         }
 
+        $paidBill = null;
         try {
-            $paidBill = null;
             Db::transaction(function () use ($notify, $body, &$paidBill) {
                 $order = PaymentOrder::where('order_number', $notify['order_number'])->first();
                 // 幂等：订单不存在或非待支付状态（重复回调）→ 不重复入账，直接应答成功
@@ -125,25 +154,40 @@ class PaymentService
                     }
                 }
             });
-
-            if ($paidBill) {
-                $this->fireFeePaid($paidBill, $notify['order_number'] ?? '', $notify['trade_no'] ?? '');
-            }
-
-            Log::info('payment_notify_processed', ['channel' => $channel, 'order' => $notify['order_number'], 'paid' => $notify['paid']]);
-            return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
         } finally {
             LockService::release("lock:payment_notify:{$orderNumber}", $token);
         }
+
+        // 锁已释放再投递 webhook：避免持锁执行外部 HTTP（同步投递最长 5s）
+        if ($paidBill) {
+            $this->fireFeePaid($paidBill, $notify['order_number'] ?? '', $notify['trade_no'] ?? '');
+        }
+
+        Log::info('payment_notify_processed', ['channel' => $channel, 'order' => $notify['order_number'], 'paid' => $notify['paid']]);
+        return $channel === 'wechat' ? '{"code":"SUCCESS","message":"OK"}' : 'success';
     }
 
-    /** 退款：先调渠道退款，成功后再更新本地 */
+    /** 退款：加锁串行化 + 锁内重查状态，防止并发双重退款；渠道退款成功后再更新本地 */
     public function refund(int $orderId, float $amount): array
+    {
+        $token = LockService::acquire("lock:payment_refund:{$orderId}", 30);
+        if ($token === null) {
+            throw new RuntimeException('退款处理中，请稍后重试');
+        }
+        try {
+            return $this->refundLocked($orderId, $amount);
+        } finally {
+            LockService::release("lock:payment_refund:{$orderId}", $token);
+        }
+    }
+
+    private function refundLocked(int $orderId, float $amount): array
     {
         $order = PaymentOrder::find($orderId);
         if (!$order) {
             throw new RuntimeException('支付订单不存在');
         }
+        // 锁内重查：并发第二个请求在锁释放后看到 status=3，被拒绝
         if ((int) $order->status !== 1) {
             throw new RuntimeException('仅已支付订单可退款');
         }

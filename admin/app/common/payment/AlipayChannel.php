@@ -87,6 +87,13 @@ class AlipayChannel
         if (!self::verify(self::buildParamString($params), $params['sign'], $this->cfg['alipay_public_key'])) {
             throw new RuntimeException('支付宝回调验签失败');
         }
+        // 回调时间新鲜度：与微信 300s 窗口对齐，纵深防御回调重放
+        if (isset($params['notify_time'])) {
+            $notifyTs = strtotime((string) $params['notify_time']);
+            if ($notifyTs === false || abs(time() - $notifyTs) > 300) {
+                throw new RuntimeException('支付宝回调时间戳超时');
+            }
+        }
         $tradeStatus = $params['trade_status'] ?? '';
         return [
             'order_number' => $params['out_trade_no'],
