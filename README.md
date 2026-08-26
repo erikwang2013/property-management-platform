@@ -1,6 +1,6 @@
 # 物业管理系统 (Property Management Platform)
 
-[English](README_EN.md) | 中文
+[English](docs/i18n/en/README.md) | [한국어](docs/i18n/ko/README.md) | [Русский](docs/i18n/ru/README.md) | [Deutsch](docs/i18n/de/README.md) | [Français](docs/i18n/fr/README.md) | [Español](docs/i18n/es/README.md) | [Português](docs/i18n/pt/README.md) | [हिन्दी](docs/i18n/hi/README.md) | [العربية](docs/i18n/ar/README.md) | [বাংলা](docs/i18n/bn/README.md) | [Bahasa Indonesia](docs/i18n/id/README.md) | [日本語](docs/i18n/ja/README.md) | 中文
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
@@ -134,7 +134,7 @@ property-management-platform/
 
 ### API 文档
 
-启动服务后访问 apidoc 自动生成的接口文档：
+全部 API 端点与参数说明见独立文档 [docs/API.md](docs/API.md)。启动服务后也可访问 apidoc 自动生成的交互式文档：
 
 | 端 | 地址 | 分组 |
 |----|------|------|
@@ -290,6 +290,24 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | <img src="admin/docs/weixinpay.png" width="130" height="130" alt="微信支付"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="支付宝"> |
 |:---:|:---:|
 | 微信支付 | 支付宝 |
+
+### 全球转账打赏
+
+支持来自全球的银行转账，收款账户为香港 ZA Bank（众安银行）：
+
+| 项目 | 信息 |
+|------|------|
+| 收款人姓名 | WANG KEXUN |
+| 收款账户号码 | 881015918251 |
+| 收款银行 | ZA Bank Limited |
+| SWIFT Code | AABLHKHHXXX |
+| 银行编号 | 387 |
+| 银行地址 | Core F, Cyberport 3, 100 Cyberport Road, Hong Kong |
+
+> **跨境汇款代理银行（中转银行）**：以下为代理银行（中转银行）信息，非收款银行信息。请向汇款银行查询是否需要提供代理银行信息。
+>
+> - **汇入港元、人民币及美元**（Citibank N.A. Hong Kong）：SWIFT `CITIHKXXXX`，银行编号 006，分行编号 391，地址：Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
+> - **汇入其他币种**（THE BANK OF NEW YORK MELLON）：SWIFT `IRVTUS3NXXX`，地址：240 GREENWICH STREET, NEW YORK, United States
 
 欢迎支持本项目！
 

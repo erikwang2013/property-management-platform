@@ -1,0 +1,27 @@
+# Схема функциональных модулей (Function Module Diagram)
+
+> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+
+---
+
+## 1. Обзор функциональных модулей
+
+<img src="images/function_overview.svg" alt="Обзор функциональных модулей" width="100%">
+
+---
+
+## 2. Зависимости модулей
+
+<img src="images/function_deps.svg" alt="Зависимости модулей" width="100%">
+
+---
+
+## 3. Дерево функций админ-панели
+
+<img src="images/function_admin_tree.svg" alt="Дерево функций админ-панели" width="100%">
+
+---
+
+## 4. Карта функций портала жильцов
+
+<img src="images/function_owner_map.svg" alt="Карта функций портала жильцов" width="100%">

@@ -1,0 +1,312 @@
+# Installation Guide
+
+> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+
+This document guides you through deploying the property management system from scratch.
+
+---
+
+## Table of Contents
+
+1. [Web Installation Wizard (Recommended)](#web-installation-wizard-recommended)
+2. [Manual Installation](#manual-installation)
+3. [Docker Deployment](#docker-deployment)
+4. [Default Account](#default-account)
+5. [Verifying the Installation](#verifying-the-installation)
+6. [FAQ](#faq)
+
+---
+
+## Web Installation Wizard (Recommended)
+
+The project includes a built-in Web installation wizard: after starting the admin service, all configuration can be completed through the browser.
+
+### Steps
+
+```bash
+# 1. Enter the admin directory
+cd admin
+
+# 2. Create the environment variable file (copy from template)
+cp .env.example .env
+
+# 3. Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# 4. Start the service
+php start.php start -d
+```
+
+### 5. Open the Installation Wizard
+
+Visit **`http://localhost:8787/install`** in a browser and complete the three-step configuration:
+
+| Step | Content | Description |
+|------|------|------|
+| Step 1 | Database config | Enter host, port, database name, username, password |
+| Step 2 | Admin account | Set the admin login username and password (at least 6 characters) |
+| Step 3 | Confirm installation | Review the config, click confirm, and installation runs automatically |
+
+The installation process automatically completes:
+1. Tests the database connection
+2. Writes the `.env` config file
+3. Imports all 65 tables + permission seeds
+4. Creates the admin account with the super admin role
+5. Creates the installation lock file `public/.installed`
+
+### After Installation
+
+- Admin panel address: `http://localhost:8787/admin`
+- The wizard shows the login address and account info
+- Recommended to restart the service for config to take effect: `php start.php restart -d`
+- To reinstall, simply delete the `public/.installed` file
+
+---
+
+## Manual Installation
+
+### Environment Requirements
+
+| Component | Version | Notes |
+|------|---------|------|
+| PHP | 8.1+ (8.3 recommended) | Requires pcntl, pdo_mysql, redis, gd, mbstring extensions |
+| MySQL | 8.0+ | utf8mb4 charset |
+| Redis | 6.0+ | Cache, rate limiting, Session |
+| Composer | 2.x | PHP dependency management |
+| Elasticsearch | 8.x | Full-text search (optional; database queries used when disabled) |
+| Flutter SDK | 3.x | Only needed for frontend development |
+
+### PHP Extension Check
+
+```bash
+php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
+```
+
+---
+
+## Database Initialization
+
+### 1. Create the Database
+
+```bash
+mysql -u root -p <<SQL
+CREATE DATABASE IF NOT EXISTS property_management
+  DEFAULT CHARSET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+SQL
+```
+
+### 2. Import the Merged Installation Script
+
+```bash
+mysql -u root -p property_management < docs/install.sql
+```
+
+`docs/install.sql` contains all 65 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
+
+Verify after execution:
+
+```bash
+mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+# Should output: 66 (65 tables + 1 header line)
+```
+
+---
+
+## Admin Service Deployment
+
+The admin service runs at `http://localhost:8787` and provides the admin backend API.
+
+```bash
+cd admin
+
+# 1. Configure environment variables
+cp .env.example .env
+# Edit .env to change the database password, JWT keys, etc.
+
+# 2. Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# 3. Start the service
+php start.php start -d
+# -d means run in the background; without -d it runs in the foreground with logs visible
+
+# 4. Verify
+curl http://localhost:8787/health
+```
+
+### Key Config Items (admin/.env)
+
+| Config | Description | Production Requirement |
+|--------|------|-------------|
+| `JWT_SECRET_KEY` | JWT signing key | Random string of 64+ characters |
+| `HASHIDS_SALT` | ID encryption salt | Random string, must match service |
+| `SNOWFLAKE_DATACENTER_ID` | Datacenter ID (0-31) | Must differ across datacenters in multi-DC deployments |
+| `SNOWFLAKE_WORKER_ID` | Worker node ID (0-31) | Different per machine in the same DC |
+| `ENCRYPTION_KEY` | API transport encryption key | 32-byte random string |
+| `ENCRYPTABLE_KEY` | Database field encryption key | 32-byte random string |
+| `DB_PASSWORD` | Database password | Strong password |
+
+---
+
+## Business Service Deployment
+
+The business service runs at `http://localhost:8788` and provides owner-side APIs.
+
+```bash
+cd service
+
+# 1. Configure environment variables
+cp .env.example .env
+# Edit .env to change the database password, JWT keys, etc.
+
+# 2. Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# 3. Start the service
+php start.php start -d
+
+# 4. Verify
+curl http://localhost:8788/health
+```
+
+> **Note:** admin and service share the same database. `HASHIDS_SALT` must match admin, otherwise encrypted IDs generated by admin cannot be decrypted on the service side.
+
+---
+
+## Docker Deployment
+
+### Admin
+
+```bash
+cd admin
+cp .env.docker .env
+# Edit .env to change production keys
+
+docker compose up -d
+# Includes: Nginx + PHP + MySQL + Redis + Elasticsearch
+```
+
+### Business Service
+
+```bash
+cd service
+cp .env.docker .env
+# Edit .env to change production keys
+
+docker compose up -d
+```
+
+### Service Port Plan
+
+| Service | admin | service | Notes |
+|------|-------|---------|------|
+| App | 8787 | 8788 | webman HTTP |
+| MySQL | 3306 | 3307 | container port mapping |
+| Redis | 6379 | 6380 | container port mapping |
+| Elasticsearch | 9200 | 9201 | container port mapping |
+| Nginx | 80/443 | 80/443 | must avoid conflicts when deploying together |
+
+> When deploying both docker-compose stacks on the same host, the service ports are pre-offset to avoid conflicts.
+
+---
+
+## Default Account
+
+| Username | Password | Role | Notes |
+|--------|------|------|------|
+| admin | admin123 | Super admin | Has all permissions |
+
+> **Change the default password immediately in production.**
+
+---
+
+## Verifying the Installation
+
+### 1. Health Check
+
+```bash
+# Admin
+curl http://localhost:8787/health
+
+# Business service
+curl http://localhost:8788/health
+```
+
+### 2. API Documentation
+
+All API endpoints and parameter descriptions are in the standalone [API.md](API.md). After starting the services, you can also access the auto-generated interactive endpoint docs:
+
+| End | Address |
+|----|------|
+| Admin | http://localhost:8787/apidoc |
+| Business service | http://localhost:8788/apidoc |
+
+### 3. Login Test
+
+```bash
+curl -X POST http://localhost:8787/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
+
+### 4. Run Tests
+
+```bash
+# Admin
+cd admin && php vendor/bin/phpunit
+
+# Business service
+cd service && php vendor/bin/phpunit
+```
+
+---
+
+## FAQ
+
+### Q: Startup error `Call to undefined function pcntl_fork()`
+
+PHP is missing the pcntl extension.
+
+```bash
+# Ubuntu/Debian
+apt install php-pcntl
+
+# Docker
+docker-php-ext-install pcntl
+```
+
+### Q: "Invalid Token" after login
+
+Check that the following configs match between `admin/.env` and `service/.env`:
+- `JWT_SECRET_KEY`
+- `JWT_ALGORITHM`
+
+### Q: Encrypted IDs differ between the two ends
+
+Make sure `HASHIDS_SALT` in admin and service is exactly identical.
+
+### Q: Docker containers cannot reach each other over the network
+
+Use container names instead of IPs (e.g. `DB_HOST=mysql`).
+
+### Q: How to reset the database
+
+```bash
+mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
+mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p property_management < docs/install.sql
+```
+
+### Q: How to configure HTTPS
+
+For production, an Nginx reverse proxy terminating TLS is recommended. See `admin/docs/nginx-security.conf` for a reference config.
+
+---
+
+## Next Steps
+
+- [Architecture Design Document](ARCHITECTURE_DESIGN.md) — system layered architecture and middleware execution chain
+- [API Document](API.md) — complete endpoint reference
+- [Feature Design Document](FEATURE_DESIGN.md) — 34-module functional specifications
+- [Editions Comparison](EDITIONS.md) — Lite / Standard / Full differences

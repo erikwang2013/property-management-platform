@@ -1,6 +1,6 @@
 # Property Management Platform
 
-[中文](README.md) | English
+[中文](../../README.md) | [English](docs/i18n/en/README.md) | [한국어](docs/i18n/ko/README.md) | [Русский](docs/i18n/ru/README.md) | [Deutsch](docs/i18n/de/README.md) | [Français](docs/i18n/fr/README.md) | [Español](docs/i18n/es/README.md) | [Português](docs/i18n/pt/README.md) | [हिन्दी](docs/i18n/hi/README.md) | [العربية](docs/i18n/ar/README.md) | [বাংলা](docs/i18n/bn/README.md) | [Bahasa Indonesia](docs/i18n/id/README.md) | [日本語](docs/i18n/ja/README.md)
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
@@ -293,6 +293,24 @@ Thank you for your support!
 | <img src="admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
+
+### Global Bank Transfer Tipping
+
+Support from anywhere in the world via bank transfer to ZA Bank (Hong Kong):
+
+| Item | Details |
+|------|---------|
+| Beneficiary Name | WANG KEXUN |
+| Beneficiary Account Number | 881015918251 |
+| Beneficiary Bank | ZA Bank Limited |
+| SWIFT Code | AABLHKHHXXX |
+| Bank Code | 387 |
+| Bank Address | Core F, Cyberport 3, 100 Cyberport Road, Hong Kong |
+
+> **Correspondent (intermediary) bank for cross-border remittance**: The following is correspondent bank (intermediary) information, NOT the beneficiary bank. Please check with your remitting bank whether correspondent bank information is required.
+>
+> - **For HKD, CNY and USD remittance** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, Bank Code 006, Branch Code 391, Address: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
+> - **For other currencies** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, Address: 240 GREENWICH STREET, NEW YORK, United States
 
 Your support is greatly appreciated!
 

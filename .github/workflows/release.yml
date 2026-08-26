@@ -1,0 +1,72 @@
+# ============================================================
+# Release Workflow — incremental tags & releases from CHANGELOG
+# Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+# ============================================================
+# 规则：push 到 main 后，解析 CHANGELOG.md 中所有版本（## vX.Y.Z），
+# 为尚未打 tag 的版本增量创建 git tag + GitHub Release（notes 取该版本章节）。
+# 不包含任何应用打包/构建产物步骤。
+# ============================================================
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Incremental Tags & Releases
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest version from CHANGELOG
+        id: latest
+        run: |
+          VERSION=$(grep -oP '^## v\K[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | head -1)
+          if [ -z "$VERSION" ]; then
+            echo "no version found in CHANGELOG.md"
+            exit 0
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "latest version: $VERSION"
+
+      - name: Create missing tags and releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.latest.outputs.version }}"
+          if [ -z "$VERSION" ]; then
+            echo "skip: no version in CHANGELOG.md"
+            exit 0
+          fi
+
+          TAG="v$VERSION"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "skip: tag $TAG already exists"
+            exit 0
+          fi
+
+          # 提取该版本在 CHANGELOG.md 中的章节作为 release notes（截至下一版本或 EOF）
+          NOTES_FILE="$(mktemp)"
+          awk -v ver="v$VERSION" '
+            $0 ~ "^## v" && !first { first=1; next }
+            first && $0 ~ "^## v" { exit }
+            first { print }
+          ' CHANGELOG.md > "$NOTES_FILE"
+
+          git tag "$TAG"
+          git push origin "$TAG"
+
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file "$NOTES_FILE" \
+            --repo "$GITHUB_REPOSITORY"
+
+          echo "created tag + release: $TAG"
