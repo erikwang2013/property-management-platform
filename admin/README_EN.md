@@ -429,7 +429,7 @@ See `docs/nginx-security.conf` for production reverse-proxy security hardening.
 
 | 微信 | 支付宝 |
 |:---:|:---:|
-| ![微信](./docs/weixinpay.png "微信") | ![支付宝](./docs/alipay.png "支付宝") |
+| ![微信](./docs/weixinpay.svg "微信") | ![支付宝](./docs/alipay.svg "支付宝") |
 
 ---
 

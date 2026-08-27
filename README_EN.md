@@ -292,7 +292,7 @@ Static files: Flutter Web build/
 
 Thank you for your support!
 
-| <img src="admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 

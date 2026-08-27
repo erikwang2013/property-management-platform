@@ -436,7 +436,7 @@ GitHub Actions 持续集成流水线：`.github/workflows/ci.yml`
 
 | 微信 | 支付宝 |
 |:---:|:---:|
-| ![微信](./docs/weixinpay.png "微信") | ![支付宝](./docs/alipay.png "支付宝") |
+| ![微信](./docs/weixinpay.svg "微信") | ![支付宝](./docs/alipay.svg "支付宝") |
 
 ---
 

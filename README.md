@@ -288,7 +288,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 感谢您的支持！
 
-| <img src="admin/docs/weixinpay.png" width="130" height="130" alt="微信支付"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="支付宝"> |
+| <img src="admin/docs/weixinpay.svg" width="130" height="130" alt="微信支付"> | <img src="admin/docs/alipay.svg" width="130" height="130" alt="支付宝"> |
 |:---:|:---:|
 | 微信支付 | 支付宝 |
 
