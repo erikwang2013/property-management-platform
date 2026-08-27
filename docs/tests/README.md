@@ -7,13 +7,13 @@
 
 | 套件 | 测试数 | 断言数 | 通过率 | 报告 |
 |------|--------|--------|--------|------|
-| admin 单元测试 | 254 | 607 | 100%（2 个 DB 门控跳过） | [admin-unit-report.md](admin-unit-report.md) |
+| admin 单元测试 | 258 | 619 | 100%（2 个 DB 门控跳过） | [admin-unit-report.md](admin-unit-report.md) |
 | service 单元测试 | 201 | 661 | 100%（1 个应用缺陷门控跳过） | [service-unit-report.md](service-unit-report.md) |
 | API 自动化（并入上两套件） | 全部端点 | — | 100% | [api-report.md](api-report.md) |
 | UI 端到端 | 54 用例 | — | 通过（1 缺陷复现 + 3 环境不可测，缺陷已修复） | [e2e-report.md](e2e-report.md) |
 | Go | — | — | 无代码，无可测对象 | [go-unit-report.md](go-unit-report.md) |
 | Rust | — | — | 无代码，无可测对象 | [rust-unit-report.md](rust-unit-report.md) |
-| **合计** | **455** | **1268** | — | — |
+| **合计** | **459** | **1280** | — | — |
 
 ## 本轮发现的真实缺陷（均已修复）
 
@@ -34,7 +34,7 @@
 ## 运行方式
 
 ```bash
-cd admin && vendor/bin/phpunit --no-coverage    # admin 254 用例
+cd admin && vendor/bin/phpunit --no-coverage    # admin 258 用例
 cd service && vendor/bin/phpunit --no-coverage  # service 201 用例
 bash scripts/e2e/run.sh                          # UI 端到端
 cd apps/flutter && flutter test                  # Flutter widget 测试

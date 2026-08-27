@@ -133,13 +133,14 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 第9层  账号锁定        → 连续5次失败锁定15分钟
 第10层 RBAC 鉴权       → method.path 粒度权限控制
 第11层 限流保护        → Redis 滑动窗口 Lua原子化
-第12层 ID 保护         → Hashids 编码, 不可逆推真实ID
-第13层 请求体加密      → AES-256-CBC 敏感字段
-第14层 存储加密        → encryptable DB字段加密
-第15层 展示脱敏        → 手机号/邮箱/身份证脱敏
-第16层 审计追溯        → OperationLog 全量记录 (含来源端 source 自动检测) 
-第17层 HTTP 头防护     → CSP + X-Permitted-Cross-Domain-Policies
-第18层 出口保护        → PDF 版权水印 (不可移除) + Excel 敏感数据脱敏
+第12层 熔断保护        → Redis 熔断器（支付/回调快速失败+半开探测）
+第13层 ID 保护         → Hashids 编码, 不可逆推真实ID
+第14层 请求体加密      → AES-256-CBC 敏感字段
+第15层 存储加密        → encryptable DB字段加密
+第16层 展示脱敏        → 手机号/邮箱/身份证脱敏
+第17层 审计追溯        → OperationLog 全量记录 (含来源端 source 自动检测) 
+第18层 HTTP 头防护     → CSP + X-Permitted-Cross-Domain-Policies
+第19层 出口保护        → PDF 版权水印 (不可移除) + Excel 敏感数据脱敏
 ```
 
 ## 8. রেট লিমিট কৌশল

@@ -194,6 +194,6 @@ cd apps/flutter && flutter test
 | Bug | 修复内容 | 复测结果 |
 |-----|----------|----------|
 | #1 P0 模板路径错位 | `git mv` 将 4 个安装页模板从 `app/view/install/` 移至 webman 实际解析路径 `app/admin/view/install/` | `E2E_MODE=fixed` 重跑：**32 通过 / 0 失败**（唯一非通过项为按约束禁测的 `_confirm=1` 执行安装） |
-| #2 P1 MetricsCollector 返回类型过窄 | `process(): support\Response` → `Webman\Http\Response`（父类，与 Cors/SecurityFilter/RateLimit 一致），异常路径不再被 TypeError 掩盖 | admin phpunit 复跑全绿（254/607） |
+| #2 P1 MetricsCollector 返回类型过窄 | `process(): support\Response` → `Webman\Http\Response`（父类，与 Cors/SecurityFilter/RateLimit 一致），异常路径不再被 TypeError 掩盖 | admin phpunit 复跑全绿（258/619） |
 
 修复后安装向导整体可用，向导流程验证截图见 `scripts/e2e/screenshots/fixed-*.png`。

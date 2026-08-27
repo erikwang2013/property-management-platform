@@ -90,9 +90,9 @@ property-management-platform/
 
 <img src="docs/images/readme_lifecycle.svg" alt="Data entity lifecycle" width="100%">
 
-### 18-Layer Security Defense in Depth
+### 19-Layer Security Defense in Depth
 
-<img src="docs/images/readme_security.svg" alt="18-layer security defense in depth" width="100%">
+<img src="docs/images/readme_security.svg" alt="19-layer security defense in depth" width="100%">
 
 ## Function Modules (22 Major Modules + 12 Extensions)
 
@@ -148,9 +148,9 @@ All API endpoints and parameter descriptions are in the standalone [docs/API.md]
 - **Default Language**: Simplified Chinese (zh_CN), switchable to English (en)
 - **Request Header**: response language controllable via `Accept-Language` request header
 
-## Security System (18-Layer Defense in Depth)
+## Security System (19-Layer Defense in Depth)
 
-1. Click captcha → 2. Password re-confirmation → 3. poster random verification → 4. security-php security scan → 5. SecurityFilter attack blocking → 6. HTTPS + AES-256-CBC transport encryption → 7. JWT HS256 authentication → 8. Concurrent session limit (max 3) → 9. Account lockout (5 failures/15 minutes) → 10. RBAC permission authorization (method.path granularity) → 11. Redis sliding window rate limiting → 12. Hashids ID protection → 13. Request body sensitive field encryption → 14. DB field encrypted storage → 15. Display-layer data masking → 16. Full operation log audit (8 platform sources) → 17. CSP header protection → 18. PDF copyright watermark
+1. Click captcha → 2. Password re-confirmation → 3. poster random verification → 4. security-php security scan → 5. SecurityFilter attack blocking → 6. HTTPS + AES-256-CBC transport encryption → 7. JWT HS256 authentication → 8. Concurrent session limit (max 3) → 9. Account lockout (5 failures/15 minutes) → 10. RBAC permission authorization (method.path granularity) → 11. Redis sliding window rate limiting → 12. Redis Circuit Breaker (payment/webhook fast-fail + half-open probe) → 13. Hashids ID protection → 14. Request body sensitive field encryption → 15. DB field encrypted storage → 16. Display-layer data masking → 17. Full operation log audit (8 platform sources) → 18. CSP header protection → 19. PDF copyright watermark
 
 ## Coding Standards
 
@@ -278,7 +278,7 @@ Static files: Flutter Web build/
 | [Business Flowchart](docs/FLOWCHART.md) | Authentication flow, charge management, repair handling, property management, complaints, visitors |
 | [Function Module Diagram](docs/FUNCTION_DIAGRAM.md) | 34-module overview, dependencies, admin function tree, owner function map |
 | [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, Token lifecycle, full CRUD flow |
-| [Security Architecture Diagram](docs/SECURITY_ARCHITECTURE.md) | 18-layer defense-in-depth overview, attack surface defense matrix, full encryption chain, audit trail system |
+| [Security Architecture Diagram](docs/SECURITY_ARCHITECTURE.md) | 19-layer defense-in-depth overview, attack surface defense matrix, full encryption chain, audit trail system |
 | [Feature Design Document](docs/FEATURE_DESIGN.md) | Functional specifications for the 34 modules |
 | [Features Document](docs/FEATURES.md) | Feature list and module overview |
 | [API Document](docs/API.md) | All API endpoints and parameter descriptions |

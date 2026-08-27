@@ -76,7 +76,7 @@ class PaymentService
         $order->save();
 
         try {
-            $payParams = $this->channel($channel)->prepay($orderNumber, $subject, (float) $bill->amount, $notifyUrl);
+            $payParams = $this->gatewayCall(fn () => $this->channel($channel)->prepay($orderNumber, $subject, (float) $bill->amount, $notifyUrl));
         } catch (\Throwable $e) {
             // 预下单失败：关闭本地订单，避免遗留无效单
             $order->status = 4;
@@ -197,11 +197,13 @@ class PaymentService
         $this->assertChannelReady($order->channel);
 
         $refundNumber = (string) \app\common\SnowflakeService::generate();
-        if ($order->channel === 'wechat') {
-            $this->channel('wechat')->refund($order->order_number, $refundNumber, $amount, (float) $order->amount);
-        } else {
-            $this->channel('alipay')->refund($order->order_number, $refundNumber, $amount);
-        }
+        $this->gatewayCall(function () use ($order, $refundNumber, $amount) {
+            if ($order->channel === 'wechat') {
+                $this->channel('wechat')->refund($order->order_number, $refundNumber, $amount, (float) $order->amount);
+            } else {
+                $this->channel('alipay')->refund($order->order_number, $refundNumber, $amount);
+            }
+        });
 
         $order->status        = 3;
         $order->refund_at     = date('Y-m-d H:i:s');
@@ -239,7 +241,7 @@ class PaymentService
         $findings = [];
         foreach ($orders as $order) {
             try {
-                $gateway = $this->channel($order->channel)->queryOrder($order->order_number);
+                $gateway = $this->gatewayCall(fn () => $this->channel($order->channel)->queryOrder($order->order_number));
             } catch (\Throwable $e) {
                 $findings[] = ['order_number' => $order->order_number, 'result' => 'query_failed', 'detail' => $e->getMessage()];
                 continue;
@@ -319,6 +321,23 @@ class PaymentService
             'amount'       => (float) $bill->paid_amount,
             'paid_at'      => (string) $bill->paid_at,
         ]);
+    }
+
+    /** 熔断保护的外部网关调用：open 快速失败，成功复位计数，失败累计计数 */
+    private function gatewayCall(callable $fn)
+    {
+        $breaker = new CircuitBreaker('payment', config('circuit.payment', []));
+        if (!$breaker->canProceed()) {
+            throw new RuntimeException('支付网关暂不可用，请稍后重试');
+        }
+        try {
+            $result = $fn();
+            $breaker->recordSuccess();
+            return $result;
+        } catch (\Throwable $e) {
+            $breaker->recordFailure();
+            throw $e;
+        }
     }
 
     private function channel(string $channel): WechatPayChannel|AlipayChannel

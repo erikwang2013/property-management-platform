@@ -56,7 +56,7 @@
 | 系统配置 | 键值对 CRUD |
 | 操作审计 | 日志查询 + 8 平台来源端自动检测 |
 | 文件管理 | 上传 + Excel/PDF 导出（敏感数据脱敏）|
-| 安全管理 | 18 层纵深防御 + security.txt |
+| 安全管理 | 19 层纵深防御 + security.txt |
 | 运维监控 | 健康检查 + Prometheus 指标 + API 文档 |
 | 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations + HarmonyOS 资源限定符 |
 | API 文档 | `hg/apidoc` 自动生成，admin 10分组 + service 9分组，按功能模块组织 |
@@ -79,7 +79,7 @@
 - 业主端：JWT Bearer Token 认证，业主只能操作自己的数据
 
 ### 安全防护
-18 层纵深防御：验证码 → 密码确认 → 随机验证 → 安全扫描 → 攻击拦截 → 传输加密 → JWT → 会话控制 → 账号锁定 → RBAC → 限流 → ID保护 → 请求加密 → 存储加密 → 展示脱敏 → 审计 → CSP → 版权水印
+19 层纵深防御：验证码 → 密码确认 → 随机验证 → 安全扫描 → 攻击拦截 → 传输加密 → JWT → 会话控制 → 账号锁定 → RBAC → 限流 → 熔断 → ID保护 → 请求加密 → 存储加密 → 展示脱敏 → 审计 → CSP → 版权水印
 
 ### 导出功能
 - Excel：PhpSpreadsheet，蓝底白字表头 + 冻结首行 + 自动筛选 + 敏感数据脱敏

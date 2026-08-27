@@ -68,7 +68,7 @@ property-management-platform/
 | Flutter Admin | 42 pages | 42 page modules, 96 files/6,662 lines |
 | Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,582 lines |
 | HarmonyOS | 7 pages | Login/Home/Bills/Repairs(2)/Announcements/Profile, 11 files/927 lines |
-| Tests | 455 total | admin 254(607 assertions) + service 201(661 assertions), see [test reports](docs/tests/) |
+| Tests | 459 total | admin 258(619 assertions) + service 201(661 assertions), see [test reports](docs/tests/) |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
 
@@ -92,9 +92,9 @@ property-management-platform/
 
 <img src="docs/images/readme_en_lifecycle.svg" alt="Entity Lifecycle" width="100%">
 
-### 18-Layer Defense-in-Depth Security
+### 19-Layer Defense-in-Depth Security
 
-<img src="docs/images/readme_en_security.svg" alt="18-Layer Defense-in-Depth Security" width="100%">
+<img src="docs/images/readme_en_security.svg" alt="19-Layer Defense-in-Depth Security" width="100%">
 
 ## Feature Modules (22 Modules)
 
@@ -149,9 +149,9 @@ Start the services and access the auto-generated apidoc:
 - **Flutter Web**: GetX `Translations`, `lib/i18n/messages.dart`
 - **Default**: Simplified Chinese (zh_CN), fallback to English (en)
 
-## Security (18-Layer Defense-in-Depth)
+## Security (19-Layer Defense-in-Depth)
 
-1. Click Captcha → 2. Password Confirmation → 3. Random Verification → 4. Security Scan → 5. Attack Interception (XSS/SQLi/CSRF) → 6. HTTPS + AES-256-CBC → 7. JWT HS256 → 8. Concurrent Session Limit (max 3) → 9. Account Lockout (5 failures/15 min) → 10. RBAC (method.path granularity) → 11. Redis Sliding Window Rate Limit → 12. Hashids ID Protection → 13. Request Body Encryption → 14. DB Field Encryption → 15. Display Masking → 16. Full Audit Trail (8 platform sources) → 17. CSP Headers → 18. PDF Copyright Watermark
+1. Click Captcha → 2. Password Confirmation → 3. Random Verification → 4. Security Scan → 5. Attack Interception (XSS/SQLi/CSRF) → 6. HTTPS + AES-256-CBC → 7. JWT HS256 → 8. Concurrent Session Limit (max 3) → 9. Account Lockout (5 failures/15 min) → 10. RBAC (method.path granularity) → 11. Redis Sliding Window Rate Limit → 12. Redis Circuit Breaker (payment/webhook fast-fail + half-open probe) → 13. Hashids ID Protection → 14. Request Body Encryption → 15. DB Field Encryption → 16. Display Masking → 17. Full Audit Trail (8 platform sources) → 18. CSP Headers → 19. PDF Copyright Watermark
 
 ## Coding Standards
 
@@ -239,9 +239,9 @@ cd service && php vendor/bin/phpunit
 
 | Project | Tests | Assertions | Pass Rate |
 |---------|-------|------------|-----------|
-| admin | 254 | 607 | 100% (2 DB-gated skips) |
+| admin | 258 | 619 | 100% (2 DB-gated skips) |
 | service | 201 | 661 | 100% (1 app-defect-gated skip) |
-| **Total** | **455** | **1268** | — |
+| **Total** | **459** | **1280** | — |
 
 Service test coverage: all 19 API controllers, 6 middleware, models/common services, security & feature regression
 Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report)

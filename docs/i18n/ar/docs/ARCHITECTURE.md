@@ -412,11 +412,12 @@ flowchart TB
     L9["第9层: 账号锁定<br/>5次失败15分钟"] --> L10
     L10["第10层: RBAC 鉴权<br/>method.path 粒度"] --> L11
     L11["第11层: 限流保护<br/>Redis滑动窗口"] --> L12
-    L12["第12层: Hashids ID保护<br/>不可逆推真实ID"] --> L13
-    L13["第13层: 请求体加密<br/>AES-256-CBC"] --> L14
-    L14["第14层: 存储加密<br/>encryptable DB字段"] --> L15
-    L15["第15层: 展示脱敏<br/>138****1234"] --> L16
-    L16["第16层: 审计追溯<br/>OperationLog全量记录"] --> L17
-    L17["第17层: CSP头防护<br/>X-Permitted-Cross-Domain"] --> L18
-    L18["第18层: PDF版权水印<br/>不可移除"]
+    L12["第12层: Redis熔断器<br/>快速失败+半开探测"] --> L13
+    L13["第13层: Hashids ID保护<br/>不可逆推真实ID"] --> L14
+    L14["第14层: 请求体加密<br/>AES-256-CBC"] --> L15
+    L15["第15层: 存储加密<br/>encryptable DB字段"] --> L16
+    L16["第16层: 展示脱敏<br/>138****1234"] --> L17
+    L17["第17层: 审计追溯<br/>OperationLog全量记录"] --> L18
+    L18["第18层: CSP头防护<br/>X-Permitted-Cross-Domain"] --> L19
+    L19["第19层: PDF版权水印<br/>不可移除"]
 ```

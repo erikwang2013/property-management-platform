@@ -83,11 +83,20 @@ class WebhookService
         $signature = self::sign($payload, (string) ($config['secret'] ?? ''));
         $client = self::$httpClient ?? fn (string $url, string $body, string $sig): int => self::post($url, $body, $sig);
 
+        // 熔断：open 时跳过同步投递直接返回 false，事件入队走异步重试（降级不丢）
+        $breaker = new CircuitBreaker('webhook', config('circuit.webhook', []));
+        if (!$breaker->canProceed()) {
+            Log::info('webhook_circuit_open', ['event' => $event]);
+            return false;
+        }
+
         $status = $client((string) $config['url'], $payload, $signature);
         if ($status >= 200 && $status < 300) {
+            $breaker->recordSuccess();
             Log::info('webhook_delivered', ['event' => $event, 'status' => $status]);
             return true;
         }
+        $breaker->recordFailure();
         Log::info('webhook_failed', ['event' => $event, 'status' => $status]);
         return false;
     }

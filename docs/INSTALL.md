@@ -262,9 +262,9 @@ cd service && php vendor/bin/phpunit
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| admin | 254 | 607 | 100% (2个DB门控跳过) |
+| admin | 258 | 619 | 100% (2个DB门控跳过) |
 | service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
-| **合计** | **455** | **1268** | — |
+| **合计** | **459** | **1280** | — |
 
 单元测试 / API 自动化 / 端到端测试报告见 [docs/tests/](../tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）。
 

@@ -3,7 +3,7 @@
 - 日期：2026-08-27
 - 执行命令：`cd admin && vendor/bin/phpunit --no-coverage`
 - 基线：219 tests / 494 assertions / 7 errors / 2 failures / 2 skipped
-- 最终：**254 tests / 607 assertions / 0 errors / 0 failures / 2 skipped（全绿）**
+- 最终：**258 tests / 619 assertions / 0 errors / 0 failures / 2 skipped（全绿）**
 
 ## 一、修复的 9 个红项
 
@@ -33,7 +33,7 @@
 
 - `app/admin/controller/DocsController.php:28`：`json(['code'=>404,...], 404)` 同样把 404 传给了编码选项。改为显式 404 响应（`response(json_encode(...), 404, ['Content-Type'=>'application/json'])`）。新写的 DocsControllerTest 断言了 HTTP 404。
 
-## 二、覆盖矩阵（35 个测试文件，254 个用例）
+## 二、覆盖矩阵（36 个测试文件，258 个用例）
 
 | 模块 | 测试文件 | 用例数 | 覆盖内容 |
 |---|---|---|---|

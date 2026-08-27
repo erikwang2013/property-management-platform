@@ -4,9 +4,9 @@
 
 ---
 
-## 1. 18-Layer Defense-in-Depth Overview
+## 1. 19-Layer Defense-in-Depth Overview
 
-<img src="images/security_defense.svg" alt="18-layer defense in depth overview" width="100%">
+<img src="images/security_defense.svg" alt="19-layer defense in depth overview" width="100%">
 
 ---
 

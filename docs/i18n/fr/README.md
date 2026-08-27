@@ -90,9 +90,9 @@ property-management-platform/
 
 <img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="100%">
 
-### Défense en profondeur sur 18 couches
+### Défense en profondeur sur 19 couches
 
-<img src="docs/images/readme_security.svg" alt="18层安全纵深防御" width="100%">
+<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="100%">
 
 ## Modules fonctionnels (22 grands modules + 12 extensions)
 
@@ -148,9 +148,9 @@ Tous les points de terminaison API et les descriptions de paramètres figurent d
 - **Langue par défaut** : chinois simplifié (zh_CN), bascule vers l'anglais (en) prise en charge
 - **En-tête de requête** : la langue de réponse peut être contrôlée via l'en-tête `Accept-Language`
 
-## Système de sécurité (défense en profondeur sur 18 couches)
+## Système de sécurité (défense en profondeur sur 19 couches)
 
-1. Captcha cliquable → 2. Double confirmation du mot de passe → 3. Vérification aléatoire poster → 4. Analyse de sécurité security-php → 5. Interception des attaques SecurityFilter → 6. Chiffrement de transmission HTTPS + AES-256-CBC → 7. Authentification JWT HS256 → 8. Limite de sessions concurrentes (3 maximum) → 9. Verrouillage du compte (5 échecs/15 minutes) → 10. Autorisation RBAC (granularité method.path) → 11. Limitation de débit à fenêtre glissante Redis → 12. Protection des ID Hashids → 13. Chiffrement des champs sensibles du corps de requête → 14. Chiffrement des champs DB → 15. Masquage des données au niveau affichage → 16. Audit complet par journaux d'opérations (8 sources de plateforme) → 17. Protection des en-têtes CSP → 18. Filigrane de copyright PDF
+1. Captcha cliquable → 2. Double confirmation du mot de passe → 3. Vérification aléatoire poster → 4. Analyse de sécurité security-php → 5. Interception des attaques SecurityFilter → 6. Chiffrement de transmission HTTPS + AES-256-CBC → 7. Authentification JWT HS256 → 8. Limite de sessions concurrentes (3 maximum) → 9. Verrouillage du compte (5 échecs/15 minutes) → 10. Autorisation RBAC (granularité method.path) → 11. Limitation de débit à fenêtre glissante Redis → 12. Disjoncteur Redis (échec rapide + sonde semi-ouverte) → 13. Protection des ID Hashids → 14. Chiffrement des champs sensibles du corps de requête → 15. Chiffrement des champs DB → 16. Masquage des données au niveau affichage → 17. Audit complet par journaux d'opérations (8 sources de plateforme) → 18. Protection des en-têtes CSP → 19. Filigrane de copyright PDF
 
 ## Normes de code
 
@@ -278,7 +278,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | [Schémas des processus métier](docs/FLOWCHART.md) | Processus d'authentification, gestion des frais, traitement des réparations, gestion des biens, réclamations, visiteurs |
 | [Schéma des modules fonctionnels](docs/FUNCTION_DIAGRAM.md) | Panorama des 34 modules, relations de dépendance, arbre fonctionnel du panneau d'administration, carte fonctionnelle du portail des propriétaires |
 | [Schémas du cycle de vie](docs/LIFECYCLE_DIAGRAM.md) | Cycle de vie des requêtes, cycle de vie des entités, cycle de vie des Tokens, flux complet CRUD |
-| [Schéma de l'architecture de sécurité](docs/SECURITY_ARCHITECTURE.md) | Panorama de la défense en profondeur sur 18 couches, matrice de protection de la surface d'attaque, chaîne complète du chiffrement, système d'audit |
+| [Schéma de l'architecture de sécurité](docs/SECURITY_ARCHITECTURE.md) | Panorama de la défense en profondeur sur 19 couches, matrice de protection de la surface d'attaque, chaîne complète du chiffrement, système d'audit |
 | [Document de conception fonctionnelle](docs/FEATURE_DESIGN.md) | Spécifications fonctionnelles des 34 modules |
 | [Document fonctionnel](docs/FEATURES.md) | Liste des fonctionnalités et vue d'ensemble des modules |
 | [Documentation des interfaces](docs/API.md) | Tous les points de terminaison API et les descriptions de paramètres |

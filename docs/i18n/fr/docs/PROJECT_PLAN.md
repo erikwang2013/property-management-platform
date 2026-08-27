@@ -17,7 +17,7 @@
 
 ## II. Écarts sécurité et qualité (security-auditor)
 
-**Défense en 18 couches : 16/18 vérifiées présentes**, implémentation conforme à SECURITY_ARCHITECTURE.md (code de vérification, double confirmation, poster, SecurityFilter, AES-256-CBC, JWT, limitation de sessions, verrouillage de compte, RBAC, limitation de débit, hashids, chiffrement de champs, masquage, journaux d'audit, CSP).
+**Défense en 19 couches : 16/19 vérifiées présentes**, implémentation conforme à SECURITY_ARCHITECTURE.md (code de vérification, double confirmation, poster, SecurityFilter, AES-256-CBC, JWT, limitation de sessions, verrouillage de compte, RBAC, limitation de débit, disjoncteur, hashids, chiffrement de champs, masquage, journaux d'audit, CSP).
 
 **Deux non-conformités (P1 corrigées) :**
 1. ~~security-php installé uniquement côté service~~ → désormais connecté aux SecurityFilter des deux côtés (admin + service ont tous deux la couche d'analyse de profondeur 4b, SecurityGuard en initialisation paresseuse, journalisation et escalade au blocage)

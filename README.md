@@ -68,7 +68,7 @@ property-management-platform/
 | Flutter 管理后台 | 42页 | admin 42个页面模块，96文件/6,662行 |
 | Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/商城/智能问答/人脸，32文件/3,582行 |
 | HarmonyOS | 7页 | 登录/首页/账单/报修(2)/公告/个人中心，11文件/927行 |
-| 测试 | 455个 | admin 254个(607断言) + service 201个(661断言)，详见 [测试报告](docs/tests/) |
+| 测试 | 459个 | admin 258个(619断言) + service 201个(661断言)，详见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
 
@@ -90,9 +90,9 @@ property-management-platform/
 
 <img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="100%">
 
-### 18层安全纵深防御
+### 19层安全纵深防御
 
-<img src="docs/images/readme_security.svg" alt="18层安全纵深防御" width="100%">
+<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="100%">
 
 ## 功能模块（22大模块 + 12扩展）
 
@@ -148,9 +148,9 @@ property-management-platform/
 - **默认语言**: 简体中文（zh_CN），支持英语（en）切换
 - **请求头**: 支持通过 `Accept-Language` 请求头控制响应语言
 
-## 安全体系（18层纵深防御）
+## 安全体系（19层纵深防御）
 
-1. 点击验证码 → 2. 密码二次确认 → 3. poster 随机验证 → 4. security-php 安全扫描 → 5. SecurityFilter 攻击拦截 → 6. HTTPS + AES-256-CBC 传输加密 → 7. JWT HS256 认证 → 8. 并发会话限制(最多3个) → 9. 账号锁定(5次失败/15分钟) → 10. RBAC 权限鉴权(method.path 粒度) → 11. Redis 滑动窗口限流 → 12. Hashids ID 保护 → 13. 请求体敏感字段加密 → 14. DB 字段加密存储 → 15. 展示层数据脱敏 → 16. 操作日志全量审计(8平台来源端) → 17. CSP 头防护 → 18. PDF 版权水印
+1. 点击验证码 → 2. 密码二次确认 → 3. poster 随机验证 → 4. security-php 安全扫描 → 5. SecurityFilter 攻击拦截 → 6. HTTPS + AES-256-CBC 传输加密 → 7. JWT HS256 认证 → 8. 并发会话限制(最多3个) → 9. 账号锁定(5次失败/15分钟) → 10. RBAC 权限鉴权(method.path 粒度) → 11. Redis 滑动窗口限流 → 12. Redis 熔断器(支付/回调快速失败+半开探测) → 13. Hashids ID 保护 → 14. 请求体敏感字段加密 → 15. DB 字段加密存储 → 16. 展示层数据脱敏 → 17. 操作日志全量审计(8平台来源端) → 18. CSP 头防护 → 19. PDF 版权水印
 
 ## 代码规范
 
@@ -235,9 +235,9 @@ cd service && php vendor/bin/phpunit
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| admin | 254 | 607 | 100% (2个DB门控跳过) |
+| admin | 258 | 619 | 100% (2个DB门控跳过) |
 | service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
-| **合计** | **455** | **1268** | — |
+| **合计** | **459** | **1280** | — |
 
 service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公共服务类、安全与特性回归
 全部模块单元测试 + API 自动化 + 端到端测试报告见 [docs/tests/](docs/tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）
