@@ -16,9 +16,10 @@ class ApiResponseTest extends TestCase
      */
     public function testHealthEndpoint(): void
     {
-        $response = @file_get_contents('http://localhost:8788/health');
+        $port = getenv('OPEN_API_TEST_PORT') ?: 8788;
+        $response = @file_get_contents("http://localhost:{$port}/health");
         if ($response === false) {
-            $this->markTestSkipped('Service not running on port 8788');
+            $this->markTestSkipped("Service not running on port {$port}");
         }
         $data = json_decode($response, true);
         $this->assertIsArray($data, '响应应为有效JSON');

@@ -25,7 +25,8 @@ class DocsController
     public function index(Request $request): Response
     {
         if (!(bool) getenv('DOCS_ENABLED')) {
-            return json(['code' => 404, 'message' => 'Not Found'], 404);
+            // 注意：json() 助手第二参为编码选项且固定 HTTP 200，需显式构造 404 响应
+            return response(json_encode(['code' => 404, 'message' => 'Not Found']), 404, ['Content-Type' => 'application/json']);
         }
         return json($this->buildSpec());
     }

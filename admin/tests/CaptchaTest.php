@@ -18,6 +18,17 @@ class CaptchaTest extends TestCase
             $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..');
             $dotenv->safeLoad();
         }
+
+        if (!extension_loaded('gd')) {
+            $this->markTestSkipped('缺少 GD 扩展：vendor 的 ImagickDriver::$resource 为 typed 属性且无构造器初始化，AbstractCaptcha::createBackground() 在 create() 之前 clone() 未初始化属性会直接崩溃（vendor bug，禁改 vendor），必须回退 GD 驱动');
+        }
+
+        // 真实修复：显式回退 GD 驱动（DriverFactory::create('gd')）。
+        // 原因：本机 CLI 加载了 imagick，DriverFactory 'auto' 会选中 ImagickDriver，
+        // 而 vendor 库 ImagickDriver::clone() 在资源未初始化时（AbstractCaptcha:43）直接
+        // 抛 "Typed property $resource must not be accessed before initialization"，
+        // 且无构造器可预初始化 —— 与生产环境未安装 imagick 时走 GD 的行为保持一致。
+        \Erikwang2013\Poster\PosterConfig::merge(['image' => ['driver' => 'gd']]);
     }
 
     #[Test]

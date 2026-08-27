@@ -68,7 +68,7 @@ property-management-platform/
 | Flutter Admin | 42 pages | 42 page modules, 96 files/6,662 lines |
 | Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,582 lines |
 | HarmonyOS | 7 pages | Login/Home/Bills/Repairs(2)/Announcements/Profile, 11 files/927 lines |
-| Tests | 133 total | admin 90(217 assertions) + service 43(248 assertions) |
+| Tests | 455 total | admin 254(607 assertions) + service 201(661 assertions), see [test reports](docs/tests/) |
 | HarmonyOS | Complete scaffold | Service layer + Auth + Login/Home pages |
 | Tests | 18/18 passing | 45 assertions, 100% pass rate |
 
@@ -239,10 +239,12 @@ cd service && php vendor/bin/phpunit
 
 | Project | Tests | Assertions | Pass Rate |
 |---------|-------|------------|-----------|
-| admin | 60 | 164 | 93.3% (4 pre-existing config issues) |
-| service | 18 | 45 | 100% |
+| admin | 254 | 607 | 100% (2 DB-gated skips) |
+| service | 201 | 661 | 100% (1 app-defect-gated skip) |
+| **Total** | **455** | **1268** | — |
 
-Service test coverage: Snowflake ID generation, Hashids encode/decode, unified response format, database schema validation, i18n translation files
+Service test coverage: all 19 API controllers, 6 middleware, models/common services, security & feature regression
+Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report)
 
 ### Docker Deployment
 

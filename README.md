@@ -68,7 +68,7 @@ property-management-platform/
 | Flutter 管理后台 | 42页 | admin 42个页面模块，96文件/6,662行 |
 | Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/商城/智能问答/人脸，32文件/3,582行 |
 | HarmonyOS | 7页 | 登录/首页/账单/报修(2)/公告/个人中心，11文件/927行 |
-| 测试 | 133个 | admin 90个(217断言) + service 43个(248断言) |
+| 测试 | 455个 | admin 254个(607断言) + service 201个(661断言)，详见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
 
@@ -235,11 +235,12 @@ cd service && php vendor/bin/phpunit
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| admin | 90 | 217 | 100% |
-| service | 43 | 248 | 100% (1个跳过) |
-| **合计** | **133** | **465** | — |
+| admin | 254 | 607 | 100% (2个DB门控跳过) |
+| service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
+| **合计** | **455** | **1268** | — |
 
-service 测试覆盖: Snowflake ID、Hashids 编解码、响应格式、数据库 Schema、i18n 翻译文件
+service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公共服务类、安全与特性回归
+全部模块单元测试 + API 自动化 + 端到端测试报告见 [docs/tests/](docs/tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）
 
 ### Docker 部署
 

@@ -9,8 +9,8 @@ namespace app\middleware;
 
 use support\Redis;
 use support\Request;
-use support\Response;
 use Throwable;
+use Webman\Http\Response;
 
 /**
  * 请求计数中间件：累计 HTTP 请求总数与 5xx 数量到 Redis，

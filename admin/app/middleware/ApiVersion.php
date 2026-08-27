@@ -29,11 +29,17 @@ class ApiVersion
         $version = (string) $request->header('API-Version', self::DEFAULT);
 
         if (!in_array($version, self::SUPPORTED, true)) {
-            return json([
-                'code'    => 400,
-                'message' => "不支持的API版本: {$version}，当前支持: " . implode(', ', self::SUPPORTED),
-                'data'    => [],
-            ]);
+            // 注意：webman 的 json() 助手第二参为 JSON 编码选项且固定 HTTP 200，
+            // 这里必须显式构造 400 状态响应，保证 REST 语义正确
+            return response(
+                json_encode([
+                    'code'    => 400,
+                    'message' => "不支持的API版本: {$version}，当前支持: " . implode(', ', self::SUPPORTED),
+                    'data'    => [],
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+                400,
+                ['Content-Type' => 'application/json']
+            );
         }
 
         $request->apiVersion = $version;

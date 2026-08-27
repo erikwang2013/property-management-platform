@@ -1,0 +1,12 @@
+{
+  "name": "property-management-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "安装向导 / 首页 / 健康检查 E2E（playwright + google-chrome）",
+  "scripts": {
+    "test": "node run-e2e.js"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

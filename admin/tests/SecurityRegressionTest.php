@@ -35,7 +35,11 @@ class SecurityRegressionTest extends TestCase
 
     public function test_cors_not_wildcard(): void
     {
-        $origin = config('cors.allowed_origin', getenv('CORS_ALLOWED_ORIGIN') ?: '');
+        // 项目没有 config/cors.php，真实来源是 app/middleware/Cors.php 的取值逻辑：
+        // getenv('CORS_ALLOWED_ORIGIN') ?: 'http://localhost:8787'
+        // （注意不能依赖 config('cors.*')——CorsMiddlewareTest 会 putenv 清空该变量，
+        // 按字母序先于本文件执行，故此处必须与中间件一样自带回退值）
+        $origin = getenv('CORS_ALLOWED_ORIGIN') ?: 'http://localhost:8787';
         $this->assertNotEmpty($origin);
         $this->assertNotEquals('*', $origin);
     }

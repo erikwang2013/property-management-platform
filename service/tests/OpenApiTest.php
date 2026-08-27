@@ -23,6 +23,9 @@ class OpenApiTest extends TestCase
 
     private static ?ApiKey $key = null;
 
+    /** 端口可能被其他项目占用：-1=未探测 0=非本服务 1=本服务 */
+    private static int $serviceUp = -1;
+
     public static function setUpBeforeClass(): void
     {
         try {
@@ -46,6 +49,15 @@ class OpenApiTest extends TestCase
 
     private function httpGet(string $path, ?string $apiKey): ?array
     {
+        // 8788 端口可能被其他项目占用（本机即被 social-service 占用）：
+        // 仅当 /health 确认是物业系统服务才发起探测，否则与"服务未运行"同等处理（跳过用例）
+        if (self::$serviceUp === -1) {
+            $health = @file_get_contents(self::baseUrl() . '/health');
+            self::$serviceUp = $health !== false && str_contains((string) $health, 'property-service') ? 1 : 0;
+        }
+        if (self::$serviceUp !== 1) {
+            return null;
+        }
         $ctx = stream_context_create(['http' => [
             'timeout'       => 5,
             'ignore_errors' => true, // 4xx/5xx 也返回响应体
