@@ -6,34 +6,34 @@
 
 ## 1. Siklus Hidup Request
 
-<img src="images/lifecycle_request.svg" alt="Siklus hidup request" width="100%">
+<img src="images/lifecycle_request.svg" alt="Siklus hidup request" width="860">
 
 ---
 
 ## 2. Siklus Hidup Entitas Data — Pemilik (Owner)
 
-<img src="images/lifecycle_owner.svg" alt="Siklus hidup pemilik" width="100%">
+<img src="images/lifecycle_owner.svg" alt="Siklus hidup pemilik" width="860">
 
 ---
 
 ## 3. Siklus Hidup Entitas Data — Tagihan Biaya (Fee Bill)
 
-<img src="images/lifecycle_fee.svg" alt="Siklus hidup tagihan biaya" width="100%">
+<img src="images/lifecycle_fee.svg" alt="Siklus hidup tagihan biaya" width="758.374550">
 
 ---
 
 ## 4. Siklus Hidup Entitas Data — Tiket Perbaikan (Repair Order)
 
-<img src="images/lifecycle_repair.svg" alt="Siklus hidup tiket perbaikan" width="100%">
+<img src="images/lifecycle_repair.svg" alt="Siklus hidup tiket perbaikan" width="706.057100">
 
 ---
 
 ## 5. Siklus Hidup Token JWT
 
-<img src="images/lifecycle_token.svg" alt="Siklus hidup Token JWT" width="100%">
+<img src="images/lifecycle_token.svg" alt="Siklus hidup Token JWT" width="557.608200">
 
 ---
 
 ## 6. Siklus Hidup Lengkap Rekaman Database
 
-<img src="images/lifecycle_crud.svg" alt="Siklus hidup rekaman database" width="100%">
+<img src="images/lifecycle_crud.svg" alt="Siklus hidup rekaman database" width="860">

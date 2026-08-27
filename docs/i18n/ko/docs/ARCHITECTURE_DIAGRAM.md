@@ -6,16 +6,16 @@
 
 ## 1. 시스템 전체 아키텍처
 
-<img src="images/architecture_overview.svg" alt="시스템 전체 아키텍처" width="100%">
+<img src="images/architecture_overview.svg" alt="시스템 전체 아키텍처" width="739.163650">
 
 ---
 
 ## 2. 계층 아키텍처 상세
 
-<img src="images/architecture_layered.svg" alt="계층 아키텍처 상세" width="100%">
+<img src="images/architecture_layered.svg" alt="계층 아키텍처 상세" width="754.826300">
 
 ---
 
 ## 3. 배포 아키텍처
 
-<img src="images/architecture_deployment.svg" alt="배포 아키텍처" width="100%">
+<img src="images/architecture_deployment.svg" alt="배포 아키텍처" width="338.203800">

@@ -76,23 +76,23 @@ property-management-platform/
 
 ### সিস্টেম প্যানোরামা আর্কিটেকচার
 
-<img src="docs/images/readme_architecture.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="460">
 
 ### কোর বিজনেস প্রক্রিয়া
 
-<img src="docs/images/readme_business_flow.svg" alt="কোর বিজনেস প্রক্রিয়া" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="কোর বিজনেস প্রক্রিয়া" width="860">
 
 ### ফাংশন মডিউল ওভারভিউ
 
-<img src="docs/images/readme_modules.svg" alt="ফাংশন মডিউল ওভারভিউ" width="100%">
+<img src="docs/images/readme_modules.svg" alt="ফাংশন মডিউল ওভারভিউ" width="860">
 
 ### ডেটা এনটিটি লাইফসাইকেল
 
-<img src="docs/images/readme_lifecycle.svg" alt="ডেটা এনটিটি লাইফসাইকেল" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="ডেটা এনটিটি লাইফসাইকেল" width="460">
 
 ### ১৮ স্তরের গভীর নিরাপত্তা প্রতিরক্ষা
 
-<img src="docs/images/readme_security.svg" alt="১৮ স্তরের গভীর নিরাপত্তা প্রতিরক্ষা" width="100%">
+<img src="docs/images/readme_security.svg" alt="১৮ স্তরের গভীর নিরাপত্তা প্রতিরক্ষা" width="330">
 
 ## ফাংশন মডিউল (২২টি বড় মডিউল + ১২টি এক্সটেনশন)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 আপনার সমর্থনের জন্য ধন্যবাদ!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="উইচ্যাট পেমেন্ট"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="আলিপে"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="উইচ্যাট পেমেন্ট"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="আলিপে"> |
 |:---:|:---:|
 | উইচ্যাট পেমেন্ট | আলিপে |
 

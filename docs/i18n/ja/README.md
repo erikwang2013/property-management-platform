@@ -78,23 +78,23 @@ property-management-platform/
 
 ### システム全景アーキテクチャ
 
-<img src="docs/images/readme_architecture.svg" alt="システム全景アーキテクチャ" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="システム全景アーキテクチャ" width="460">
 
 ### コア業務フロー
 
-<img src="docs/images/readme_business_flow.svg" alt="コア業務フロー" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="コア業務フロー" width="860">
 
 ### 機能モジュール総覧
 
-<img src="docs/images/readme_modules.svg" alt="機能モジュール総覧" width="100%">
+<img src="docs/images/readme_modules.svg" alt="機能モジュール総覧" width="860">
 
 ### データエンティティライフサイクル
 
-<img src="docs/images/readme_lifecycle.svg" alt="データエンティティライフサイクル" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="データエンティティライフサイクル" width="460">
 
 ### 18層セキュリティ多層防御
 
-<img src="docs/images/readme_security.svg" alt="18層セキュリティ多層防御" width="100%">
+<img src="docs/images/readme_security.svg" alt="18層セキュリティ多層防御" width="330">
 
 ## 機能モジュール（22大モジュール + 12拡張）
 
@@ -289,7 +289,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 ご支援ありがとうございます！
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 

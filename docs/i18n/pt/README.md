@@ -76,23 +76,23 @@ property-management-platform/
 
 ### Arquitetura geral do sistema
 
-<img src="docs/images/readme_architecture.svg" alt="Arquitetura geral do sistema" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="Arquitetura geral do sistema" width="460">
 
 ### Fluxo de negócio principal
 
-<img src="docs/images/readme_business_flow.svg" alt="Fluxo de negócio principal" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="Fluxo de negócio principal" width="860">
 
 ### Visão geral dos módulos funcionais
 
-<img src="docs/images/readme_modules.svg" alt="Visão geral dos módulos funcionais" width="100%">
+<img src="docs/images/readme_modules.svg" alt="Visão geral dos módulos funcionais" width="860">
 
 ### Ciclo de vida das entidades de dados
 
-<img src="docs/images/readme_lifecycle.svg" alt="Ciclo de vida das entidades de dados" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="Ciclo de vida das entidades de dados" width="460">
 
 ### Defesa em profundidade com 18 camadas de segurança
 
-<img src="docs/images/readme_security.svg" alt="Defesa em profundidade com 18 camadas de segurança" width="100%">
+<img src="docs/images/readme_security.svg" alt="Defesa em profundidade com 18 camadas de segurança" width="330">
 
 ## Módulos funcionais (22 módulos + 12 extensões)
 
@@ -287,7 +287,7 @@ Arquivos estáticos: Flutter Web build/
 
 Agradecemos o seu apoio!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 

@@ -6,34 +6,34 @@
 
 ## 1. دورة حياة الطلب
 
-<img src="images/lifecycle_request.svg" alt="دورة حياة الطلب" width="100%">
+<img src="images/lifecycle_request.svg" alt="دورة حياة الطلب" width="860">
 
 ---
 
 ## 2. دورة حياة الكيان — المالك (Owner)
 
-<img src="images/lifecycle_owner.svg" alt="دورة حياة المالك" width="100%">
+<img src="images/lifecycle_owner.svg" alt="دورة حياة المالك" width="860">
 
 ---
 
 ## 3. دورة حياة الكيان — فاتورة الرسوم (Fee Bill)
 
-<img src="images/lifecycle_fee.svg" alt="دورة حياة فاتورة الرسوم" width="100%">
+<img src="images/lifecycle_fee.svg" alt="دورة حياة فاتورة الرسوم" width="758.374550">
 
 ---
 
 ## 4. دورة حياة الكيان — طلب الإصلاح (Repair Order)
 
-<img src="images/lifecycle_repair.svg" alt="دورة حياة طلب الإصلاح" width="100%">
+<img src="images/lifecycle_repair.svg" alt="دورة حياة طلب الإصلاح" width="706.057100">
 
 ---
 
 ## 5. دورة حياة JWT Token
 
-<img src="images/lifecycle_token.svg" alt="دورة حياة JWT Token" width="100%">
+<img src="images/lifecycle_token.svg" alt="دورة حياة JWT Token" width="557.608200">
 
 ---
 
 ## 6. دورة الحياة الكاملة لسجل قاعدة البيانات
 
-<img src="images/lifecycle_crud.svg" alt="دورة حياة سجل قاعدة البيانات" width="100%">
+<img src="images/lifecycle_crud.svg" alt="دورة حياة سجل قاعدة البيانات" width="860">

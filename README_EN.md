@@ -78,23 +78,23 @@ property-management-platform/
 
 ### System Architecture Overview
 
-<img src="docs/images/readme_en_architecture.svg" alt="System Architecture Overview" width="100%">
+<img src="docs/images/readme_en_architecture.svg" alt="System Architecture Overview" width="460">
 
 ### Core Business Flow
 
-<img src="docs/images/readme_en_business_flow.svg" alt="Core Business Flow" width="100%">
+<img src="docs/images/readme_en_business_flow.svg" alt="Core Business Flow" width="860">
 
 ### Function Module Overview
 
-<img src="docs/images/readme_en_modules.svg" alt="Function Module Overview" width="100%">
+<img src="docs/images/readme_en_modules.svg" alt="Function Module Overview" width="860">
 
 ### Entity Lifecycle
 
-<img src="docs/images/readme_en_lifecycle.svg" alt="Entity Lifecycle" width="100%">
+<img src="docs/images/readme_en_lifecycle.svg" alt="Entity Lifecycle" width="460">
 
 ### 19-Layer Defense-in-Depth Security
 
-<img src="docs/images/readme_en_security.svg" alt="19-Layer Defense-in-Depth Security" width="100%">
+<img src="docs/images/readme_en_security.svg" alt="19-Layer Defense-in-Depth Security" width="330">
 
 ## Feature Modules (22 Modules)
 

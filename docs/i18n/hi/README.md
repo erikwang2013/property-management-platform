@@ -76,23 +76,23 @@ property-management-platform/
 
 ### सिस्टम पैनोरमा आर्किटेक्चर
 
-<img src="docs/images/readme_architecture.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="460">
 
 ### मुख्य व्यावसायिक प्रवाह
 
-<img src="docs/images/readme_business_flow.svg" alt="मुख्य व्यावसायिक प्रवाह" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="मुख्य व्यावसायिक प्रवाह" width="860">
 
 ### फ़ंक्शन मॉड्यूल अवलोकन
 
-<img src="docs/images/readme_modules.svg" alt="फ़ंक्शन मॉड्यूल अवलोकन" width="100%">
+<img src="docs/images/readme_modules.svg" alt="फ़ंक्शन मॉड्यूल अवलोकन" width="860">
 
 ### डेटा इकाई जीवनचक्र
 
-<img src="docs/images/readme_lifecycle.svg" alt="डेटा इकाई जीवनचक्र" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="डेटा इकाई जीवनचक्र" width="460">
 
 ### 18-परत सुरक्षा गहराई रक्षा
 
-<img src="docs/images/readme_security.svg" alt="18-परत सुरक्षा गहराई रक्षा" width="100%">
+<img src="docs/images/readme_security.svg" alt="18-परत सुरक्षा गहराई रक्षा" width="330">
 
 ## फ़ंक्शन मॉड्यूल (22 मुख्य मॉड्यूल + 12 विस्तार)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 आपके समर्थन के लिए धन्यवाद!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="WeChat भुगतान"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat भुगतान"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat भुगतान | Alipay |
 

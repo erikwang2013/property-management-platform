@@ -76,23 +76,23 @@ property-management-platform/
 
 ### Architecture panoramique du système
 
-<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="460">
 
 ### Processus métier principaux
 
-<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="860">
 
 ### Vue d'ensemble des modules fonctionnels
 
-<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="100%">
+<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="860">
 
 ### Cycle de vie des entités de données
 
-<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="460">
 
 ### Défense en profondeur sur 19 couches
 
-<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="100%">
+<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="330">
 
 ## Modules fonctionnels (22 grands modules + 12 extensions)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 Merci pour votre soutien !
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="微信支付"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="支付宝"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="微信支付"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="支付宝"> |
 |:---:|:---:|
 | 微信支付 | 支付宝 |
 

@@ -6,22 +6,22 @@
 
 ## 1. Funktionsmodul-Gesamtübersicht
 
-<img src="images/function_overview.svg" alt="Funktionsmodul-Gesamtübersicht" width="100%">
+<img src="images/function_overview.svg" alt="Funktionsmodul-Gesamtübersicht" width="860">
 
 ---
 
 ## 2. Modulabhängigkeiten
 
-<img src="images/function_deps.svg" alt="Modulabhängigkeiten" width="100%">
+<img src="images/function_deps.svg" alt="Modulabhängigkeiten" width="860">
 
 ---
 
 ## 3. Admin-Panel-Funktionsbaum
 
-<img src="images/function_admin_tree.svg" alt="Admin-Panel-Funktionsbaum" width="100%">
+<img src="images/function_admin_tree.svg" alt="Admin-Panel-Funktionsbaum" width="860">
 
 ---
 
 ## 4. Eigentümer-Portal-Funktionskarte
 
-<img src="images/function_owner_map.svg" alt="Eigentümer-Portal-Funktionskarte" width="100%">
+<img src="images/function_owner_map.svg" alt="Eigentümer-Portal-Funktionskarte" width="860">

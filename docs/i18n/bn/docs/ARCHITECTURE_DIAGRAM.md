@@ -6,16 +6,16 @@
 
 ## 1. সিস্টেম প্যানোরামা আর্কিটেকচার
 
-<img src="images/architecture_overview.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="100%">
+<img src="images/architecture_overview.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="739.163650">
 
 ---
 
 ## 2. লেয়ারড আর্কিটেকচার বিস্তারিত ডায়াগ্রাম
 
-<img src="images/architecture_layered.svg" alt="লেয়ারড আর্কিটেকচার বিস্তারিত ডায়াগ্রাম" width="100%">
+<img src="images/architecture_layered.svg" alt="লেয়ারড আর্কিটেকচার বিস্তারিত ডায়াগ্রাম" width="754.826300">
 
 ---
 
 ## 3. ডিপ্লয়মেন্ট আর্কিটেকচার
 
-<img src="images/architecture_deployment.svg" alt="ডিপ্লয়মেন্ট আর্কিটেকচার" width="100%">
+<img src="images/architecture_deployment.svg" alt="ডিপ্লয়মেন্ট আর্কিটেকচার" width="338.203800">

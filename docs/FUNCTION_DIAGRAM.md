@@ -6,22 +6,22 @@
 
 ## 1. 功能模块全景
 
-<img src="images/function_overview.svg" alt="功能模块全景" width="100%">
+<img src="images/function_overview.svg" alt="功能模块全景" width="860">
 
 ---
 
 ## 2. 模块依赖关系
 
-<img src="images/function_deps.svg" alt="模块依赖关系" width="100%">
+<img src="images/function_deps.svg" alt="模块依赖关系" width="860">
 
 ---
 
 ## 3. 管理后台功能树
 
-<img src="images/function_admin_tree.svg" alt="管理后台功能树" width="100%">
+<img src="images/function_admin_tree.svg" alt="管理后台功能树" width="860">
 
 ---
 
 ## 4. 业主端功能地图
 
-<img src="images/function_owner_map.svg" alt="业主端功能地图" width="100%">
+<img src="images/function_owner_map.svg" alt="业主端功能地图" width="860">

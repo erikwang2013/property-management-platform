@@ -78,23 +78,23 @@ property-management-platform/
 
 ### Arsitektur Panorama Sistem
 
-<img src="docs/images/readme_architecture.svg" alt="Arsitektur panorama sistem" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="Arsitektur panorama sistem" width="460">
 
 ### Alur Bisnis Inti
 
-<img src="docs/images/readme_business_flow.svg" alt="Alur bisnis inti" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="Alur bisnis inti" width="860">
 
 ### Ikhtisar Modul Fungsi
 
-<img src="docs/images/readme_modules.svg" alt="Ikhtisar modul fungsi" width="100%">
+<img src="docs/images/readme_modules.svg" alt="Ikhtisar modul fungsi" width="860">
 
 ### Siklus Hidup Entitas Data
 
-<img src="docs/images/readme_lifecycle.svg" alt="Siklus hidup entitas data" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="Siklus hidup entitas data" width="460">
 
 ### Pertahanan Berlapis Keamanan 18 Lapis
 
-<img src="docs/images/readme_security.svg" alt="Pertahanan berlapis keamanan 18 lapis" width="100%">
+<img src="docs/images/readme_security.svg" alt="Pertahanan berlapis keamanan 18 lapis" width="330">
 
 ## Modul Fungsi (22 modul besar + 12 ekstensi)
 
@@ -289,7 +289,7 @@ File statis: Flutter Web build/
 
 Terima kasih atas dukungan Anda!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="Pembayaran WeChat"> | <img src="admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="Pembayaran WeChat"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | Pembayaran WeChat | Alipay |
 

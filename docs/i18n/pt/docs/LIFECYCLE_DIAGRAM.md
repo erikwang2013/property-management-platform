@@ -6,34 +6,34 @@
 
 ## 1. Ciclo de vida da requisição
 
-<img src="images/lifecycle_request.svg" alt="Ciclo de vida da requisição" width="100%">
+<img src="images/lifecycle_request.svg" alt="Ciclo de vida da requisição" width="860">
 
 ---
 
 ## 2. Ciclo de vida da entidade de dados — Proprietário (Owner)
 
-<img src="images/lifecycle_owner.svg" alt="Ciclo de vida do proprietário" width="100%">
+<img src="images/lifecycle_owner.svg" alt="Ciclo de vida do proprietário" width="860">
 
 ---
 
 ## 3. Ciclo de vida da entidade de dados — Fatura de cobrança (Fee Bill)
 
-<img src="images/lifecycle_fee.svg" alt="Ciclo de vida da fatura de cobrança" width="100%">
+<img src="images/lifecycle_fee.svg" alt="Ciclo de vida da fatura de cobrança" width="758.374550">
 
 ---
 
 ## 4. Ciclo de vida da entidade de dados — Ordem de reparo (Repair Order)
 
-<img src="images/lifecycle_repair.svg" alt="Ciclo de vida da ordem de reparo" width="100%">
+<img src="images/lifecycle_repair.svg" alt="Ciclo de vida da ordem de reparo" width="706.057100">
 
 ---
 
 ## 5. Ciclo de vida do Token JWT
 
-<img src="images/lifecycle_token.svg" alt="Ciclo de vida do Token JWT" width="100%">
+<img src="images/lifecycle_token.svg" alt="Ciclo de vida do Token JWT" width="557.608200">
 
 ---
 
 ## 6. Ciclo de vida completo dos registros do banco de dados
 
-<img src="images/lifecycle_crud.svg" alt="Ciclo de vida dos registros do banco de dados" width="100%">
+<img src="images/lifecycle_crud.svg" alt="Ciclo de vida dos registros do banco de dados" width="860">

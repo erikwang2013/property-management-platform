@@ -76,23 +76,23 @@ property-management-platform/
 
 ### البنية الشاملة للنظام
 
-<img src="../../../docs/images/readme_architecture.svg" alt="البنية الشاملة للنظام" width="100%">
+<img src="../../../docs/images/readme_architecture.svg" alt="البنية الشاملة للنظام" width="460">
 
 ### العمليات التجارية الأساسية
 
-<img src="../../../docs/images/readme_business_flow.svg" alt="العمليات التجارية الأساسية" width="100%">
+<img src="../../../docs/images/readme_business_flow.svg" alt="العمليات التجارية الأساسية" width="860">
 
 ### نظرة شاملة على الوحدات الوظيفية
 
-<img src="../../../docs/images/readme_modules.svg" alt="نظرة شاملة على الوحدات الوظيفية" width="100%">
+<img src="../../../docs/images/readme_modules.svg" alt="نظرة شاملة على الوحدات الوظيفية" width="860">
 
 ### دورة حياة كيانات البيانات
 
-<img src="../../../docs/images/readme_lifecycle.svg" alt="دورة حياة كيانات البيانات" width="100%">
+<img src="../../../docs/images/readme_lifecycle.svg" alt="دورة حياة كيانات البيانات" width="460">
 
 ### الدفاع الأمني المتعمق من 18 طبقة
 
-<img src="../../../docs/images/readme_security.svg" alt="الدفاع الأمني المتعمق من 18 طبقة" width="100%">
+<img src="../../../docs/images/readme_security.svg" alt="الدفاع الأمني المتعمق من 18 طبقة" width="330">
 
 ## الوحدات الوظيفية (22 وحدة رئيسية + 12 وظيفة موسعة)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 شكرًا لدعمكم!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 

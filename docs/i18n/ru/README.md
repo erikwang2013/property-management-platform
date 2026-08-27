@@ -76,23 +76,23 @@ property-management-platform/
 
 ### Общая архитектура системы
 
-<img src="docs/images/readme_architecture.svg" alt="Общая архитектура системы" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="Общая архитектура системы" width="460">
 
 ### Ключевые бизнес-процессы
 
-<img src="docs/images/readme_business_flow.svg" alt="Ключевые бизнес-процессы" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="Ключевые бизнес-процессы" width="860">
 
 ### Обзор функциональных модулей
 
-<img src="docs/images/readme_modules.svg" alt="Обзор функциональных модулей" width="100%">
+<img src="docs/images/readme_modules.svg" alt="Обзор функциональных модулей" width="860">
 
 ### Жизненный цикл сущностей данных
 
-<img src="docs/images/readme_lifecycle.svg" alt="Жизненный цикл сущностей данных" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="Жизненный цикл сущностей данных" width="460">
 
 ### 18 уровней эшелонированной защиты
 
-<img src="docs/images/readme_security.svg" alt="18 уровней эшелонированной защиты" width="100%">
+<img src="docs/images/readme_security.svg" alt="18 уровней эшелонированной защиты" width="330">
 
 ## Функциональные модули (22 крупных модуля + 12 расширений)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 Спасибо за поддержку!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="Alipay"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 

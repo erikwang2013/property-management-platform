@@ -76,23 +76,23 @@ property-management-platform/
 
 ### 系统全景架构
 
-<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="460">
 
 ### 核心业务流程
 
-<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="860">
 
 ### 功能模块总览
 
-<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="100%">
+<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="860">
 
 ### 数据实体生命周期
 
-<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="460">
 
 ### 19层安全纵深防御
 
-<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="100%">
+<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="330">
 
 ## 功能模块（22大模块 + 12扩展）
 

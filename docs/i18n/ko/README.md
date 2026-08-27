@@ -76,23 +76,23 @@ property-management-platform/
 
 ### 시스템 전체 아키텍처
 
-<img src="docs/images/readme_architecture.svg" alt="시스템 전체 아키텍처" width="100%">
+<img src="docs/images/readme_architecture.svg" alt="시스템 전체 아키텍처" width="460">
 
 ### 핵심 비즈니스 흐름
 
-<img src="docs/images/readme_business_flow.svg" alt="핵심 비즈니스 흐름" width="100%">
+<img src="docs/images/readme_business_flow.svg" alt="핵심 비즈니스 흐름" width="860">
 
 ### 기능 모듈 총괄
 
-<img src="docs/images/readme_modules.svg" alt="기능 모듈 총괄" width="100%">
+<img src="docs/images/readme_modules.svg" alt="기능 모듈 총괄" width="860">
 
 ### 데이터 엔티티 라이프사이클
 
-<img src="docs/images/readme_lifecycle.svg" alt="데이터 엔티티 라이프사이클" width="100%">
+<img src="docs/images/readme_lifecycle.svg" alt="데이터 엔티티 라이프사이클" width="460">
 
 ### 18단계 보안 심층 방어
 
-<img src="docs/images/readme_security.svg" alt="18단계 보안 심층 방어" width="100%">
+<img src="docs/images/readme_security.svg" alt="18단계 보안 심층 방어" width="330">
 
 ## 기능 모듈(22개 대모듈 + 12개 확장)
 
@@ -287,7 +287,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 지원해 주셔서 감사합니다!
 
-| <img src="../../../admin/docs/weixinpay.png" width="130" height="130" alt="위챗페이"> | <img src="../../../admin/docs/alipay.png" width="130" height="130" alt="알리페이"> |
+| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="위챗페이"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="알리페이"> |
 |:---:|:---:|
 | 위챗페이 | 알리페이 |
 

@@ -6,16 +6,16 @@
 
 ## 1. सिस्टम पैनोरमा आर्किटेक्चर
 
-<img src="images/architecture_overview.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="100%">
+<img src="images/architecture_overview.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="739.163650">
 
 ---
 
 ## 2. स्तरीय आर्किटेक्चर विवरण
 
-<img src="images/architecture_layered.svg" alt="स्तरीय आर्किटेक्चर विवरण" width="100%">
+<img src="images/architecture_layered.svg" alt="स्तरीय आर्किटेक्चर विवरण" width="754.826300">
 
 ---
 
 ## 3. तैनाती आर्किटेक्चर
 
-<img src="images/architecture_deployment.svg" alt="तैनाती आर्किटेक्चर" width="100%">
+<img src="images/architecture_deployment.svg" alt="तैनाती आर्किटेक्चर" width="338.203800">
