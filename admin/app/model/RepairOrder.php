@@ -11,7 +11,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class RepairOrder extends BaseModel
 {
-    protected $table = 'erik_repair_order';
+    protected $table = 'management_repair_order';
 
     protected $fillable = [
         'order_number', 'room_id', 'owner_id', 'contact_phone',

@@ -60,7 +60,7 @@ property-management-platform/
 
 | Layer | Count | Details |
 |-------|-------|---------|
-| Database Tables | 65 | All `erik_` prefix, BIGINT non-auto-increment PK |
+| Database Tables | 65 | All `management_` prefix, BIGINT non-auto-increment PK |
 | PHP Models | 64 | With encryptable field encryption |
 | Admin Controllers | 58 | General admin + 22 modules + 12 extensions |
 | Service Controllers | 17 | Complete owner-facing API |
@@ -110,7 +110,7 @@ property-management-platform/
 ### Backend
 - **Framework**: webman v2 (workerman/webman)
 - **Language**: PHP 8.3+
-- **Database**: MySQL 8.0+, table prefix `erik_`, BIGINT non-auto-increment PKs
+- **Database**: MySQL 8.0+, table prefix `management_`, BIGINT non-auto-increment PKs
 - **Search Engine**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
@@ -191,10 +191,10 @@ See [Installation Guide](docs/INSTALL.md) for details.
 
 ```bash
 # Create database
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 # Import merged install script (all 65 tables + RBAC seed data)
-mysql -u root property_management < docs/install.sql
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Start Admin Panel

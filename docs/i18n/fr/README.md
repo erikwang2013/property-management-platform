@@ -60,7 +60,7 @@ property-management-platform/
 
 | Couche | Quantité | Détails |
 |----|------|------|
-| Tables de base de données | 65 | Toutes préfixées `erik_`, clé primaire BIGINT non auto-incrémentée |
+| Tables de base de données | 65 | Toutes préfixées `management_`, clé primaire BIGINT non auto-incrémentée |
 | Modèles PHP | admin 64 / service 57 | Tous des modèles Eloquent, avec champs chiffrés encryptable ; 57 côté service = nombre de fichiers de modèles (dont la classe de base BaseModel) |
 | Contrôleurs admin | 58 | Gestion générale + 22 modules immobiliers + 12 fonctions étendues |
 | Contrôleurs service | 17 | Toutes les API du portail des propriétaires |
@@ -108,7 +108,7 @@ property-management-platform/
 ### Backend
 - **Framework** : webman v2 (workerman/webman)
 - **Langage** : PHP 8.3+
-- **Base de données** : MySQL 8.0+, préfixe de tables `erik_`, clé primaire BIGINT non auto-incrémentée
+- **Base de données** : MySQL 8.0+, préfixe de tables `management_`, clé primaire BIGINT non auto-incrémentée
 - **Moteur de recherche** : Elasticsearch 8.x
 - **Cache** : Redis 7.x
 
@@ -189,8 +189,8 @@ Voir [Guide d'installation](docs/INSTALL.md) pour plus de détails.
 #### 1. Initialiser la base de données
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Démarrer le panneau d'administration

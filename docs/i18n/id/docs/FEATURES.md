@@ -6,44 +6,44 @@
 
 | No | Modul | Batch | Panel admin | Portal pemilik | Tabel data |
 |------|------|---------|---------|--------|--------|
-| 1 | Manajemen komunitas | Batch 1 | CRUD + pencarian & paginasi | Lihat komunitas terikat | erik_community |
-| 2 | Manajemen gedung | Batch 1 | CRUD + filter per komunitas | - | erik_building |
-| 3 | Manajemen unit | Batch 1 | CRUD + filter per gedung | - | erik_unit |
-| 4 | Manajemen tipe ruangan | Batch 1 | CRUD | - | erik_room_type |
-| 5 | Manajemen properti | Batch 1 | CRUD + pohon rumah + bind pemilik massal | Daftar/detail properti saya | erik_room |
-| 6 | Manajemen pemilik | Batch 1 | CRUD + impor massal/aktif-nonaktif/hapus | Registrasi/login/info pribadi | erik_owner, erik_room_owner |
-| 7 | Manajemen penyewa | Batch 1 | CRUD + filter per properti | - | erik_tenant |
-| 8 | Manajemen biaya | Batch 1 | CRUD tipe biaya + manajemen tagihan + generate massal + penerimaan offline | Cek tagihan + bayar online + statistik biaya | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | Manajemen perbaikan | Batch 1 | Daftar perbaikan + dispatch + update progres | Submit perbaikan + lihat progres + penilaian | erik_repair_order, erik_repair_progress |
-| 10 | Pengumuman | Batch 1 | CRUD + terbit/pin | Daftar/detail pengumuman | erik_announcement |
-| 11 | Manajemen parkir | Batch 2 | Manajemen tempat/kendaraan + rekaman parkir | Tempat/kendaraan saya + rekaman parkir | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | Manajemen peralatan | Batch 2 | Aset peralatan + rekaman pemeliharaan | - | erik_equipment, erik_equipment_maintenance |
-| 13 | Keluhan dan saran | Batch 2 | Daftar keluhan + penanganan + kunjungan balik | Submit keluhan + lihat progres + penilaian | erik_complaint |
-| 14 | Manajemen tamu | Batch 2 | Persetujuan tamu + cek rekaman | Reservasi tamu + kode akses | erik_visitor |
-| 15 | Manajemen kontrak | Batch 2 | CRUD + manajemen status | - | erik_contract |
-| 16 | Manajemen keuangan | Batch 2 | Manajemen pemasukan/pengeluaran + laporan statistik | - | erik_finance_income, erik_finance_expense |
-| 17 | Patroli keamanan | Batch 3 | Rute patroli + rekaman patroli | - | erik_security_patrol, erik_patrol_record |
-| 18 | Manajemen kebersihan | Batch 3 | Area kebersihan + rekaman kebersihan | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | Manajemen penghijauan | Batch 3 | Area hijau + rekaman perawatan | - | erik_green_area, erik_green_maintenance |
-| 20 | Aktivitas komunitas | Batch 3 | Manajemen aktivitas + lihat pendaftaran | Daftar aktivitas + daftar | erik_community_activity, erik_activity_signup |
-| 21 | Manajemen energi | Batch 3 | Manajemen meter + rekaman pencatatan meter | - | erik_energy_meter, erik_energy_record |
-| 22 | Manajemen karyawan | Batch 3 | CRUD + manajemen status | - | erik_staff |
+| 1 | Manajemen komunitas | Batch 1 | CRUD + pencarian & paginasi | Lihat komunitas terikat | management_community |
+| 2 | Manajemen gedung | Batch 1 | CRUD + filter per komunitas | - | management_building |
+| 3 | Manajemen unit | Batch 1 | CRUD + filter per gedung | - | management_unit |
+| 4 | Manajemen tipe ruangan | Batch 1 | CRUD | - | management_room_type |
+| 5 | Manajemen properti | Batch 1 | CRUD + pohon rumah + bind pemilik massal | Daftar/detail properti saya | management_room |
+| 6 | Manajemen pemilik | Batch 1 | CRUD + impor massal/aktif-nonaktif/hapus | Registrasi/login/info pribadi | management_owner, management_room_owner |
+| 7 | Manajemen penyewa | Batch 1 | CRUD + filter per properti | - | management_tenant |
+| 8 | Manajemen biaya | Batch 1 | CRUD tipe biaya + manajemen tagihan + generate massal + penerimaan offline | Cek tagihan + bayar online + statistik biaya | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | Manajemen perbaikan | Batch 1 | Daftar perbaikan + dispatch + update progres | Submit perbaikan + lihat progres + penilaian | management_repair_order, management_repair_progress |
+| 10 | Pengumuman | Batch 1 | CRUD + terbit/pin | Daftar/detail pengumuman | management_announcement |
+| 11 | Manajemen parkir | Batch 2 | Manajemen tempat/kendaraan + rekaman parkir | Tempat/kendaraan saya + rekaman parkir | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | Manajemen peralatan | Batch 2 | Aset peralatan + rekaman pemeliharaan | - | management_equipment, management_equipment_maintenance |
+| 13 | Keluhan dan saran | Batch 2 | Daftar keluhan + penanganan + kunjungan balik | Submit keluhan + lihat progres + penilaian | management_complaint |
+| 14 | Manajemen tamu | Batch 2 | Persetujuan tamu + cek rekaman | Reservasi tamu + kode akses | management_visitor |
+| 15 | Manajemen kontrak | Batch 2 | CRUD + manajemen status | - | management_contract |
+| 16 | Manajemen keuangan | Batch 2 | Manajemen pemasukan/pengeluaran + laporan statistik | - | management_finance_income, management_finance_expense |
+| 17 | Patroli keamanan | Batch 3 | Rute patroli + rekaman patroli | - | management_security_patrol, management_patrol_record |
+| 18 | Manajemen kebersihan | Batch 3 | Area kebersihan + rekaman kebersihan | - | management_cleaning_area, management_cleaning_record |
+| 19 | Manajemen penghijauan | Batch 3 | Area hijau + rekaman perawatan | - | management_green_area, management_green_maintenance |
+| 20 | Aktivitas komunitas | Batch 3 | Manajemen aktivitas + lihat pendaftaran | Daftar aktivitas + daftar | management_community_activity, management_activity_signup |
+| 21 | Manajemen energi | Batch 3 | Manajemen meter + rekaman pencatatan meter | - | management_energy_meter, management_energy_record |
+| 22 | Manajemen karyawan | Batch 3 | CRUD + manajemen status | - | management_staff |
 
 ## Fitur Ekstensi (Batch 4 — 12 modul)
 
 | No | Modul | Panel admin | Portal pemilik | Tabel data |
 |------|------|---------|--------|--------|
-| 23 | Notifikasi pesan | CRUD template + kirim manual + daftar | Pesan saya + tandai sudah dibaca | erik_notification_template, erik_notification |
-| 24 | Alur persetujuan | Tipe persetujuan + instance + alur langkah | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | Integrasi pembayaran | Manajemen order + refund + callback WeChat/Alipay | - | erik_payment_order |
-| 26 | Voting pemilik | CRUD voting + opsi + statistik berbobot luas | Daftar voting + voting + bobot luas | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | Eskalasi SLA otomatis | Konfigurasi aturan + cek timeout + denda | - | erik_sla_rule, erik_sla_record |
-| 28 | Penagihan cerdas | Konfigurasi strategi + pencocokan keterlambatan + denda | - | erik_collection_strategy, erik_collection_record |
-| 29 | Pemeliharaan mobile | Dispatch tugas + GPS check-in + foto | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | Toko komunitas | Manajemen kategori/produk/order/pengiriman | Lihat produk + order + order saya | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | Pengenalan wajah | Manajemen review | Registrasi wajah + status autentikasi | erik_face_info |
-| 32 | Manajemen grup | CRUD grup + kaitan komunitas + agregasi lintas area | - | erik_group, erik_group_community |
-| 33 | Tanya jawab cerdas | Knowledge base + riwayat percakapan + statistik | Bertanya + pencocokan kata kunci | erik_knowledge_base, erik_chat_record |
+| 23 | Notifikasi pesan | CRUD template + kirim manual + daftar | Pesan saya + tandai sudah dibaca | management_notification_template, management_notification |
+| 24 | Alur persetujuan | Tipe persetujuan + instance + alur langkah | - | management_approval_type, management_approval, management_approval_record |
+| 25 | Integrasi pembayaran | Manajemen order + refund + callback WeChat/Alipay | - | management_payment_order |
+| 26 | Voting pemilik | CRUD voting + opsi + statistik berbobot luas | Daftar voting + voting + bobot luas | management_vote, management_vote_option, management_vote_record |
+| 27 | Eskalasi SLA otomatis | Konfigurasi aturan + cek timeout + denda | - | management_sla_rule, management_sla_record |
+| 28 | Penagihan cerdas | Konfigurasi strategi + pencocokan keterlambatan + denda | - | management_collection_strategy, management_collection_record |
+| 29 | Pemeliharaan mobile | Dispatch tugas + GPS check-in + foto | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | Toko komunitas | Manajemen kategori/produk/order/pengiriman | Lihat produk + order + order saya | management_mall_category, management_mall_product, management_mall_order |
+| 31 | Pengenalan wajah | Manajemen review | Registrasi wajah + status autentikasi | management_face_info |
+| 32 | Manajemen grup | CRUD grup + kaitan komunitas + agregasi lintas area | - | management_group, management_group_community |
+| 33 | Tanya jawab cerdas | Knowledge base + riwayat percakapan + statistik | Bertanya + pencocokan kata kunci | management_knowledge_base, management_chat_record |
 | - | Data besar | Visualisasi data properti real-time layar penuh | - | (reuse endpoint data yang ada) |
 
 ## Modul Panel Admin (sudah ada di admin)
@@ -89,7 +89,7 @@ Pertahanan berlapis 18 lapis: captcha → konfirmasi kata sandi → verifikasi a
 ### Mesin pencari
 - `erikwang2013/webman-scout` menggerakkan Elasticsearch
 - Sinkronisasi indeks otomatis (perubahan tambah/hapus/ubah otomatis didorong)
-- Prefiks indeks `erik_`, konsisten dengan prefiks tabel database
+- Prefiks indeks `management_`, konsisten dengan prefiks tabel database
 
 ### Internasionalisasi (i18n)
 - **Backend PHP**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 kunci terjemahan, controller mengambil terjemahan melalui metode `__()`

@@ -14,5 +14,7 @@ return [
         'port'     => (int)(getenv('REDIS_PORT') ?: 6379),
         'password' => getenv('REDIS_PASSWORD') ?: '',
         'database' => (int)(getenv('REDIS_DATABASE') ?: 0),
+        // 全局 key 前缀（support\Redis 门面 OPT_PREFIX）
+        'prefix' => 'management:',
     ],
 ];

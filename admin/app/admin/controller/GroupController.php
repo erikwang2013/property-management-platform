@@ -318,7 +318,7 @@ class GroupController extends BaseController
         // 总业主数（通过房产关联）
         $totalOwners = Owner::whereHas('rooms', function ($q) use ($communityIds) {
             $q->whereIn('room_id', function ($sub) use ($communityIds) {
-                $sub->select('id')->from('erik_room')->whereIn('community_id', $communityIds);
+                $sub->select('id')->from('management_room')->whereIn('community_id', $communityIds);
             });
         })->count();
 

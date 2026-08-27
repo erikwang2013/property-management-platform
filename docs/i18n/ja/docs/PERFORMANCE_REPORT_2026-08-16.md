@@ -44,7 +44,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ## 3. スロークエリ審査
 
-- 料金テーブル `erik_fee_bill` / `erik_fee_payment` のインデックスは整備済み（paid_at、bill_id、owner_id、payment_number 等）、コアクエリは全てインデックス利用可能。
+- 料金テーブル `management_fee_bill` / `management_fee_payment` のインデックスは整備済み（paid_at、bill_id、owner_id、payment_number 等）、コアクエリは全てインデックス利用可能。
 - 発見点：料金一覧の `payment_number like %kw%` あいまい検索（前方ワイルドカード）はインデックスを利用できず、データ量が増えると全テーブルスキャンに退化する。低頻度の管理画面検索のため、現状は対応しない；データ量増加後は逆インデックスまたは接頭辞インデックスに変更可能。
 - **MySQL slow_query_log が OFF**：有効化して `long_query_time=1` を設定することを推奨し、実 SQL のスローを継続観察（負荷試験からの推測ではなく）。本番実行：
   ```sql

@@ -81,7 +81,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?please set MYSQL_ROOT_PASSWORD in .env}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-open_admin}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-management}
       MYSQL_USER: ${MYSQL_USER:-open_admin_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:?please set MYSQL_PASSWORD in .env}
     ports:

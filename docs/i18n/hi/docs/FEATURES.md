@@ -6,44 +6,44 @@
 
 | क्रमांक | मॉड्यूल | बैच | एडमिन पैनल | मालिक पोर्टल | डेटा टेबल |
 |------|------|---------|---------|--------|--------|
-| 1 | समुदाय प्रबंधन | बैच 1 | CRUD + खोज पेजिनेशन | बंधे समुदाय देखें | erik_community |
-| 2 | भवन प्रबंधन | बैच 1 | CRUD + समुदाय के अनुसार फ़िल्टर | - | erik_building |
-| 3 | इकाई प्रबंधन | बैच 1 | CRUD + भवन के अनुसार फ़िल्टर | - | erik_unit |
-| 4 | रूम प्रकार प्रबंधन | बैच 1 | CRUD | - | erik_room_type |
-| 5 | संपत्ति प्रबंधन | बैच 1 | CRUD + हाउस ट्री + बैच मालिक बाइंडिंग | मेरी संपत्ति सूची/विवरण | erik_room |
-| 6 | मालिक प्रबंधन | बैच 1 | CRUD + बैच इम्पोर्ट/सक्षम-अक्षम/हटाना | पंजीकरण/लॉगिन/व्यक्तिगत जानकारी | erik_owner, erik_room_owner |
-| 7 | किरायेदार प्रबंधन | बैच 1 | CRUD + संपत्ति के अनुसार फ़िल्टर | - | erik_tenant |
-| 8 | शुल्क प्रबंधन | बैच 1 | शुल्क प्रकार CRUD + बिल प्रबंधन + बैच जनरेशन + ऑफलाइन संग्रह | बिल खोज + ऑनलाइन भुगतान + शुल्क सांख्यिकी | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | मरम्मत अनुरोध प्रबंधन | बैच 1 | मरम्मत सूची + कार्य सौंपना + प्रगति अपडेट | मरम्मत सबमिट + प्रगति देखें + रेटिंग | erik_repair_order, erik_repair_progress |
-| 10 | घोषणा सूचना | बैच 1 | CRUD + प्रकाशित/पिन करना | घोषणा सूची/विवरण | erik_announcement |
-| 11 | पार्किंग प्रबंधन | बैच 2 | पार्किंग स्थल/वाहन प्रबंधन + पार्किंग रिकॉर्ड | मेरी पार्किंग/वाहन + पार्किंग रिकॉर्ड | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | उपकरण प्रबंधन | बैच 2 | उपकरण रजिस्टर + रखरखाव रिकॉर्ड | - | erik_equipment, erik_equipment_maintenance |
-| 13 | शिकायत सुझाव | बैच 2 | शिकायत सूची + प्रसंस्करण + फॉलो-अप | शिकायत सबमिट + प्रगति देखें + रेटिंग | erik_complaint |
-| 14 | अतिथि प्रबंधन | बैच 2 | अतिथि अनुमोदन + रिकॉर्ड खोज | अतिथि आरक्षण + पास कोड | erik_visitor |
-| 15 | अनुबंध प्रबंधन | बैच 2 | CRUD + स्थिति प्रबंधन | - | erik_contract |
-| 16 | वित्त प्रबंधन | बैच 2 | आय-व्यय प्रबंधन + सांख्यिकी रिपोर्ट | - | erik_finance_income, erik_finance_expense |
-| 17 | सुरक्षा गश्त | बैच 3 | गश्त मार्ग + गश्त रिकॉर्ड | - | erik_security_patrol, erik_patrol_record |
-| 18 | सफाई प्रबंधन | बैच 3 | सफाई क्षेत्र + सफाई रिकॉर्ड | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | हरियाली प्रबंधन | बैच 3 | हरियाली क्षेत्र + रखरखाव रिकॉर्ड | - | erik_green_area, erik_green_maintenance |
-| 20 | सामुदायिक गतिविधि | बैच 3 | गतिविधि प्रबंधन + पंजीकरण देखें | गतिविधि सूची + पंजीकरण | erik_community_activity, erik_activity_signup |
-| 21 | ऊर्जा प्रबंधन | बैच 3 | मीटर प्रबंधन + रीडिंग रिकॉर्ड | - | erik_energy_meter, erik_energy_record |
-| 22 | कर्मचारी प्रबंधन | बैच 3 | CRUD + स्थिति प्रबंधन | - | erik_staff |
+| 1 | समुदाय प्रबंधन | बैच 1 | CRUD + खोज पेजिनेशन | बंधे समुदाय देखें | management_community |
+| 2 | भवन प्रबंधन | बैच 1 | CRUD + समुदाय के अनुसार फ़िल्टर | - | management_building |
+| 3 | इकाई प्रबंधन | बैच 1 | CRUD + भवन के अनुसार फ़िल्टर | - | management_unit |
+| 4 | रूम प्रकार प्रबंधन | बैच 1 | CRUD | - | management_room_type |
+| 5 | संपत्ति प्रबंधन | बैच 1 | CRUD + हाउस ट्री + बैच मालिक बाइंडिंग | मेरी संपत्ति सूची/विवरण | management_room |
+| 6 | मालिक प्रबंधन | बैच 1 | CRUD + बैच इम्पोर्ट/सक्षम-अक्षम/हटाना | पंजीकरण/लॉगिन/व्यक्तिगत जानकारी | management_owner, management_room_owner |
+| 7 | किरायेदार प्रबंधन | बैच 1 | CRUD + संपत्ति के अनुसार फ़िल्टर | - | management_tenant |
+| 8 | शुल्क प्रबंधन | बैच 1 | शुल्क प्रकार CRUD + बिल प्रबंधन + बैच जनरेशन + ऑफलाइन संग्रह | बिल खोज + ऑनलाइन भुगतान + शुल्क सांख्यिकी | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | मरम्मत अनुरोध प्रबंधन | बैच 1 | मरम्मत सूची + कार्य सौंपना + प्रगति अपडेट | मरम्मत सबमिट + प्रगति देखें + रेटिंग | management_repair_order, management_repair_progress |
+| 10 | घोषणा सूचना | बैच 1 | CRUD + प्रकाशित/पिन करना | घोषणा सूची/विवरण | management_announcement |
+| 11 | पार्किंग प्रबंधन | बैच 2 | पार्किंग स्थल/वाहन प्रबंधन + पार्किंग रिकॉर्ड | मेरी पार्किंग/वाहन + पार्किंग रिकॉर्ड | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | उपकरण प्रबंधन | बैच 2 | उपकरण रजिस्टर + रखरखाव रिकॉर्ड | - | management_equipment, management_equipment_maintenance |
+| 13 | शिकायत सुझाव | बैच 2 | शिकायत सूची + प्रसंस्करण + फॉलो-अप | शिकायत सबमिट + प्रगति देखें + रेटिंग | management_complaint |
+| 14 | अतिथि प्रबंधन | बैच 2 | अतिथि अनुमोदन + रिकॉर्ड खोज | अतिथि आरक्षण + पास कोड | management_visitor |
+| 15 | अनुबंध प्रबंधन | बैच 2 | CRUD + स्थिति प्रबंधन | - | management_contract |
+| 16 | वित्त प्रबंधन | बैच 2 | आय-व्यय प्रबंधन + सांख्यिकी रिपोर्ट | - | management_finance_income, management_finance_expense |
+| 17 | सुरक्षा गश्त | बैच 3 | गश्त मार्ग + गश्त रिकॉर्ड | - | management_security_patrol, management_patrol_record |
+| 18 | सफाई प्रबंधन | बैच 3 | सफाई क्षेत्र + सफाई रिकॉर्ड | - | management_cleaning_area, management_cleaning_record |
+| 19 | हरियाली प्रबंधन | बैच 3 | हरियाली क्षेत्र + रखरखाव रिकॉर्ड | - | management_green_area, management_green_maintenance |
+| 20 | सामुदायिक गतिविधि | बैच 3 | गतिविधि प्रबंधन + पंजीकरण देखें | गतिविधि सूची + पंजीकरण | management_community_activity, management_activity_signup |
+| 21 | ऊर्जा प्रबंधन | बैच 3 | मीटर प्रबंधन + रीडिंग रिकॉर्ड | - | management_energy_meter, management_energy_record |
+| 22 | कर्मचारी प्रबंधन | बैच 3 | CRUD + स्थिति प्रबंधन | - | management_staff |
 
 ## विस्तारित सुविधाएँ (बैच 4 — 12 मॉड्यूल)
 
 | क्रमांक | मॉड्यूल | एडमिन पैनल | मालिक पोर्टल | डेटा टेबल |
 |------|------|---------|--------|--------|
-| 23 | संदेश सूचना | टेम्पलेट CRUD + मैन्युअल भेजना + सूची | मेरे संदेश + पढ़ा चिह्नित करें | erik_notification_template, erik_notification |
-| 24 | अनुमोदन वर्कफ़्लो | अनुमोदन प्रकार + इंस्टेंस + चरण प्रवाह | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | भुगतान एकीकरण | ऑर्डर प्रबंधन + रिफंड + WeChat/Alipay कॉलबैक | - | erik_payment_order |
-| 26 | मालिक मतदान | मतदान CRUD + विकल्प + क्षेत्र-भारित सांख्यिकी | मतदान सूची + मतदान + क्षेत्र-भारित | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | SLA स्वतः अपग्रेड | नियम कॉन्फ़िग + टाइमआउट जांच + जुर्माना | - | erik_sla_rule, erik_sla_record |
-| 28 | स्मार्ट वसूली | रणनीति कॉन्फ़िग + अतिदेय मिलान + विलंब शुल्क | - | erik_collection_strategy, erik_collection_record |
-| 29 | मोबाइल निरीक्षण | कार्य वितरण + GPS चेक-इन + फोटो | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | सामुदायिक मॉल | श्रेणी/उत्पाद/ऑर्डर/डिलीवरी प्रबंधन | उत्पाद ब्राउज़ + ऑर्डर + मेरे ऑर्डर | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | चेहरा पहचान | समीक्षा प्रबंधन | चेहरा पंजीकरण + प्रमाणीकरण स्थिति | erik_face_info |
-| 32 | समूह प्रबंधन | समूह CRUD + समुदाय संबद्धता + क्रॉस-क्षेत्र सारांश | - | erik_group, erik_group_community |
-| 33 | स्मार्ट प्रश्नोत्तर | ज्ञान आधार + वार्तालाप रिकॉर्ड + सांख्यिकी | प्रश्न पूछें + कीवर्ड मिलान | erik_knowledge_base, erik_chat_record |
+| 23 | संदेश सूचना | टेम्पलेट CRUD + मैन्युअल भेजना + सूची | मेरे संदेश + पढ़ा चिह्नित करें | management_notification_template, management_notification |
+| 24 | अनुमोदन वर्कफ़्लो | अनुमोदन प्रकार + इंस्टेंस + चरण प्रवाह | - | management_approval_type, management_approval, management_approval_record |
+| 25 | भुगतान एकीकरण | ऑर्डर प्रबंधन + रिफंड + WeChat/Alipay कॉलबैक | - | management_payment_order |
+| 26 | मालिक मतदान | मतदान CRUD + विकल्प + क्षेत्र-भारित सांख्यिकी | मतदान सूची + मतदान + क्षेत्र-भारित | management_vote, management_vote_option, management_vote_record |
+| 27 | SLA स्वतः अपग्रेड | नियम कॉन्फ़िग + टाइमआउट जांच + जुर्माना | - | management_sla_rule, management_sla_record |
+| 28 | स्मार्ट वसूली | रणनीति कॉन्फ़िग + अतिदेय मिलान + विलंब शुल्क | - | management_collection_strategy, management_collection_record |
+| 29 | मोबाइल निरीक्षण | कार्य वितरण + GPS चेक-इन + फोटो | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | सामुदायिक मॉल | श्रेणी/उत्पाद/ऑर्डर/डिलीवरी प्रबंधन | उत्पाद ब्राउज़ + ऑर्डर + मेरे ऑर्डर | management_mall_category, management_mall_product, management_mall_order |
+| 31 | चेहरा पहचान | समीक्षा प्रबंधन | चेहरा पंजीकरण + प्रमाणीकरण स्थिति | management_face_info |
+| 32 | समूह प्रबंधन | समूह CRUD + समुदाय संबद्धता + क्रॉस-क्षेत्र सारांश | - | management_group, management_group_community |
+| 33 | स्मार्ट प्रश्नोत्तर | ज्ञान आधार + वार्तालाप रिकॉर्ड + सांख्यिकी | प्रश्न पूछें + कीवर्ड मिलान | management_knowledge_base, management_chat_record |
 | - | डेटा स्क्रीन | रीयल-टाइम संपत्ति डेटा विज़ुअलाइज़ेशन फुल-स्क्रीन प्रदर्शन | - | (मौजूदा डेटा इंटरफ़ेस पुनः उपयोग) |
 
 ## एडमिन बैकएंड मॉड्यूल (admin में मौजूद)
@@ -89,7 +89,7 @@
 ### सर्च इंजन
 - `erikwang2013/webman-scout` Elasticsearch चलाता है
 - स्वतः इंडेक्स सिंक (जोड़/हटाना/बदलना स्वतः पुश)
-- इंडेक्स उपसर्ग `erik_`, डेटाबेस टेबल उपसर्ग के अनुरूप
+- इंडेक्स उपसर्ग `management_`, डेटाबेस टेबल उपसर्ग के अनुरूप
 
 ### अंतर्राष्ट्रीयकरण (i18n)
 - **PHP बैकएंड**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 अनुवाद कुंजियाँ, कंट्रोलर `__()` विधि से अनुवाद प्राप्त करता है

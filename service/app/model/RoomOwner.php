@@ -9,7 +9,7 @@ namespace app\model;
 
 class RoomOwner extends BaseModel
 {
-    protected $table = 'erik_room_owner';
+    protected $table = 'management_room_owner';
 
     protected $fillable = [
         'room_id', 'owner_id', 'relation_type',

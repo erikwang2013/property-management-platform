@@ -9,11 +9,11 @@
 
 | Kategorie | Tabellen | Beschreibung |
 |------|-----|------|
-| Global/Plattform-Tabellen | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | Autorisierung, Konfiguration, Audit — naturgemäß plattformweit, nicht an Mandanten gebunden |
-| Wohnanlagen-dimensionale Tabellen | erik_community und 40+ Geschäftstabellen, die über community_id zugeordnet sind (building/unit/room/owner/fee_*/repair_order/parking_*/announcement usw.) | über community_id indirekt dem Mandanten zugeordnet |
-| Konzern-Verknüpfungstabellen | erik_group (Konzern)、erik_group_community (Konzern↔Wohnanlage) | derzeit **optionale Verknüpfung**, keine Mandantensemantik, wohnanlagenübergreifende Zusammenfassung per join |
-| Plattform-Erweiterungstabellen | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info usw. | teils plattformweit, teils wohnanlagenweit; Fallweise Prüfung erforderlich |
-| Verwechselbare Tabelle | **erik_tenant (Mieter-Tabelle)** | ⚠️ Semantikkonflikt: es ist der „Wohnungsmieter" (Dimension room_id/owner_id), **nicht** der SaaS-Mandant |
+| Global/Plattform-Tabellen | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | Autorisierung, Konfiguration, Audit — naturgemäß plattformweit, nicht an Mandanten gebunden |
+| Wohnanlagen-dimensionale Tabellen | management_community und 40+ Geschäftstabellen, die über community_id zugeordnet sind (building/unit/room/owner/fee_*/repair_order/parking_*/announcement usw.) | über community_id indirekt dem Mandanten zugeordnet |
+| Konzern-Verknüpfungstabellen | management_group (Konzern)、management_group_community (Konzern↔Wohnanlage) | derzeit **optionale Verknüpfung**, keine Mandantensemantik, wohnanlagenübergreifende Zusammenfassung per join |
+| Plattform-Erweiterungstabellen | management_notification_template、management_knowledge_base、management_mall_*、management_face_info usw. | teils plattformweit, teils wohnanlagenweit; Fallweise Prüfung erforderlich |
+| Verwechselbare Tabelle | **management_tenant (Mieter-Tabelle)** | ⚠️ Semantikkonflikt: es ist der „Wohnungsmieter" (Dimension room_id/owner_id), **nicht** der SaaS-Mandant |
 
 ### 1.2 Autorisierungskette (admin-Seite, code-verifiziert)
 
@@ -28,7 +28,7 @@ Routengruppen-Middleware: AdminAuth(JWT → $request->adminId) → AdminPermissi
 
 ### 1.3 Kernschlussfolgerungen
 
-- Es gibt kein vorhandenes SaaS-Mandantenmodell; der Name `erik_tenant` ist bereits vom Mieter belegt, das neue Konzept muss den Namen meiden
+- Es gibt kein vorhandenes SaaS-Mandantenmodell; der Name `management_tenant` ist bereits vom Mieter belegt, das neue Konzept muss den Namen meiden
 - Alle Controller verwenden direkte Eloquent-Abfragen, keine Repository-Schicht, keine globalen Scopes — die Isolierung muss auf Modellebene umgesetzt werden
 - config/database.php hat eine einzelne Verbindung, aber illuminate/database unterstützt nativ mehrere connections (Reserve für die Evolution zu getrennten Datenbanken)
 
@@ -51,9 +51,9 @@ Routengruppen-Middleware: AdminAuth(JWT → $request->adminId) → AdminPermissi
 
 ### 3.1 Datenmodell (minimaler Satz)
 
-- Neue Tabelle `erik_platform_tenant` (Vermeidung des Konflikts mit der Mietertabelle erik_tenant): id/name/status/created_at usw.
-- `erik_community` erhält `tenant_id BIGINT NOT NULL DEFAULT 0`, Index `(tenant_id, community_id)`
-- `erik_admin_user` erhält `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = Plattform-Superadministrator)
+- Neue Tabelle `management_platform_tenant` (Vermeidung des Konflikts mit der Mietertabelle management_tenant): id/name/status/created_at usw.
+- `management_community` erhält `tenant_id BIGINT NOT NULL DEFAULT 0`, Index `(tenant_id, community_id)`
+- `management_admin_user` erhält `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = Plattform-Superadministrator)
 - Die 40 Geschäftszwischentabellen (building/room/fee_bill usw.) **erhalten keine Spalte**, Zuordnung über community_id
 
 ### 3.2 Laufzeitschicht-Dreiergespann
@@ -94,13 +94,13 @@ Datenmigrationsstrategie: Alle Altdaten werden dem „Standardmandanten" zugeord
 | Fehler bei der Befüllung von Altdaten | Alle Altdaten | Idempotentes Skript + Befüllungsvalidierung + Dry-Run-Modus |
 | Index-/Leistungseinfluss | Hochfrequente Tabellen (fee_bill/room/owner) | Gemeinsamer Index (tenant_id, community_id); Überprüfung der Slow-Query-Logs |
 | Regression der 133 Tests | Gesamtumfang | Nach Scope-Injektion erst vollständige Regression laufen lassen, dann Pilot starten |
-| Namensverwechslung (erik_tenant Mieter vs. SaaS-Mandant) | Entwicklerkognition | Neue Tabelle als platform_tenant benennen, explizit in der Dokumentation erklären |
+| Namensverwechslung (management_tenant Mieter vs. SaaS-Mandant) | Entwicklerkognition | Neue Tabelle als platform_tenant benennen, explizit in der Dokumentation erklären |
 | **Rollback-Plan** | — | Globalscope per Konfigurationsschalter einstellbar (Single-Tenant-Semantik wiederherstellen), Datenspalten bleiben ohne Löschung erhalten, keine destruktiven Änderungen |
 
 ## 6. Bewertungsergebnis
 
 **Sofort empfohlen**:
-- Gemeinsame DB + tenant_id-Zeilenisolierung (Lösung A), neue Tabelle `erik_platform_tenant`, community/admin_user um Spalten erweitern
+- Gemeinsame DB + tenant_id-Zeilenisolierung (Lösung A), neue Tabelle `management_platform_tenant`, community/admin_user um Spalten erweitern
 - TenantContext-Middleware + TenantScope-Globalscope + Tenant::for()-Werkzeug
 - Pilotreihenfolge: Konzern → Wohnanlage → Eigentümer → Gebühren
 - Vorausgesetzte Abhängigkeit: erledigt — Multi-Tenant-Tabellen/Spalten/Befüllung sind in docs/install.sql integriert (2026-08-16 zusammengeführt, einziger Datenbank-Einstiegspunkt)
@@ -113,4 +113,4 @@ Datenmigrationsstrategie: Alle Altdaten werden dem „Standardmandanten" zugeord
 - Schema-Ebenen-Isolierung (MySQL hat keine eigenständige Schema-Semantik, Kosten gleichwertig zur getrennten DB)
 - Dynamisches Multi-DB-Routing (bei Einzelmaschinen-Bereitstellung kein Nutzen)
 - Mandantenindividuelle Schema/Felder (YAGNI)
-- Die Mietertabelle erik_tenant als SaaS-Mandanten umnutzen/umbauen (Semantikkonflikt, zerstört die Mietergeschäftsfunktion)
+- Die Mietertabelle management_tenant als SaaS-Mandanten umnutzen/umbauen (Semantikkonflikt, zerstört die Mietergeschäftsfunktion)

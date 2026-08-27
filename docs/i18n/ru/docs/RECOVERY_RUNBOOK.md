@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) Создать пустую БД (в имени тренировочной БД суффикс _drill, чтобы не задеть прод-данные)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) Импорт (-T отключает TTY, гарантирует неинтерактивность; фактически около 1-5 минут)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    Воспроизвести binlog до целевого момента (пример: до 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 Ключевые моменты:
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | Проверка | Команда | Критерий прохождения |
 |---|---|---|
 | Целостность файла копии | `gzip -t <копия>` | без ошибок |
-| Число строк ключевых таблиц | `SELECT COUNT(*) FROM erik_admin_user;` | совпадает с числом строк, записанным до копирования |
-| Выборочная проверка бизнес-таблиц | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | три и более таблиц в разумном порядке величины (не 0 и совпадают с состоянием до копирования) |
-| Шифрованные поля расшифровываются | запросить запись с encryptable-полем (например, удостоверение/телефон в `erik_owner`) | значение верное, в журнале приложения нет ошибок decrypt |
+| Число строк ключевых таблиц | `SELECT COUNT(*) FROM management_admin_user;` | совпадает с числом строк, записанным до копирования |
+| Выборочная проверка бизнес-таблиц | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | три и более таблиц в разумном порядке величины (не 0 и совпадают с состоянием до копирования) |
+| Шифрованные поля расшифровываются | запросить запись с encryptable-полем (например, удостоверение/телефон в `management_owner`) | значение верное, в журнале приложения нет ошибок decrypt |
 | Дымовая проверка бизнеса | вход и получение списка по 1 разу | 200 / нормальный ответ |
 
 Пример скрипта выборочной проверки (тренировочная среда):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > Согласованность строк: до копирования записать базовую линию тем же SQL и сравнить после восстановления; при тренировке записать базовую линию в протокол тренировки.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 мин | выбрать копию、`gzip -t`、создать пустую БД、записать базовые числа строк | эксплуатация |
 | 5-15 мин | восстановление по сценарию A | эксплуатация |
 | 15-25 мин | проверка консистентности по разделу 3 + дымовая проверка бизнеса | эксплуатация + бизнес |
-| 25-30 мин | записать результат、удалить тренировочную БД (`DROP DATABASE property_management_drill`)、обновить фактический RTO в OPS_RUNBOOK 1.4 | эксплуатация |
+| 25-30 мин | записать результат、удалить тренировочную БД (`DROP DATABASE management_drill`)、обновить фактический RTO в OPS_RUNBOOK 1.4 | эксплуатация |
 
 ## 5. Обработка сбоев
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 Дата: 2026-08-16
 Цель восстановления: пустая БД (сценарий A) / момент времени (сценарий B)
 Файл копии: backups/backup_20260816_020000.sql.gz
-Базовая линия строк: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+Базовая линия строк: management_admin_user=1, management_owner=42, management_fee_bill=128
 Время восстановления: XX мин    Время проверки: XX мин    Итого: XX мин (цель ≤ 30)
 Результат: прошла / не прошла (с причиной и обработкой)
 ```

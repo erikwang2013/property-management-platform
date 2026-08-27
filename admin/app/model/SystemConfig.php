@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SystemConfig extends Model
 {
-    protected $table = 'erik_system_config';
+    protected $table = 'management_system_config';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'int';

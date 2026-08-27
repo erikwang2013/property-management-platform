@@ -6,44 +6,44 @@
 
 | Nr. | Modul | Charge | Admin-Panel | Eigentümer-Portal | Datenbanktabellen |
 |------|------|---------|---------|--------|--------|
-| 1 | Wohnanlagenverwaltung | 1. Charge | CRUD + Suche/Paginierung | Gebundene Wohnanlage ansehen | erik_community |
-| 2 | Gebäudeverwaltung | 1. Charge | CRUD + Filter nach Wohnanlage | - | erik_building |
-| 3 | Einheitenverwaltung | 1. Charge | CRUD + Filter nach Gebäude | - | erik_unit |
-| 4 | Wohntypverwaltung | 1. Charge | CRUD | - | erik_room_type |
-| 5 | Immobilienverwaltung | 1. Charge | CRUD + Immobilienbaum + Massenbindung von Eigentümern | Meine Immobilien Liste/Details | erik_room |
-| 6 | Eigentümerverwaltung | 1. Charge | CRUD + Massenimport/Aktivieren-Deaktivieren/Löschen | Registrierung/Anmeldung/Persönliche Daten | erik_owner, erik_room_owner |
-| 7 | Mieterverwaltung | 1. Charge | CRUD + Filter nach Immobilie | - | erik_tenant |
-| 8 | Gebührenverwaltung | 1. Charge | Gebührenarten-CRUD + Rechnungsverwaltung + Seriengenerierung + Offline-Zahlungseingang | Rechnungsabfrage + Online-Zahlung + Gebührenstatistik | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | Reparaturverwaltung | 1. Charge | Reparaturliste + Auftragszuweisung + Fortschrittsupdate | Reparatur einreichen + Fortschritt ansehen + Bewerten | erik_repair_order, erik_repair_progress |
-| 10 | Ankündigungen | 1. Charge | CRUD + Veröffentlichen/Anpinnen | Ankündigungsliste/Details | erik_announcement |
-| 11 | Parkplatzverwaltung | 2. Charge | Parkplatz-/Fahrzeugverwaltung + Parkprotokoll | Meine Parkplätze/Fahrzeuge + Parkprotokoll | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | Geräteverwaltung | 2. Charge | Gerätebuch + Wartungsprotokolle | - | erik_equipment, erik_equipment_maintenance |
-| 13 | Beschwerde & Vorschlag | 2. Charge | Beschwerdeliste + Bearbeitung + Nachbesuch | Beschwerde einreichen + Fortschritt ansehen + Bewerten | erik_complaint |
-| 14 | Besucherverwaltung | 2. Charge | Besuchergenehmigung + Protokollabfrage | Besuchertermin + Zugangscode | erik_visitor |
-| 15 | Vertragsverwaltung | 2. Charge | CRUD + Statusverwaltung | - | erik_contract |
-| 16 | Finanzverwaltung | 2. Charge | Einnahmen-Ausgaben-Verwaltung + Statistikberichte | - | erik_finance_income, erik_finance_expense |
-| 17 | Sicherheitspatrouille | 3. Charge | Patrouillenrouten + Patrouillenprotokolle | - | erik_security_patrol, erik_patrol_record |
-| 18 | Reinigungsverwaltung | 3. Charge | Reinigungsbereiche + Reinigungsprotokolle | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | Grünanlagenverwaltung | 3. Charge | Grünbereiche + Pflegeprotokolle | - | erik_green_area, erik_green_maintenance |
-| 20 | Community-Aktivitäten | 3. Charge | Aktivitätsverwaltung + Anmeldungen ansehen | Aktivitätsliste + Anmeldung | erik_community_activity, erik_activity_signup |
-| 21 | Energieverbrauchsverwaltung | 3. Charge | Zählerverwaltung + Ableseprotokolle | - | erik_energy_meter, erik_energy_record |
-| 22 | Mitarbeiterverwaltung | 3. Charge | CRUD + Statusverwaltung | - | erik_staff |
+| 1 | Wohnanlagenverwaltung | 1. Charge | CRUD + Suche/Paginierung | Gebundene Wohnanlage ansehen | management_community |
+| 2 | Gebäudeverwaltung | 1. Charge | CRUD + Filter nach Wohnanlage | - | management_building |
+| 3 | Einheitenverwaltung | 1. Charge | CRUD + Filter nach Gebäude | - | management_unit |
+| 4 | Wohntypverwaltung | 1. Charge | CRUD | - | management_room_type |
+| 5 | Immobilienverwaltung | 1. Charge | CRUD + Immobilienbaum + Massenbindung von Eigentümern | Meine Immobilien Liste/Details | management_room |
+| 6 | Eigentümerverwaltung | 1. Charge | CRUD + Massenimport/Aktivieren-Deaktivieren/Löschen | Registrierung/Anmeldung/Persönliche Daten | management_owner, management_room_owner |
+| 7 | Mieterverwaltung | 1. Charge | CRUD + Filter nach Immobilie | - | management_tenant |
+| 8 | Gebührenverwaltung | 1. Charge | Gebührenarten-CRUD + Rechnungsverwaltung + Seriengenerierung + Offline-Zahlungseingang | Rechnungsabfrage + Online-Zahlung + Gebührenstatistik | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | Reparaturverwaltung | 1. Charge | Reparaturliste + Auftragszuweisung + Fortschrittsupdate | Reparatur einreichen + Fortschritt ansehen + Bewerten | management_repair_order, management_repair_progress |
+| 10 | Ankündigungen | 1. Charge | CRUD + Veröffentlichen/Anpinnen | Ankündigungsliste/Details | management_announcement |
+| 11 | Parkplatzverwaltung | 2. Charge | Parkplatz-/Fahrzeugverwaltung + Parkprotokoll | Meine Parkplätze/Fahrzeuge + Parkprotokoll | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | Geräteverwaltung | 2. Charge | Gerätebuch + Wartungsprotokolle | - | management_equipment, management_equipment_maintenance |
+| 13 | Beschwerde & Vorschlag | 2. Charge | Beschwerdeliste + Bearbeitung + Nachbesuch | Beschwerde einreichen + Fortschritt ansehen + Bewerten | management_complaint |
+| 14 | Besucherverwaltung | 2. Charge | Besuchergenehmigung + Protokollabfrage | Besuchertermin + Zugangscode | management_visitor |
+| 15 | Vertragsverwaltung | 2. Charge | CRUD + Statusverwaltung | - | management_contract |
+| 16 | Finanzverwaltung | 2. Charge | Einnahmen-Ausgaben-Verwaltung + Statistikberichte | - | management_finance_income, management_finance_expense |
+| 17 | Sicherheitspatrouille | 3. Charge | Patrouillenrouten + Patrouillenprotokolle | - | management_security_patrol, management_patrol_record |
+| 18 | Reinigungsverwaltung | 3. Charge | Reinigungsbereiche + Reinigungsprotokolle | - | management_cleaning_area, management_cleaning_record |
+| 19 | Grünanlagenverwaltung | 3. Charge | Grünbereiche + Pflegeprotokolle | - | management_green_area, management_green_maintenance |
+| 20 | Community-Aktivitäten | 3. Charge | Aktivitätsverwaltung + Anmeldungen ansehen | Aktivitätsliste + Anmeldung | management_community_activity, management_activity_signup |
+| 21 | Energieverbrauchsverwaltung | 3. Charge | Zählerverwaltung + Ableseprotokolle | - | management_energy_meter, management_energy_record |
+| 22 | Mitarbeiterverwaltung | 3. Charge | CRUD + Statusverwaltung | - | management_staff |
 
 ## Erweiterungsfunktionen (4. Charge — 12 Module)
 
 | Nr. | Modul | Admin-Panel | Eigentümer-Portal | Datenbanktabellen |
 |------|------|---------|--------|--------|
-| 23 | Benachrichtigungen | Vorlagen-CRUD + manueller Versand + Liste | Meine Nachrichten + als gelesen markieren | erik_notification_template, erik_notification |
-| 24 | Genehmigungsworkflow | Genehmigungstypen + Instanzen + Schrittfluss | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | Zahlungsintegration | Auftragsverwaltung + Rückerstattung + WeChat/Alipay-Callbacks | - | erik_payment_order |
-| 26 | Eigentümer-Abstimmung | Abstimmungs-CRUD + Optionen + flächengewichtete Statistik | Abstimmungsliste + Abstimmung + flächengewichtet | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | Automatische SLA-Eskalation | Regelkonfiguration + Zeitüberschreitungsprüfung + Strafen | - | erik_sla_rule, erik_sla_record |
-| 28 | Intelligente Zahlungserinnerung | Strategiekonfiguration + Überfälligkeitsabgleich + Verzugszuschlag | - | erik_collection_strategy, erik_collection_record |
-| 29 | Mobile Inspektion | Aufgabenverteilung + GPS-Check-in + Fotos | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | Community-Shop | Kategorien/Produkte/Bestellungen/Lieferung | Produkte ansehen + Bestellen + Meine Bestellungen | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | Gesichtserkennung | Prüfungsverwaltung | Gesicht registrieren + Authentifizierungsstatus | erik_face_info |
-| 32 | Konzernverwaltung | Konzern-CRUD + Wohnanlagen-Verknüpfung + übergreifende Zusammenfassung | - | erik_group, erik_group_community |
-| 33 | Intelligente Fragen & Antworten | Wissensdatenbank + Gesprächsverlauf + Statistik | Fragen stellen + Schlüsselwortabgleich | erik_knowledge_base, erik_chat_record |
+| 23 | Benachrichtigungen | Vorlagen-CRUD + manueller Versand + Liste | Meine Nachrichten + als gelesen markieren | management_notification_template, management_notification |
+| 24 | Genehmigungsworkflow | Genehmigungstypen + Instanzen + Schrittfluss | - | management_approval_type, management_approval, management_approval_record |
+| 25 | Zahlungsintegration | Auftragsverwaltung + Rückerstattung + WeChat/Alipay-Callbacks | - | management_payment_order |
+| 26 | Eigentümer-Abstimmung | Abstimmungs-CRUD + Optionen + flächengewichtete Statistik | Abstimmungsliste + Abstimmung + flächengewichtet | management_vote, management_vote_option, management_vote_record |
+| 27 | Automatische SLA-Eskalation | Regelkonfiguration + Zeitüberschreitungsprüfung + Strafen | - | management_sla_rule, management_sla_record |
+| 28 | Intelligente Zahlungserinnerung | Strategiekonfiguration + Überfälligkeitsabgleich + Verzugszuschlag | - | management_collection_strategy, management_collection_record |
+| 29 | Mobile Inspektion | Aufgabenverteilung + GPS-Check-in + Fotos | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | Community-Shop | Kategorien/Produkte/Bestellungen/Lieferung | Produkte ansehen + Bestellen + Meine Bestellungen | management_mall_category, management_mall_product, management_mall_order |
+| 31 | Gesichtserkennung | Prüfungsverwaltung | Gesicht registrieren + Authentifizierungsstatus | management_face_info |
+| 32 | Konzernverwaltung | Konzern-CRUD + Wohnanlagen-Verknüpfung + übergreifende Zusammenfassung | - | management_group, management_group_community |
+| 33 | Intelligente Fragen & Antworten | Wissensdatenbank + Gesprächsverlauf + Statistik | Fragen stellen + Schlüsselwortabgleich | management_knowledge_base, management_chat_record |
 | - | Daten-Dashboard | Echtzeit-Visualisierung der Immobiliendaten im Vollbild | - | (nutzt bestehende Datenschnittstellen) |
 
 ## Admin-Panel-Module (bereits vorhanden)
@@ -89,7 +89,7 @@ Alle POST/PUT/DELETE-Aktionen im Admin-Panel werden automatisch protokolliert, i
 ### Suchmaschine
 - `erikwang2013/webman-scout` treibt Elasticsearch
 - Automatische Indexsynchronisierung (automatische Übertragung bei Hinzufügen/Ändern/Löschen)
-- Indexpräfix `erik_`, identisch mit dem Datenbank-Tabellenpräfix
+- Indexpräfix `management_`, identisch mit dem Datenbank-Tabellenpräfix
 
 ### Internationalisierung (i18n)
 - **PHP-Backend**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 Übersetzungsschlüssel, im Controller über die Methode `__()` abgerufen

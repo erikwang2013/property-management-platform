@@ -33,6 +33,9 @@ class Redis
             if (!empty($config['database'])) {
                 $connection->select((int)$config['database']);
             }
+            if (!empty($config['prefix'])) {
+                $connection->setOption(PhpRedis::OPT_PREFIX, $config['prefix']);
+            }
             static::$connection = $connection;
         }
         return static::$connection;

@@ -8,7 +8,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class CommunityActivity extends BaseModel
 {
-    protected $table = 'erik_community_activity';
+    protected $table = 'management_community_activity';
     protected $fillable = ['community_id', 'title', 'content', 'category', 'cover_image', 'location', 'max_participants', 'start_time', 'end_time', 'signup_start', 'signup_end', 'is_free', 'cost', 'organizer', 'contact_phone', 'status'];
     protected $casts = [
         'category' => 'integer', 'max_participants' => 'integer', 'is_free' => 'integer',

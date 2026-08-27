@@ -9,11 +9,11 @@
 
 | Category | Tables | Description |
 |------|-----|------|
-| Global/platform tables | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission, erik_system_config, erik_operation_log | Auth, config, audit — naturally platform-level, not tenant-bound |
-| Community-dimension tables | erik_community and 40+ business tables owned via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Indirectly tenant-bound through community_id |
-| Group association tables | erik_group (group), erik_group_community (group↔community) | Currently **optional associations**, no tenant semantics; cross-community aggregation relies on joins |
-| Platform extension tables | erik_notification_template, erik_knowledge_base, erik_mall_*, erik_face_info, etc. | Some platform-level, some community-level; need case-by-case confirmation |
-| Confusing table | **erik_tenant (lease tenant table)** | ⚠️ Semantic conflict: it is a "property lease tenant" (room_id/owner_id dimension), **not** a SaaS tenant |
+| Global/platform tables | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission, management_system_config, management_operation_log | Auth, config, audit — naturally platform-level, not tenant-bound |
+| Community-dimension tables | management_community and 40+ business tables owned via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Indirectly tenant-bound through community_id |
+| Group association tables | management_group (group), management_group_community (group↔community) | Currently **optional associations**, no tenant semantics; cross-community aggregation relies on joins |
+| Platform extension tables | management_notification_template, management_knowledge_base, management_mall_*, management_face_info, etc. | Some platform-level, some community-level; need case-by-case confirmation |
+| Confusing table | **management_tenant (lease tenant table)** | ⚠️ Semantic conflict: it is a "property lease tenant" (room_id/owner_id dimension), **not** a SaaS tenant |
 
 ### 1.2 Authorization Chain (admin side, verified in code)
 
@@ -28,7 +28,7 @@ Route-group middleware: AdminAuth(JWT → $request->adminId) → AdminPermission
 
 ### 1.3 Key Conclusions
 
-- No existing SaaS tenant model; the `erik_tenant` name is taken by lease tenants, so any new concept must avoid that name
+- No existing SaaS tenant model; the `management_tenant` name is taken by lease tenants, so any new concept must avoid that name
 - All controllers query Eloquent directly — no repository layer, no global scopes — so isolation changes must be done at the model layer
 - config/database.php uses a single connection, but illuminate/database natively supports multiple connections (reserved for future independent-database evolution)
 
@@ -51,9 +51,9 @@ Route-group middleware: AdminAuth(JWT → $request->adminId) → AdminPermission
 
 ### 3.1 Data Model (minimal set)
 
-- Create `erik_platform_tenant` (avoiding conflict with the lease-tenant table erik_tenant): id/name/status/created_at, etc.
-- Add `tenant_id BIGINT NOT NULL DEFAULT 0` to `erik_community`, with index `(tenant_id, community_id)`
-- Add `tenant_id BIGINT NOT NULL DEFAULT 0` to `erik_admin_user` (0 = platform super admin)
+- Create `management_platform_tenant` (avoiding conflict with the lease-tenant table management_tenant): id/name/status/created_at, etc.
+- Add `tenant_id BIGINT NOT NULL DEFAULT 0` to `management_community`, with index `(tenant_id, community_id)`
+- Add `tenant_id BIGINT NOT NULL DEFAULT 0` to `management_admin_user` (0 = platform super admin)
 - Business intermediate tables (building/room/fee_bill, ~40 tables) **get no column**; they are attributed via community_id
 
 ### 3.2 Runtime-Layer Trio
@@ -94,13 +94,13 @@ Data migration strategy: all existing data goes to the "default tenant" (created
 | Existing-data backfill errors | All existing data | Idempotent script + backfill validation + dry-run mode |
 | Index/performance impact | High-frequency tables (fee_bill/room/owner) | (tenant_id, community_id) composite index; re-check slow query log |
 | 133-test regression | Full suite | Run full regression after scope injection before enabling pilots |
-| Naming confusion (erik_tenant lease tenant vs SaaS tenant) | Developer cognition | New table named platform_tenant; explicitly documented |
+| Naming confusion (management_tenant lease tenant vs SaaS tenant) | Developer cognition | New table named platform_tenant; explicitly documented |
 | **Rollback plan** | — | Global scopes can be disabled with a config switch (restoring single-tenant semantics); data columns kept, not deleted; no destructive changes |
 
 ## 6. Review Conclusion
 
 **Recommended now**:
-- Shared database + tenant_id row isolation (option A); create the `erik_platform_tenant` table; add columns to community/admin_user
+- Shared database + tenant_id row isolation (option A); create the `management_platform_tenant` table; add columns to community/admin_user
 - TenantContext middleware + TenantScope global scope + Tenant::for() utility
 - Pilot order: group → community → owner → charges
 - Precondition: complete — multi-tenant tables/columns/backfill are already inlined into docs/install.sql (merged on 2026-08-16, single database-creation entry)
@@ -113,4 +113,4 @@ Data migration strategy: all existing data goes to the "default tenant" (created
 - Schema-level isolation (MySQL has no independent schema semantics; cost equals independent databases)
 - Dynamic multi-database routing (no benefit under single-machine deployment)
 - Tenant-specific customized schema/fields (YAGNI)
-- Reusing/repurposing the erik_tenant lease-tenant table as the SaaS tenant (semantic conflict; breaks lease-tenant business)
+- Reusing/repurposing the management_tenant lease-tenant table as the SaaS tenant (semantic conflict; breaks lease-tenant business)

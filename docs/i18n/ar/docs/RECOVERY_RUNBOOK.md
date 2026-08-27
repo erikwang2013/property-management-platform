@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) أنشئ قاعدة فارغة (لاحقة _drill لاسم قاعدة التمرين، تجنبًا لاستبدال بيانات الإنتاج خطأً)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) الاستيراد (-T يغلق TTY، لضمان عدم التفاعل؛ قياس فعلي نحو 1-5 دقائق)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    أعد تشغيل binlog حتى النقطة الزمنية المستهدفة (مثال: الاستعادة إلى 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 النقاط المهمة:
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | بند الفحص | الأمر | معيار النجاح |
 |---|---|---|
 | سلامة ملف النسخ | `gzip -t <نسخ>` | بلا أخطاء |
-| عدد صفوف الجداول الرئيسية | `SELECT COUNT(*) FROM erik_admin_user;` | مطابق لعدد الصفوف المسجل قبل النسخ |
-| عينة من جداول الأعمال | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | ثلاثة جداول فأكثر بكميات معقولة (غير صفر ومطابقة لما قبل النسخ) |
-| قابلية فك تشفير الحقول المشفرة | استعلام سجل يحتوي حقول encryptable (مثل هوية/هاتف `erik_owner`) | القيمة صحيحة، وسجلات التطبيق بلا أخطاء decrypt |
+| عدد صفوف الجداول الرئيسية | `SELECT COUNT(*) FROM management_admin_user;` | مطابق لعدد الصفوف المسجل قبل النسخ |
+| عينة من جداول الأعمال | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | ثلاثة جداول فأكثر بكميات معقولة (غير صفر ومطابقة لما قبل النسخ) |
+| قابلية فك تشفير الحقول المشفرة | استعلام سجل يحتوي حقول encryptable (مثل هوية/هاتف `management_owner`) | القيمة صحيحة، وسجلات التطبيق بلا أخطاء decrypt |
 | فحص مبدئي للأعمال | تسجيل دخول + واجهة سحب قائمة مرة واحدة لكلٍّ | 200 / إرجاع طبيعي |
 
 مثال سكربت العينة (بيئة التمرين):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > اتساق الصفوف: سجّل خط الأساس بنفس SQL قبل النسخ، وقارن بعد الاستعادة؛ في التمرين اكتب خط الأساس في سجل التمرين.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 دقائق | اختيار النسخ، `gzip -t`، إنشاء قاعدة فارغة، تسجيل خط الأساس للصفوف | التشغيل |
 | 5-15 دقيقة | استعادة سيناريو أ والاستيراد | التشغيل |
 | 15-25 دقيقة | تحقق اتساق القسم 3 + فحص مبدئي للأعمال | التشغيل + الأعمال |
-| 25-30 دقيقة | تسجيل النتيجة، تنظيف قاعدة التمرين (`DROP DATABASE property_management_drill`)، تحديث RTO المقاس فعليًا في OPS_RUNBOOK 1.4 | التشغيل |
+| 25-30 دقيقة | تسجيل النتيجة، تنظيف قاعدة التمرين (`DROP DATABASE management_drill`)، تحديث RTO المقاس فعليًا في OPS_RUNBOOK 1.4 | التشغيل |
 
 ## 5. معالجة الفشل
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 التاريخ: 2026-08-16
 هدف الاستعادة: قاعدة فارغة (سيناريو أ) / نقطة زمنية (سيناريو ب)
 ملف النسخ: backups/backup_20260816_020000.sql.gz
-خط الأساس للصفوف: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+خط الأساس للصفوف: management_admin_user=1, management_owner=42, management_fee_bill=128
 زمن الاستعادة: XX دقيقة    زمن التحقق: XX دقيقة    الإجمالي: XX دقيقة (الهدف ≤ 30)
 النتيجة: ناجح / فاشل (مع سبب الفشل والمعالجة)
 ```

@@ -9,7 +9,7 @@
 -- ============================================================
 -- 管理用户表
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_admin_user` (
+CREATE TABLE IF NOT EXISTS `management_admin_user` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，由snowflake生成',
     `username` VARCHAR(50) NOT NULL COMMENT '用户名',
     `password` VARCHAR(255) NOT NULL COMMENT '密码（bcrypt哈希）',
@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `erik_admin_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理用户表';
 
 -- ============================================================
--- SaaS 租户表（与租客表 erik_tenant 语义区分）
+-- SaaS 租户表（与租客表 management_tenant 语义区分）
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_platform_tenant` (
+CREATE TABLE IF NOT EXISTS `management_platform_tenant` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID（默认租户固定 1）',
     `name` VARCHAR(100) NOT NULL COMMENT '租户名称',
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=停用 1=正常',
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `erik_platform_tenant` (
 -- ============================================================
 -- 角色表
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_admin_role` (
+CREATE TABLE IF NOT EXISTS `management_admin_role` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，由snowflake生成',
     `name` VARCHAR(50) NOT NULL COMMENT '角色名称',
     `slug` VARCHAR(50) NOT NULL COMMENT '角色标识，用于权限判断',
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `erik_admin_role` (
 -- ============================================================
 -- 权限表（菜单/按钮/接口）
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_admin_permission` (
+CREATE TABLE IF NOT EXISTS `management_admin_permission` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，由snowflake生成',
     `parent_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父级权限ID，0表示顶级',
     `name` VARCHAR(50) NOT NULL COMMENT '权限名称',
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `erik_admin_permission` (
 -- ============================================================
 -- 用户角色关联表（多对多中间表）
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_admin_user_role` (
+CREATE TABLE IF NOT EXISTS `management_admin_user_role` (
     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
     `role_id` BIGINT UNSIGNED NOT NULL COMMENT '角色ID',
     PRIMARY KEY (`user_id`, `role_id`),
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `erik_admin_user_role` (
 -- ============================================================
 -- 角色权限关联表（多对多中间表）
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_admin_role_permission` (
+CREATE TABLE IF NOT EXISTS `management_admin_role_permission` (
     `role_id` BIGINT UNSIGNED NOT NULL COMMENT '角色ID',
     `permission_id` BIGINT UNSIGNED NOT NULL COMMENT '权限ID',
     PRIMARY KEY (`role_id`, `permission_id`),
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `erik_admin_role_permission` (
 -- ============================================================
 -- 系统配置表
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_system_config` (
+CREATE TABLE IF NOT EXISTS `management_system_config` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，由snowflake生成',
     `group` VARCHAR(50) NOT NULL DEFAULT 'default' COMMENT '配置分组标识',
     `key` VARCHAR(100) NOT NULL COMMENT '配置键名',
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `erik_system_config` (
 -- ============================================================
 -- 操作日志表
 -- ============================================================
-CREATE TABLE IF NOT EXISTS `erik_operation_log` (
+CREATE TABLE IF NOT EXISTS `management_operation_log` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，由snowflake生成',
     `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作用户ID',
     `action` VARCHAR(100) NOT NULL COMMENT '操作动作，如 admin.user.store',
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `erik_operation_log` (
 -- ============================================================
 -- 插入默认管理员角色
 -- ============================================================
-INSERT INTO `erik_admin_role` (`id`, `name`, `slug`, `description`, `status`) VALUES
+INSERT INTO `management_admin_role` (`id`, `name`, `slug`, `description`, `status`) VALUES
 (10000000000000001, '超级管理员', 'super_admin', '系统超级管理员，拥有所有权限', 1);
 -- ============================================================
 -- 权限种子数据
@@ -149,7 +149,7 @@ INSERT INTO `erik_admin_role` (`id`, `name`, `slug`, `description`, `status`) VA
 -- ============================================================
 
 -- 菜单权限 (type=1)
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000001, 0, '仪表盘',    'dashboard',     1, 'dashboard', '/dashboard',        1, NOW(), NOW()),
 (21000000000000002, 0, '用户管理',  'user',           1, 'people',    '/admin/user',        2, NOW(), NOW()),
 (21000000000000003, 0, '角色管理',  'role',           1, 'shield',    '/admin/role',        3, NOW(), NOW()),
@@ -158,7 +158,7 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (21000000000000006, 0, '操作日志',  'log',            1, 'article',   '/admin/log',         6, NOW(), NOW());
 
 -- 按钮权限 (type=2)
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000011, 21000000000000002, '批量删除',     'batch.destroy', 2, '', '', 1, NOW(), NOW()),
 (21000000000000012, 21000000000000002, '批量启用/禁用', 'batch.status', 2, '', '', 2, NOW(), NOW()),
 (21000000000000013, 21000000000000002, '导入用户',     'import.users',  2, '', '', 3, NOW(), NOW()),
@@ -167,11 +167,11 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (21000000000000016, 21000000000000002, '文件上传',     'upload',         2, '', '', 6, NOW(), NOW());
 
 -- API 权限 (type=3) — 仪表盘
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000021, 21000000000000001, '查看仪表盘',   'get.admin/dashboard', 3, '', '', 1, NOW(), NOW());
 
 -- API 权限 — 用户管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000031, 21000000000000002, '查看用户',     'get.admin/user',             3, '', '', 1, NOW(), NOW()),
 (21000000000000032, 21000000000000002, '创建用户',     'post.admin/user',            3, '', '', 2, NOW(), NOW()),
 (21000000000000033, 21000000000000002, '更新用户',     'put.admin/user',             3, '', '', 3, NOW(), NOW()),
@@ -180,47 +180,47 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (21000000000000036, 21000000000000002, '批量启禁用',   'post.admin/user/batch/status',  3, '', '', 6, NOW(), NOW());
 
 -- API 权限 — 角色管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000041, 21000000000000003, '查看角色', 'get.admin/role',    3, '', '', 1, NOW(), NOW()),
 (21000000000000042, 21000000000000003, '创建角色', 'post.admin/role',   3, '', '', 2, NOW(), NOW()),
 (21000000000000043, 21000000000000003, '更新角色', 'put.admin/role',    3, '', '', 3, NOW(), NOW()),
 (21000000000000044, 21000000000000003, '删除角色', 'delete.admin/role', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 权限管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000051, 21000000000000004, '查看权限', 'get.admin/permission',    3, '', '', 1, NOW(), NOW()),
 (21000000000000052, 21000000000000004, '创建权限', 'post.admin/permission',   3, '', '', 2, NOW(), NOW()),
 (21000000000000053, 21000000000000004, '更新权限', 'put.admin/permission',    3, '', '', 3, NOW(), NOW()),
 (21000000000000054, 21000000000000004, '删除权限', 'delete.admin/permission', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 系统配置
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000061, 21000000000000005, '查看配置', 'get.admin/config',    3, '', '', 1, NOW(), NOW()),
 (21000000000000062, 21000000000000005, '创建配置', 'post.admin/config',   3, '', '', 2, NOW(), NOW()),
 (21000000000000063, 21000000000000005, '更新配置', 'put.admin/config',    3, '', '', 3, NOW(), NOW()),
 (21000000000000064, 21000000000000005, '删除配置', 'delete.admin/config', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 操作日志
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000071, 21000000000000006, '查看日志', 'get.admin/log', 3, '', '', 1, NOW(), NOW());
 
 -- API 权限 — 个人中心
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000081, 0, '个人中心-更新信息', 'put.admin/profile',         3, '', '', 1, NOW(), NOW()),
 (21000000000000082, 0, '个人中心-修改密码', 'put.admin/profile/password', 3, '', '', 2, NOW(), NOW()),
 (21000000000000083, 0, '个人中心-登出',     'post.admin/profile/logout',  3, '', '', 3, NOW(), NOW());
 
 -- API 权限 — 导出
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000091, 0, '导出Excel', 'post.admin/export/excel', 3, '', '', 1, NOW(), NOW()),
 (21000000000000092, 0, '导出PDF',   'post.admin/export/pdf',   3, '', '', 2, NOW(), NOW());
 
 -- API 权限 — 导入
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000093, 0, '导入用户', 'post.admin/import/users', 3, '', '', 1, NOW(), NOW());
 
 -- API 权限 — 上传
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (21000000000000094, 0, '文件上传', 'post.admin/upload', 3, '', '', 1, NOW(), NOW());
 
 -- ============================================================
@@ -230,203 +230,203 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 -- ============================================================
 
 -- API 权限 — 小区管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010001, 0, '查看小区', 'get.admin/community',    3, '', '', 1, NOW(), NOW()),
 (2100000000010002, 0, '创建小区', 'post.admin/community',   3, '', '', 2, NOW(), NOW()),
 (2100000000010003, 0, '更新小区', 'put.admin/community',    3, '', '', 3, NOW(), NOW()),
 (2100000000010004, 0, '删除小区', 'delete.admin/community', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 楼栋管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010005, 0, '查看楼栋', 'get.admin/building',    3, '', '', 1, NOW(), NOW()),
 (2100000000010006, 0, '创建楼栋', 'post.admin/building',   3, '', '', 2, NOW(), NOW()),
 (2100000000010007, 0, '更新楼栋', 'put.admin/building',    3, '', '', 3, NOW(), NOW()),
 (2100000000010008, 0, '删除楼栋', 'delete.admin/building', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 单元管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010009, 0, '查看单元', 'get.admin/unit',    3, '', '', 1, NOW(), NOW()),
 (2100000000010010, 0, '创建单元', 'post.admin/unit',   3, '', '', 2, NOW(), NOW()),
 (2100000000010011, 0, '更新单元', 'put.admin/unit',    3, '', '', 3, NOW(), NOW()),
 (2100000000010012, 0, '删除单元', 'delete.admin/unit', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 户型管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010013, 0, '查看户型', 'get.admin/room-type',    3, '', '', 1, NOW(), NOW()),
 (2100000000010014, 0, '创建户型', 'post.admin/room-type',   3, '', '', 2, NOW(), NOW()),
 (2100000000010015, 0, '更新户型', 'put.admin/room-type',    3, '', '', 3, NOW(), NOW()),
 (2100000000010016, 0, '删除户型', 'delete.admin/room-type', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 房产管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010017, 0, '查看房产', 'get.admin/room',    3, '', '', 1, NOW(), NOW()),
 (2100000000010018, 0, '创建房产', 'post.admin/room',   3, '', '', 2, NOW(), NOW()),
 (2100000000010019, 0, '更新房产', 'put.admin/room',    3, '', '', 3, NOW(), NOW()),
 (2100000000010020, 0, '删除房产', 'delete.admin/room', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 业主管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010021, 0, '查看业主', 'get.admin/owner',    3, '', '', 1, NOW(), NOW()),
 (2100000000010022, 0, '创建业主', 'post.admin/owner',   3, '', '', 2, NOW(), NOW()),
 (2100000000010023, 0, '更新业主', 'put.admin/owner',    3, '', '', 3, NOW(), NOW()),
 (2100000000010024, 0, '删除业主', 'delete.admin/owner', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 租户管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010025, 0, '查看租户', 'get.admin/tenant',    3, '', '', 1, NOW(), NOW()),
 (2100000000010026, 0, '创建租户', 'post.admin/tenant',   3, '', '', 2, NOW(), NOW()),
 (2100000000010027, 0, '更新租户', 'put.admin/tenant',    3, '', '', 3, NOW(), NOW()),
 (2100000000010028, 0, '删除租户', 'delete.admin/tenant', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 费用类型
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010029, 0, '查看费用类型', 'get.admin/fee-type',    3, '', '', 1, NOW(), NOW()),
 (2100000000010030, 0, '创建费用类型', 'post.admin/fee-type',   3, '', '', 2, NOW(), NOW()),
 (2100000000010031, 0, '更新费用类型', 'put.admin/fee-type',    3, '', '', 3, NOW(), NOW()),
 (2100000000010032, 0, '删除费用类型', 'delete.admin/fee-type', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 账单管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010033, 0, '查看账单', 'get.admin/fee-bill',    3, '', '', 1, NOW(), NOW()),
 (2100000000010034, 0, '创建账单', 'post.admin/fee-bill',   3, '', '', 2, NOW(), NOW()),
 (2100000000010035, 0, '更新账单', 'put.admin/fee-bill',    3, '', '', 3, NOW(), NOW()),
 (2100000000010036, 0, '删除账单', 'delete.admin/fee-bill', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 报修管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010037, 0, '查看报修', 'get.admin/repair',    3, '', '', 1, NOW(), NOW()),
 (2100000000010038, 0, '创建报修', 'post.admin/repair',   3, '', '', 2, NOW(), NOW()),
 (2100000000010039, 0, '更新报修', 'put.admin/repair',    3, '', '', 3, NOW(), NOW()),
 (2100000000010040, 0, '删除报修', 'delete.admin/repair', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 公告管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010041, 0, '查看公告', 'get.admin/announcement',    3, '', '', 1, NOW(), NOW()),
 (2100000000010042, 0, '创建公告', 'post.admin/announcement',   3, '', '', 2, NOW(), NOW()),
 (2100000000010043, 0, '更新公告', 'put.admin/announcement',    3, '', '', 3, NOW(), NOW()),
 (2100000000010044, 0, '删除公告', 'delete.admin/announcement', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 停车位管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010045, 0, '查看停车位', 'get.admin/parking-space',    3, '', '', 1, NOW(), NOW()),
 (2100000000010046, 0, '创建停车位', 'post.admin/parking-space',   3, '', '', 2, NOW(), NOW()),
 (2100000000010047, 0, '更新停车位', 'put.admin/parking-space',    3, '', '', 3, NOW(), NOW()),
 (2100000000010048, 0, '删除停车位', 'delete.admin/parking-space', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 车辆管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010049, 0, '查看车辆', 'get.admin/parking-vehicle',    3, '', '', 1, NOW(), NOW()),
 (2100000000010050, 0, '创建车辆', 'post.admin/parking-vehicle',   3, '', '', 2, NOW(), NOW()),
 (2100000000010051, 0, '更新车辆', 'put.admin/parking-vehicle',    3, '', '', 3, NOW(), NOW()),
 (2100000000010052, 0, '删除车辆', 'delete.admin/parking-vehicle', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 设备管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010053, 0, '查看设备', 'get.admin/equipment',    3, '', '', 1, NOW(), NOW()),
 (2100000000010054, 0, '创建设备', 'post.admin/equipment',   3, '', '', 2, NOW(), NOW()),
 (2100000000010055, 0, '更新设备', 'put.admin/equipment',    3, '', '', 3, NOW(), NOW()),
 (2100000000010056, 0, '删除设备', 'delete.admin/equipment', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 设备维保
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010057, 0, '查看维保', 'get.admin/equipment-maintenance',    3, '', '', 1, NOW(), NOW()),
 (2100000000010058, 0, '创建维保', 'post.admin/equipment-maintenance',   3, '', '', 2, NOW(), NOW()),
 (2100000000010059, 0, '更新维保', 'put.admin/equipment-maintenance',    3, '', '', 3, NOW(), NOW()),
 (2100000000010060, 0, '删除维保', 'delete.admin/equipment-maintenance', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 合同管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010061, 0, '查看合同', 'get.admin/contract',    3, '', '', 1, NOW(), NOW()),
 (2100000000010062, 0, '创建合同', 'post.admin/contract',   3, '', '', 2, NOW(), NOW()),
 (2100000000010063, 0, '更新合同', 'put.admin/contract',    3, '', '', 3, NOW(), NOW()),
 (2100000000010064, 0, '删除合同', 'delete.admin/contract', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 安防巡逻
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010065, 0, '查看巡逻', 'get.admin/security-patrol',    3, '', '', 1, NOW(), NOW()),
 (2100000000010066, 0, '创建巡逻', 'post.admin/security-patrol',   3, '', '', 2, NOW(), NOW()),
 (2100000000010067, 0, '更新巡逻', 'put.admin/security-patrol',    3, '', '', 3, NOW(), NOW()),
 (2100000000010068, 0, '删除巡逻', 'delete.admin/security-patrol', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 保洁区域
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010069, 0, '查看保洁区域', 'get.admin/cleaning-area',    3, '', '', 1, NOW(), NOW()),
 (2100000000010070, 0, '创建保洁区域', 'post.admin/cleaning-area',   3, '', '', 2, NOW(), NOW()),
 (2100000000010071, 0, '更新保洁区域', 'put.admin/cleaning-area',    3, '', '', 3, NOW(), NOW()),
 (2100000000010072, 0, '删除保洁区域', 'delete.admin/cleaning-area', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 绿化区域
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010073, 0, '查看绿化区域', 'get.admin/green-area',    3, '', '', 1, NOW(), NOW()),
 (2100000000010074, 0, '创建绿化区域', 'post.admin/green-area',   3, '', '', 2, NOW(), NOW()),
 (2100000000010075, 0, '更新绿化区域', 'put.admin/green-area',    3, '', '', 3, NOW(), NOW()),
 (2100000000010076, 0, '删除绿化区域', 'delete.admin/green-area', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 社区活动
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010077, 0, '查看活动', 'get.admin/activity',    3, '', '', 1, NOW(), NOW()),
 (2100000000010078, 0, '创建活动', 'post.admin/activity',   3, '', '', 2, NOW(), NOW()),
 (2100000000010079, 0, '更新活动', 'put.admin/activity',    3, '', '', 3, NOW(), NOW()),
 (2100000000010080, 0, '删除活动', 'delete.admin/activity', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 能耗仪表
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010081, 0, '查看仪表', 'get.admin/energy-meter',    3, '', '', 1, NOW(), NOW()),
 (2100000000010082, 0, '创建仪表', 'post.admin/energy-meter',   3, '', '', 2, NOW(), NOW()),
 (2100000000010083, 0, '更新仪表', 'put.admin/energy-meter',    3, '', '', 3, NOW(), NOW()),
 (2100000000010084, 0, '删除仪表', 'delete.admin/energy-meter', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 员工管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010085, 0, '查看员工', 'get.admin/staff',    3, '', '', 1, NOW(), NOW()),
 (2100000000010086, 0, '创建员工', 'post.admin/staff',   3, '', '', 2, NOW(), NOW()),
 (2100000000010087, 0, '更新员工', 'put.admin/staff',    3, '', '', 3, NOW(), NOW()),
 (2100000000010088, 0, '删除员工', 'delete.admin/staff', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 巡检任务
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010089, 0, '查看巡检任务', 'get.admin/inspection-task',    3, '', '', 1, NOW(), NOW()),
 (2100000000010090, 0, '创建巡检任务', 'post.admin/inspection-task',   3, '', '', 2, NOW(), NOW()),
 (2100000000010091, 0, '更新巡检任务', 'put.admin/inspection-task',    3, '', '', 3, NOW(), NOW()),
 (2100000000010092, 0, '删除巡检任务', 'delete.admin/inspection-task', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 商城分类
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010093, 0, '查看商城分类', 'get.admin/mall-category',    3, '', '', 1, NOW(), NOW()),
 (2100000000010094, 0, '创建商城分类', 'post.admin/mall-category',   3, '', '', 2, NOW(), NOW()),
 (2100000000010095, 0, '更新商城分类', 'put.admin/mall-category',    3, '', '', 3, NOW(), NOW()),
 (2100000000010096, 0, '删除商城分类', 'delete.admin/mall-category', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 商城商品
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010097, 0, '查看商品', 'get.admin/mall-product',    3, '', '', 1, NOW(), NOW()),
 (2100000000010098, 0, '创建商品', 'post.admin/mall-product',   3, '', '', 2, NOW(), NOW()),
 (2100000000010099, 0, '更新商品', 'put.admin/mall-product',    3, '', '', 3, NOW(), NOW()),
 (2100000000010100, 0, '删除商品', 'delete.admin/mall-product', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 集团管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010101, 0, '查看集团', 'get.admin/group',    3, '', '', 1, NOW(), NOW()),
 (2100000000010102, 0, '创建集团', 'post.admin/group',   3, '', '', 2, NOW(), NOW()),
 (2100000000010103, 0, '更新集团', 'put.admin/group',    3, '', '', 3, NOW(), NOW()),
 (2100000000010104, 0, '删除集团', 'delete.admin/group', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 问答分类
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010105, 0, '查看问答分类', 'get.admin/knowledge-category',    3, '', '', 1, NOW(), NOW()),
 (2100000000010106, 0, '创建问答分类', 'post.admin/knowledge-category',   3, '', '', 2, NOW(), NOW()),
 (2100000000010107, 0, '更新问答分类', 'put.admin/knowledge-category',    3, '', '', 3, NOW(), NOW()),
 (2100000000010108, 0, '删除问答分类', 'delete.admin/knowledge-category', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 智能问答
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010109, 0, '查看文章', 'get.admin/knowledge',    3, '', '', 1, NOW(), NOW()),
 (2100000000010110, 0, '创建文章', 'post.admin/knowledge',   3, '', '', 2, NOW(), NOW()),
 (2100000000010111, 0, '更新文章', 'put.admin/knowledge',    3, '', '', 3, NOW(), NOW()),
 (2100000000010112, 0, '删除文章', 'delete.admin/knowledge', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 业务模块特殊端点
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010113, 0, '房产层级树',       'get.admin/room/tree',               3, '', '', 1, NOW(), NOW()),
 (2100000000010114, 0, '业主批量导入',     'post.admin/owner/batch/import',     3, '', '', 2, NOW(), NOW()),
 (2100000000010115, 0, '业主批量删除',     'post.admin/owner/batch/destroy',    3, '', '', 3, NOW(), NOW()),
@@ -477,7 +477,7 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (2100000000010160, 0, '物业仪表盘统计',   'get.admin/dashboard/property',      3, '', '', 48, NOW(), NOW());
 
 -- API 权限 — 财务收支
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010161, 0, '查看财务收入', 'get.admin/finance-income',    3, '', '', 1, NOW(), NOW()),
 (2100000000010162, 0, '创建财务收入', 'post.admin/finance-income',   3, '', '', 2, NOW(), NOW()),
 (2100000000010163, 0, '更新财务收入', 'put.admin/finance-income',    3, '', '', 3, NOW(), NOW()),
@@ -488,22 +488,22 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (2100000000010168, 0, '删除财务支出', 'delete.admin/finance-expense', 3, '', '', 8, NOW(), NOW());
 
 -- API 权限 — 员工批量状态
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010169, 0, '员工批量启禁用', 'post.admin/staff/batch/status', 3, '', '', 1, NOW(), NOW());
 
 -- API 权限 — 巡检扩展端点
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010170, 0, '查看巡检点',       'get.admin/inspection-task/checkpoints',     3, '', '', 1, NOW(), NOW()),
 (2100000000010171, 0, '开始巡检任务',     'put.admin/inspection-task/start',           3, '', '', 2, NOW(), NOW()),
 (2100000000010172, 0, '完成巡检任务',     'put.admin/inspection-task/complete',        3, '', '', 3, NOW(), NOW()),
 (2100000000010173, 0, '巡检点打卡',       'put.admin/inspection-checkpoint/checkin',   3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 集团移除小区
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010174, 0, '集团移除小区', 'delete.admin/group/community', 3, '', '', 1, NOW(), NOW());
 
 -- API 权限 — 审批管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010175, 0, '查看审批类型', 'get.admin/approval-type',     3, '', '', 1, NOW(), NOW()),
 (2100000000010176, 0, '创建审批类型', 'post.admin/approval-type',    3, '', '', 2, NOW(), NOW()),
 (2100000000010177, 0, '更新审批类型', 'put.admin/approval-type',     3, '', '', 3, NOW(), NOW()),
@@ -514,7 +514,7 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (2100000000010182, 0, '我的待办审批', 'get.admin/approval/my-pending', 3, '', '', 8, NOW(), NOW());
 
 -- API 权限 — 通知管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010183, 0, '查看通知模板', 'get.admin/notification-template',   3, '', '', 1, NOW(), NOW()),
 (2100000000010184, 0, '创建通知模板', 'post.admin/notification-template',  3, '', '', 2, NOW(), NOW()),
 (2100000000010185, 0, '更新通知模板', 'put.admin/notification-template',   3, '', '', 3, NOW(), NOW()),
@@ -523,7 +523,7 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (2100000000010188, 0, '发送通知',     'post.admin/notification/send',      3, '', '', 6, NOW(), NOW());
 
 -- API 权限 — 投票管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010189, 0, '查看投票',     'get.admin/vote',           3, '', '', 1, NOW(), NOW()),
 (2100000000010190, 0, '创建投票',     'post.admin/vote',          3, '', '', 2, NOW(), NOW()),
 (2100000000010191, 0, '更新投票',     'put.admin/vote',           3, '', '', 3, NOW(), NOW()),
@@ -538,7 +538,7 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 (2100000000010200, 0, '结束投票',     'put.admin/vote/end',       3, '', '', 12, NOW(), NOW());
 
 -- API 权限 — 支付管理
-INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010201, 0, '查看支付订单',       'get.admin/payment-order',           3, '', '', 1, NOW(), NOW()),
 (2100000000010202, 0, '支付订单退款',       'post.admin/payment-order/refund',   3, '', '', 2, NOW(), NOW()),
 (2100000000010203, 0, '支付统计',           'get.admin/payment-order/statistics', 3, '', '', 3, NOW(), NOW());
@@ -546,20 +546,20 @@ INSERT INTO `erik_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, 
 -- ============================================================
 -- 超级管理员角色 (ID=10000000000000001) 关联所有权限
 -- ============================================================
-INSERT INTO `erik_admin_role_permission` (`role_id`, `permission_id`)
-SELECT 10000000000000001, `id` FROM `erik_admin_permission`
+INSERT INTO `management_admin_role_permission` (`role_id`, `permission_id`)
+SELECT 10000000000000001, `id` FROM `management_admin_permission`
 WHERE `id` NOT IN (
-    SELECT `permission_id` FROM `erik_admin_role_permission` WHERE `role_id` = 10000000000000001
+    SELECT `permission_id` FROM `management_admin_role_permission` WHERE `role_id` = 10000000000000001
 );
 -- ============================================================
 -- 操作日志表增加操作来源端字段
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- ============================================================
 
-ALTER TABLE `erik_operation_log`
+ALTER TABLE `management_operation_log`
 ADD COLUMN `source` VARCHAR(20) NOT NULL DEFAULT 'web' COMMENT '操作来源端: ipados|macos|windows|linux|ios|android|harmonyos|web' AFTER `ip`;
 
-ALTER TABLE `erik_operation_log`
+ALTER TABLE `management_operation_log`
 ADD KEY `idx_source` (`source`);
 -- ============================================================
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
@@ -568,7 +568,7 @@ ADD KEY `idx_source` (`source`);
 -- ============================================================
 
 -- 1. 小区/社区表
-CREATE TABLE IF NOT EXISTS `erik_community` (
+CREATE TABLE IF NOT EXISTS `management_community` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，snowflake生成',
     `name` VARCHAR(100) NOT NULL COMMENT '小区名称',
     `address` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '详细地址',
@@ -596,13 +596,13 @@ CREATE TABLE IF NOT EXISTS `erik_community` (
 -- ============================================================
 -- 多租户：默认租户初始化 + 存量回填（存量数据归入默认租户）
 -- ============================================================
-INSERT IGNORE INTO `erik_platform_tenant` (`id`, `name`, `status`, `created_at`, `updated_at`)
+INSERT IGNORE INTO `management_platform_tenant` (`id`, `name`, `status`, `created_at`, `updated_at`)
 VALUES (1, '默认租户', 1, NOW(), NOW());
-UPDATE `erik_community` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
-UPDATE `erik_admin_user` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
+UPDATE `management_community` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
+UPDATE `management_admin_user` SET `tenant_id` = 1 WHERE `tenant_id` = 0;
 
 -- 2. 楼栋表
-CREATE TABLE IF NOT EXISTS `erik_building` (
+CREATE TABLE IF NOT EXISTS `management_building` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(50) NOT NULL COMMENT '楼栋名称',
@@ -620,7 +620,7 @@ CREATE TABLE IF NOT EXISTS `erik_building` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='楼栋表';
 
 -- 3. 单元表
-CREATE TABLE IF NOT EXISTS `erik_unit` (
+CREATE TABLE IF NOT EXISTS `management_unit` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `building_id` BIGINT UNSIGNED NOT NULL COMMENT '所属楼栋ID',
     `name` VARCHAR(30) NOT NULL COMMENT '单元名称',
@@ -633,7 +633,7 @@ CREATE TABLE IF NOT EXISTS `erik_unit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='单元表';
 
 -- 4. 户型表
-CREATE TABLE IF NOT EXISTS `erik_room_type` (
+CREATE TABLE IF NOT EXISTS `management_room_type` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '户型名称',
     `bedrooms` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '室',
@@ -646,7 +646,7 @@ CREATE TABLE IF NOT EXISTS `erik_room_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='户型表';
 
 -- 5. 房产/房屋表
-CREATE TABLE IF NOT EXISTS `erik_room` (
+CREATE TABLE IF NOT EXISTS `management_room` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `building_id` BIGINT UNSIGNED NOT NULL COMMENT '所属楼栋ID',
@@ -674,7 +674,7 @@ CREATE TABLE IF NOT EXISTS `erik_room` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='房产表';
 
 -- 6. 业主表
-CREATE TABLE IF NOT EXISTS `erik_owner` (
+CREATE TABLE IF NOT EXISTS `management_owner` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '姓名',
     `phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '手机号（加密存储）',
@@ -702,7 +702,7 @@ CREATE TABLE IF NOT EXISTS `erik_owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='业主表';
 
 -- 7. 房产-业主关联表
-CREATE TABLE IF NOT EXISTS `erik_room_owner` (
+CREATE TABLE IF NOT EXISTS `management_room_owner` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -719,7 +719,7 @@ CREATE TABLE IF NOT EXISTS `erik_room_owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='房产业主关联表';
 
 -- 8. 租户表
-CREATE TABLE IF NOT EXISTS `erik_tenant` (
+CREATE TABLE IF NOT EXISTS `management_tenant` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '房东(业主)ID',
@@ -738,7 +738,7 @@ CREATE TABLE IF NOT EXISTS `erik_tenant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='租户表';
 
 -- 9. 费用类型表
-CREATE TABLE IF NOT EXISTS `erik_fee_type` (
+CREATE TABLE IF NOT EXISTS `management_fee_type` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '费用名称',
     `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '分类: 1=物业费 2=水费 3=电费 4=燃气 5=暖气 6=停车 7=维修基金 8=其他',
@@ -753,7 +753,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='费用类型表';
 
 -- 10. 费用账单表
-CREATE TABLE IF NOT EXISTS `erik_fee_bill` (
+CREATE TABLE IF NOT EXISTS `management_fee_bill` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -780,7 +780,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_bill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='费用账单表';
 
 -- 11. 缴费记录表
-CREATE TABLE IF NOT EXISTS `erik_fee_payment` (
+CREATE TABLE IF NOT EXISTS `management_fee_payment` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `bill_id` BIGINT UNSIGNED NOT NULL COMMENT '账单ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -801,7 +801,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_payment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='缴费记录表';
 
 -- 12. 报修单表
-CREATE TABLE IF NOT EXISTS `erik_repair_order` (
+CREATE TABLE IF NOT EXISTS `management_repair_order` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `order_number` VARCHAR(32) NOT NULL COMMENT '报修编号',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
@@ -827,7 +827,7 @@ CREATE TABLE IF NOT EXISTS `erik_repair_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修单表';
 
 -- 13. 报修进度表
-CREATE TABLE IF NOT EXISTS `erik_repair_progress` (
+CREATE TABLE IF NOT EXISTS `management_repair_progress` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `repair_order_id` BIGINT UNSIGNED NOT NULL COMMENT '报修单ID',
     `staff_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作人员ID',
@@ -841,7 +841,7 @@ CREATE TABLE IF NOT EXISTS `erik_repair_progress` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修进度表';
 
 -- 14. 公告通知表
-CREATE TABLE IF NOT EXISTS `erik_announcement` (
+CREATE TABLE IF NOT EXISTS `management_announcement` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '小区ID',
     `title` VARCHAR(200) NOT NULL COMMENT '标题',
@@ -867,7 +867,7 @@ CREATE TABLE IF NOT EXISTS `erik_announcement` (
 -- ============================================================
 
 -- 15. 停车位表
-CREATE TABLE IF NOT EXISTS `erik_parking_space` (
+CREATE TABLE IF NOT EXISTS `management_parking_space` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `space_number` VARCHAR(20) NOT NULL COMMENT '车位编号',
@@ -883,7 +883,7 @@ CREATE TABLE IF NOT EXISTS `erik_parking_space` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='停车位表';
 
 -- 16. 车辆表
-CREATE TABLE IF NOT EXISTS `erik_parking_vehicle` (
+CREATE TABLE IF NOT EXISTS `management_parking_vehicle` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '车主ID',
     `space_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '绑定车位ID',
@@ -903,7 +903,7 @@ CREATE TABLE IF NOT EXISTS `erik_parking_vehicle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='车辆表';
 
 -- 17. 停车记录表
-CREATE TABLE IF NOT EXISTS `erik_parking_record` (
+CREATE TABLE IF NOT EXISTS `management_parking_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `vehicle_id` BIGINT UNSIGNED NOT NULL COMMENT '车辆ID',
     `space_id` BIGINT UNSIGNED NOT NULL COMMENT '车位ID',
@@ -918,7 +918,7 @@ CREATE TABLE IF NOT EXISTS `erik_parking_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='停车记录表';
 
 -- 18. 设备表
-CREATE TABLE IF NOT EXISTS `erik_equipment` (
+CREATE TABLE IF NOT EXISTS `management_equipment` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(100) NOT NULL COMMENT '设备名称',
@@ -941,7 +941,7 @@ CREATE TABLE IF NOT EXISTS `erik_equipment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='设备表';
 
 -- 19. 设备维保表
-CREATE TABLE IF NOT EXISTS `erik_equipment_maintenance` (
+CREATE TABLE IF NOT EXISTS `management_equipment_maintenance` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `equipment_id` BIGINT UNSIGNED NOT NULL COMMENT '设备ID',
     `maintenance_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=日常巡检 2=定期保养 3=故障维修 4=大修 5=更换',
@@ -961,7 +961,7 @@ CREATE TABLE IF NOT EXISTS `erik_equipment_maintenance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='设备维保表';
 
 -- 20. 投诉建议表
-CREATE TABLE IF NOT EXISTS `erik_complaint` (
+CREATE TABLE IF NOT EXISTS `management_complaint` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '投诉人ID',
     `room_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '房产ID',
@@ -989,7 +989,7 @@ CREATE TABLE IF NOT EXISTS `erik_complaint` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投诉建议表';
 
 -- 21. 访客表
-CREATE TABLE IF NOT EXISTS `erik_visitor` (
+CREATE TABLE IF NOT EXISTS `management_visitor` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '到访房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '被访业主ID',
@@ -1015,7 +1015,7 @@ CREATE TABLE IF NOT EXISTS `erik_visitor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='访客表';
 
 -- 22. 合同表
-CREATE TABLE IF NOT EXISTS `erik_contract` (
+CREATE TABLE IF NOT EXISTS `management_contract` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `contract_number` VARCHAR(50) NOT NULL COMMENT '合同编号',
     `contract_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=物业合同 2=租赁合同 3=维保合同 4=服务合同 5=采购合同',
@@ -1040,7 +1040,7 @@ CREATE TABLE IF NOT EXISTS `erik_contract` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='合同表';
 
 -- 23. 财务收入表
-CREATE TABLE IF NOT EXISTS `erik_finance_income` (
+CREATE TABLE IF NOT EXISTS `management_finance_income` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `income_number` VARCHAR(32) NOT NULL COMMENT '收入单号',
     `income_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=物业费 2=停车费 3=租金 4=广告费 5=维修基金 6=其他',
@@ -1060,7 +1060,7 @@ CREATE TABLE IF NOT EXISTS `erik_finance_income` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='财务收入表';
 
 -- 24. 财务支出表
-CREATE TABLE IF NOT EXISTS `erik_finance_expense` (
+CREATE TABLE IF NOT EXISTS `management_finance_expense` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `expense_number` VARCHAR(32) NOT NULL COMMENT '支出单号',
     `expense_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=人力成本 2=设备采购 3=维保维修 4=水电能耗 5=保洁绿化 6=办公费用 7=税金 8=其他',
@@ -1084,7 +1084,7 @@ CREATE TABLE IF NOT EXISTS `erik_finance_expense` (
 -- ============================================================
 
 -- 25. 安保巡逻路线表
-CREATE TABLE IF NOT EXISTS `erik_security_patrol` (
+CREATE TABLE IF NOT EXISTS `management_security_patrol` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(100) NOT NULL COMMENT '巡逻路线名称',
@@ -1098,7 +1098,7 @@ CREATE TABLE IF NOT EXISTS `erik_security_patrol` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='安保巡逻路线表';
 
 -- 26. 巡逻记录表
-CREATE TABLE IF NOT EXISTS `erik_patrol_record` (
+CREATE TABLE IF NOT EXISTS `management_patrol_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `patrol_id` BIGINT UNSIGNED NOT NULL COMMENT '巡逻路线ID',
     `staff_id` BIGINT UNSIGNED NOT NULL COMMENT '巡逻人员ID',
@@ -1112,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `erik_patrol_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡逻记录表';
 
 -- 27. 保洁区域表
-CREATE TABLE IF NOT EXISTS `erik_cleaning_area` (
+CREATE TABLE IF NOT EXISTS `management_cleaning_area` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(100) NOT NULL COMMENT '区域名称',
@@ -1128,7 +1128,7 @@ CREATE TABLE IF NOT EXISTS `erik_cleaning_area` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保洁区域表';
 
 -- 28. 保洁记录表
-CREATE TABLE IF NOT EXISTS `erik_cleaning_record` (
+CREATE TABLE IF NOT EXISTS `management_cleaning_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `area_id` BIGINT UNSIGNED NOT NULL COMMENT '保洁区域ID',
     `staff_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '保洁人员ID',
@@ -1143,7 +1143,7 @@ CREATE TABLE IF NOT EXISTS `erik_cleaning_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保洁记录表';
 
 -- 29. 绿化区域表
-CREATE TABLE IF NOT EXISTS `erik_green_area` (
+CREATE TABLE IF NOT EXISTS `management_green_area` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(100) NOT NULL COMMENT '区域名称',
@@ -1159,7 +1159,7 @@ CREATE TABLE IF NOT EXISTS `erik_green_area` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='绿化区域表';
 
 -- 30. 绿化养护记录表
-CREATE TABLE IF NOT EXISTS `erik_green_maintenance` (
+CREATE TABLE IF NOT EXISTS `management_green_maintenance` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `area_id` BIGINT UNSIGNED NOT NULL COMMENT '绿化区域ID',
     `maintenance_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=浇水 2=修剪 3=施肥 4=除虫 5=补种',
@@ -1172,7 +1172,7 @@ CREATE TABLE IF NOT EXISTS `erik_green_maintenance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='绿化养护记录表';
 
 -- 31. 社区活动表
-CREATE TABLE IF NOT EXISTS `erik_community_activity` (
+CREATE TABLE IF NOT EXISTS `management_community_activity` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `title` VARCHAR(200) NOT NULL COMMENT '活动标题',
@@ -1196,7 +1196,7 @@ CREATE TABLE IF NOT EXISTS `erik_community_activity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='社区活动表';
 
 -- 32. 活动报名表
-CREATE TABLE IF NOT EXISTS `erik_activity_signup` (
+CREATE TABLE IF NOT EXISTS `management_activity_signup` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `activity_id` BIGINT UNSIGNED NOT NULL COMMENT '活动ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '报名人ID',
@@ -1212,7 +1212,7 @@ CREATE TABLE IF NOT EXISTS `erik_activity_signup` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='活动报名表';
 
 -- 33. 能耗仪表表
-CREATE TABLE IF NOT EXISTS `erik_energy_meter` (
+CREATE TABLE IF NOT EXISTS `management_energy_meter` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `meter_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=电表 2=水表 3=燃气表 4=暖气表',
@@ -1226,7 +1226,7 @@ CREATE TABLE IF NOT EXISTS `erik_energy_meter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗仪表表';
 
 -- 34. 能耗记录表
-CREATE TABLE IF NOT EXISTS `erik_energy_record` (
+CREATE TABLE IF NOT EXISTS `management_energy_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `meter_id` BIGINT UNSIGNED NOT NULL COMMENT '仪表ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
@@ -1243,7 +1243,7 @@ CREATE TABLE IF NOT EXISTS `erik_energy_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗记录表';
 
 -- 35. 员工表
-CREATE TABLE IF NOT EXISTS `erik_staff` (
+CREATE TABLE IF NOT EXISTS `management_staff` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(50) NOT NULL COMMENT '姓名',
@@ -1268,7 +1268,7 @@ CREATE TABLE IF NOT EXISTS `erik_staff` (
 -- ============================================================
 
 -- 消息模板表
-CREATE TABLE IF NOT EXISTS `erik_notification_template` (
+CREATE TABLE IF NOT EXISTS `management_notification_template` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `code` VARCHAR(50) NOT NULL COMMENT '模板代码: bill_remind/repair_update/announcement',
     `name` VARCHAR(100) NOT NULL COMMENT '模板名称',
@@ -1282,7 +1282,7 @@ CREATE TABLE IF NOT EXISTS `erik_notification_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='消息模板表';
 
 -- 通知消息表
-CREATE TABLE IF NOT EXISTS `erik_notification` (
+CREATE TABLE IF NOT EXISTS `management_notification` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '接收人ID',
     `user_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '用户类型: 1=业主 2=管理员',
@@ -1308,7 +1308,7 @@ CREATE TABLE IF NOT EXISTS `erik_notification` (
 -- ============================================================
 
 -- 审批类型表
-CREATE TABLE IF NOT EXISTS `erik_approval_type` (
+CREATE TABLE IF NOT EXISTS `management_approval_type` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `code` VARCHAR(50) NOT NULL COMMENT '类型代码: repair_assign/visitor_approve/contract_approve',
     `name` VARCHAR(100) NOT NULL COMMENT '类型名称',
@@ -1320,7 +1320,7 @@ CREATE TABLE IF NOT EXISTS `erik_approval_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批类型表';
 
 -- 审批实例表
-CREATE TABLE IF NOT EXISTS `erik_approval` (
+CREATE TABLE IF NOT EXISTS `management_approval` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `approval_type_id` BIGINT UNSIGNED NOT NULL COMMENT '审批类型ID',
     `title` VARCHAR(200) NOT NULL COMMENT '审批标题',
@@ -1341,7 +1341,7 @@ CREATE TABLE IF NOT EXISTS `erik_approval` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批实例表';
 
 -- 审批记录表
-CREATE TABLE IF NOT EXISTS `erik_approval_record` (
+CREATE TABLE IF NOT EXISTS `management_approval_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `approval_id` BIGINT UNSIGNED NOT NULL COMMENT '审批实例ID',
     `step` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '步骤',
@@ -1361,7 +1361,7 @@ CREATE TABLE IF NOT EXISTS `erik_approval_record` (
 -- ============================================================
 
 -- 支付订单表
-CREATE TABLE IF NOT EXISTS `erik_payment_order` (
+CREATE TABLE IF NOT EXISTS `management_payment_order` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `order_number` VARCHAR(32) NOT NULL COMMENT '支付订单号',
     `bill_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联账单ID',
@@ -1391,7 +1391,7 @@ CREATE TABLE IF NOT EXISTS `erik_payment_order` (
 -- ============================================================
 
 -- 投票表
-CREATE TABLE IF NOT EXISTS `erik_vote` (
+CREATE TABLE IF NOT EXISTS `management_vote` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `title` VARCHAR(200) NOT NULL COMMENT '投票标题',
@@ -1412,7 +1412,7 @@ CREATE TABLE IF NOT EXISTS `erik_vote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票表';
 
 -- 投票选项表
-CREATE TABLE IF NOT EXISTS `erik_vote_option` (
+CREATE TABLE IF NOT EXISTS `management_vote_option` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `vote_id` BIGINT UNSIGNED NOT NULL COMMENT '投票ID',
     `content` VARCHAR(200) NOT NULL COMMENT '选项内容',
@@ -1425,7 +1425,7 @@ CREATE TABLE IF NOT EXISTS `erik_vote_option` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票选项表';
 
 -- 投票记录表
-CREATE TABLE IF NOT EXISTS `erik_vote_record` (
+CREATE TABLE IF NOT EXISTS `management_vote_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `vote_id` BIGINT UNSIGNED NOT NULL COMMENT '投票ID',
     `option_id` BIGINT UNSIGNED NOT NULL COMMENT '选项ID',
@@ -1445,7 +1445,7 @@ CREATE TABLE IF NOT EXISTS `erik_vote_record` (
 -- ============================================================
 
 -- SLA规则表
-CREATE TABLE IF NOT EXISTS `erik_sla_rule` (
+CREATE TABLE IF NOT EXISTS `management_sla_rule` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(100) NOT NULL COMMENT '规则名称',
     `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '报修分类: 1=水电 2=门窗 ...',
@@ -1462,7 +1462,7 @@ CREATE TABLE IF NOT EXISTS `erik_sla_rule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SLA规则表';
 
 -- SLA记录表
-CREATE TABLE IF NOT EXISTS `erik_sla_record` (
+CREATE TABLE IF NOT EXISTS `management_sla_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `repair_order_id` BIGINT UNSIGNED NOT NULL COMMENT '报修单ID',
     `rule_id` BIGINT UNSIGNED NOT NULL COMMENT 'SLA规则ID',
@@ -1484,7 +1484,7 @@ CREATE TABLE IF NOT EXISTS `erik_sla_record` (
 -- ============================================================
 
 -- 催缴策略表
-CREATE TABLE IF NOT EXISTS `erik_collection_strategy` (
+CREATE TABLE IF NOT EXISTS `management_collection_strategy` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(100) NOT NULL COMMENT '策略名称',
     `overdue_days` INT UNSIGNED NOT NULL DEFAULT 7 COMMENT '逾期天数触发',
@@ -1498,7 +1498,7 @@ CREATE TABLE IF NOT EXISTS `erik_collection_strategy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴策略表';
 
 -- 催缴记录表
-CREATE TABLE IF NOT EXISTS `erik_collection_record` (
+CREATE TABLE IF NOT EXISTS `management_collection_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `bill_id` BIGINT UNSIGNED NOT NULL COMMENT '账单ID',
     `strategy_id` BIGINT UNSIGNED NOT NULL COMMENT '策略ID',
@@ -1518,7 +1518,7 @@ CREATE TABLE IF NOT EXISTS `erik_collection_record` (
 -- ============================================================
 
 -- 巡检任务表
-CREATE TABLE IF NOT EXISTS `erik_inspection_task` (
+CREATE TABLE IF NOT EXISTS `management_inspection_task` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区',
     `title` VARCHAR(200) NOT NULL COMMENT '任务标题',
@@ -1539,7 +1539,7 @@ CREATE TABLE IF NOT EXISTS `erik_inspection_task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡检任务表';
 
 -- 巡检打卡记录表
-CREATE TABLE IF NOT EXISTS `erik_inspection_checkpoint` (
+CREATE TABLE IF NOT EXISTS `management_inspection_checkpoint` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `task_id` BIGINT UNSIGNED NOT NULL COMMENT '巡检任务ID',
     `checkpoint_index` INT UNSIGNED NOT NULL COMMENT '检查点序号',
@@ -1560,7 +1560,7 @@ CREATE TABLE IF NOT EXISTS `erik_inspection_checkpoint` (
 -- ============================================================
 
 -- 商品分类表
-CREATE TABLE IF NOT EXISTS `erik_mall_category` (
+CREATE TABLE IF NOT EXISTS `management_mall_category` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '分类名称',
     `icon` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '图标',
@@ -1571,7 +1571,7 @@ CREATE TABLE IF NOT EXISTS `erik_mall_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城分类表';
 
 -- 商品表
-CREATE TABLE IF NOT EXISTS `erik_mall_product` (
+CREATE TABLE IF NOT EXISTS `management_mall_product` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `category_id` BIGINT UNSIGNED NOT NULL COMMENT '分类ID',
     `community_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属小区(0=全平台)',
@@ -1592,7 +1592,7 @@ CREATE TABLE IF NOT EXISTS `erik_mall_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城商品表';
 
 -- 订单表
-CREATE TABLE IF NOT EXISTS `erik_mall_order` (
+CREATE TABLE IF NOT EXISTS `management_mall_order` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `order_number` VARCHAR(32) NOT NULL COMMENT '订单编号',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '买家ID',
@@ -1623,7 +1623,7 @@ CREATE TABLE IF NOT EXISTS `erik_mall_order` (
 -- ============================================================
 
 -- 人脸信息表
-CREATE TABLE IF NOT EXISTS `erik_face_info` (
+CREATE TABLE IF NOT EXISTS `management_face_info` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
     `face_image` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '人脸照片URL',
@@ -1642,7 +1642,7 @@ CREATE TABLE IF NOT EXISTS `erik_face_info` (
 -- ============================================================
 
 -- 集团表
-CREATE TABLE IF NOT EXISTS `erik_group` (
+CREATE TABLE IF NOT EXISTS `management_group` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(100) NOT NULL COMMENT '集团名称',
     `contact_person` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '联系人',
@@ -1655,7 +1655,7 @@ CREATE TABLE IF NOT EXISTS `erik_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='集团表';
 
 -- 集团公司关联表（集团→小区 多对多）
-CREATE TABLE IF NOT EXISTS `erik_group_community` (
+CREATE TABLE IF NOT EXISTS `management_group_community` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `group_id` BIGINT UNSIGNED NOT NULL COMMENT '集团ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '小区ID',
@@ -1669,7 +1669,7 @@ CREATE TABLE IF NOT EXISTS `erik_group_community` (
 -- ============================================================
 
 -- 知识库表
-CREATE TABLE IF NOT EXISTS `erik_knowledge_base` (
+CREATE TABLE IF NOT EXISTS `management_knowledge_base` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `category_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '分类ID(自引用)',
     `question` VARCHAR(500) NOT NULL COMMENT '问题',
@@ -1687,7 +1687,7 @@ CREATE TABLE IF NOT EXISTS `erik_knowledge_base` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识库表';
 
 -- 对话记录表
-CREATE TABLE IF NOT EXISTS `erik_chat_record` (
+CREATE TABLE IF NOT EXISTS `management_chat_record` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
     `user_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1=业主 2=管理员',
@@ -1703,7 +1703,7 @@ CREATE TABLE IF NOT EXISTS `erik_chat_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对话记录表';
 
 -- 开放 API Key 表（service 端入站对外接口鉴权，X-API-Key 头）
-CREATE TABLE IF NOT EXISTS `erik_api_key` (
+CREATE TABLE IF NOT EXISTS `management_api_key` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(64) NOT NULL COMMENT 'Key 名称/用途',
     `api_key_hash` CHAR(64) NOT NULL COMMENT 'API Key SHA-256 摘要（明文不落库）',
@@ -1722,31 +1722,31 @@ CREATE TABLE IF NOT EXISTS `erik_api_key` (
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- ============================================================
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_vote' AND index_name = 'idx_community_status_end');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_vote` ADD INDEX `idx_community_status_end` (`community_id`, `status`, `end_time`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_vote' AND index_name = 'idx_community_status_end');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_vote` ADD INDEX `idx_community_status_end` (`community_id`, `status`, `end_time`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_approval_record' AND index_name = 'idx_approver_action');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_approval_record` ADD INDEX `idx_approver_action` (`approver_id`, `action`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_approval_record' AND index_name = 'idx_approver_action');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_approval_record` ADD INDEX `idx_approver_action` (`approver_id`, `action`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_energy_record' AND index_name = 'idx_meter_date');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_energy_record` ADD INDEX `idx_meter_date` (`meter_id`, `record_date`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_energy_record' AND index_name = 'idx_meter_date');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_energy_record` ADD INDEX `idx_meter_date` (`meter_id`, `record_date`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_mall_order' AND index_name = 'idx_owner_status');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_mall_order` ADD INDEX `idx_owner_status` (`owner_id`, `status`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_mall_order' AND index_name = 'idx_owner_status');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_mall_order` ADD INDEX `idx_owner_status` (`owner_id`, `status`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_equipment' AND index_name = 'idx_community_status');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_equipment` ADD INDEX `idx_community_status` (`community_id`, `status`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_equipment' AND index_name = 'idx_community_status');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_equipment` ADD INDEX `idx_community_status` (`community_id`, `status`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- P13 审计补充：唯一键兜底（活动报名重复 / 催缴重复），旧库幂等追加
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_activity_signup' AND index_name = 'uk_activity_signup_owner');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_activity_signup` ADD UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_activity_signup' AND index_name = 'uk_activity_signup_owner');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_activity_signup` ADD UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'erik_collection_record' AND index_name = 'uk_collection_bill_strategy');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `erik_collection_record` ADD UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)', 'DO 0');
+SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_collection_record' AND index_name = 'uk_collection_bill_strategy');
+SET @sql := IF(@ix = 0, 'ALTER TABLE `management_collection_record` ADD UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;

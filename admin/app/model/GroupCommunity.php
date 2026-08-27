@@ -9,7 +9,7 @@ namespace app\model;
 
 class GroupCommunity extends BaseModel
 {
-    protected $table = 'erik_group_community';
+    protected $table = 'management_group_community';
 
     protected $fillable = [
         'group_id', 'community_id',

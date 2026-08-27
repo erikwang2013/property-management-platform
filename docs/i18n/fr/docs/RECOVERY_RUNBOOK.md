@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) Créer une base vide (suffixe _drill pour l'exercice, éviter d'écraser la production)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) Import (-T désactive TTY pour le non-interactif ; environ 1-5 minutes)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    Rejouer le binlog jusqu'au point cible (exemple : restauration au 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 Points clés :
@@ -78,21 +78,21 @@ Points clés :
 | Élément de contrôle | Commande | Critère de passage |
 |---|---|---|
 | Intégrité du fichier de sauvegarde | `gzip -t <sauvegarde>` | Aucune erreur |
-| Compteurs de lignes des tables clés | `SELECT COUNT(*) FROM erik_admin_user;` | Cohérent avec le compte avant sauvegarde |
-| Sondage des tables métier | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | Trois tables ou plus d'ordres de grandeur raisonnables (non nul et cohérent avec l'avant-sauvegarde) |
-| Champs chiffrés déchiffrables | Consulter un enregistrement avec champs encryptable (ex. `erik_owner` pièce d'identité/téléphone) | Valeurs correctes, aucune erreur decrypt dans les journaux applicatifs |
+| Compteurs de lignes des tables clés | `SELECT COUNT(*) FROM management_admin_user;` | Cohérent avec le compte avant sauvegarde |
+| Sondage des tables métier | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | Trois tables ou plus d'ordres de grandeur raisonnables (non nul et cohérent avec l'avant-sauvegarde) |
+| Champs chiffrés déchiffrables | Consulter un enregistrement avec champs encryptable (ex. `management_owner` pièce d'identité/téléphone) | Valeurs correctes, aucune erreur decrypt dans les journaux applicatifs |
 | Smoke test métier | Connexion, appel d'une interface de liste chacun | 200 / retour normal |
 
 Exemple de script de sondage (environnement d'exercice) :
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > Cohérence des compteurs : enregistrer la ligne de base avec la même requête SQL avant la sauvegarde, comparer après restauration ; lors de l'exercice, consigner la ligne de base dans le compte-rendu.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | Choisir la sauvegarde, `gzip -t`, créer la base vide, consigner les compteurs de ligne de base | Ops |
 | 5-15 min | Restauration et import du scénario A | Ops |
 | 15-25 min | Validation de cohérence de la section 3 + smoke test métier | Ops + Métier |
-| 25-30 min | Consigner les résultats, nettoyer la base d'exercice (`DROP DATABASE property_management_drill`), mettre à jour le RTO mesuré dans OPS_RUNBOOK 1.4 | Ops |
+| 25-30 min | Consigner les résultats, nettoyer la base d'exercice (`DROP DATABASE management_drill`), mettre à jour le RTO mesuré dans OPS_RUNBOOK 1.4 | Ops |
 
 ## 5. Gestion des échecs
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 日期: 2026-08-16
 恢复目标: 空库（场景 A）/ 时间点（场景 B）
 备份文件: backups/backup_20260816_020000.sql.gz
-基线行数: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+基线行数: management_admin_user=1, management_owner=42, management_fee_bill=128
 恢复耗时: XX 分钟    验证耗时: XX 分钟    总计: XX 分钟（目标 ≤ 30）
 结果: 通过 / 失败（附失败原因与处理）
 ```

@@ -94,11 +94,11 @@
 
 | # | 问题 | 影响 | 处置 |
 |---|------|------|------|
-| 1 | `ActivitySignup`/`ParkingRecord` 开启 Eloquent 时间戳，但 `erik_activity_signup`/`erik_parking_record` 表无 `updated_at` 列（install.sql 同） | 写路径必然 1054 崩溃（生产同故障） | 模型 `$timestamps = false`（已修） |
+| 1 | `ActivitySignup`/`ParkingRecord` 开启 Eloquent 时间戳，但 `management_activity_signup`/`management_parking_record` 表无 `updated_at` 列（install.sql 同） | 写路径必然 1054 崩溃（生产同故障） | 模型 `$timestamps = false`（已修） |
 | 2 | `Visitor::$fillable` 缺 `'id'` | `Visitor::create(['id' => …])` 静默丢弃主键 → 1364 | fillable 补 `'id'`（已修） |
 | 3 | `ApiVersion` 中间件 `json()` 第二参被当编码选项传，HTTP 状态码未生效 | v2 请求应 400 实返回 200 | 修正参数（已修） |
 | 4 | vendor `ImagickDriver::clone()` 在资源未初始化时崩溃（vendor bug，禁改 vendor）；`auto` 驱动在装有 Imagick 的环境必选 Imagick | `/api/captcha/generate` 500 | 测试内强制 GD 驱动 + `.env` 设 `POSTER_IMAGE_DRIVER=gd`；**生产根治需在 `config/bootstrap.php` 注册 `CaptchaPlugin`（将 env 驱动 merge 进 poster 配置）或强制 gd，并线工程师已按约定还原该注册项，此点记录为生产待办** |
-| 5 | batch3 表未迁移：`erik_notification`/`vote*`/`face_info`/`mall_*`/`knowledge_base`/`chat_record` 在 `docs/install.sql` 有定义，dev 库未建 | 对应 6 个控制器无法测业务写路径 | 对应用例覆盖参数校验/无效 ID 路径，未伪造业务断言；迁移后补测 |
+| 5 | batch3 表未迁移：`management_notification`/`vote*`/`face_info`/`mall_*`/`knowledge_base`/`chat_record` 在 `docs/install.sql` 有定义，dev 库未建 | 对应 6 个控制器无法测业务写路径 | 对应用例覆盖参数校验/无效 ID 路径，未伪造业务断言；迁移后补测 |
 | 6 | 裸 `decimal` cast（见第四节） | 读取即崩 | 记录待修，1 用例门控跳过 |
 | 7 | `LockServiceTest` TTL 用例与并线 phpunit 进程共享 Redis key 偶发互扰 | 偶发失败 | key 按进程隔离（`getmypid()` 后缀），语义不变 |
 

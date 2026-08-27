@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) Crear base vacía (añadir sufijo _drill al nombre de la base de simulacro para evitar sobrescribir datos de producción por error)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) Importar (-T desactiva TTY, garantiza no interactividad; en la práctica toma unos 1-5 minutos)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    Reproducir el binlog hasta el punto en el tiempo objetivo (ejemplo: restaurar a 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 Puntos clave:
@@ -78,21 +78,21 @@ Puntos clave:
 | Elemento de verificación | Comando | Criterio de aprobación |
 |---|---|---|
 | Integridad del archivo de respaldo | `gzip -t <respaldo>` | Sin errores |
-| Conteo de filas de tablas clave | `SELECT COUNT(*) FROM erik_admin_user;` | Consistente con el conteo registrado antes del respaldo |
-| Muestreo de tablas de negocio | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | Tres o más con magnitudes razonables (no 0 y consistentes con antes del respaldo) |
-| Campos cifrados descifrables | Consultar un registro con campos encryptable (por ejemplo, documento de identidad/teléfono de `erik_owner`) | Valores correctos, sin errores de decrypt en logs de aplicación |
+| Conteo de filas de tablas clave | `SELECT COUNT(*) FROM management_admin_user;` | Consistente con el conteo registrado antes del respaldo |
+| Muestreo de tablas de negocio | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | Tres o más con magnitudes razonables (no 0 y consistentes con antes del respaldo) |
+| Campos cifrados descifrables | Consultar un registro con campos encryptable (por ejemplo, documento de identidad/teléfono de `management_owner`) | Valores correctos, sin errores de decrypt en logs de aplicación |
 | Smoke de negocio | Inicio de sesión y consulta de lista de interfaz, 1 vez cada uno | 200 / respuesta normal |
 
 Ejemplo de script de muestreo (entorno de simulacro):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > Consistencia de conteos: registrar la línea base con el mismo SQL antes del respaldo y comparar después de restaurar; durante el simulacro, escribir la línea base en el registro del simulacro.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | Seleccionar respaldo, `gzip -t`, crear base vacía, registrar conteos de línea base | Operaciones |
 | 5-15 min | Restauración e importación del escenario A | Operaciones |
 | 15-25 min | Verificación de consistencia de la sección 3 + smoke de negocio | Operaciones + negocio |
-| 25-30 min | Registrar resultados, limpiar base de simulacro (`DROP DATABASE property_management_drill`), actualizar el RTO medido de OPS_RUNBOOK 1.4 | Operaciones |
+| 25-30 min | Registrar resultados, limpiar base de simulacro (`DROP DATABASE management_drill`), actualizar el RTO medido de OPS_RUNBOOK 1.4 | Operaciones |
 
 ## 5. Manejo de fallos
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 Fecha: 2026-08-16
 Objetivo de restauración: base vacía (escenario A) / punto en el tiempo (escenario B)
 Archivo de respaldo: backups/backup_20260816_020000.sql.gz
-Conteos de línea base: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+Conteos de línea base: management_admin_user=1, management_owner=42, management_fee_bill=128
 Tiempo de restauración: XX minutos    Tiempo de verificación: XX minutos    Total: XX minutos (objetivo ≤ 30)
 Resultado: aprobado / fallido (adjuntar motivo del fallo y manejo)
 ```

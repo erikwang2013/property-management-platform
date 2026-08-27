@@ -6,7 +6,7 @@
 declare(strict_types=1);
 
 /**
- * 注册 Webhook 配置（幂等，写入 erik_system_config group=webhook key=webhook_config）
+ * 注册 Webhook 配置（幂等，写入 management_system_config group=webhook key=webhook_config）
  *
  * 用法: cd admin && php scripts/register_webhook.php <url> <secret> [events] [enabled]
  *   events  : 逗号分隔，默认 fee_paid,repair_created,announcement_published

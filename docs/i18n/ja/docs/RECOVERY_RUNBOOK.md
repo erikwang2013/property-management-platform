@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) 空 DB を作成（訓練 DB 名に _drill 接尾辞を付け、本番データの誤上書きを回避）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) インポート（-T で TTY を無効化、非対話を保証；実測約 1-5 分）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    binlog を対象時点までリプレイ（例：2026-08-16 10:30:00 へ復旧）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 要点：
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | チェック項目 | コマンド | 合格基準 |
 |---|---|---|
 | バックアップファイル完全性 | `gzip -t <バックアップ>` | エラーなし |
-| 主要テーブル行数 | `SELECT COUNT(*) FROM erik_admin_user;` | バックアップ前の記録と行数一致 |
-| 業務テーブル抽查 | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | 3 つ以上が数量レベル的に妥当（非 0 かつバックアップ前と一致） |
-| 暗号化フィールドの復号 | encryptable フィールドを含むレコードを 1 件参照（例：`erik_owner` の身分証/携帯番号） | 値が正しく、アプリログに decrypt エラーなし |
+| 主要テーブル行数 | `SELECT COUNT(*) FROM management_admin_user;` | バックアップ前の記録と行数一致 |
+| 業務テーブル抽查 | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | 3 つ以上が数量レベル的に妥当（非 0 かつバックアップ前と一致） |
+| 暗号化フィールドの復号 | encryptable フィールドを含むレコードを 1 件参照（例：`management_owner` の身分証/携帯番号） | 値が正しく、アプリログに decrypt エラーなし |
 | 業務スモーク | ログイン、一覧取得 API を各 1 回 | 200 / 正常応答 |
 
 抽查スクリプト例（訓練環境）：
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > 行数一致性：バックアップ前に同じ SQL でベースラインを記録し、復旧後に比較；訓練時はベースラインを訓練記録に書き込む。
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | バックアップ選択、`gzip -t`、空 DB 作成、ベースライン行数記録 | 運用 |
 | 5-15 min | シナリオ A の復旧インポート | 運用 |
 | 15-25 min | 第 3 節の一致性検証 + 業務スモーク | 運用 + 業務 |
-| 25-30 min | 結果記録、訓練 DB クリーンアップ（`DROP DATABASE property_management_drill`）、OPS_RUNBOOK 1.4 の実測 RTO 更新 | 運用 |
+| 25-30 min | 結果記録、訓練 DB クリーンアップ（`DROP DATABASE management_drill`）、OPS_RUNBOOK 1.4 の実測 RTO 更新 | 運用 |
 
 ## 5. 失敗処理
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 日付: 2026-08-16
 復旧目標: 空 DB（シナリオ A）/ 時点（シナリオ B）
 バックアップファイル: backups/backup_20260816_020000.sql.gz
-ベースライン行数: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+ベースライン行数: management_admin_user=1, management_owner=42, management_fee_bill=128
 復旧所要時間: XX 分    検証所要時間: XX 分    合計: XX 分（目標 ≤ 30）
 結果: 合格 / 不合格（失敗理由と対応を添付）
 ```

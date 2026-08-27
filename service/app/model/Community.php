@@ -13,7 +13,7 @@ class Community extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_community';
+    protected $table = 'management_community';
 
     protected $fillable = [
         'name', 'address', 'province', 'city', 'district',

@@ -5,11 +5,11 @@
 
 ## 1. データベースのバックアップと復旧
 
-admin 端と service 端は同一 MySQL インスタンスと DB `property_management` を共有しており、バックアップは 1 回で済みます。統一エントリ：
+admin 端と service 端は同一 MySQL インスタンスと DB `management` を共有しており、バックアップは 1 回で済みます。統一エントリ：
 
 | DB 名 | バックアップスクリプト | 説明 |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | `admin/.env` から接続情報を読み取る（`--container=` でコンテナ名を上書き可）、デフォルトはコンテナ内 mysqldump |
+| `management` | `scripts/backup.sh` | `admin/.env` から接続情報を読み取る（`--container=` でコンテナ名を上書き可）、デフォルトはコンテナ内 mysqldump |
 
 出力 `backups/backup_YYYYMMDD_HHMMSS.sql.gz`、デフォルトで直近 7 日間保持（`--keep-days=` で調整可）。
 
@@ -34,7 +34,7 @@ bash scripts/backup.sh
 1. 直近のバックアップを選択：`ls -t backups/backup_*.sql.gz`
 2. **独立環境**（または一時 DB）で復旧を実行：詳細は [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) のシナリオ A（空 DB 復旧）とシナリオ B（時点復旧）を参照。
 3. 検証：
-   - 行数比較：`SELECT COUNT(*) FROM erik_user;` がバックアップ前の記録と一致
+   - 行数比較：`SELECT COUNT(*) FROM management_user;` がバックアップ前の記録と一致
    - 暗号化フィールドが正常に復号できる：encryptable フィールドを含むレコードを 1 件参照し、値が正しく、ログに decrypt エラーなし
    - 業務スモーク：ログイン、一覧取得 API が正常
 4. 訓練の所要時間と結果を記録（RTO 評価用）。

@@ -8,7 +8,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Staff extends BaseModel
 {
-    protected $table = 'erik_staff';
+    protected $table = 'management_staff';
     protected $fillable = ['community_id', 'name', 'phone', 'id_card', 'job_title', 'department', 'hire_date', 'salary', 'status'];
     protected $casts = [
         'department' => 'integer', 'status' => 'integer',

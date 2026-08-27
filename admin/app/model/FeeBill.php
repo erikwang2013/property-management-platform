@@ -9,7 +9,7 @@ namespace app\model;
 
 class FeeBill extends BaseModel
 {
-    protected $table = 'erik_fee_bill';
+    protected $table = 'management_fee_bill';
 
     protected $fillable = [
         'room_id', 'owner_id', 'fee_type_id', 'bill_number',

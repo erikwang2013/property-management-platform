@@ -91,9 +91,9 @@ class MiddlewareWebTest extends TestCase
     public function test_operation_log_get_does_not_write(): void
     {
         $this->requireDb();
-        $before = Db::table('erik_operation_log')->count();
+        $before = Db::table('management_operation_log')->count();
         (new OperationLog())->process(self::request('GET', '/service/home'), self::next());
-        $this->assertSame($before, Db::table('erik_operation_log')->count());
+        $this->assertSame($before, Db::table('management_operation_log')->count());
     }
 
     public function test_operation_log_post_writes_masked_input(): void
@@ -105,7 +105,7 @@ class MiddlewareWebTest extends TestCase
         $request->ownerId = 7;
         (new OperationLog())->process($request, self::next());
 
-        $log = Db::table('erik_operation_log')->where('user_id', 7)->where('action', 'POST')->first();
+        $log = Db::table('management_operation_log')->where('user_id', 7)->where('action', 'POST')->first();
         $this->assertNotNull($log);
         $this->assertSame('/service/profile/password', $log->path);
     }

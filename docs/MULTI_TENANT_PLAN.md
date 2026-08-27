@@ -9,11 +9,11 @@
 
 | 类别 | 表 | 说明 |
 |------|-----|------|
-| 全局/平台表 | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | 鉴权、配置、审计，天然平台级，不挂租户 |
-| 社区维度表 | erik_community 及经 community_id 归属的 40+ 张业务表（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 等） | 通过 community_id 间接归属租户 |
-| 集团关联表 | erik_group（集团）、erik_group_community（集团↔小区） | 当前为**可选关联**，无租户语义，跨区汇总靠 join |
-| 平台扩展表 | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info 等 | 部分为平台级，部分社区级，需个案确认 |
-| 易混淆表 | **erik_tenant（租客表）** | ⚠️ 语义冲突：是"房屋租客"（room_id/owner_id 维度），**不是** SaaS 租户 |
+| 全局/平台表 | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | 鉴权、配置、审计，天然平台级，不挂租户 |
+| 社区维度表 | management_community 及经 community_id 归属的 40+ 张业务表（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 等） | 通过 community_id 间接归属租户 |
+| 集团关联表 | management_group（集团）、management_group_community（集团↔小区） | 当前为**可选关联**，无租户语义，跨区汇总靠 join |
+| 平台扩展表 | management_notification_template、management_knowledge_base、management_mall_*、management_face_info 等 | 部分为平台级，部分社区级，需个案确认 |
+| 易混淆表 | **management_tenant（租客表）** | ⚠️ 语义冲突：是"房屋租客"（room_id/owner_id 维度），**不是** SaaS 租户 |
 
 ### 1.2 鉴权链路（admin 端，代码验证）
 
@@ -28,7 +28,7 @@
 
 ### 1.3 关键结论
 
-- 无任何现成 SaaS 租户模型；`erik_tenant` 名称已被租客占用，新概念必须避名
+- 无任何现成 SaaS 租户模型；`management_tenant` 名称已被租客占用，新概念必须避名
 - 全部控制器直接 Eloquent 查询，无 repository 层、无全局作用域 —— 隔离改造需在模型层做
 - config/database.php 单连接，但 illuminate/database 原生支持多 connection（为独立库演进预留）
 
@@ -51,9 +51,9 @@
 
 ### 3.1 数据模型（最小集）
 
-- 新建 `erik_platform_tenant`（避免与租客表 erik_tenant 冲突）：id/name/status/created_at 等
-- `erik_community` 加 `tenant_id BIGINT NOT NULL DEFAULT 0`，索引 `(tenant_id, community_id)`
-- `erik_admin_user` 加 `tenant_id BIGINT NOT NULL DEFAULT 0`（0 = 平台超级管理员）
+- 新建 `management_platform_tenant`（避免与租客表 management_tenant 冲突）：id/name/status/created_at 等
+- `management_community` 加 `tenant_id BIGINT NOT NULL DEFAULT 0`，索引 `(tenant_id, community_id)`
+- `management_admin_user` 加 `tenant_id BIGINT NOT NULL DEFAULT 0`（0 = 平台超级管理员）
 - 业务中间表（building/room/fee_bill 等 40 张）**不加列**，经 community_id 归属
 
 ### 3.2 运行层三件套
@@ -94,13 +94,13 @@
 | 存量数据回填错误 | 全部存量数据 | 幂等脚本 + 回填校验 + 干跑模式 |
 | 索引/性能影响 | 高频表（fee_bill/room/owner） | (tenant_id, community_id) 联合索引；慢查询日志复查 |
 | 133 测试回归 | 全量 | scope 注入后先跑全量回归再启试点 |
-| 命名混淆（erik_tenant 租客 vs SaaS 租户） | 开发认知 | 新表命名 platform_tenant，文档显式声明 |
+| 命名混淆（management_tenant 租客 vs SaaS 租户） | 开发认知 | 新表命名 platform_tenant，文档显式声明 |
 | **回滚方案** | — | 全局作用域可在配置开关一键关闭（恢复单租户语义），数据列保留不删，无破坏性变更 |
 
 ## 6. 评审结论
 
 **建议立即做**：
-- 共享库 + tenant_id 行隔离（方案 A），新建 `erik_platform_tenant` 表，community/admin_user 加列
+- 共享库 + tenant_id 行隔离（方案 A），新建 `management_platform_tenant` 表，community/admin_user 加列
 - TenantContext 中间件 + TenantScope 全局作用域 + Tenant::for() 工具
 - 试点顺序：集团 → 小区 → 业主 → 费用
 - 前置依赖：已完成 — 多租户表/列/回填已内联进 docs/install.sql（2026-08-16 合并落地，单一建库入口）
@@ -113,4 +113,4 @@
 - Schema 级隔离（MySQL 无独立 schema 语义，成本等同独立库）
 - 动态多库路由（单机部署下无收益）
 - 租户级个性化 schema/字段（YAGNI）
-- 复用/改造 erik_tenant 租客表充当 SaaS 租户（语义冲突，破坏租客业务）
+- 复用/改造 management_tenant 租客表充当 SaaS 租户（语义冲突，破坏租客业务）

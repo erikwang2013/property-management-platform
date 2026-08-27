@@ -7,7 +7,7 @@ namespace app\model;
 
 class ParkingSpace extends BaseModel
 {
-    protected $table = 'erik_parking_space';
+    protected $table = 'management_parking_space';
     protected $fillable = ['community_id', 'space_number', 'space_type', 'area', 'status', 'fee_monthly'];
     protected $casts = [
         'space_type' => 'integer', 'area' => 'decimal:2', 'status' => 'integer',

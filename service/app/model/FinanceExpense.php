@@ -7,7 +7,7 @@ namespace app\model;
 
 class FinanceExpense extends BaseModel
 {
-    protected $table = 'erik_finance_expense';
+    protected $table = 'management_finance_expense';
     protected $fillable = ['community_id', 'category', 'amount', 'pay_method', 'payee', 'transaction_date', 'remark', 'status', 'approval_status'];
     protected $casts = [
         'amount' => 'decimal:2', 'category' => 'integer', 'pay_method' => 'integer',

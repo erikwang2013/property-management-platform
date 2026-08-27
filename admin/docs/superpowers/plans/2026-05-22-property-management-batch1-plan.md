@@ -156,7 +156,7 @@ app\process\Http::run();
 - `APP_NAME=物业管理系统-业务端`
 - `APP_URL=http://localhost:8788`
 - 所有密钥重新生成独立值
-- `DB_DATABASE=property_management`
+- `DB_DATABASE=management`
 - 新增 `SERVICE_PORT=8788`
 
 - [ ] **Step 5: 创建 service/public/index.php**
@@ -204,7 +204,7 @@ git commit -m "feat(service): scaffold webman v2 project skeleton for property s
 每个文件头部添加版权声明，配置值中修改：
 - `app.php`: app_name = '物业管理系统-业务端'
 - `server.php`: listen = `http://0.0.0.0:8788`
-- `database.php`: 数据库连接配置相同（共享数据库），表前缀 `erik_`
+- `database.php`: 数据库连接配置相同（共享数据库），表前缀 `management_`
 - `snowflake.php`: datacenter_id=1, worker_id=2 (区别于admin的worker_id=1)
 - `hashids.php`: salt 使用独立值
 - `jwt.php`: 密钥独立于admin
@@ -423,7 +423,7 @@ git commit -m "feat(service): add common service classes and base controller"
 -- ============================================================
 
 -- 1. 小区/社区表
-CREATE TABLE IF NOT EXISTS `erik_community` (
+CREATE TABLE IF NOT EXISTS `management_community` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID，snowflake生成',
     `name` VARCHAR(100) NOT NULL COMMENT '小区名称',
     `address` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '详细地址',
@@ -447,7 +447,7 @@ CREATE TABLE IF NOT EXISTS `erik_community` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小区表';
 
 -- 2. 楼栋表
-CREATE TABLE IF NOT EXISTS `erik_building` (
+CREATE TABLE IF NOT EXISTS `management_building` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `name` VARCHAR(50) NOT NULL COMMENT '楼栋名称',
@@ -465,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `erik_building` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='楼栋表';
 
 -- 3. 单元表
-CREATE TABLE IF NOT EXISTS `erik_unit` (
+CREATE TABLE IF NOT EXISTS `management_unit` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `building_id` BIGINT UNSIGNED NOT NULL COMMENT '所属楼栋ID',
     `name` VARCHAR(30) NOT NULL COMMENT '单元名称',
@@ -478,7 +478,7 @@ CREATE TABLE IF NOT EXISTS `erik_unit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='单元表';
 
 -- 4. 户型表
-CREATE TABLE IF NOT EXISTS `erik_room_type` (
+CREATE TABLE IF NOT EXISTS `management_room_type` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '户型名称',
     `bedrooms` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '室',
@@ -491,7 +491,7 @@ CREATE TABLE IF NOT EXISTS `erik_room_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='户型表';
 
 -- 5. 房产/房屋表
-CREATE TABLE IF NOT EXISTS `erik_room` (
+CREATE TABLE IF NOT EXISTS `management_room` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
     `building_id` BIGINT UNSIGNED NOT NULL COMMENT '所属楼栋ID',
@@ -519,7 +519,7 @@ CREATE TABLE IF NOT EXISTS `erik_room` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='房产表';
 
 -- 6. 业主表
-CREATE TABLE IF NOT EXISTS `erik_owner` (
+CREATE TABLE IF NOT EXISTS `management_owner` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '姓名',
     `phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '手机号（加密存储）',
@@ -547,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `erik_owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='业主表';
 
 -- 7. 房产-业主关联表
-CREATE TABLE IF NOT EXISTS `erik_room_owner` (
+CREATE TABLE IF NOT EXISTS `management_room_owner` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -564,7 +564,7 @@ CREATE TABLE IF NOT EXISTS `erik_room_owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='房产业主关联表';
 
 -- 8. 租户表
-CREATE TABLE IF NOT EXISTS `erik_tenant` (
+CREATE TABLE IF NOT EXISTS `management_tenant` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '房东(业主)ID',
@@ -583,7 +583,7 @@ CREATE TABLE IF NOT EXISTS `erik_tenant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='租户表';
 
 -- 9. 费用类型表
-CREATE TABLE IF NOT EXISTS `erik_fee_type` (
+CREATE TABLE IF NOT EXISTS `management_fee_type` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '费用名称',
     `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '分类: 1=物业费 2=水费 3=电费 4=燃气 5=暖气 6=停车 7=维修基金 8=其他',
@@ -598,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='费用类型表';
 
 -- 10. 费用账单表
-CREATE TABLE IF NOT EXISTS `erik_fee_bill` (
+CREATE TABLE IF NOT EXISTS `management_fee_bill` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -625,7 +625,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_bill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='费用账单表';
 
 -- 11. 缴费记录表
-CREATE TABLE IF NOT EXISTS `erik_fee_payment` (
+CREATE TABLE IF NOT EXISTS `management_fee_payment` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `bill_id` BIGINT UNSIGNED NOT NULL COMMENT '账单ID',
     `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
@@ -646,7 +646,7 @@ CREATE TABLE IF NOT EXISTS `erik_fee_payment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='缴费记录表';
 
 -- 12. 报修单表
-CREATE TABLE IF NOT EXISTS `erik_repair_order` (
+CREATE TABLE IF NOT EXISTS `management_repair_order` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `order_number` VARCHAR(32) NOT NULL COMMENT '报修编号',
     `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
@@ -672,7 +672,7 @@ CREATE TABLE IF NOT EXISTS `erik_repair_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修单表';
 
 -- 13. 报修进度表
-CREATE TABLE IF NOT EXISTS `erik_repair_progress` (
+CREATE TABLE IF NOT EXISTS `management_repair_progress` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `repair_order_id` BIGINT UNSIGNED NOT NULL COMMENT '报修单ID',
     `staff_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作人员ID',
@@ -686,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `erik_repair_progress` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修进度表';
 
 -- 14. 公告通知表
-CREATE TABLE IF NOT EXISTS `erik_announcement` (
+CREATE TABLE IF NOT EXISTS `management_announcement` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '小区ID',
     `title` VARCHAR(200) NOT NULL COMMENT '标题',
@@ -723,12 +723,12 @@ mkdir -p service/database/migrations service/database/backup
 
 ```bash
 # 在 MySQL 中创建数据库（如未创建）
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 # 导入迁移文件
-mysql -u root property_management < admin/database/migrations/2026_05_22_000001_property_batch1_tables.sql
+mysql -u root management < admin/database/migrations/2026_05_22_000001_property_batch1_tables.sql
 ```
-Expected: 表创建成功，`SHOW TABLES LIKE 'erik_%';` 列出14张新表。
+Expected: 表创建成功，`SHOW TABLES LIKE 'management_%';` 列出14张新表。
 
 - [ ] **Step 4: Commit**
 
@@ -763,7 +763,7 @@ cp admin/app/middleware/ApiVersion.php service/app/middleware/
 
 - [ ] **Step 2: 创建 ServiceAuth 中间件**
 
-基于 `admin/app/middleware/AdminAuth.php` 改写，认证 `erik_owner` 表：
+基于 `admin/app/middleware/AdminAuth.php` 改写，认证 `management_owner` 表：
 
 创建 `service/app/middleware/ServiceAuth.php`:
 
@@ -903,7 +903,7 @@ class Community extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_community';
+    protected $table = 'management_community';
 
     protected $fillable = [
         'name', 'address', 'province', 'city', 'district',
@@ -942,7 +942,7 @@ class Owner extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_owner';
+    protected $table = 'management_owner';
 
     protected $fillable = [
         'name', 'phone', 'email', 'id_card', 'password',
@@ -973,7 +973,7 @@ class Owner extends BaseModel
 
     public function rooms()
     {
-        return $this->belongsToMany(Room::class, 'erik_room_owner', 'owner_id', 'room_id')
+        return $this->belongsToMany(Room::class, 'management_room_owner', 'owner_id', 'room_id')
             ->withPivot(['relation_type', 'ownership_ratio', 'cert_number']);
     }
 }
@@ -997,7 +997,7 @@ class Room extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_room';
+    protected $table = 'management_room';
 
     protected $fillable = [
         'community_id', 'building_id', 'unit_id', 'room_number',
@@ -1026,7 +1026,7 @@ class Room extends BaseModel
 
     public function owners()
     {
-        return $this->belongsToMany(Owner::class, 'erik_room_owner', 'room_id', 'owner_id')
+        return $this->belongsToMany(Owner::class, 'management_room_owner', 'room_id', 'owner_id')
             ->withPivot(['relation_type', 'ownership_ratio', 'cert_number']);
     }
 }
@@ -1046,7 +1046,7 @@ namespace app\model;
 
 class RoomOwner extends BaseModel
 {
-    protected $table = 'erik_room_owner';
+    protected $table = 'management_room_owner';
 
     protected $fillable = [
         'room_id', 'owner_id', 'relation_type',
@@ -1080,7 +1080,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Tenant extends BaseModel
 {
-    protected $table = 'erik_tenant';
+    protected $table = 'management_tenant';
 
     protected $fillable = [
         'room_id', 'owner_id', 'name', 'phone', 'id_card',
@@ -1115,7 +1115,7 @@ namespace app\model;
 
 class FeeType extends BaseModel
 {
-    protected $table = 'erik_fee_type';
+    protected $table = 'management_fee_type';
 
     protected $fillable = [
         'name', 'category', 'unit_price', 'unit_type',
@@ -1153,7 +1153,7 @@ namespace app\model;
 
 class FeeBill extends BaseModel
 {
-    protected $table = 'erik_fee_bill';
+    protected $table = 'management_fee_bill';
 
     protected $fillable = [
         'room_id', 'owner_id', 'fee_type_id', 'bill_number',
@@ -1204,7 +1204,7 @@ namespace app\model;
 
 class FeePayment extends BaseModel
 {
-    protected $table = 'erik_fee_payment';
+    protected $table = 'management_fee_payment';
 
     protected $fillable = [
         'bill_id', 'owner_id', 'payment_number',
@@ -1244,7 +1244,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class RepairOrder extends BaseModel
 {
-    protected $table = 'erik_repair_order';
+    protected $table = 'management_repair_order';
 
     protected $fillable = [
         'order_number', 'room_id', 'owner_id', 'contact_phone',
@@ -1289,7 +1289,7 @@ namespace app\model;
 
 class RepairProgress extends BaseModel
 {
-    protected $table = 'erik_repair_progress';
+    protected $table = 'management_repair_progress';
 
     protected $fillable = [
         'repair_order_id', 'staff_id',
@@ -1322,7 +1322,7 @@ class Announcement extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_announcement';
+    protected $table = 'management_announcement';
 
     protected $fillable = [
         'community_id', 'title', 'content', 'category',
@@ -2253,7 +2253,7 @@ class ComplaintController extends BaseController
     {
         $ownerId = $this->getOwnerId($request);
 
-        $complaints = Db::table('erik_complaint')
+        $complaints = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->orderBy('created_at', 'desc')
             ->paginate(20)
@@ -2280,7 +2280,7 @@ class ComplaintController extends BaseController
         $ownerId = $this->getOwnerId($request);
         $complaintId = $this->decodeId($hashid);
 
-        $complaint = Db::table('erik_complaint')
+        $complaint = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->find($complaintId);
 
@@ -2323,7 +2323,7 @@ class ComplaintController extends BaseController
             return $this->fail('标题和内容不能为空', 422);
         }
 
-        Db::table('erik_complaint')->insert([
+        Db::table('management_complaint')->insert([
             'id' => SnowflakeService::generate(),
             'owner_id' => $ownerId,
             'type' => $type,
@@ -2349,7 +2349,7 @@ class ComplaintController extends BaseController
         $satisfaction = (int) $request->input('satisfaction', 5);
 
         $complaintId = $this->decodeId($hashid);
-        $complaint = Db::table('erik_complaint')
+        $complaint = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->find($complaintId);
 
@@ -2361,7 +2361,7 @@ class ComplaintController extends BaseController
             return $this->fail('只能评价已处理的投诉', 422);
         }
 
-        Db::table('erik_complaint')
+        Db::table('management_complaint')
             ->where('id', $complaintId)
             ->update([
                 'satisfaction' => $satisfaction,
@@ -2778,7 +2778,7 @@ namespace app\model;
 
 class Building extends BaseModel
 {
-    protected $table = 'erik_building';
+    protected $table = 'management_building';
 
     protected $fillable = [
         'community_id', 'name', 'building_type',
@@ -2821,7 +2821,7 @@ namespace app\model;
 
 class Unit extends BaseModel
 {
-    protected $table = 'erik_unit';
+    protected $table = 'management_unit';
 
     protected $fillable = [
         'building_id', 'name', 'room_count_per_floor', 'sort',
@@ -2854,7 +2854,7 @@ namespace app\model;
 
 class RoomType extends BaseModel
 {
-    protected $table = 'erik_room_type';
+    protected $table = 'management_room_type';
 
     protected $fillable = [
         'name', 'bedrooms', 'halls', 'bathrooms', 'image',
@@ -3460,7 +3460,7 @@ Expected: `{"code":0,"message":"ok","data":{"service":"property-service"}}`
 - [ ] **Step 3: 验证数据库连接**
 
 ```bash
-mysql -u root property_management -e "SHOW TABLES LIKE 'erik_%';"
+mysql -u root management -e "SHOW TABLES LIKE 'management_%';"
 ```
 Expected: 列出所有已创建的表。
 

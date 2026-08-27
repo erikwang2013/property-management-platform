@@ -79,7 +79,7 @@ class ComplaintControllerTest extends TestCase
     private static function createComplaint(int $ownerId = 1, int $status = 0, array $overrides = []): int
     {
         $id = SnowflakeService::generate();
-        Db::table('erik_complaint')->insert([
+        Db::table('management_complaint')->insert([
             'id'           => $id,
             'owner_id'     => $ownerId,
             'type'         => $overrides['type'] ?? 1,
@@ -115,7 +115,7 @@ class ComplaintControllerTest extends TestCase
         $body = self::call('store', ['title' => '噪音', 'content' => '半夜装修', 'is_anonymous' => 1, 'type' => 1, 'category' => 5]);
         $this->assertSame(0, $body['code']);
         $this->assertSame('投诉已提交', $body['message']);
-        $row = Db::table('erik_complaint')->where('id', HashidsService::decode($body['data']['id']))->first();
+        $row = Db::table('management_complaint')->where('id', HashidsService::decode($body['data']['id']))->first();
         $this->assertNotNull($row);
         $this->assertSame(1, (int) $row->owner_id);
         $this->assertSame(0, (int) $row->status);
@@ -174,7 +174,7 @@ class ComplaintControllerTest extends TestCase
         $body = self::call('satisfaction', ['score' => 4], 1, HashidsService::encode($id));
         $this->assertSame(0, $body['code']);
         $this->assertSame('评价成功', $body['message']);
-        $row = Db::table('erik_complaint')->where('id', $id)->first();
+        $row = Db::table('management_complaint')->where('id', $id)->first();
         $this->assertSame(4, (int) $row->satisfaction);
     }
 }

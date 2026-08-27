@@ -643,7 +643,7 @@ curl -H "X-API-Key: <your-key>" http://localhost:8788/open/announcements
 ```
 
 - A missing or invalid Key returns `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
-- Key management: generate with `php scripts/gen_api_key.php [--name=purpose]`; to disable/delete, operate directly on the `erik_api_key` table (`status=0` disables, key becomes invalid immediately)
+- Key management: generate with `php scripts/gen_api_key.php [--name=purpose]`; to disable/delete, operate directly on the `management_api_key` table (`status=0` disables, key becomes invalid immediately)
 
 ### Endpoints
 

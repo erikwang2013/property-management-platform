@@ -9,7 +9,7 @@ namespace app\model;
 
 class CollectionRecord extends BaseModel
 {
-    protected $table = 'erik_collection_record';
+    protected $table = 'management_collection_record';
 
     protected $fillable = [
         'bill_id', 'strategy_id', 'action', 'executed_by', 'remark', 'executed_at',

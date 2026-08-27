@@ -6,44 +6,44 @@
 
 | N° | Module | Lot | Panneau d'administration | Portail des propriétaires | Tables |
 |------|------|---------|---------|--------|--------|
-| 1 | Gestion des résidences | Lot 1 | CRUD + recherche paginée | Consultation liée à la résidence | erik_community |
-| 2 | Gestion des bâtiments | Lot 1 | CRUD + filtre par résidence | - | erik_building |
-| 3 | Gestion des unités | Lot 1 | CRUD + filtre par bâtiment | - | erik_unit |
-| 4 | Gestion des types de logement | Lot 1 | CRUD | - | erik_room_type |
-| 5 | Gestion des biens immobiliers | Lot 1 | CRUD + arborescence des logements + liaison en masse des propriétaires | Liste/détail de mes biens | erik_room |
-| 6 | Gestion des propriétaires | Lot 1 | CRUD + import en masse/activation-désactivation/suppression | Inscription/connexion/informations personnelles | erik_owner, erik_room_owner |
-| 7 | Gestion des locataires | Lot 1 | CRUD + filtre par bien | - | erik_tenant |
-| 8 | Gestion des frais | Lot 1 | CRUD des types de frais + gestion des factures + génération en masse + encaissement hors ligne | Consultation des factures + paiement en ligne + statistiques des frais | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | Gestion des demandes de réparation | Lot 1 | Liste des demandes + affectation + mise à jour de la progression | Soumettre une demande + consulter la progression + évaluer | erik_repair_order, erik_repair_progress |
-| 10 | Annonces et notifications | Lot 1 | CRUD + publication/épinglage | Liste/détail des annonces | erik_announcement |
-| 11 | Gestion du stationnement | Lot 2 | Gestion des places/véhicules + historique de stationnement | Mes places/véhicules + historique | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | Gestion des équipements | Lot 2 | Registre des équipements + historique de maintenance | - | erik_equipment, erik_equipment_maintenance |
-| 13 | Réclamations et suggestions | Lot 2 | Liste des réclamations + traitement + suivi | Soumettre une réclamation + consulter la progression + évaluer | erik_complaint |
-| 14 | Gestion des visiteurs | Lot 2 | Approbation des visiteurs + consultation des enregistrements | Réservation de visiteur + code de passage | erik_visitor |
-| 15 | Gestion des contrats | Lot 2 | CRUD + gestion des statuts | - | erik_contract |
-| 16 | Gestion financière | Lot 2 | Gestion des recettes/dépenses + rapports statistiques | - | erik_finance_income, erik_finance_expense |
-| 17 | Patrouille de sécurité | Lot 3 | Itinéraires de patrouille + enregistrements de patrouille | - | erik_security_patrol, erik_patrol_record |
-| 18 | Gestion du nettoyage | Lot 3 | Zones de nettoyage + enregistrements de nettoyage | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | Gestion des espaces verts | Lot 3 | Zones vertes + enregistrements d'entretien | - | erik_green_area, erik_green_maintenance |
-| 20 | Activités communautaires | Lot 3 | Gestion des activités + consultation des inscriptions | Liste des activités + inscription | erik_community_activity, erik_activity_signup |
-| 21 | Gestion de la consommation d'énergie | Lot 3 | Gestion des compteurs + relevés | - | erik_energy_meter, erik_energy_record |
-| 22 | Gestion des employés | Lot 3 | CRUD + gestion des statuts | - | erik_staff |
+| 1 | Gestion des résidences | Lot 1 | CRUD + recherche paginée | Consultation liée à la résidence | management_community |
+| 2 | Gestion des bâtiments | Lot 1 | CRUD + filtre par résidence | - | management_building |
+| 3 | Gestion des unités | Lot 1 | CRUD + filtre par bâtiment | - | management_unit |
+| 4 | Gestion des types de logement | Lot 1 | CRUD | - | management_room_type |
+| 5 | Gestion des biens immobiliers | Lot 1 | CRUD + arborescence des logements + liaison en masse des propriétaires | Liste/détail de mes biens | management_room |
+| 6 | Gestion des propriétaires | Lot 1 | CRUD + import en masse/activation-désactivation/suppression | Inscription/connexion/informations personnelles | management_owner, management_room_owner |
+| 7 | Gestion des locataires | Lot 1 | CRUD + filtre par bien | - | management_tenant |
+| 8 | Gestion des frais | Lot 1 | CRUD des types de frais + gestion des factures + génération en masse + encaissement hors ligne | Consultation des factures + paiement en ligne + statistiques des frais | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | Gestion des demandes de réparation | Lot 1 | Liste des demandes + affectation + mise à jour de la progression | Soumettre une demande + consulter la progression + évaluer | management_repair_order, management_repair_progress |
+| 10 | Annonces et notifications | Lot 1 | CRUD + publication/épinglage | Liste/détail des annonces | management_announcement |
+| 11 | Gestion du stationnement | Lot 2 | Gestion des places/véhicules + historique de stationnement | Mes places/véhicules + historique | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | Gestion des équipements | Lot 2 | Registre des équipements + historique de maintenance | - | management_equipment, management_equipment_maintenance |
+| 13 | Réclamations et suggestions | Lot 2 | Liste des réclamations + traitement + suivi | Soumettre une réclamation + consulter la progression + évaluer | management_complaint |
+| 14 | Gestion des visiteurs | Lot 2 | Approbation des visiteurs + consultation des enregistrements | Réservation de visiteur + code de passage | management_visitor |
+| 15 | Gestion des contrats | Lot 2 | CRUD + gestion des statuts | - | management_contract |
+| 16 | Gestion financière | Lot 2 | Gestion des recettes/dépenses + rapports statistiques | - | management_finance_income, management_finance_expense |
+| 17 | Patrouille de sécurité | Lot 3 | Itinéraires de patrouille + enregistrements de patrouille | - | management_security_patrol, management_patrol_record |
+| 18 | Gestion du nettoyage | Lot 3 | Zones de nettoyage + enregistrements de nettoyage | - | management_cleaning_area, management_cleaning_record |
+| 19 | Gestion des espaces verts | Lot 3 | Zones vertes + enregistrements d'entretien | - | management_green_area, management_green_maintenance |
+| 20 | Activités communautaires | Lot 3 | Gestion des activités + consultation des inscriptions | Liste des activités + inscription | management_community_activity, management_activity_signup |
+| 21 | Gestion de la consommation d'énergie | Lot 3 | Gestion des compteurs + relevés | - | management_energy_meter, management_energy_record |
+| 22 | Gestion des employés | Lot 3 | CRUD + gestion des statuts | - | management_staff |
 
 ## Fonctions étendues (Lot 4 — 12 modules)
 
 | N° | Module | Panneau d'administration | Portail des propriétaires | Tables |
 |------|------|---------|--------|--------|
-| 23 | Notifications | CRUD des modèles + envoi manuel + liste | Mes messages + marquer comme lu | erik_notification_template, erik_notification |
-| 24 | Workflow d'approbation | Types d'approbation + instances + progression des étapes | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | Intégration de paiement | Gestion des commandes + remboursement + callbacks WeChat/Alipay | - | erik_payment_order |
-| 26 | Vote des propriétaires | CRUD des votes + options + statistiques pondérées par surface | Liste des votes + vote + pondération par surface | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | Escalade automatique SLA | Configuration des règles + contrôle des délais + pénalités | - | erik_sla_rule, erik_sla_record |
-| 28 | Relance intelligente | Configuration des stratégies + correspondance des retards + pénalités | - | erik_collection_strategy, erik_collection_record |
-| 29 | Application mobile d'inspection | Attribution des tâches + pointage GPS + photos | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | Boutique communautaire | Gestion des catégories/produits/commandes/expéditions | Parcourir les produits + commander + mes commandes | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | Reconnaissance faciale | Gestion des validations | Enregistrement du visage + statut d'authentification | erik_face_info |
-| 32 | Gestion de groupe | CRUD des groupes + association de résidences + synthèse inter-résidences | - | erik_group, erik_group_community |
-| 33 | Q&A intelligent | Base de connaissances + historique des conversations + statistiques | Poser une question + correspondance par mots-clés | erik_knowledge_base, erik_chat_record |
+| 23 | Notifications | CRUD des modèles + envoi manuel + liste | Mes messages + marquer comme lu | management_notification_template, management_notification |
+| 24 | Workflow d'approbation | Types d'approbation + instances + progression des étapes | - | management_approval_type, management_approval, management_approval_record |
+| 25 | Intégration de paiement | Gestion des commandes + remboursement + callbacks WeChat/Alipay | - | management_payment_order |
+| 26 | Vote des propriétaires | CRUD des votes + options + statistiques pondérées par surface | Liste des votes + vote + pondération par surface | management_vote, management_vote_option, management_vote_record |
+| 27 | Escalade automatique SLA | Configuration des règles + contrôle des délais + pénalités | - | management_sla_rule, management_sla_record |
+| 28 | Relance intelligente | Configuration des stratégies + correspondance des retards + pénalités | - | management_collection_strategy, management_collection_record |
+| 29 | Application mobile d'inspection | Attribution des tâches + pointage GPS + photos | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | Boutique communautaire | Gestion des catégories/produits/commandes/expéditions | Parcourir les produits + commander + mes commandes | management_mall_category, management_mall_product, management_mall_order |
+| 31 | Reconnaissance faciale | Gestion des validations | Enregistrement du visage + statut d'authentification | management_face_info |
+| 32 | Gestion de groupe | CRUD des groupes + association de résidences + synthèse inter-résidences | - | management_group, management_group_community |
+| 33 | Q&A intelligent | Base de connaissances + historique des conversations + statistiques | Poser une question + correspondance par mots-clés | management_knowledge_base, management_chat_record |
 | - | Grand écran de données | Visualisation en temps réel plein écran des données immobilières | - | (réutilise les interfaces de données existantes) |
 
 ## Modules du panneau d'administration (admin existant)
@@ -89,7 +89,7 @@ Toutes les opérations POST/PUT/DELETE du panneau d'administration sont enregist
 ### Moteur de recherche
 - `erikwang2013/webman-scout` pilote Elasticsearch
 - Synchronisation automatique des index (push automatique à chaque ajout/modification/suppression)
-- Préfixe d'index `erik_`, cohérent avec le préfixe des tables
+- Préfixe d'index `management_`, cohérent avec le préfixe des tables
 
 ### Internationalisation (i18n)
 - **Backend PHP** : symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 clés de traduction, obtenues dans les contrôleurs via `__()`

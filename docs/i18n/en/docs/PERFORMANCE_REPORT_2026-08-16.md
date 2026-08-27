@@ -44,7 +44,7 @@ Login script notes: login is double-protected by captcha + rate limiting (10/min
 
 ## 3. Slow Query Review
 
-- The charge tables `erik_fee_bill` / `erik_fee_payment` have well-formed indexes (paid_at, bill_id, owner_id, payment_number, etc.); all core queries have usable indexes.
+- The charge tables `management_fee_bill` / `management_fee_payment` have well-formed indexes (paid_at, bill_id, owner_id, payment_number, etc.); all core queries have usable indexes.
 - Finding: the charge list fuzzy search by `payment_number like %kw%` (leading wildcard) cannot use an index and degrades to a full table scan at scale. It is a low-frequency admin search, so left as-is for now; can switch to inverted or prefix indexes as data grows.
 - **MySQL slow_query_log is OFF**: recommended to enable it with `long_query_time=1` to continuously observe real slow SQL (rather than inferring from load tests). Production commands:
   ```sql

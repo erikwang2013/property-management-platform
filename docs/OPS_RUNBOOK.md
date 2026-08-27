@@ -5,11 +5,11 @@
 
 ## 1. 数据库备份与恢复
 
-admin 端与 service 端共用同一 MySQL 实例与库 `property_management`，备份一次即可。统一入口：
+admin 端与 service 端共用同一 MySQL 实例与库 `management`，备份一次即可。统一入口：
 
 | 库名 | 备份脚本 | 说明 |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | 从 `admin/.env` 读连接（可用 `--container=` 覆盖容器名），默认容器内 mysqldump |
+| `management` | `scripts/backup.sh` | 从 `admin/.env` 读连接（可用 `--container=` 覆盖容器名），默认容器内 mysqldump |
 
 输出 `backups/backup_YYYYMMDD_HHMMSS.sql.gz`，默认保留最近 7 天（`--keep-days=` 可调）。
 
@@ -34,7 +34,7 @@ bash scripts/backup.sh
 1. 选取最近一份备份：`ls -t backups/backup_*.sql.gz`
 2. 在**独立环境**（或临时库）执行恢复：详见 [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) 场景 A（空库恢复）与场景 B（时间点恢复）。
 3. 验证：
-   - 行数对比：`SELECT COUNT(*) FROM erik_user;` 与备份前记录一致
+   - 行数对比：`SELECT COUNT(*) FROM management_user;` 与备份前记录一致
    - 加密字段可正常解密：查一条含 encryptable 字段的记录，值正确、日志无 decrypt 报错
    - 业务冒烟：登录、拉取列表接口正常
 4. 记录演练耗时与结果（用于 RTO 评估）。

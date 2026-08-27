@@ -5,11 +5,11 @@
 
 ## 1. Sauvegarde et restauration de la base de données
 
-Le côté admin et le côté service partagent la même instance MySQL et la même base `property_management`, une seule sauvegarde suffit. Point d'entrée unifié :
+Le côté admin et le côté service partagent la même instance MySQL et la même base `management`, une seule sauvegarde suffit. Point d'entrée unifié :
 
 | Base | Script de sauvegarde | Description |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Lit la connexion depuis `admin/.env` (surchargable avec `--container=`), mysqldump dans le conteneur par défaut |
+| `management` | `scripts/backup.sh` | Lit la connexion depuis `admin/.env` (surchargable avec `--container=`), mysqldump dans le conteneur par défaut |
 
 Sortie `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, conservation par défaut des 7 derniers jours (`--keep-days=` réglable).
 
@@ -34,7 +34,7 @@ Recommandation production : monter le répertoire de sauvegarde sur un disque in
 1. Choisir la sauvegarde la plus récente : `ls -t backups/backup_*.sql.gz`
 2. Exécuter la restauration dans un **environnement indépendant** (ou une base temporaire) : voir [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) scénario A (restauration sur base vide) et scénario B (restauration à un point dans le temps).
 3. Vérifications :
-   - Comparaison des compteurs de lignes : `SELECT COUNT(*) FROM erik_user;` cohérent avec l'avant-sauvegarde
+   - Comparaison des compteurs de lignes : `SELECT COUNT(*) FROM management_user;` cohérent avec l'avant-sauvegarde
    - Les champs chiffrés se déchiffrent correctement : consulter un enregistrement avec champs encryptable, valeurs correctes, aucun message d'erreur decrypt dans les journaux
    - Smoke test métier : connexion, appel des interfaces de liste normaux
 4. Consigner la durée et le résultat de l'exercice (pour l'évaluation RTO).

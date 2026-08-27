@@ -643,7 +643,7 @@ curl -H "X-API-Key: <KeyAnda>" http://localhost:8788/open/announcements
 ```
 
 - Key hilang atau salah mengembalikan `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
-- Manajemen Key: `php scripts/gen_api_key.php [--name=用途]` membuat; nonaktifkan/hapus langsung operasi tabel `erik_api_key`（`status=0` berarti nonaktif, Key langsung tidak berlaku）
+- Manajemen Key: `php scripts/gen_api_key.php [--name=用途]` membuat; nonaktifkan/hapus langsung operasi tabel `management_api_key`（`status=0` berarti nonaktif, Key langsung tidak berlaku）
 
 ### Endpoint
 

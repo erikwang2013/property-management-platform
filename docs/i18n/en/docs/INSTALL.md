@@ -90,7 +90,7 @@ php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
 
 ```bash
 mysql -u root -p <<SQL
-CREATE DATABASE IF NOT EXISTS property_management
+CREATE DATABASE IF NOT EXISTS management
   DEFAULT CHARSET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 SQL
@@ -99,7 +99,7 @@ SQL
 ### 2. Import the Merged Installation Script
 
 ```bash
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p management < docs/install.sql
 ```
 
 `docs/install.sql` contains all 65 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
@@ -107,7 +107,7 @@ mysql -u root -p property_management < docs/install.sql
 Verify after execution:
 
 ```bash
-mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+mysql -u root -p management -e "SHOW TABLES;" | wc -l
 # Should output: 66 (65 tables + 1 header line)
 ```
 
@@ -293,9 +293,9 @@ Use container names instead of IPs (e.g. `DB_HOST=mysql`).
 ### Q: How to reset the database
 
 ```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
-mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p -e "DROP DATABASE IF EXISTS management;"
+mysql -u root -p -e "CREATE DATABASE management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p management < docs/install.sql
 ```
 
 ### Q: How to configure HTTPS

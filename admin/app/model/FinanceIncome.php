@@ -9,7 +9,7 @@ namespace app\model;
 
 class FinanceIncome extends BaseModel
 {
-    protected $table = 'erik_finance_income';
+    protected $table = 'management_finance_income';
 
     protected $fillable = [
         'income_number', 'income_type', 'amount',

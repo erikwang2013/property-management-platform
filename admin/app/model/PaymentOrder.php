@@ -9,7 +9,7 @@ namespace app\model;
 
 class PaymentOrder extends BaseModel
 {
-    protected $table = 'erik_payment_order';
+    protected $table = 'management_payment_order';
 
     protected $fillable = [
         'order_number', 'bill_id', 'user_id', 'user_type', 'amount',

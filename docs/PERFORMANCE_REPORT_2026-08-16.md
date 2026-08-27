@@ -44,7 +44,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ## 3. 慢查询审查
 
-- 费用表 `erik_fee_bill` / `erik_fee_payment` 索引完善（paid_at、bill_id、owner_id、payment_number 等），核心查询均有索引可用。
+- 费用表 `management_fee_bill` / `management_fee_payment` 索引完善（paid_at、bill_id、owner_id、payment_number 等），核心查询均有索引可用。
 - 发现点：费用列表按 `payment_number like %kw%` 模糊搜索（前导通配符），无法走索引，数据量大时该条件会退化为全表扫。属低频管理端搜索，暂不处理；数据量增长后可改为倒排或前缀索引。
 - **MySQL slow_query_log 处于 OFF**：建议开启并设 `long_query_time=1`，持续观察真实慢 SQL（而非靠压测推断）。生产执行：
   ```sql

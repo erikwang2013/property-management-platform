@@ -9,7 +9,7 @@ namespace app\model;
 
 class MallProduct extends BaseModel
 {
-    protected $table = 'erik_mall_product';
+    protected $table = 'management_mall_product';
 
     protected $fillable = [
         'category_id', 'community_id', 'name', 'description', 'images',

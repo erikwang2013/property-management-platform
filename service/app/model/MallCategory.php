@@ -9,7 +9,7 @@ namespace app\model;
 
 class MallCategory extends BaseModel
 {
-    protected $table = 'erik_mall_category';
+    protected $table = 'management_mall_category';
 
     protected $fillable = [
         'name', 'icon', 'sort', 'status',

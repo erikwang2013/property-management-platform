@@ -7,7 +7,7 @@ namespace app\model;
 
 class EnergyMeter extends BaseModel
 {
-    protected $table = 'erik_energy_meter';
+    protected $table = 'management_energy_meter';
     protected $fillable = ['room_id', 'meter_type', 'meter_number', 'install_reading', 'install_date', 'status'];
     protected $casts = [
         'meter_type' => 'integer', 'install_reading' => 'decimal:2', 'status' => 'integer',

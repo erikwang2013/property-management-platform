@@ -643,7 +643,7 @@ curl -H "X-API-Key: <Ihr Key>" http://localhost:8788/open/announcements
 ```
 
 - Fehlender oder falscher Key führt zu `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
-- Key-Verwaltung: `php scripts/gen_api_key.php [--name=Verwendungszweck]` zum Generieren; Deaktivieren/Löschen direkt über die Tabelle `erik_api_key` (`status=0` deaktiviert, der Key verliert sofort seine Gültigkeit)
+- Key-Verwaltung: `php scripts/gen_api_key.php [--name=Verwendungszweck]` zum Generieren; Deaktivieren/Löschen direkt über die Tabelle `management_api_key` (`status=0` deaktiviert, der Key verliert sofort seine Gültigkeit)
 
 ### Endpunkte
 

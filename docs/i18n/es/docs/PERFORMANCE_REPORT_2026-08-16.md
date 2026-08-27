@@ -44,7 +44,7 @@ Nota sobre el script de login: el inicio de sesión está doblemente protegido p
 
 ## 3. Revisión de consultas lentas
 
-- Las tablas de cargos `erik_fee_bill` / `erik_fee_payment` tienen índices completos (paid_at, bill_id, owner_id, payment_number, etc.); las consultas principales tienen índices disponibles.
+- Las tablas de cargos `management_fee_bill` / `management_fee_payment` tienen índices completos (paid_at, bill_id, owner_id, payment_number, etc.); las consultas principales tienen índices disponibles.
 - Hallazgo: la búsqueda difusa de la lista de cargos por `payment_number like %kw%` (comodín de prefijo) no puede usar el índice y, con muchos datos, esa condición degenera en escaneo completo de tabla. Es una búsqueda de panel de administración de baja frecuencia; no se maneja por ahora; cuando crezca el volumen de datos, puede cambiarse a índice invertido o de prefijo.
 - **MySQL slow_query_log está en OFF**: se recomienda activarlo y establecer `long_query_time=1` para observar continuamente el SQL lento real (en lugar de inferirlo de las pruebas de carga). Ejecución en producción:
   ```sql

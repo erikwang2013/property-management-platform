@@ -9,11 +9,11 @@
 
 | श्रेणी | टेबल | विवरण |
 |------|-----|------|
-| वैश्विक/प्लेटफ़ॉर्म टेबल | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | प्राधिकरण、कॉन्फ़िग、ऑडिट, स्वाभाविक रूप से प्लेटफ़ॉर्म-स्तरीय, टेनेंट से जुड़ी नहीं |
-| समुदाय आयाम टेबल | erik_community और community_id से संबद्ध 40+ व्यवसाय टेबल (building/unit/room/owner/fee_*/repair_order/parking_*/announcement आदि) | community_id के माध्यम से अप्रत्यक्ष रूप से टेनेंट से संबद्ध |
-| समूह संबद्धता टेबल | erik_group (समूह)、erik_group_community (समूह↔समुदाय) | वर्तमान में **वैकल्पिक संबंध**, कोई टेनेंट अर्थ नहीं, क्रॉस-क्षेत्र सारांश join पर निर्भर |
-| प्लेटफ़ॉर्म विस्तार टेबल | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info आदि | कुछ प्लेटफ़ॉर्म-स्तरीय, कुछ समुदाय-स्तरीय, प्रति-मामला पुष्टि आवश्यक |
-| भ्रमित करने वाली टेबल | **erik_tenant (किरायेदार टेबल)** | ⚠️ अर्थ टकराव: यह "घर का किरायेदार" (room_id/owner_id आयाम) है, **SaaS टेनेंट नहीं** |
+| वैश्विक/प्लेटफ़ॉर्म टेबल | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | प्राधिकरण、कॉन्फ़िग、ऑडिट, स्वाभाविक रूप से प्लेटफ़ॉर्म-स्तरीय, टेनेंट से जुड़ी नहीं |
+| समुदाय आयाम टेबल | management_community और community_id से संबद्ध 40+ व्यवसाय टेबल (building/unit/room/owner/fee_*/repair_order/parking_*/announcement आदि) | community_id के माध्यम से अप्रत्यक्ष रूप से टेनेंट से संबद्ध |
+| समूह संबद्धता टेबल | management_group (समूह)、management_group_community (समूह↔समुदाय) | वर्तमान में **वैकल्पिक संबंध**, कोई टेनेंट अर्थ नहीं, क्रॉस-क्षेत्र सारांश join पर निर्भर |
+| प्लेटफ़ॉर्म विस्तार टेबल | management_notification_template、management_knowledge_base、management_mall_*、management_face_info आदि | कुछ प्लेटफ़ॉर्म-स्तरीय, कुछ समुदाय-स्तरीय, प्रति-मामला पुष्टि आवश्यक |
+| भ्रमित करने वाली टेबल | **management_tenant (किरायेदार टेबल)** | ⚠️ अर्थ टकराव: यह "घर का किरायेदार" (room_id/owner_id आयाम) है, **SaaS टेनेंट नहीं** |
 
 ### 1.2 प्राधिकरण श्रृंखला (admin पोर्टल, कोड से सत्यापित)
 
@@ -28,7 +28,7 @@
 
 ### 1.3 मुख्य निष्कर्ष
 
-- कोई मौजूदा SaaS टेनेंट मॉडल नहीं; `erik_tenant` नाम किरायेदार द्वारा लिया जा चुका है, नई अवधारणा के लिए नाम से बचना अनिवार्य
+- कोई मौजूदा SaaS टेनेंट मॉडल नहीं; `management_tenant` नाम किरायेदार द्वारा लिया जा चुका है, नई अवधारणा के लिए नाम से बचना अनिवार्य
 - सभी कंट्रोलर सीधे Eloquent क्वेरी करते हैं, कोई repository परत नहीं、कोई वैश्विक scope नहीं — अलगाव सुधार मॉडल परत पर करना होगा
 - config/database.php सिंगल कनेक्शन, लेकिन illuminate/database मूल रूप से मल्टी-कनेक्शन समर्थित करता है (स्वतंत्र डेटाबेस विकास के लिए आरक्षित)
 
@@ -51,9 +51,9 @@
 
 ### 3.1 डेटा मॉडल (न्यूनतम सेट)
 
-- नई `erik_platform_tenant` (किरायेदार टेबल erik_tenant से टकराव से बचने के लिए): id/name/status/created_at आदि
-- `erik_community` में `tenant_id BIGINT NOT NULL DEFAULT 0` जोड़ें, इंडेक्स `(tenant_id, community_id)`
-- `erik_admin_user` में `tenant_id BIGINT NOT NULL DEFAULT 0` जोड़ें (0 = प्लेटफ़ॉर्म सुपर एडमिन)
+- नई `management_platform_tenant` (किरायेदार टेबल management_tenant से टकराव से बचने के लिए): id/name/status/created_at आदि
+- `management_community` में `tenant_id BIGINT NOT NULL DEFAULT 0` जोड़ें, इंडेक्स `(tenant_id, community_id)`
+- `management_admin_user` में `tenant_id BIGINT NOT NULL DEFAULT 0` जोड़ें (0 = प्लेटफ़ॉर्म सुपर एडमिन)
 - व्यवसाय मध्यवर्ती टेबल (building/room/fee_bill आदि 40 टेबल) में **कॉलम न जोड़ें**, community_id से संबद्ध
 
 ### 3.2 रनटाइम परत तीन-पीस सेट
@@ -94,13 +94,13 @@
 | मौजूदा डेटा बैकफिल त्रुटि | सभी मौजूदा डेटा | आइडेम्पोटेंट स्क्रिप्ट + बैकफिल सत्यापन + ड्राई-रन मोड |
 | इंडेक्स/प्रदर्शन प्रभाव | उच्च-आवृत्ति टेबल (fee_bill/room/owner) | (tenant_id, community_id) संयुक्त इंडेक्स; धीमी क्वेरी लॉग पुनः जांच |
 | 133 परीक्षण रिग्रेशन | पूर्ण | scope इंजेक्शन के बाद पहले पूर्ण रिग्रेशन चलाएं फिर पायलट शुरू करें |
-| नाम भ्रम (erik_tenant किरायेदार vs SaaS टेनेंट) | डेवलपर अनुभूति | नई टेबल नाम platform_tenant, दस्तावेज़ में स्पष्ट घोषणा |
+| नाम भ्रम (management_tenant किरायेदार vs SaaS टेनेंट) | डेवलपर अनुभूति | नई टेबल नाम platform_tenant, दस्तावेज़ में स्पष्ट घोषणा |
 | **रोलबैक योजना** | — | वैश्विक scope कॉन्फ़िग स्विच से एक-क्लिक बंद (सिंगल-टेनेंट अर्थ बहाल), डेटा कॉलम रखे जाएं न हटाएं, कोई विनाशकारी परिवर्तन नहीं |
 
 ## 6. समीक्षा निष्कर्ष
 
 **तुरंत करने की सलाह**:
-- साझा डेटाबेस + tenant_id पंक्ति अलगाव (योजना A), नई `erik_platform_tenant` टेबल, community/admin_user कॉलम जोड़ें
+- साझा डेटाबेस + tenant_id पंक्ति अलगाव (योजना A), नई `management_platform_tenant` टेबल, community/admin_user कॉलम जोड़ें
 - TenantContext मिडलवेयर + TenantScope वैश्विक scope + Tenant::for() उपकरण
 - पायलट क्रम: समूह → समुदाय → मालिक → शुल्क
 - पूर्व निर्भरता: पूर्ण — मल्टी-टेनेंट टेबल/कॉलम/बैकफिल docs/install.sql में इनलाइन किए गए (2026-08-16 मर्ज लागू, एकल डेटाबेस निर्माण प्रवेश)
@@ -113,4 +113,4 @@
 - Schema-स्तरीय अलगाव (MySQL में स्वतंत्र schema अर्थ नहीं, लागत स्वतंत्र डेटाबेस के बराबर)
 - डायनामिक मल्टी-डेटाबेस रूटिंग (सिंगल-मशीन तैनाती में कोई लाभ नहीं)
 - टेनेंट-स्तरीय वैयक्तिकृत schema/फ़ील्ड (YAGNI)
-- erik_tenant किरायेदार टेबल का पुनः उपयोग/सुधार SaaS टेनेंट के रूप में (अर्थ टकराव, किरायेदार व्यवसाय बाधित)
+- management_tenant किरायेदार टेबल का पुनः उपयोग/सुधार SaaS टेनेंट के रूप में (अर्थ टकराव, किरायेदार व्यवसाय बाधित)

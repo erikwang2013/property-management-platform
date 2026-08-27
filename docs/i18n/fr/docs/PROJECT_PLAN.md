@@ -55,7 +55,7 @@
 
 | Objectif | Tâches clés | Critères d'acceptation |
 |------|---------|---------|
-| Multi-tenant, performances au rendez-vous, mobile complété | ① SaaS multi-tenant : à partir de la gestion de groupe, erik_community + tenant_id + isolation par middleware (évaluation de solution d'abord, bases séparées comme direction d'évolution) ② Test de charge : wrk/k6 sur connexion/frais/tableau de bord, requêtes lentes + réexamen du cache Redis ③ Complément mobile : 5 pages HarmonyOS étendues aux parcours principaux (paiement/réparation/annonce/visiteur/stationnement), adaptation mobile du portail Flutter ④ API ouvertes / Webhook (optionnel) | Tests de franchissement de locataires validés ; P95 des interfaces clés < 300 ms ; parcours principaux HarmonyOS terminés |
+| Multi-tenant, performances au rendez-vous, mobile complété | ① SaaS multi-tenant : à partir de la gestion de groupe, management_community + tenant_id + isolation par middleware (évaluation de solution d'abord, bases séparées comme direction d'évolution) ② Test de charge : wrk/k6 sur connexion/frais/tableau de bord, requêtes lentes + réexamen du cache Redis ③ Complément mobile : 5 pages HarmonyOS étendues aux parcours principaux (paiement/réparation/annonce/visiteur/stationnement), adaptation mobile du portail Flutter ④ API ouvertes / Webhook (optionnel) | Tests de franchissement de locataires validés ; P95 des interfaces clés < 300 ms ; parcours principaux HarmonyOS terminés |
 
 **État P3** : ✅ tout terminé (livré le 2026-08-16 : trio multi-tenant + test de charge réel P95 au rendez-vous + HarmonyOS étendu à 5 pages).
 

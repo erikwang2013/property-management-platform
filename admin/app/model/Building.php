@@ -9,7 +9,7 @@ namespace app\model;
 
 class Building extends BaseModel
 {
-    protected $table = 'erik_building';
+    protected $table = 'management_building';
     protected $fillable = [
         'community_id', 'name', 'building_type',
         'floor_count', 'unit_count', 'elevator_count',

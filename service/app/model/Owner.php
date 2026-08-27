@@ -14,7 +14,7 @@ class Owner extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_owner';
+    protected $table = 'management_owner';
 
     protected $fillable = [
         'name', 'phone', 'email', 'id_card', 'password',
@@ -45,6 +45,6 @@ class Owner extends BaseModel
 
     public function rooms()
     {
-        return $this->belongsToMany(Room::class, 'erik_room_owner', 'owner_id', 'room_id');
+        return $this->belongsToMany(Room::class, 'management_room_owner', 'owner_id', 'room_id');
     }
 }

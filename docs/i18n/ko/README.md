@@ -60,7 +60,7 @@ property-management-platform/
 
 | 레이어 | 수량 | 상세 |
 |----|------|------|
-| 데이터베이스 테이블 | 65개 | 전부 `erik_` 접두사, BIGINT 비자동증가 기본 키 |
+| 데이터베이스 테이블 | 65개 | 전부 `management_` 접두사, BIGINT 비자동증가 기본 키 |
 | PHP 모델 | admin 64 / service 57 | 모두 Eloquent 모델, encryptable 암호화 필드 포함; service 57은 모델 파일 수(BaseModel 베이스 클래스 포함) |
 | admin 컨트롤러 | 58개 | 공통 관리 + 22개 부동산 모듈 + 12개 확장 기능 |
 | service 컨트롤러 | 17개 | 입주민 포털 전체 API |
@@ -108,7 +108,7 @@ property-management-platform/
 ### 백엔드
 - **프레임워크**: webman v2 (workerman/webman)
 - **언어**: PHP 8.3+
-- **데이터베이스**: MySQL 8.0+, 테이블 접두사 `erik_`, 기본 키 BIGINT 비자동증가
+- **데이터베이스**: MySQL 8.0+, 테이블 접두사 `management_`, 기본 키 BIGINT 비자동증가
 - **검색 엔진**: Elasticsearch 8.x
 - **캐시**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### 1. 데이터베이스 초기화
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. 관리자 시작

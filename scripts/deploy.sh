@@ -72,7 +72,7 @@ init_db() {
     local dir="$1" name="$2"
     step "$name: 数据库初始化检查"
     local db root_pw
-    db="$(env_value "$dir" DB_DATABASE property_management)"
+    db="$(env_value "$dir" DB_DATABASE management)"
     root_pw="$(env_value "$dir" MYSQL_ROOT_PASSWORD change-me-root-password)"
 
     local i=0

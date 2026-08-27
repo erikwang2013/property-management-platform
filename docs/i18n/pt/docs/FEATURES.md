@@ -6,44 +6,44 @@
 
 | Nº | Módulo | Fase | Painel de administração | Portal de proprietários | Tabelas |
 |------|------|---------|---------|--------|--------|
-| 1 | Gestão de condomínios | 1ª fase | CRUD + busca com paginação | Visualizar condomínio vinculado | erik_community |
-| 2 | Gestão de edifícios | 1ª fase | CRUD + filtro por condomínio | - | erik_building |
-| 3 | Gestão de unidades | 1ª fase | CRUD + filtro por edifício | - | erik_unit |
-| 4 | Gestão de layouts | 1ª fase | CRUD | - | erik_room_type |
-| 5 | Gestão de propriedades | 1ª fase | CRUD + árvore de imóveis + vínculo em lote com proprietários | Minha lista/detalhes de propriedades | erik_room |
-| 6 | Gestão de proprietários | 1ª fase | CRUD + importação em lote/ativar-desativar/excluir | Registro/login/dados pessoais | erik_owner, erik_room_owner |
-| 7 | Gestão de inquilinos | 1ª fase | CRUD + filtro por propriedade | - | erik_tenant |
-| 8 | Gestão de cobranças | 1ª fase | CRUD de tipos de cobrança + gestão de faturas + geração em lote + cobrança offline | Consulta de faturas + pagamento online + estatísticas de cobranças | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | Gestão de reparos | 1ª fase | Lista de reparos + despacho + atualização de andamento | Enviar solicitação de reparo + acompanhar andamento + avaliar | erik_repair_order, erik_repair_progress |
-| 10 | Anúncios e notificações | 1ª fase | CRUD + publicação/fixação | Lista/detalhes de anúncios | erik_announcement |
-| 11 | Gestão de estacionamento | 2ª fase | Gestão de vagas/veículos + registros | Minhas vagas/veículos + registros | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | Gestão de equipamentos | 2ª fase | Cadastro de equipamentos + registros de manutenção | - | erik_equipment, erik_equipment_maintenance |
-| 13 | Reclamações e sugestões | 2ª fase | Lista de reclamações + tratamento + retorno | Enviar reclamação + acompanhar andamento + avaliar | erik_complaint |
-| 14 | Gestão de visitantes | 2ª fase | Aprovação de visitantes + consulta de registros | Agendamento de visitante + código de acesso | erik_visitor |
-| 15 | Gestão de contratos | 2ª fase | CRUD + gestão de status | - | erik_contract |
-| 16 | Gestão financeira | 2ª fase | Gestão de receitas/despesas + relatórios estatísticos | - | erik_finance_income, erik_finance_expense |
-| 17 | Patrulha de segurança | 3ª fase | Rotas de patrulha + registros de patrulha | - | erik_security_patrol, erik_patrol_record |
-| 18 | Gestão de limpeza | 3ª fase | Áreas de limpeza + registros de limpeza | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | Gestão de paisagismo | 3ª fase | Áreas verdes + registros de manutenção | - | erik_green_area, erik_green_maintenance |
-| 20 | Atividades comunitárias | 3ª fase | Gestão de atividades + consulta de inscrições | Lista de atividades + inscrição | erik_community_activity, erik_activity_signup |
-| 21 | Gestão de consumo de energia | 3ª fase | Gestão de medidores + registros de leitura | - | erik_energy_meter, erik_energy_record |
-| 22 | Gestão de funcionários | 3ª fase | CRUD + gestão de status | - | erik_staff |
+| 1 | Gestão de condomínios | 1ª fase | CRUD + busca com paginação | Visualizar condomínio vinculado | management_community |
+| 2 | Gestão de edifícios | 1ª fase | CRUD + filtro por condomínio | - | management_building |
+| 3 | Gestão de unidades | 1ª fase | CRUD + filtro por edifício | - | management_unit |
+| 4 | Gestão de layouts | 1ª fase | CRUD | - | management_room_type |
+| 5 | Gestão de propriedades | 1ª fase | CRUD + árvore de imóveis + vínculo em lote com proprietários | Minha lista/detalhes de propriedades | management_room |
+| 6 | Gestão de proprietários | 1ª fase | CRUD + importação em lote/ativar-desativar/excluir | Registro/login/dados pessoais | management_owner, management_room_owner |
+| 7 | Gestão de inquilinos | 1ª fase | CRUD + filtro por propriedade | - | management_tenant |
+| 8 | Gestão de cobranças | 1ª fase | CRUD de tipos de cobrança + gestão de faturas + geração em lote + cobrança offline | Consulta de faturas + pagamento online + estatísticas de cobranças | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | Gestão de reparos | 1ª fase | Lista de reparos + despacho + atualização de andamento | Enviar solicitação de reparo + acompanhar andamento + avaliar | management_repair_order, management_repair_progress |
+| 10 | Anúncios e notificações | 1ª fase | CRUD + publicação/fixação | Lista/detalhes de anúncios | management_announcement |
+| 11 | Gestão de estacionamento | 2ª fase | Gestão de vagas/veículos + registros | Minhas vagas/veículos + registros | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | Gestão de equipamentos | 2ª fase | Cadastro de equipamentos + registros de manutenção | - | management_equipment, management_equipment_maintenance |
+| 13 | Reclamações e sugestões | 2ª fase | Lista de reclamações + tratamento + retorno | Enviar reclamação + acompanhar andamento + avaliar | management_complaint |
+| 14 | Gestão de visitantes | 2ª fase | Aprovação de visitantes + consulta de registros | Agendamento de visitante + código de acesso | management_visitor |
+| 15 | Gestão de contratos | 2ª fase | CRUD + gestão de status | - | management_contract |
+| 16 | Gestão financeira | 2ª fase | Gestão de receitas/despesas + relatórios estatísticos | - | management_finance_income, management_finance_expense |
+| 17 | Patrulha de segurança | 3ª fase | Rotas de patrulha + registros de patrulha | - | management_security_patrol, management_patrol_record |
+| 18 | Gestão de limpeza | 3ª fase | Áreas de limpeza + registros de limpeza | - | management_cleaning_area, management_cleaning_record |
+| 19 | Gestão de paisagismo | 3ª fase | Áreas verdes + registros de manutenção | - | management_green_area, management_green_maintenance |
+| 20 | Atividades comunitárias | 3ª fase | Gestão de atividades + consulta de inscrições | Lista de atividades + inscrição | management_community_activity, management_activity_signup |
+| 21 | Gestão de consumo de energia | 3ª fase | Gestão de medidores + registros de leitura | - | management_energy_meter, management_energy_record |
+| 22 | Gestão de funcionários | 3ª fase | CRUD + gestão de status | - | management_staff |
 
 ## Funcionalidades estendidas (4ª fase — 12 módulos)
 
 | Nº | Módulo | Painel de administração | Portal de proprietários | Tabelas |
 |------|------|---------|--------|--------|
-| 23 | Notificações | CRUD de templates + envio manual + lista | Minhas mensagens + marcar como lida | erik_notification_template, erik_notification |
-| 24 | Fluxo de aprovação | Tipos de aprovação + instâncias + fluxo de etapas | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | Integração de pagamento | Gestão de pedidos + reembolsos + callbacks WeChat/Alipay | - | erik_payment_order |
-| 26 | Votação de proprietários | CRUD de votações + opções + estatísticas ponderadas por área | Lista de votações + votar + ponderação por área | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | Escalonamento automático de SLA | Configuração de regras + verificação de timeout + multas | - | erik_sla_rule, erik_sla_record |
-| 28 | Cobrança de inadimplência inteligente | Configuração de estratégias + correspondência de atrasos + multas | - | erik_collection_strategy, erik_collection_record |
-| 29 | App móvel de inspeção | Distribuição de tarefas + check-in por GPS + fotos | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | Loja comunitária | Gestão de categorias/produtos/pedidos/envios | Navegar produtos + fazer pedidos + meus pedidos | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | Reconhecimento facial | Gestão de revisão | Registrar rosto + status de autenticação | erik_face_info |
-| 32 | Gestão de grupo | CRUD de grupos + vínculo de condomínios + consolidação entre áreas | - | erik_group, erik_group_community |
-| 33 | P&R inteligente | Base de conhecimento + histórico de conversas + estatísticas | Perguntar + correspondência por palavras-chave | erik_knowledge_base, erik_chat_record |
+| 23 | Notificações | CRUD de templates + envio manual + lista | Minhas mensagens + marcar como lida | management_notification_template, management_notification |
+| 24 | Fluxo de aprovação | Tipos de aprovação + instâncias + fluxo de etapas | - | management_approval_type, management_approval, management_approval_record |
+| 25 | Integração de pagamento | Gestão de pedidos + reembolsos + callbacks WeChat/Alipay | - | management_payment_order |
+| 26 | Votação de proprietários | CRUD de votações + opções + estatísticas ponderadas por área | Lista de votações + votar + ponderação por área | management_vote, management_vote_option, management_vote_record |
+| 27 | Escalonamento automático de SLA | Configuração de regras + verificação de timeout + multas | - | management_sla_rule, management_sla_record |
+| 28 | Cobrança de inadimplência inteligente | Configuração de estratégias + correspondência de atrasos + multas | - | management_collection_strategy, management_collection_record |
+| 29 | App móvel de inspeção | Distribuição de tarefas + check-in por GPS + fotos | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | Loja comunitária | Gestão de categorias/produtos/pedidos/envios | Navegar produtos + fazer pedidos + meus pedidos | management_mall_category, management_mall_product, management_mall_order |
+| 31 | Reconhecimento facial | Gestão de revisão | Registrar rosto + status de autenticação | management_face_info |
+| 32 | Gestão de grupo | CRUD de grupos + vínculo de condomínios + consolidação entre áreas | - | management_group, management_group_community |
+| 33 | P&R inteligente | Base de conhecimento + histórico de conversas + estatísticas | Perguntar + correspondência por palavras-chave | management_knowledge_base, management_chat_record |
 | - | Painel de dados | Visualização em tela cheia de dados imobiliários em tempo real | - | (reutiliza APIs existentes) |
 
 ## Módulos do painel de administração (já existentes no admin)
@@ -89,7 +89,7 @@ Defesa em profundidade com 18 camadas: código de verificação → confirmaçã
 ### Mecanismo de busca
 - `erikwang2013/webman-scout` aciona o Elasticsearch
 - Sincronização automática de índices (envio automático em criações/alterações/exclusões)
-- Prefixo de índice `erik_`, consistente com o prefixo das tabelas
+- Prefixo de índice `management_`, consistente com o prefixo das tabelas
 
 ### Internacionalização (i18n)
 - **Back-end PHP**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 chaves de tradução, controladores obtêm traduções pelo método `__()`

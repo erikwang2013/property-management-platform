@@ -13,7 +13,7 @@ use Workerman\Worker;
 
 /**
  * Eloquent ORM 初始化引导
- * 读取 config/database.php 注册全局连接（表前缀 erik_）
+ * 读取 config/database.php 注册全局连接（表前缀 management_）
  */
 class Db implements Bootstrap
 {

@@ -7,7 +7,7 @@ namespace app\model;
 
 class Complaint extends BaseModel
 {
-    protected $table = 'erik_complaint';
+    protected $table = 'management_complaint';
     protected $fillable = ['owner_id', 'room_id', 'type', 'category', 'title', 'content', 'images', 'is_anonymous', 'status', 'handler_id', 'handler_remark', 'handled_at', 'visitor_id', 'visitor_remark', 'visitor_at', 'satisfaction'];
     protected $casts = [
         'type' => 'integer', 'category' => 'integer', 'is_anonymous' => 'integer',

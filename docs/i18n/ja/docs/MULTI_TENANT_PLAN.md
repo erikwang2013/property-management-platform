@@ -9,11 +9,11 @@
 
 | カテゴリ | テーブル | 説明 |
 |------|-----|------|
-| グローバル/プラットフォーム表 | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | 認可、設定、監査。本来プラットフォームレベルで、テナントを付けない |
-| コミュニティ次元の表 | erik_community および community_id で帰属する 40+ の業務テーブル（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 等） | community_id 経由で間接的にテナントへ帰属 |
-| グループ関連表 | erik_group（グループ）、erik_group_community（グループ↔コミュニティ） | 現状は**任意関連**でテナント意味論なし、跨区集計は join に依存 |
-| プラットフォーム拡張表 | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info 等 | 一部はプラットフォームレベル、一部はコミュニティレベル、個別確認が必要 |
-| 紛らわしい表 | **erik_tenant（賃借人テーブル）** | ⚠️ 意味論の衝突：「建物の賃借人」（room_id/owner_id 次元）であって、**SaaS テナントではない** |
+| グローバル/プラットフォーム表 | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | 認可、設定、監査。本来プラットフォームレベルで、テナントを付けない |
+| コミュニティ次元の表 | management_community および community_id で帰属する 40+ の業務テーブル（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 等） | community_id 経由で間接的にテナントへ帰属 |
+| グループ関連表 | management_group（グループ）、management_group_community（グループ↔コミュニティ） | 現状は**任意関連**でテナント意味論なし、跨区集計は join に依存 |
+| プラットフォーム拡張表 | management_notification_template、management_knowledge_base、management_mall_*、management_face_info 等 | 一部はプラットフォームレベル、一部はコミュニティレベル、個別確認が必要 |
+| 紛らわしい表 | **management_tenant（賃借人テーブル）** | ⚠️ 意味論の衝突：「建物の賃借人」（room_id/owner_id 次元）であって、**SaaS テナントではない** |
 
 ### 1.2 認可チェーン（admin 端、コード検証）
 
@@ -28,7 +28,7 @@
 
 ### 1.3 主要結論
 
-- 既存の SaaS テナントモデルはなし；`erik_tenant` の名称は賃借人が占有済みのため、新概念は名称を避ける必要がある
+- 既存の SaaS テナントモデルはなし；`management_tenant` の名称は賃借人が占有済みのため、新概念は名称を避ける必要がある
 - 全コントローラが直接 Eloquent クエリで、repository 層もグローバルスコープもない —— 分離改造はモデル層で行う必要がある
 - config/database.php は単一接続だが、illuminate/database は複数 connection をネイティブサポート（独立 DB への進化を予約）
 
@@ -51,9 +51,9 @@
 
 ### 3.1 データモデル（最小セット）
 
-- `erik_platform_tenant` を新規作成（賃借人テーブル erik_tenant との衝突を回避）：id/name/status/created_at 等
-- `erik_community` に `tenant_id BIGINT NOT NULL DEFAULT 0` を追加、インデックス `(tenant_id, community_id)`
-- `erik_admin_user` に `tenant_id BIGINT NOT NULL DEFAULT 0` を追加（0 = プラットフォームスーパー管理者）
+- `management_platform_tenant` を新規作成（賃借人テーブル management_tenant との衝突を回避）：id/name/status/created_at 等
+- `management_community` に `tenant_id BIGINT NOT NULL DEFAULT 0` を追加、インデックス `(tenant_id, community_id)`
+- `management_admin_user` に `tenant_id BIGINT NOT NULL DEFAULT 0` を追加（0 = プラットフォームスーパー管理者）
 - 業務中間テーブル（building/room/fee_bill 等 40 テーブル）は**列を追加せず**、community_id 経由で帰属
 
 ### 3.2 実行層の三種の神器
@@ -94,13 +94,13 @@
 | 既存データ回填ミス | 全既存データ | 冪等スクリプト + 回填検証 + ドライラン |
 | インデックス/パフォーマンス影響 | 高頻度テーブル（fee_bill/room/owner） | (tenant_id, community_id) 複合インデックス；スロークエリログで再確認 |
 | 133 テスト回帰 | 全量 | スコープ注入後に全量回帰を先に実行してからパイロット開始 |
-| 命名混乱（erik_tenant 賃借人 vs SaaS テナント） | 開発者の認知 | 新テーブルは platform_tenant と命名し、ドキュメントで明示宣言 |
+| 命名混乱（management_tenant 賃借人 vs SaaS テナント） | 開発者の認知 | 新テーブルは platform_tenant と命名し、ドキュメントで明示宣言 |
 | **ロールバック方案** | — | グローバルスコープは設定スイッチでワンクリック無効化可能（単テナント意味論に復帰）、データ列は保持し削除しない、破壊的変更なし |
 
 ## 6. 評審結論
 
 **今すぐ実施を推奨**：
-- 共有 DB + tenant_id 行分離（方案 A）、`erik_platform_tenant` テーブルを新規作成、community/admin_user に列追加
+- 共有 DB + tenant_id 行分離（方案 A）、`management_platform_tenant` テーブルを新規作成、community/admin_user に列追加
 - TenantContext ミドルウェア + TenantScope グローバルスコープ + Tenant::for() ツール
 - パイロット順序：グループ → コミュニティ → 所有者 → 料金
 - 前置依存：完了済み — マルチテナントのテーブル/列/回填は docs/install.sql にインライン化済み（2026-08-16 統合、単一の DB 作成エントリ）
@@ -113,4 +113,4 @@
 - Schema レベル分離（MySQL に独立 schema 意味論なし、コストは独立 DB と同等）
 - 動的多 DB ルーティング（単機デプロイではメリットなし）
 - テナントレベル個別 schema/フィールド（YAGNI）
-- erik_tenant 賃借人テーブルの流用/改造で SaaS テナント化（意味論衝突、賃借人業務を破壊）
+- management_tenant 賃借人テーブルの流用/改造で SaaS テナント化（意味論衝突、賃借人業務を破壊）

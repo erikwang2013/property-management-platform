@@ -9,7 +9,7 @@ namespace app\model;
 
 class Vote extends BaseModel
 {
-    protected $table = 'erik_vote';
+    protected $table = 'management_vote';
 
     protected $fillable = [
         'community_id', 'title', 'description', 'vote_type',

@@ -643,7 +643,7 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 ```
 
 - 欠落または誤った Key は `401` を返します（`{"code":401,"message":"无效的API Key","data":[]}`）
-- Key 管理：`php scripts/gen_api_key.php [--name=用途]` で生成；無効化/削除は `erik_api_key` テーブルを直接操作（`status=0` で即無効、キーは即時失効）
+- Key 管理：`php scripts/gen_api_key.php [--name=用途]` で生成；無効化/削除は `management_api_key` テーブルを直接操作（`status=0` で即無効、キーは即時失効）
 
 ### エンドポイント
 

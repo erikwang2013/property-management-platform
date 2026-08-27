@@ -9,7 +9,7 @@ namespace app\model;
 
 class Contract extends BaseModel
 {
-    protected $table = 'erik_contract';
+    protected $table = 'management_contract';
 
     protected $fillable = [
         'contract_number', 'contract_type',

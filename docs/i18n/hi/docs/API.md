@@ -643,7 +643,7 @@ curl -H "X-API-Key: <आपका Key>" http://localhost:8788/open/announcements
 ```
 
 - अनुपलब्ध या गलत Key पर `401` लौटता है (`{"code":401,"message":"无效的API Key","data":[]}`)
-- Key प्रबंधन: `php scripts/gen_api_key.php [--name=उपयोग]` से जनरेट करें; अक्षम/हटाना सीधे `erik_api_key` टेबल पर कार्य (`status=0` अर्थात अक्षम, कुंजी तुरंत अमान्य)
+- Key प्रबंधन: `php scripts/gen_api_key.php [--name=उपयोग]` से जनरेट करें; अक्षम/हटाना सीधे `management_api_key` टेबल पर कार्य (`status=0` अर्थात अक्षम, कुंजी तुरंत अमान्य)
 
 ### एंडपॉइंट
 

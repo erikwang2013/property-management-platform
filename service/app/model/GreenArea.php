@@ -7,7 +7,7 @@ namespace app\model;
 
 class GreenArea extends BaseModel
 {
-    protected $table = 'erik_green_area';
+    protected $table = 'management_green_area';
     protected $fillable = ['community_id', 'name', 'location', 'area', 'plant_types', 'responsible_staff', 'sort', 'status'];
     protected $casts = [
         'area' => 'decimal:2', 'sort' => 'integer', 'status' => 'integer',

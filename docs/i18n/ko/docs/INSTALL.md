@@ -90,7 +90,7 @@ php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
 
 ```bash
 mysql -u root -p <<SQL
-CREATE DATABASE IF NOT EXISTS property_management
+CREATE DATABASE IF NOT EXISTS management
   DEFAULT CHARSET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 SQL
@@ -99,7 +99,7 @@ SQL
 ### 2. 통합 설치 스크립트 가져오기
 
 ```bash
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p management < docs/install.sql
 ```
 
 `docs/install.sql`에는 전체 65개 테이블 + RBAC 권한 시드 데이터가 포함되며, `CREATE TABLE IF NOT EXISTS`를 사용해 반복 실행 가능합니다.
@@ -107,7 +107,7 @@ mysql -u root -p property_management < docs/install.sql
 실행 후 검증:
 
 ```bash
-mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+mysql -u root -p management -e "SHOW TABLES;" | wc -l
 # 应输出: 66（65张表 + 1行表头）
 ```
 
@@ -293,9 +293,9 @@ IP 대신 컨테이너 이름으로 연결하세요（예: `DB_HOST=mysql`）.
 ### Q: 데이터베이스 리셋 방법
 
 ```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
-mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p -e "DROP DATABASE IF EXISTS management;"
+mysql -u root -p -e "CREATE DATABASE management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p management < docs/install.sql
 ```
 
 ### Q: HTTPS 설정 방법

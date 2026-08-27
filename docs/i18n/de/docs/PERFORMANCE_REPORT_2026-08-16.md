@@ -44,7 +44,7 @@ Hinweis zum Anmeldeskript: Die Anmeldung ist durch Captcha + Ratenlimit (10 Vers
 
 ## 3. Slow-Query-Überprüfung
 
-- Die Indizes der Gebührentabellen `erik_fee_bill` / `erik_fee_payment` sind vollständig (paid_at、bill_id、owner_id、payment_number usw.), Kernabfragen haben passende Indizes.
+- Die Indizes der Gebührentabellen `management_fee_bill` / `management_fee_payment` sind vollständig (paid_at、bill_id、owner_id、payment_number usw.), Kernabfragen haben passende Indizes.
 - Fundstelle: Die Gebührenliste sucht per `payment_number like %kw%` (führender Wildcard) — kein Index nutzbar; bei großen Datenmengen degeneriert diese Bedingung zum Full-Table-Scan. Ist eine seltene Admin-Suche, vorerst nicht behandelt; bei Datenwachstum auf Inverted-Index oder Präfix-Index umstellen.
 - **MySQL slow_query_log ist OFF**: Empfehlung, es zu aktivieren und `long_query_time=1` zu setzen, um reale langsame SQLs zu beobachten (statt nur aus Lasttests abzuleiten). Produktion ausführen:
   ```sql

@@ -8,7 +8,7 @@ declare(strict_types=1);
 /**
  * 数据库连接配置
  * 使用 illuminate/database (Laravel Eloquent)
- * 表前缀统一为 erik_
+ * 表前缀统一为 management_
  */
 return [
     // 默认连接
@@ -23,7 +23,7 @@ return [
             // 数据库端口
             'port' => (int)(getenv('DB_PORT') ?: 3306),
             // 数据库名
-            'database' => getenv('DB_DATABASE') ?: 'property_management',
+            'database' => getenv('DB_DATABASE') ?: 'management',
             // 用户名
             'username' => getenv('DB_USERNAME') ?: 'root',
             // 密码
@@ -32,7 +32,7 @@ return [
             'charset' => 'utf8mb4',
             // 排序规则
             'collation' => 'utf8mb4_unicode_ci',
-            // 表前缀（模型 $table 已含 erik_ 前缀，此处为空避免双前缀）
+            // 表前缀（模型 $table 已含 management_ 前缀，此处为空避免双前缀）
             'prefix' => '',
             // 严格模式
             'strict' => true,

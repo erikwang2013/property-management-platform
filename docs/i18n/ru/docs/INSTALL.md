@@ -90,7 +90,7 @@ php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
 
 ```bash
 mysql -u root -p <<SQL
-CREATE DATABASE IF NOT EXISTS property_management
+CREATE DATABASE IF NOT EXISTS management
   DEFAULT CHARSET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 SQL
@@ -99,7 +99,7 @@ SQL
 ### 2. Импорт объединённого скрипта установки
 
 ```bash
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p management < docs/install.sql
 ```
 
 `docs/install.sql` содержит все 65 таблиц + начальные данные RBAC, использует `CREATE TABLE IF NOT EXISTS` для повторяемого выполнения.
@@ -107,7 +107,7 @@ mysql -u root -p property_management < docs/install.sql
 Проверка после выполнения:
 
 ```bash
-mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+mysql -u root -p management -e "SHOW TABLES;" | wc -l
 # Должно вывести: 66 (65 таблиц + 1 строка заголовка)
 ```
 
@@ -293,9 +293,9 @@ docker-php-ext-install pcntl
 ### Q: Как сбросить базу данных
 
 ```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
-mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p -e "DROP DATABASE IF EXISTS management;"
+mysql -u root -p -e "CREATE DATABASE management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p management < docs/install.sql
 ```
 
 ### Q: Как настроить HTTPS

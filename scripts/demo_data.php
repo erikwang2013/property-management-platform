@@ -119,7 +119,7 @@ foreach ([['张三', '13800000001'], ['李四', '13800000002']] as [$name, $phon
 }
 $mark('owner', $owners[0]);
 
-// 业主-房产关联（erik_room_owner 中间表，含 snowflake 主键）
+// 业主-房产关联（management_room_owner 中间表，含 snowflake 主键）
 $pivot = fn (int $roomId): array => ['id' => SnowflakeService::generate()];
 $owners[0]->rooms()->syncWithoutDetaching([$rooms[0]->id => $pivot($rooms[0]->id), $rooms[2]->id => $pivot($rooms[2]->id)]);
 $owners[1]->rooms()->syncWithoutDetaching([$rooms[1]->id => $pivot($rooms[1]->id), $rooms[3]->id => $pivot($rooms[3]->id)]);
@@ -155,7 +155,7 @@ $mark('fee_bill', FeeBill::first());
 // 演示后台账号（仅在无管理员时创建，密码 demo123456）
 // 注意: AdminUser 挂载了 scout 观察者，CLI 无 ES 客户端会崩，故用原生 insert
 if (AdminUser::query()->count() === 0) {
-    \support\Db::table('erik_admin_user')->insert([
+    \support\Db::table('management_admin_user')->insert([
         'id' => SnowflakeService::generate(), 'username' => 'admin',
         'password' => password_hash('demo123456', PASSWORD_BCRYPT), 'real_name' => '系统管理员',
         'status' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),

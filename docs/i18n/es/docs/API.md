@@ -643,7 +643,7 @@ curl -H "X-API-Key: <su Key>" http://localhost:8788/open/announcements
 ```
 
 - Key faltante o incorrecta devuelve `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
-- Gestión de Keys: generar con `php scripts/gen_api_key.php [--name=uso]`; para deshabilitar/eliminar operar directamente en la tabla `erik_api_key` (`status=0` deshabilita, la Key deja de ser válida inmediatamente)
+- Gestión de Keys: generar con `php scripts/gen_api_key.php [--name=uso]`; para deshabilitar/eliminar operar directamente en la tabla `management_api_key` (`status=0` deshabilita, la Key deja de ser válida inmediatamente)
 
 ### Endpoints
 

@@ -60,7 +60,7 @@ property-management-platform/
 
 | परत | मात्रा | विवरण |
 |----|------|------|
-| डेटाबेस टेबल | 65 | सभी `erik_` उपसर्ग के साथ, BIGINT गैर-ऑटोइंक्रीमेंट प्राथमिक कुंजी |
+| डेटाबेस टेबल | 65 | सभी `management_` उपसर्ग के साथ, BIGINT गैर-ऑटोइंक्रीमेंट प्राथमिक कुंजी |
 | PHP मॉडल | admin 64 / service 57 | सभी Eloquent मॉडल, encryptable एन्क्रिप्शन फ़ील्ड सहित; service 57 मॉडल फ़ाइलों की संख्या है (BaseModel आधार कक्षा सहित) |
 | admin कंट्रोलर | 58 | सामान्य प्रबंधन + 22 संपत्ति मॉड्यूल + 12 विस्तारित सुविधाएँ |
 | service कंट्रोलर | 17 | मालिक पोर्टल के सभी API |
@@ -108,7 +108,7 @@ property-management-platform/
 ### बैकएंड
 - **फ्रेमवर्क**: webman v2 (workerman/webman)
 - **भाषा**: PHP 8.3+
-- **डेटाबेस**: MySQL 8.0+, टेबल उपसर्ग `erik_`, प्राथमिक कुंजी BIGINT गैर-ऑटोइंक्रीमेंट
+- **डेटाबेस**: MySQL 8.0+, टेबल उपसर्ग `management_`, प्राथमिक कुंजी BIGINT गैर-ऑटोइंक्रीमेंट
 - **सर्च इंजन**: Elasticsearch 8.x
 - **कैश**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### 1. डेटाबेस आरंभ करें
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. एडमिन पैनल प्रारंभ करें

@@ -6,44 +6,44 @@
 
 | 番号 | モジュール | 所属バッチ | 管理者端 | 所有者端 | データテーブル |
 |------|------|---------|---------|--------|--------|
-| 1 | コミュニティ管理 | 第1バッチ | CRUD + 検索ページング | バインドしたコミュニティの閲覧 | erik_community |
-| 2 | 棟管理 | 第1バッチ | CRUD + コミュニティ別フィルタ | - | erik_building |
-| 3 | 部屋管理 | 第1バッチ | CRUD + 棟別フィルタ | - | erik_unit |
-| 4 | 間取りタイプ管理 | 第1バッチ | CRUD | - | erik_room_type |
-| 5 | 不動産管理 | 第1バッチ | CRUD + 建物ツリー + 所有者一括バインド | マイ不動産一覧/詳細 | erik_room |
-| 6 | 所有者管理 | 第1バッチ | CRUD + 一括インポート/有効・無効化/削除 | 登録/ログイン/個人情報 | erik_owner, erik_room_owner |
-| 7 | テナント管理 | 第1バッチ | CRUD + 不動産別フィルタ | - | erik_tenant |
-| 8 | 料金管理 | 第1バッチ | 料金タイプ CRUD + 請求書管理 + 一括生成 + オフライン集金 | 請求書照会 + オンライン支払い + 料金統計 | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | 修理依頼管理 | 第1バッチ | 修理依頼一覧 + 手配 + 進捗更新 | 修理依頼提出 + 進捗確認 + 評価 | erik_repair_order, erik_repair_progress |
-| 10 | お知らせ通知 | 第1バッチ | CRUD + 公開/固定表示 | お知らせ一覧/詳細 | erik_announcement |
-| 11 | 駐車管理 | 第2バッチ | 駐車スペース/車両管理 + 駐車記録 | マイ駐車スペース/車両 + 駐車記録 | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | 設備管理 | 第2バッチ | 設備台帳 + メンテナンス記録 | - | erik_equipment, erik_equipment_maintenance |
-| 13 | 苦情・提案 | 第2バッチ | 苦情一覧 + 処理 + フォローアップ | 苦情提出 + 進捗確認 + 評価 | erik_complaint |
-| 14 | 来訪者管理 | 第2バッチ | 来訪者承認 + 記録照会 | 来訪者予約 + 通行コード | erik_visitor |
-| 15 | 契約管理 | 第2バッチ | CRUD + ステータス管理 | - | erik_contract |
-| 16 | 財務管理 | 第2バッチ | 収支管理 + 統計レポート | - | erik_finance_income, erik_finance_expense |
-| 17 | 警備巡回 | 第3バッチ | 巡回ルート + 巡回記録 | - | erik_security_patrol, erik_patrol_record |
-| 18 | 清掃管理 | 第3バッチ | 清掃エリア + 清掃記録 | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | 緑化管理 | 第3バッチ | 緑化エリア + 維持管理記録 | - | erik_green_area, erik_green_maintenance |
-| 20 | コミュニティイベント | 第3バッチ | イベント管理 + 申し込み確認 | イベント一覧 + 申し込み | erik_community_activity, erik_activity_signup |
-| 21 | エネルギー管理 | 第3バッチ | 計器管理 + 検針記録 | - | erik_energy_meter, erik_energy_record |
-| 22 | スタッフ管理 | 第3バッチ | CRUD + ステータス管理 | - | erik_staff |
+| 1 | コミュニティ管理 | 第1バッチ | CRUD + 検索ページング | バインドしたコミュニティの閲覧 | management_community |
+| 2 | 棟管理 | 第1バッチ | CRUD + コミュニティ別フィルタ | - | management_building |
+| 3 | 部屋管理 | 第1バッチ | CRUD + 棟別フィルタ | - | management_unit |
+| 4 | 間取りタイプ管理 | 第1バッチ | CRUD | - | management_room_type |
+| 5 | 不動産管理 | 第1バッチ | CRUD + 建物ツリー + 所有者一括バインド | マイ不動産一覧/詳細 | management_room |
+| 6 | 所有者管理 | 第1バッチ | CRUD + 一括インポート/有効・無効化/削除 | 登録/ログイン/個人情報 | management_owner, management_room_owner |
+| 7 | テナント管理 | 第1バッチ | CRUD + 不動産別フィルタ | - | management_tenant |
+| 8 | 料金管理 | 第1バッチ | 料金タイプ CRUD + 請求書管理 + 一括生成 + オフライン集金 | 請求書照会 + オンライン支払い + 料金統計 | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | 修理依頼管理 | 第1バッチ | 修理依頼一覧 + 手配 + 進捗更新 | 修理依頼提出 + 進捗確認 + 評価 | management_repair_order, management_repair_progress |
+| 10 | お知らせ通知 | 第1バッチ | CRUD + 公開/固定表示 | お知らせ一覧/詳細 | management_announcement |
+| 11 | 駐車管理 | 第2バッチ | 駐車スペース/車両管理 + 駐車記録 | マイ駐車スペース/車両 + 駐車記録 | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | 設備管理 | 第2バッチ | 設備台帳 + メンテナンス記録 | - | management_equipment, management_equipment_maintenance |
+| 13 | 苦情・提案 | 第2バッチ | 苦情一覧 + 処理 + フォローアップ | 苦情提出 + 進捗確認 + 評価 | management_complaint |
+| 14 | 来訪者管理 | 第2バッチ | 来訪者承認 + 記録照会 | 来訪者予約 + 通行コード | management_visitor |
+| 15 | 契約管理 | 第2バッチ | CRUD + ステータス管理 | - | management_contract |
+| 16 | 財務管理 | 第2バッチ | 収支管理 + 統計レポート | - | management_finance_income, management_finance_expense |
+| 17 | 警備巡回 | 第3バッチ | 巡回ルート + 巡回記録 | - | management_security_patrol, management_patrol_record |
+| 18 | 清掃管理 | 第3バッチ | 清掃エリア + 清掃記録 | - | management_cleaning_area, management_cleaning_record |
+| 19 | 緑化管理 | 第3バッチ | 緑化エリア + 維持管理記録 | - | management_green_area, management_green_maintenance |
+| 20 | コミュニティイベント | 第3バッチ | イベント管理 + 申し込み確認 | イベント一覧 + 申し込み | management_community_activity, management_activity_signup |
+| 21 | エネルギー管理 | 第3バッチ | 計器管理 + 検針記録 | - | management_energy_meter, management_energy_record |
+| 22 | スタッフ管理 | 第3バッチ | CRUD + ステータス管理 | - | management_staff |
 
 ## 拡張機能（第4バッチ — 12モジュール）
 
 | 番号 | モジュール | 管理者端 | 所有者端 | データテーブル |
 |------|------|---------|--------|--------|
-| 23 | メッセージ通知 | テンプレート CRUD + 手動送信 + 一覧 | マイメッセージ + 既読マーク | erik_notification_template, erik_notification |
-| 24 | 承認ワークフロー | 承認タイプ + インスタンス + ステップ遷移 | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | 決済統合 | 注文管理 + 返金 + WeChat/Alipay コールバック | - | erik_payment_order |
-| 26 | 所有者投票 | 投票 CRUD + 選択肢 + 面積加重統計 | 投票一覧 + 投票 + 面積加重 | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | SLA 自動エスカレーション | ルール設定 + タイムアウトチェック + 罰金 | - | erik_sla_rule, erik_sla_record |
-| 28 | スマート督促 | 戦略設定 + 滞納マッチング + 延滞金 | - | erik_collection_strategy, erik_collection_record |
-| 29 | 巡回点検モバイル | タスク配信 + GPS 打刻 + 写真 | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | コミュニティモール | カテゴリ/商品/注文/発送管理 | 商品閲覧 + 注文 + マイ注文 | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | 顔認証 | 審査管理 | 顔認証登録 + 認証ステータス | erik_face_info |
-| 32 | グループ管理 | グループ CRUD + コミュニティ関連付け + 跨区集計 | - | erik_group, erik_group_community |
-| 33 | スマートQ&A | ナレッジベース + 対話記録 + 統計 | 質問 + キーワードマッチング | erik_knowledge_base, erik_chat_record |
+| 23 | メッセージ通知 | テンプレート CRUD + 手動送信 + 一覧 | マイメッセージ + 既読マーク | management_notification_template, management_notification |
+| 24 | 承認ワークフロー | 承認タイプ + インスタンス + ステップ遷移 | - | management_approval_type, management_approval, management_approval_record |
+| 25 | 決済統合 | 注文管理 + 返金 + WeChat/Alipay コールバック | - | management_payment_order |
+| 26 | 所有者投票 | 投票 CRUD + 選択肢 + 面積加重統計 | 投票一覧 + 投票 + 面積加重 | management_vote, management_vote_option, management_vote_record |
+| 27 | SLA 自動エスカレーション | ルール設定 + タイムアウトチェック + 罰金 | - | management_sla_rule, management_sla_record |
+| 28 | スマート督促 | 戦略設定 + 滞納マッチング + 延滞金 | - | management_collection_strategy, management_collection_record |
+| 29 | 巡回点検モバイル | タスク配信 + GPS 打刻 + 写真 | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | コミュニティモール | カテゴリ/商品/注文/発送管理 | 商品閲覧 + 注文 + マイ注文 | management_mall_category, management_mall_product, management_mall_order |
+| 31 | 顔認証 | 審査管理 | 顔認証登録 + 認証ステータス | management_face_info |
+| 32 | グループ管理 | グループ CRUD + コミュニティ関連付け + 跨区集計 | - | management_group, management_group_community |
+| 33 | スマートQ&A | ナレッジベース + 対話記録 + 統計 | 質問 + キーワードマッチング | management_knowledge_base, management_chat_record |
 | - | データ大画面 | リアルタイム不動産データ可視化の全画面表示 | - | (既存データ API を再利用) |
 
 ## 管理画面モジュール（admin 既存）
@@ -89,7 +89,7 @@
 ### 検索エンジン
 - `erikwang2013/webman-scout` が Elasticsearch を駆動
 - 自動インデックス同期（追加・削除・変更の自動プッシュ）
-- インデックス接頭辞 `erik_`、データベーステーブル接頭辞と一致
+- インデックス接頭辞 `management_`、データベーステーブル接頭辞と一致
 
 ### 国際化 (i18n)
 - **PHP バックエンド**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`、42 翻訳キー、コントローラは `__()` メソッドで翻訳取得

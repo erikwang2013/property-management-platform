@@ -30,7 +30,7 @@ class SecurityFilterTest extends TestCase
     {
         $this->assertSame('SQL注入', self::scanValue("' OR 1=1 --"));
         $this->assertSame('SQL注入', self::scanValue('UNION ALL SELECT id FROM users'));
-        $this->assertSame('SQL注入', self::scanValue('DROP TABLE erik_fee_bill'));
+        $this->assertSame('SQL注入', self::scanValue('DROP TABLE management_fee_bill'));
     }
 
     public function test_scan_detects_path_traversal(): void

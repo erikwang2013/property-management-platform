@@ -9,7 +9,7 @@ namespace app\model;
 
 class Unit extends BaseModel
 {
-    protected $table = 'erik_unit';
+    protected $table = 'management_unit';
     protected $fillable = ['building_id', 'name', 'room_count_per_floor', 'sort'];
     protected $casts = [
         'room_count_per_floor' => 'integer', 'sort' => 'integer',

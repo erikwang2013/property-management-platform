@@ -5,11 +5,11 @@
 
 ## 1. Respaldo y restauración de base de datos
 
-El extremo admin y el extremo service comparten la misma instancia de MySQL y la misma base `property_management`; un solo respaldo es suficiente. Entrada unificada:
+El extremo admin y el extremo service comparten la misma instancia de MySQL y la misma base `management`; un solo respaldo es suficiente. Entrada unificada:
 
 | Base | Script de respaldo | Descripción |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Lee la conexión de `admin/.env` (se puede sobrescribir con `--container=`), mysqldump dentro del contenedor por defecto |
+| `management` | `scripts/backup.sh` | Lee la conexión de `admin/.env` (se puede sobrescribir con `--container=`), mysqldump dentro del contenedor por defecto |
 
 Genera `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, retiene los últimos 7 días por defecto (`--keep-days=` ajustable).
 
@@ -34,7 +34,7 @@ Recomendación de producción: montar el directorio de respaldos en un disco ind
 1. Seleccionar el respaldo más reciente: `ls -t backups/backup_*.sql.gz`
 2. Ejecutar la restauración en un **entorno independiente** (o base temporal): ver [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) escenario A (restauración a base vacía) y escenario B (restauración a punto en el tiempo).
 3. Verificar:
-   - Comparación de conteos: `SELECT COUNT(*) FROM erik_user;` consistente con lo registrado antes del respaldo
+   - Comparación de conteos: `SELECT COUNT(*) FROM management_user;` consistente con lo registrado antes del respaldo
    - Los campos cifrados se descifran correctamente: consultar un registro con campos encryptable; valores correctos, sin errores de decrypt en logs
    - Smoke de negocio: inicio de sesión y consulta de listas de interfaces normales
 4. Registrar el tiempo y resultado del simulacro (para la evaluación de RTO).

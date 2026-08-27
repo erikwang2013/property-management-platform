@@ -90,7 +90,7 @@ php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
 
 ```bash
 mysql -u root -p <<SQL
-CREATE DATABASE IF NOT EXISTS property_management
+CREATE DATABASE IF NOT EXISTS management
   DEFAULT CHARSET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 SQL
@@ -99,7 +99,7 @@ SQL
 ### 2. Impor Skrip Instalasi Gabungan
 
 ```bash
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p management < docs/install.sql
 ```
 
 `docs/install.sql` berisi semua 65 tabel + data seed permission RBAC, menggunakan `CREATE TABLE IF NOT EXISTS` untuk memastikan dapat dieksekusi berulang.
@@ -107,7 +107,7 @@ mysql -u root -p property_management < docs/install.sql
 Setelah eksekusi verifikasi:
 
 ```bash
-mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+mysql -u root -p management -e "SHOW TABLES;" | wc -l
 # Harus output: 66（65 tabel + 1 baris header）
 ```
 
@@ -293,9 +293,9 @@ Gunakan nama container daripada IP untuk koneksi (misal `DB_HOST=mysql`).
 ### Q: Cara reset database
 
 ```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
-mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p -e "DROP DATABASE IF EXISTS management;"
+mysql -u root -p -e "CREATE DATABASE management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p management < docs/install.sql
 ```
 
 ### Q: Cara konfigurasi HTTPS

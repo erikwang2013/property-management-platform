@@ -643,7 +643,7 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 ```
 
 - Clé manquante ou erronée → `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
-- Gestion des clés : `php scripts/gen_api_key.php [--name=用途]` pour générer ; désactivation/suppression directement via la table `erik_api_key`（`status=0` désactive, la clé devient immédiatement invalide）
+- Gestion des clés : `php scripts/gen_api_key.php [--name=用途]` pour générer ; désactivation/suppression directement via la table `management_api_key`（`status=0` désactive, la clé devient immédiatement invalide）
 
 ### Points de terminaison
 

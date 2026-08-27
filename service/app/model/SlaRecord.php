@@ -9,7 +9,7 @@ namespace app\model;
 
 class SlaRecord extends BaseModel
 {
-    protected $table = 'erik_sla_record';
+    protected $table = 'management_sla_record';
 
     protected $fillable = [
         'repair_order_id', 'rule_id', 'response_deadline', 'resolve_deadline',

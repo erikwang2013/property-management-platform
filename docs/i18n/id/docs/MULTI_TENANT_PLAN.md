@@ -9,11 +9,11 @@
 
 | Kategori | Tabel | Deskripsi |
 |------|-----|------|
-| Tabel global/platform | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | Autentikasi, konfigurasi, audit, secara alami level platform, tidak terikat tenant |
-| Tabel dimensi komunitas | erik_community dan 40+ tabel bisnis yang dimiliki melalui community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement dll.) | Dimiliki tenant secara tidak langsung melalui community_id |
-| Tabel kaitan grup | erik_group (grup)、erik_group_community (grup↔komunitas) | Saat ini **kaitan opsional**, tanpa semantik tenant, agregasi lintas area mengandalkan join |
-| Tabel ekstensi platform | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info dll. | Sebagian level platform, sebagian level komunitas, perlu konfirmasi per kasus |
-| Tabel yang mudah membingungkan | **erik_tenant (tabel penyewa)** | ⚠️ Konflik semantik: adalah "penyewa rumah" (dimensi room_id/owner_id), **bukan** tenant SaaS |
+| Tabel global/platform | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | Autentikasi, konfigurasi, audit, secara alami level platform, tidak terikat tenant |
+| Tabel dimensi komunitas | management_community dan 40+ tabel bisnis yang dimiliki melalui community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement dll.) | Dimiliki tenant secara tidak langsung melalui community_id |
+| Tabel kaitan grup | management_group (grup)、management_group_community (grup↔komunitas) | Saat ini **kaitan opsional**, tanpa semantik tenant, agregasi lintas area mengandalkan join |
+| Tabel ekstensi platform | management_notification_template、management_knowledge_base、management_mall_*、management_face_info dll. | Sebagian level platform, sebagian level komunitas, perlu konfirmasi per kasus |
+| Tabel yang mudah membingungkan | **management_tenant (tabel penyewa)** | ⚠️ Konflik semantik: adalah "penyewa rumah" (dimensi room_id/owner_id), **bukan** tenant SaaS |
 
 ### 1.2 Rantai Autentikasi (sisi admin, diverifikasi kode)
 
@@ -28,7 +28,7 @@ Middleware grup route: AdminAuth(JWT → $request->adminId) → AdminPermission(
 
 ### 1.3 Kesimpulan Kunci
 
-- Tidak ada model tenant SaaS yang ada; nama `erik_tenant` sudah dipakai penyewa, konsep baru harus menghindari nama tersebut
+- Tidak ada model tenant SaaS yang ada; nama `management_tenant` sudah dipakai penyewa, konsep baru harus menghindari nama tersebut
 - Semua controller langsung query Eloquent, tanpa layer repository, tanpa global scope — perubahan isolasi perlu dilakukan di layer model
 - config/database.php single connection, tetapi illuminate/database mendukung multiple connection secara native (cadangan untuk evolusi database terpisah)
 
@@ -51,9 +51,9 @@ Middleware grup route: AdminAuth(JWT → $request->adminId) → AdminPermission(
 
 ### 3.1 Model Data (set minimal)
 
-- Buat baru `erik_platform_tenant` (hindari konflik dengan tabel penyewa erik_tenant): id/name/status/created_at dll.
-- `erik_community` tambah `tenant_id BIGINT NOT NULL DEFAULT 0`, indeks `(tenant_id, community_id)`
-- `erik_admin_user` tambah `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = super admin platform)
+- Buat baru `management_platform_tenant` (hindari konflik dengan tabel penyewa management_tenant): id/name/status/created_at dll.
+- `management_community` tambah `tenant_id BIGINT NOT NULL DEFAULT 0`, indeks `(tenant_id, community_id)`
+- `management_admin_user` tambah `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = super admin platform)
 - Tabel perantara bisnis (building/room/fee_bill dll. 40 tabel) **tidak tambah kolom**, dimiliki melalui community_id
 
 ### 3.2 Tiga Perangkat Layer Runtime
@@ -94,13 +94,13 @@ Strategi migrasi data: semua data lama dimasukkan ke "tenant default" (dibuat sk
 | Kesalahan backfill data lama | Semua data lama | Skrip idempoten + validasi backfill + mode dry-run |
 | Dampak indeks/performa | Tabel frekuensi tinggi (fee_bill/room/owner) | Indeks gabungan (tenant_id, community_id); tinjau ulang log slow query |
 | Regresi 133 tes | Semua | Setelah injeksi scope, jalankan regresi penuh dulu baru mulai pilot |
-| Kebingungan nama (penyewa erik_tenant vs tenant SaaS) | Kognisi pengembangan | Nama tabel baru platform_tenant, deklarasi eksplisit di dokumentasi |
+| Kebingungan nama (penyewa management_tenant vs tenant SaaS) | Kognisi pengembangan | Nama tabel baru platform_tenant, deklarasi eksplisit di dokumentasi |
 | **Rencana rollback** | — | Global scope dapat dimatikan sekali klik melalui saklar konfigurasi (kembali ke semantik single-tenant), kolom data dipertahankan tidak dihapus, tanpa perubahan destruktif |
 
 ## 6. Kesimpulan Review
 
 **Disarankan segera dilakukan**:
-- Shared database + isolasi baris tenant_id (solusi A), buat tabel `erik_platform_tenant` baru, tambah kolom community/admin_user
+- Shared database + isolasi baris tenant_id (solusi A), buat tabel `management_platform_tenant` baru, tambah kolom community/admin_user
 - Middleware TenantContext + global scope TenantScope + alat Tenant::for()
 - Urutan pilot: grup → komunitas → pemilik → biaya
 - Dependensi awal: sudah selesai — tabel/kolom/backfill multi-tenant sudah inline ke docs/install.sql (digabung 2026-08-16, entry pembuatan database tunggal)
@@ -113,4 +113,4 @@ Strategi migrasi data: semua data lama dimasukkan ke "tenant default" (dibuat sk
 - Isolasi level schema (MySQL tanpa semantik schema independen, biaya setara database terpisah)
 - Routing multi-database dinamis (tanpa manfaat di bawah deployment single-host)
 - Schema/field personalisasi level tenant (YAGNI)
-- Menggunakan/mengubah tabel penyewa erik_tenant sebagai tenant SaaS (konflik semantik, merusak bisnis penyewa)
+- Menggunakan/mengubah tabel penyewa management_tenant sebagai tenant SaaS (konflik semantik, merusak bisnis penyewa)

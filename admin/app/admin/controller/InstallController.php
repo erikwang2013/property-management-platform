@@ -316,7 +316,7 @@ class InstallController
             $username = $adminConfig['admin_username'];
 
             $pdo->prepare(
-                'INSERT INTO `erik_admin_user` (`id`, `username`, `password`, `real_name`, `status`, `created_at`, `updated_at`)
+                'INSERT INTO `management_admin_user` (`id`, `username`, `password`, `real_name`, `status`, `created_at`, `updated_at`)
                  VALUES (:id, :username, :password, :real_name, 1, NOW(), NOW())'
             )->execute([
                 'id'       => $id,
@@ -326,7 +326,7 @@ class InstallController
             ]);
 
             $pdo->prepare(
-                'INSERT INTO `erik_admin_user_role` (`user_id`, `role_id`) VALUES (:uid, :rid)'
+                'INSERT INTO `management_admin_user_role` (`user_id`, `role_id`) VALUES (:uid, :rid)'
             )->execute(['uid' => $id, 'rid' => self::SUPER_ADMIN_ROLE_ID]);
 
             return ['title' => '管理员账户', 'status' => 'success', 'message' => "用户 '{$username}' 已创建，已授予超级管理员角色"];

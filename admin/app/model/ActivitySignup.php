@@ -8,7 +8,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class ActivitySignup extends BaseModel
 {
-    protected $table = 'erik_activity_signup';
+    protected $table = 'management_activity_signup';
     protected $fillable = ['activity_id', 'owner_id', 'participant_count', 'contact_phone', 'remark', 'signup_status', 'signup_at', 'checkin_at'];
     protected $casts = [
         'participant_count' => 'integer', 'signup_status' => 'integer',

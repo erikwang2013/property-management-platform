@@ -9,7 +9,7 @@ namespace app\model;
 
 class Notification extends BaseModel
 {
-    protected $table = 'erik_notification';
+    protected $table = 'management_notification';
 
     protected $fillable = [
         'user_id', 'user_type', 'template_id', 'title', 'content',

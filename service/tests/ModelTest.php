@@ -111,7 +111,7 @@ class ModelTest extends TestCase
         $fresh = Owner::find($owner->id);
         $this->assertSame('13800138000', $fresh->phone, '加密字段读回应解密为原文');
 
-        $raw = Db::table('erik_owner')->where('id', $owner->id)->value('phone');
+        $raw = Db::table('management_owner')->where('id', $owner->id)->value('phone');
         $this->assertNotSame('13800138000', $raw, '库中不应存明文手机号');
     }
 

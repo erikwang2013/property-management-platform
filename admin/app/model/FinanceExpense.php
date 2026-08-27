@@ -9,7 +9,7 @@ namespace app\model;
 
 class FinanceExpense extends BaseModel
 {
-    protected $table = 'erik_finance_expense';
+    protected $table = 'management_finance_expense';
 
     protected $fillable = [
         'expense_number', 'expense_type', 'amount',

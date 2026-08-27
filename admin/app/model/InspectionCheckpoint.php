@@ -9,7 +9,7 @@ namespace app\model;
 
 class InspectionCheckpoint extends BaseModel
 {
-    protected $table = 'erik_inspection_checkpoint';
+    protected $table = 'management_inspection_checkpoint';
 
     protected $fillable = [
         'task_id', 'checkpoint_index', 'checkpoint_name', 'latitude',

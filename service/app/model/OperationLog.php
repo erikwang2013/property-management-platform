@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OperationLog extends Model
 {
-    protected $table = 'erik_operation_log';
+    protected $table = 'management_operation_log';
     protected $primaryKey = 'id';
     public $incrementing = false;
     public $timestamps = false;

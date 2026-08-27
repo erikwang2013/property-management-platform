@@ -9,11 +9,11 @@
 
 | Categoria | Tabelas | Descrição |
 |------|-----|------|
-| Tabelas globais/plataforma | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | Autenticação, configuração, auditoria — naturalmente nível de plataforma, sem vínculo de tenant |
-| Tabelas de dimensão de condomínio | erik_community e 40+ tabelas de negócio pertencentes via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement etc.) | Pertencem indiretamente ao tenant via community_id |
-| Tabelas de grupo | erik_group (grupo)、erik_group_community (grupo↔condomínio) | Atualmente **associação opcional**, sem semântica de tenant, consolidação entre regiões via join |
-| Tabelas de extensão da plataforma | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info etc. | Parte é nível de plataforma, parte é nível de condomínio, precisa de confirmação caso a caso |
-| Tabela confusa | **erik_tenant (tabela de inquilinos)** | ⚠️ Conflito semântico: é "inquilino do imóvel" (dimensão room_id/owner_id), **não** é tenant SaaS |
+| Tabelas globais/plataforma | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | Autenticação, configuração, auditoria — naturalmente nível de plataforma, sem vínculo de tenant |
+| Tabelas de dimensão de condomínio | management_community e 40+ tabelas de negócio pertencentes via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement etc.) | Pertencem indiretamente ao tenant via community_id |
+| Tabelas de grupo | management_group (grupo)、management_group_community (grupo↔condomínio) | Atualmente **associação opcional**, sem semântica de tenant, consolidação entre regiões via join |
+| Tabelas de extensão da plataforma | management_notification_template、management_knowledge_base、management_mall_*、management_face_info etc. | Parte é nível de plataforma, parte é nível de condomínio, precisa de confirmação caso a caso |
+| Tabela confusa | **management_tenant (tabela de inquilinos)** | ⚠️ Conflito semântico: é "inquilino do imóvel" (dimensão room_id/owner_id), **não** é tenant SaaS |
 
 ### 1.2 Cadeia de autenticação (admin, verificada no código)
 
@@ -28,7 +28,7 @@ Middleware do grupo de rotas: AdminAuth(JWT → $request->adminId) → AdminPerm
 
 ### 1.3 Conclusões-chave
 
-- Não existe nenhum modelo de tenant SaaS pronto; o nome `erik_tenant` já está ocupado pelo inquilino de imóvel, o novo conceito deve evitar o nome
+- Não existe nenhum modelo de tenant SaaS pronto; o nome `management_tenant` já está ocupado pelo inquilino de imóvel, o novo conceito deve evitar o nome
 - Todos os controladores consultam diretamente com Eloquent, sem camada repository, sem escopos globais — a reforma de isolamento precisa ser feita na camada de modelos
 - config/database.php tem conexão única, mas illuminate/database suporta nativamente múltiplas connections (reserva para evolução para bancos separados)
 
@@ -51,9 +51,9 @@ Middleware do grupo de rotas: AdminAuth(JWT → $request->adminId) → AdminPerm
 
 ### 3.1 Modelo de dados (conjunto mínimo)
 
-- Criar `erik_platform_tenant` (evitar conflito com a tabela de inquilinos erik_tenant): id/name/status/created_at etc.
-- `erik_community` ganha `tenant_id BIGINT NOT NULL DEFAULT 0`, índice `(tenant_id, community_id)`
-- `erik_admin_user` ganha `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = superadministrador da plataforma)
+- Criar `management_platform_tenant` (evitar conflito com a tabela de inquilinos management_tenant): id/name/status/created_at etc.
+- `management_community` ganha `tenant_id BIGINT NOT NULL DEFAULT 0`, índice `(tenant_id, community_id)`
+- `management_admin_user` ganha `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = superadministrador da plataforma)
 - As tabelas intermediárias de negócio (building/room/fee_bill etc., 40 tabelas) **não ganham coluna**, pertencem via community_id
 
 ### 3.2 Conjunto de três peças na camada de execução
@@ -94,13 +94,13 @@ Estratégia de migração de dados: todos os dados existentes são alocados no "
 | Erro de backfill dos dados existentes | Todos os dados existentes | Script idempotente + validação de backfill + modo dry-run |
 | Impacto de índice/desempenho | Tabelas de alta frequência (fee_bill/room/owner) | Índice conjunto (tenant_id, community_id); reexame do log de consultas lentas |
 | Regressão dos 133 testes | Completo | Após a injeção do escopo, rodar regressão completa antes de ativar o piloto |
-| Confusão de nomenclatura (erik_tenant inquilino vs. tenant SaaS) | Cognição de desenvolvimento | Nova tabela chamada platform_tenant, declaração explícita na documentação |
+| Confusão de nomenclatura (management_tenant inquilino vs. tenant SaaS) | Cognição de desenvolvimento | Nova tabela chamada platform_tenant, declaração explícita na documentação |
 | **Plano de rollback** | — | O escopo global pode ser desligado com um interruptor de configuração (restaurando a semântica de tenant único); as colunas de dados são mantidas sem exclusão, sem alteração destrutiva |
 
 ## 6. Conclusão da revisão
 
 **Recomendado fazer imediatamente**:
-- Banco compartilhado + isolamento por linha tenant_id (solução A), criar tabela `erik_platform_tenant`, adicionar colunas em community/admin_user
+- Banco compartilhado + isolamento por linha tenant_id (solução A), criar tabela `management_platform_tenant`, adicionar colunas em community/admin_user
 - Middleware TenantContext + escopo global TenantScope + utilitário Tenant::for()
 - Ordem do piloto: grupo → condomínio → proprietário → cobranças
 - Dependência prévia: concluída — tabelas/colunas/backfill do multi-tenant já incorporados ao docs/install.sql (consolidado em 2026-08-16, entry único de criação de banco)
@@ -113,4 +113,4 @@ Estratégia de migração de dados: todos os dados existentes são alocados no "
 - Isolamento por schema (MySQL não tem semântica de schema independente, custo equivalente ao banco separado)
 - Roteamento dinâmico de múltiplos bancos (sem benefício em implantação de máquina única)
 - Schema/campos personalizados por tenant (YAGNI)
-- Reutilizar/reformar a tabela de inquilinos erik_tenant como tenant SaaS (conflito semântico, quebra o negócio de inquilinos)
+- Reutilizar/reformar a tabela de inquilinos management_tenant como tenant SaaS (conflito semântico, quebra o negócio de inquilinos)

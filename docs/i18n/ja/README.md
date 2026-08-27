@@ -62,7 +62,7 @@ property-management-platform/
 
 | 層 | 数量 | 詳細 |
 |----|------|------|
-| データベーステーブル | 65 | 全て `erik_` 接頭辞、BIGINT 非自動増分主キー |
+| データベーステーブル | 65 | 全て `management_` 接頭辞、BIGINT 非自動増分主キー |
 | PHP モデル | admin 64 / service 57 | 全て Eloquent モデル、encryptable 暗号化フィールド含む；service 端 57 はモデルファイル数（BaseModel 基底クラス含む） |
 | admin コントローラ | 58個 | 共通管理 + 22の不動産モジュール + 12の拡張機能 |
 | service コントローラ | 17個 | 所有者端の全 API |
@@ -110,7 +110,7 @@ property-management-platform/
 ### バックエンド
 - **フレームワーク**: webman v2 (workerman/webman)
 - **言語**: PHP 8.3+
-- **データベース**: MySQL 8.0+、テーブル接頭辞 `erik_`、主キー BIGINT 非自動増分
+- **データベース**: MySQL 8.0+、テーブル接頭辞 `management_`、主キー BIGINT 非自動増分
 - **検索エンジン**: Elasticsearch 8.x
 - **キャッシュ**: Redis 7.x
 
@@ -191,8 +191,8 @@ php start.php start -d
 #### 1. データベース初期化
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. 管理端の起動

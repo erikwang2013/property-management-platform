@@ -6,44 +6,44 @@
 
 | 序号 | 模块 | 所属批次 | 管理员端 | 业主端 | 数据表 |
 |------|------|---------|---------|--------|--------|
-| 1 | 小区管理 | 第1批 | CRUD + 搜索分页 | 绑定小区查看 | erik_community |
-| 2 | 楼栋管理 | 第1批 | CRUD + 按小区筛选 | - | erik_building |
-| 3 | 单元管理 | 第1批 | CRUD + 按楼栋筛选 | - | erik_unit |
-| 4 | 户型管理 | 第1批 | CRUD | - | erik_room_type |
-| 5 | 房产管理 | 第1批 | CRUD + 房屋树 + 批量绑定业主 | 我的房产列表/详情 | erik_room |
-| 6 | 业主管理 | 第1批 | CRUD + 批量导入/启禁用/删除 | 注册/登录/个人信息 | erik_owner, erik_room_owner |
-| 7 | 租户管理 | 第1批 | CRUD + 按房产筛选 | - | erik_tenant |
-| 8 | 费用管理 | 第1批 | 费用类型CRUD + 账单管理 + 批量生成 + 线下收款 | 账单查询 + 在线缴费 + 费用统计 | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | 报修管理 | 第1批 | 报修列表 + 派单 + 进度更新 | 提交报修 + 查看进度 + 评价 | erik_repair_order, erik_repair_progress |
-| 10 | 公告通知 | 第1批 | CRUD + 发布/置顶 | 公告列表/详情 | erik_announcement |
-| 11 | 停车管理 | 第2批 | 车位/车辆管理 + 停车记录 | 我的车位/车辆 + 停车记录 | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | 设备管理 | 第2批 | 设备台账 + 维保记录 | - | erik_equipment, erik_equipment_maintenance |
-| 13 | 投诉建议 | 第2批 | 投诉列表 + 处理 + 回访 | 提交投诉 + 查看进度 + 评价 | erik_complaint |
-| 14 | 访客管理 | 第2批 | 访客审批 + 记录查询 | 访客预约 + 通行码 | erik_visitor |
-| 15 | 合同管理 | 第2批 | CRUD + 状态管理 | - | erik_contract |
-| 16 | 财务管理 | 第2批 | 收支管理 + 统计报表 | - | erik_finance_income, erik_finance_expense |
-| 17 | 安保巡逻 | 第3批 | 巡逻路线 + 巡逻记录 | - | erik_security_patrol, erik_patrol_record |
-| 18 | 保洁管理 | 第3批 | 保洁区域 + 保洁记录 | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | 绿化管理 | 第3批 | 绿化区域 + 养护记录 | - | erik_green_area, erik_green_maintenance |
-| 20 | 社区活动 | 第3批 | 活动管理 + 报名查看 | 活动列表 + 报名 | erik_community_activity, erik_activity_signup |
-| 21 | 能耗管理 | 第3批 | 仪表管理 + 抄表记录 | - | erik_energy_meter, erik_energy_record |
-| 22 | 员工管理 | 第3批 | CRUD + 状态管理 | - | erik_staff |
+| 1 | 小区管理 | 第1批 | CRUD + 搜索分页 | 绑定小区查看 | management_community |
+| 2 | 楼栋管理 | 第1批 | CRUD + 按小区筛选 | - | management_building |
+| 3 | 单元管理 | 第1批 | CRUD + 按楼栋筛选 | - | management_unit |
+| 4 | 户型管理 | 第1批 | CRUD | - | management_room_type |
+| 5 | 房产管理 | 第1批 | CRUD + 房屋树 + 批量绑定业主 | 我的房产列表/详情 | management_room |
+| 6 | 业主管理 | 第1批 | CRUD + 批量导入/启禁用/删除 | 注册/登录/个人信息 | management_owner, management_room_owner |
+| 7 | 租户管理 | 第1批 | CRUD + 按房产筛选 | - | management_tenant |
+| 8 | 费用管理 | 第1批 | 费用类型CRUD + 账单管理 + 批量生成 + 线下收款 | 账单查询 + 在线缴费 + 费用统计 | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | 报修管理 | 第1批 | 报修列表 + 派单 + 进度更新 | 提交报修 + 查看进度 + 评价 | management_repair_order, management_repair_progress |
+| 10 | 公告通知 | 第1批 | CRUD + 发布/置顶 | 公告列表/详情 | management_announcement |
+| 11 | 停车管理 | 第2批 | 车位/车辆管理 + 停车记录 | 我的车位/车辆 + 停车记录 | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | 设备管理 | 第2批 | 设备台账 + 维保记录 | - | management_equipment, management_equipment_maintenance |
+| 13 | 投诉建议 | 第2批 | 投诉列表 + 处理 + 回访 | 提交投诉 + 查看进度 + 评价 | management_complaint |
+| 14 | 访客管理 | 第2批 | 访客审批 + 记录查询 | 访客预约 + 通行码 | management_visitor |
+| 15 | 合同管理 | 第2批 | CRUD + 状态管理 | - | management_contract |
+| 16 | 财务管理 | 第2批 | 收支管理 + 统计报表 | - | management_finance_income, management_finance_expense |
+| 17 | 安保巡逻 | 第3批 | 巡逻路线 + 巡逻记录 | - | management_security_patrol, management_patrol_record |
+| 18 | 保洁管理 | 第3批 | 保洁区域 + 保洁记录 | - | management_cleaning_area, management_cleaning_record |
+| 19 | 绿化管理 | 第3批 | 绿化区域 + 养护记录 | - | management_green_area, management_green_maintenance |
+| 20 | 社区活动 | 第3批 | 活动管理 + 报名查看 | 活动列表 + 报名 | management_community_activity, management_activity_signup |
+| 21 | 能耗管理 | 第3批 | 仪表管理 + 抄表记录 | - | management_energy_meter, management_energy_record |
+| 22 | 员工管理 | 第3批 | CRUD + 状态管理 | - | management_staff |
 
 ## 扩展功能（第4批 — 12模块）
 
 | 序号 | 模块 | 管理员端 | 业主端 | 数据表 |
 |------|------|---------|--------|--------|
-| 23 | 消息通知 | 模板CRUD + 手动发送 + 列表 | 我的消息 + 标记已读 | erik_notification_template, erik_notification |
-| 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | erik_payment_order |
-| 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | SLA自动升级 | 规则配置 + 超时检查 + 罚款 | - | erik_sla_rule, erik_sla_record |
-| 28 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | erik_collection_strategy, erik_collection_record |
-| 29 | 巡检移动端 | 任务派发 + GPS打卡 + 拍照 | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | 社区商城 | 分类/商品/订单/发货管理 | 浏览商品 + 下单 + 我的订单 | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | 人脸识别 | 审核管理 | 注册人脸 + 认证状态 | erik_face_info |
-| 32 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | erik_group, erik_group_community |
-| 33 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | erik_knowledge_base, erik_chat_record |
+| 23 | 消息通知 | 模板CRUD + 手动发送 + 列表 | 我的消息 + 标记已读 | management_notification_template, management_notification |
+| 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | management_approval_type, management_approval, management_approval_record |
+| 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
+| 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | management_vote, management_vote_option, management_vote_record |
+| 27 | SLA自动升级 | 规则配置 + 超时检查 + 罚款 | - | management_sla_rule, management_sla_record |
+| 28 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | management_collection_strategy, management_collection_record |
+| 29 | 巡检移动端 | 任务派发 + GPS打卡 + 拍照 | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | 社区商城 | 分类/商品/订单/发货管理 | 浏览商品 + 下单 + 我的订单 | management_mall_category, management_mall_product, management_mall_order |
+| 31 | 人脸识别 | 审核管理 | 注册人脸 + 认证状态 | management_face_info |
+| 32 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | management_group, management_group_community |
+| 33 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | management_knowledge_base, management_chat_record |
 | - | 数据大屏 | 实时物业数据可视化全屏展示 | - | (复用已有数据接口) |
 
 ## 管理后台模块（admin 已有）
@@ -89,7 +89,7 @@
 ### 搜索引擎
 - `erikwang2013/webman-scout` 驱动 Elasticsearch
 - 自动索引同步（增删改自动推送）
-- 索引前缀 `erik_`，与数据库表前缀一致
+- 索引前缀 `management_`，与数据库表前缀一致
 
 ### 国际化 (i18n)
 - **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，42个翻译键，控制器通过 `__()` 方法获取翻译

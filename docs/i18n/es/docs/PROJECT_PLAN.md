@@ -55,7 +55,7 @@
 
 | Objetivo | Tareas clave | Criterios de aceptación |
 |------|---------|---------|
-| Multiusuario, rendimiento conforme, móvil completo | ① SaaS multiusuario: comenzando por la gestión de grupos, erik_community añade tenant_id + aislamiento con middleware (evaluación de plan primero, base independiente como dirección de evolución) ② Pruebas de rendimiento: wrk/k6 para login/cargos/panel, revisión de consultas lentas + caché Redis ③ Complemento móvil: ampliar las 5 páginas de HarmonyOS a rutas principales (pagos/reparaciones/avisos/visitantes/estacionamiento), adaptación móvil del portal Flutter de propietarios ④ API abierta / Webhook (opcional) | Pruebas de excesos de inquilino aprobadas; P95 de interfaces principales < 300ms; rutas principales de HarmonyOS completas |
+| Multiusuario, rendimiento conforme, móvil completo | ① SaaS multiusuario: comenzando por la gestión de grupos, management_community añade tenant_id + aislamiento con middleware (evaluación de plan primero, base independiente como dirección de evolución) ② Pruebas de rendimiento: wrk/k6 para login/cargos/panel, revisión de consultas lentas + caché Redis ③ Complemento móvil: ampliar las 5 páginas de HarmonyOS a rutas principales (pagos/reparaciones/avisos/visitantes/estacionamiento), adaptación móvil del portal Flutter de propietarios ④ API abierta / Webhook (opcional) | Pruebas de excesos de inquilino aprobadas; P95 de interfaces principales < 300ms; rutas principales de HarmonyOS completas |
 
 **Estado de P3**: ✅ Todo completado (entregado 2026-08-16: tríada de multiusuario + pruebas de carga reales con P95 conforme + HarmonyOS ampliado a 5 páginas).
 

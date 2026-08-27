@@ -100,7 +100,7 @@
 
 | 缺陷 | 表现 | 修复 |
 |------|------|------|
-| `ActivitySignup`/`ParkingRecord` 模型开启 Eloquent 时间戳，但 `erik_activity_signup`/`erik_parking_record` 表无 `updated_at` 列（install.sql 同） | 报名/停车记录写入必然 1054 错误（生产同故障） | 两个模型 `public $timestamps = false`（created_at 由 DB 默认值填充） |
+| `ActivitySignup`/`ParkingRecord` 模型开启 Eloquent 时间戳，但 `management_activity_signup`/`management_parking_record` 表无 `updated_at` 列（install.sql 同） | 报名/停车记录写入必然 1054 错误（生产同故障） | 两个模型 `public $timestamps = false`（created_at 由 DB 默认值填充） |
 | `Visitor` 模型 `$fillable` 缺 `id` | `Visitor::create(['id' => ...])` 静默丢弃 id → 1364 "Field 'id' doesn't have a default value" | `$fillable` 增加 `'id'` |
 
 ### 3. 环境适配

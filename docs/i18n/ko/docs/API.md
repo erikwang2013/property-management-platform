@@ -643,7 +643,7 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 ```
 
 - 누락 또는 잘못된 Key는 `401` 반환（`{"code":401,"message":"无效的API Key","data":[]}`）
-- Key 관리: `php scripts/gen_api_key.php [--name=용도]`로 생성; 비활성화/삭제는 `erik_api_key` 테이블을 직접 조작（`status=0`이면 비활성화되어 키가 즉시 무효화）
+- Key 관리: `php scripts/gen_api_key.php [--name=용도]`로 생성; 비활성화/삭제는 `management_api_key` 테이블을 직접 조작（`status=0`이면 비활성화되어 키가 즉시 무효화）
 
 ### 엔드포인트
 

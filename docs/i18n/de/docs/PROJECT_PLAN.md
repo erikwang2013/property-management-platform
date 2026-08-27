@@ -55,7 +55,7 @@
 
 | Ziel | Schlüsselaufgaben | Abnahmekriterien |
 |------|---------|---------|
-| Multi-Tenant、Leistungsziele、Mobile-Lückenschluss | ① Multi-Tenant-SaaS: mit Konzernverwaltung als Startpunkt, erik_community um tenant_id erweitern + Middleware-Isolierung (Lösungsbewertung zuerst, getrennte DB als Evolutionsrichtung) ② Leistungstests: wrk/k6 für Anmeldung/Gebühren/Dashboard, Slow Queries + Redis-Cache-Überprüfung ③ Mobile-Lückenschluss: HarmonyOS von 5 auf Kernpfade erweitern (Zahlung/Reparatur/Ankündigung/Besucher/Parken), Flutter-Eigentümer-Portal mobil anpassen ④ Offene API / Webhook (optional) | Mandanten-Zugriffsschutztests bestanden; Kern-Schnittstellen P95 < 300 ms; HarmonyOS-Kernpfade abgeschlossen |
+| Multi-Tenant、Leistungsziele、Mobile-Lückenschluss | ① Multi-Tenant-SaaS: mit Konzernverwaltung als Startpunkt, management_community um tenant_id erweitern + Middleware-Isolierung (Lösungsbewertung zuerst, getrennte DB als Evolutionsrichtung) ② Leistungstests: wrk/k6 für Anmeldung/Gebühren/Dashboard, Slow Queries + Redis-Cache-Überprüfung ③ Mobile-Lückenschluss: HarmonyOS von 5 auf Kernpfade erweitern (Zahlung/Reparatur/Ankündigung/Besucher/Parken), Flutter-Eigentümer-Portal mobil anpassen ④ Offene API / Webhook (optional) | Mandanten-Zugriffsschutztests bestanden; Kern-Schnittstellen P95 < 300 ms; HarmonyOS-Kernpfade abgeschlossen |
 
 **P3-Status**: ✅ alles abgeschlossen (2026-08-16 geliefert: Multi-Tenant-Dreiergespann + Lasttests real mit P95-Ziel erreicht + HarmonyOS auf 5 Seiten erweitert).
 

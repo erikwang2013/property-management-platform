@@ -75,7 +75,7 @@ Geração: SnowflakeService::generate()
       datacenter_id(5bit) + worker_id(5bit) + timestamp(41bit) + sequence(12bit)
       → BIGINT(18) ex.: 1750123456789
 
-Armazenamento: tabelas MySQL erik_*
+Armazenamento: tabelas MySQL management_*
       id BIGINT UNSIGNED NOT NULL (sem autoincremento)
       campos sensíveis com cast encryptable → armazenamento criptografado AES-256-CBC
 
@@ -282,7 +282,7 @@ REFACTOR: limpar o código, mantendo os testes verdes
 | Camada | Framework | Conteúdo |
 |----|---------|---------|
 | Serviços base | PHPUnit | Geração de ID Snowflake, codificação/decodificação Hashids, formato de resposta |
-| Banco de dados | PHPUnit + PDO | Validação da estrutura das tabelas (chave primária BIGINT, sem autoincremento, prefixo erik_) |
+| Banco de dados | PHPUnit + PDO | Validação da estrutura das tabelas (chave primária BIGINT, sem autoincremento, prefixo management_) |
 | Internacionalização | PHPUnit | Existência dos arquivos de tradução, consistência das chaves zh/en |
 | Endpoints de API | PHPUnit | Verificação de saúde, formato de resposta |
 | Middlewares | Testes de integração | Autenticação JWT, limite de taxa, permissões |

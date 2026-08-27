@@ -40,7 +40,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: open_admin
+          MYSQL_DATABASE: management
         ports:
           - 3306:3306
         options: >-
@@ -105,7 +105,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: property_management
+          MYSQL_DATABASE: management
         ports:
           - 3306:3306
         options: >-

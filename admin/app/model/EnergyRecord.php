@@ -7,7 +7,7 @@ namespace app\model;
 
 class EnergyRecord extends BaseModel
 {
-    protected $table = 'erik_energy_record';
+    protected $table = 'management_energy_record';
     protected $fillable = ['meter_id', 'room_id', 'reading', 'previous_reading', 'usage_amount', 'unit_price', 'amount', 'record_date', 'reader_id', 'bill_id'];
     protected $casts = [
         'reading' => 'decimal:2', 'previous_reading' => 'decimal:2',

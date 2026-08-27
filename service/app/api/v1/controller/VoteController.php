@@ -36,8 +36,8 @@ class VoteController extends BaseController
 
         // 获取业主所在的小区ID集合
         $communityIds = RoomOwner::where('owner_id', $ownerId)
-            ->join('erik_room', 'erik_room_owner.room_id', '=', 'erik_room.id')
-            ->pluck('erik_room.community_id')
+            ->join('management_room', 'management_room_owner.room_id', '=', 'management_room.id')
+            ->pluck('management_room.community_id')
             ->unique()
             ->toArray();
 
@@ -207,9 +207,9 @@ class VoteController extends BaseController
             if ($vote->vote_type === 2) {
                 // 面积加权投票：获取业主名下在该小区的房产
                 $room = RoomOwner::where('owner_id', $ownerId)
-                    ->join('erik_room', 'erik_room_owner.room_id', '=', 'erik_room.id')
-                    ->where('erik_room.community_id', $vote->community_id)
-                    ->select('erik_room.id', 'erik_room.area_total')
+                    ->join('management_room', 'management_room_owner.room_id', '=', 'management_room.id')
+                    ->where('management_room.community_id', $vote->community_id)
+                    ->select('management_room.id', 'management_room.area_total')
                     ->first();
 
                 if ($room) {

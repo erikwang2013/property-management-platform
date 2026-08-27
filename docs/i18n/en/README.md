@@ -60,7 +60,7 @@ property-management-platform/
 
 | Layer | Count | Details |
 |----|------|------|
-| Database tables | 65 | All `erik_` prefixed, BIGINT non-auto-increment primary keys |
+| Database tables | 65 | All `management_` prefixed, BIGINT non-auto-increment primary keys |
 | PHP models | admin 64 / service 57 | All Eloquent models with encryptable encrypted fields; service 57 is the model file count (including the BaseModel base class) |
 | admin controllers | 58 | General management + 22 property modules + 12 extension features |
 | service controllers | 17 | All owner-side APIs |
@@ -108,7 +108,7 @@ property-management-platform/
 ### Backend
 - **Framework**: webman v2 (workerman/webman)
 - **Language**: PHP 8.3+
-- **Database**: MySQL 8.0+, table prefix `erik_`, BIGINT non-auto-increment primary keys
+- **Database**: MySQL 8.0+, table prefix `management_`, BIGINT non-auto-increment primary keys
 - **Search Engine**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
@@ -189,8 +189,8 @@ See the [Installation Guide](docs/INSTALL.md) for details.
 #### 1. Initialize the Database
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Start the Admin Service

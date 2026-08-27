@@ -60,7 +60,7 @@ property-management-platform/
 
 | الطبقة | العدد | التفاصيل |
 |----|------|------|
-| جداول قاعدة البيانات | 65 | كلها بادئة `erik_`، مفتاح أساسي BIGINT غير تلقائي التزايد |
+| جداول قاعدة البيانات | 65 | كلها بادئة `management_`، مفتاح أساسي BIGINT غير تلقائي التزايد |
 | نماذج PHP | admin 64 / service 57 | كلها نماذج Eloquent، شاملة حقول التشفير encryptable؛ الـ57 في service هي عدد ملفات النماذج (شاملة الفئة الأساسية BaseModel) |
 | متحكمات admin | 58 | إدارة عامة + 22 وحدة عقارات + 12 وظيفة موسعة |
 | متحكمات service | 17 | كل API لبوابة الملاك |
@@ -108,7 +108,7 @@ property-management-platform/
 ### الخلفية
 - **الإطار**: webman v2 (workerman/webman)
 - **اللغة**: PHP 8.3+
-- **قاعدة البيانات**: MySQL 8.0+، بادئة الجداول `erik_`، مفتاح أساسي BIGINT غير تلقائي التزايد
+- **قاعدة البيانات**: MySQL 8.0+، بادئة الجداول `management_`، مفتاح أساسي BIGINT غير تلقائي التزايد
 - **محرك البحث**: Elasticsearch 8.x
 - **الذاكرة المؤقتة**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### 1. تهيئة قاعدة البيانات
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. تشغيل لوحة الإدارة

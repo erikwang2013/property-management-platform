@@ -71,7 +71,7 @@ get_conf() {
 
 DB_HOST="$(get_conf DB_HOST 127.0.0.1)"
 DB_PORT="$(get_conf DB_PORT 3306)"
-DB_DATABASE="$(get_conf DB_DATABASE property_management)"
+DB_DATABASE="$(get_conf DB_DATABASE management)"
 DB_USERNAME="$(get_conf DB_USERNAME root)"
 DB_PASSWORD="$(get_conf DB_PASSWORD "")"
 

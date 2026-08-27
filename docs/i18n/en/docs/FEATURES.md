@@ -6,44 +6,44 @@
 
 | # | Module | Batch | Admin | Owner | Tables |
 |------|------|---------|---------|--------|--------|
-| 1 | Community management | Batch 1 | CRUD + search pagination | View bound community | erik_community |
-| 2 | Building management | Batch 1 | CRUD + filter by community | - | erik_building |
-| 3 | Unit management | Batch 1 | CRUD + filter by building | - | erik_unit |
-| 4 | Layout management | Batch 1 | CRUD | - | erik_room_type |
-| 5 | Property management | Batch 1 | CRUD + property tree + batch owner binding | My property list/detail | erik_room |
-| 6 | Owner management | Batch 1 | CRUD + batch import/enable-disable/delete | Register/login/personal info | erik_owner, erik_room_owner |
-| 7 | Tenant management | Batch 1 | CRUD + filter by property | - | erik_tenant |
-| 8 | Charge management | Batch 1 | Charge type CRUD + bill management + batch generation + offline collection | Bill inquiry + online payment + charge statistics | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | Repair management | Batch 1 | Repair list + dispatch + progress updates | Submit repair + view progress + rate | erik_repair_order, erik_repair_progress |
-| 10 | Announcements | Batch 1 | CRUD + publish/pin | Announcement list/detail | erik_announcement |
-| 11 | Parking management | Batch 2 | Space/vehicle management + parking records | My spaces/vehicles + parking records | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | Equipment management | Batch 2 | Equipment ledger + maintenance records | - | erik_equipment, erik_equipment_maintenance |
-| 13 | Complaints & suggestions | Batch 2 | Complaint list + handling + follow-up | Submit complaint + view progress + rate | erik_complaint |
-| 14 | Visitor management | Batch 2 | Visitor approval + record inquiry | Visitor appointment + pass code | erik_visitor |
-| 15 | Contract management | Batch 2 | CRUD + status management | - | erik_contract |
-| 16 | Finance management | Batch 2 | Income/expense management + statistics reports | - | erik_finance_income, erik_finance_expense |
-| 17 | Security patrol | Batch 3 | Patrol routes + patrol records | - | erik_security_patrol, erik_patrol_record |
-| 18 | Cleaning management | Batch 3 | Cleaning zones + cleaning records | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | Greening management | Batch 3 | Greening zones + maintenance records | - | erik_green_area, erik_green_maintenance |
-| 20 | Community activities | Batch 3 | Activity management + sign-up viewing | Activity list + sign-up | erik_community_activity, erik_activity_signup |
-| 21 | Energy management | Batch 3 | Meter management + meter reading records | - | erik_energy_meter, erik_energy_record |
-| 22 | Staff management | Batch 3 | CRUD + status management | - | erik_staff |
+| 1 | Community management | Batch 1 | CRUD + search pagination | View bound community | management_community |
+| 2 | Building management | Batch 1 | CRUD + filter by community | - | management_building |
+| 3 | Unit management | Batch 1 | CRUD + filter by building | - | management_unit |
+| 4 | Layout management | Batch 1 | CRUD | - | management_room_type |
+| 5 | Property management | Batch 1 | CRUD + property tree + batch owner binding | My property list/detail | management_room |
+| 6 | Owner management | Batch 1 | CRUD + batch import/enable-disable/delete | Register/login/personal info | management_owner, management_room_owner |
+| 7 | Tenant management | Batch 1 | CRUD + filter by property | - | management_tenant |
+| 8 | Charge management | Batch 1 | Charge type CRUD + bill management + batch generation + offline collection | Bill inquiry + online payment + charge statistics | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | Repair management | Batch 1 | Repair list + dispatch + progress updates | Submit repair + view progress + rate | management_repair_order, management_repair_progress |
+| 10 | Announcements | Batch 1 | CRUD + publish/pin | Announcement list/detail | management_announcement |
+| 11 | Parking management | Batch 2 | Space/vehicle management + parking records | My spaces/vehicles + parking records | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | Equipment management | Batch 2 | Equipment ledger + maintenance records | - | management_equipment, management_equipment_maintenance |
+| 13 | Complaints & suggestions | Batch 2 | Complaint list + handling + follow-up | Submit complaint + view progress + rate | management_complaint |
+| 14 | Visitor management | Batch 2 | Visitor approval + record inquiry | Visitor appointment + pass code | management_visitor |
+| 15 | Contract management | Batch 2 | CRUD + status management | - | management_contract |
+| 16 | Finance management | Batch 2 | Income/expense management + statistics reports | - | management_finance_income, management_finance_expense |
+| 17 | Security patrol | Batch 3 | Patrol routes + patrol records | - | management_security_patrol, management_patrol_record |
+| 18 | Cleaning management | Batch 3 | Cleaning zones + cleaning records | - | management_cleaning_area, management_cleaning_record |
+| 19 | Greening management | Batch 3 | Greening zones + maintenance records | - | management_green_area, management_green_maintenance |
+| 20 | Community activities | Batch 3 | Activity management + sign-up viewing | Activity list + sign-up | management_community_activity, management_activity_signup |
+| 21 | Energy management | Batch 3 | Meter management + meter reading records | - | management_energy_meter, management_energy_record |
+| 22 | Staff management | Batch 3 | CRUD + status management | - | management_staff |
 
 ## Extension Features (Batch 4 — 12 modules)
 
 | # | Module | Admin | Owner | Tables |
 |------|------|---------|--------|--------|
-| 23 | Message notifications | Template CRUD + manual sending + list | My messages + mark read | erik_notification_template, erik_notification |
-| 24 | Approval workflow | Approval types + instances + step transitions | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | Payment integration | Order management + refunds + WeChat/Alipay callbacks | - | erik_payment_order |
-| 26 | Owner voting | Vote CRUD + options + area-weighted statistics | Vote list + voting + area weighting | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | SLA auto escalation | Rule config + timeout checks + penalties | - | erik_sla_rule, erik_sla_record |
-| 28 | Smart payment reminders | Strategy config + overdue matching + late fees | - | erik_collection_strategy, erik_collection_record |
-| 29 | Mobile inspection | Task dispatch + GPS check-in + photos | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | Community mall | Category/product/order/shipping management | Browse products + place orders + my orders | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | Face recognition | Review management | Register face + authentication status | erik_face_info |
-| 32 | Group management | Group CRUD + community association + cross-community aggregation | - | erik_group, erik_group_community |
-| 33 | Intelligent Q&A | Knowledge base + chat records + statistics | Ask questions + keyword matching | erik_knowledge_base, erik_chat_record |
+| 23 | Message notifications | Template CRUD + manual sending + list | My messages + mark read | management_notification_template, management_notification |
+| 24 | Approval workflow | Approval types + instances + step transitions | - | management_approval_type, management_approval, management_approval_record |
+| 25 | Payment integration | Order management + refunds + WeChat/Alipay callbacks | - | management_payment_order |
+| 26 | Owner voting | Vote CRUD + options + area-weighted statistics | Vote list + voting + area weighting | management_vote, management_vote_option, management_vote_record |
+| 27 | SLA auto escalation | Rule config + timeout checks + penalties | - | management_sla_rule, management_sla_record |
+| 28 | Smart payment reminders | Strategy config + overdue matching + late fees | - | management_collection_strategy, management_collection_record |
+| 29 | Mobile inspection | Task dispatch + GPS check-in + photos | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | Community mall | Category/product/order/shipping management | Browse products + place orders + my orders | management_mall_category, management_mall_product, management_mall_order |
+| 31 | Face recognition | Review management | Register face + authentication status | management_face_info |
+| 32 | Group management | Group CRUD + community association + cross-community aggregation | - | management_group, management_group_community |
+| 33 | Intelligent Q&A | Knowledge base + chat records + statistics | Ask questions + keyword matching | management_knowledge_base, management_chat_record |
 | - | Data dashboard | Real-time property data visualization, full-screen display | - | (reuses existing data endpoints) |
 
 ## Admin Panel Modules (already in admin)
@@ -89,7 +89,7 @@ All admin POST/PUT/DELETE operations are recorded automatically, including actin
 ### Search Engine
 - `erikwang2013/webman-scout` drives Elasticsearch
 - Automatic index sync (auto-push on create/update/delete)
-- Index prefix `erik_`, consistent with the database table prefix
+- Index prefix `management_`, consistent with the database table prefix
 
 ### Internationalization (i18n)
 - **PHP Backend**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`, 42 translation keys, controllers fetch translations via the `__()` method

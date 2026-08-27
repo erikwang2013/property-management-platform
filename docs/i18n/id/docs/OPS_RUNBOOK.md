@@ -5,11 +5,11 @@
 
 ## 1. Backup dan Pemulihan Database
 
-Sisi admin dan sisi service berbagi instance dan database MySQL yang sama `property_management`, backup sekali cukup. Entry terpadu:
+Sisi admin dan sisi service berbagi instance dan database MySQL yang sama `management`, backup sekali cukup. Entry terpadu:
 
 | Nama database | Skrip backup | Deskripsi |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Membaca koneksi dari `admin/.env` (dapat ganti nama container dengan `--container=`), default mysqldump di dalam container |
+| `management` | `scripts/backup.sh` | Membaca koneksi dari `admin/.env` (dapat ganti nama container dengan `--container=`), default mysqldump di dalam container |
 
 Output `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, default simpan 7 hari terakhir (`--keep-days=` dapat diatur).
 
@@ -34,7 +34,7 @@ Saran produksi: mount direktori backup ke disk independen/penyimpanan remote, da
 1. Pilih satu backup terbaru: `ls -t backups/backup_*.sql.gz`
 2. Di **lingkungan independen** (atau database sementara) eksekusi pemulihan: lihat [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) skenario A (pemulihan database kosong) dan skenario B (pemulihan titik waktu).
 3. Verifikasi:
-   - Perbandingan jumlah baris: `SELECT COUNT(*) FROM erik_user;` konsisten dengan catatan sebelum backup
+   - Perbandingan jumlah baris: `SELECT COUNT(*) FROM management_user;` konsisten dengan catatan sebelum backup
    - Field terenkripsi dapat didekripsi normal: cek satu rekaman berisi field encryptable, nilai benar, log tanpa error decrypt
    - Smoke bisnis: login、tarik daftar endpoint normal
 4. Catat durasi dan hasil latihan (untuk evaluasi RTO).

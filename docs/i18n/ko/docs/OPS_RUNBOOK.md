@@ -5,11 +5,11 @@
 
 ## 1. 데이터베이스 백업과 복구
 
-admin측과 service측은 동일한 MySQL 인스턴스와 DB `property_management`를 공유하므로, 백업 1회로 충분합니다. 통일 진입점:
+admin측과 service측은 동일한 MySQL 인스턴스와 DB `management`를 공유하므로, 백업 1회로 충분합니다. 통일 진입점:
 
 | DB명 | 백업 스크립트 | 설명 |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | `admin/.env`에서 커넥션 읽기（`--container=`로 컨테이너명 오버라이드 가능）, 기본은 컨테이너 내 mysqldump |
+| `management` | `scripts/backup.sh` | `admin/.env`에서 커넥션 읽기（`--container=`로 컨테이너명 오버라이드 가능）, 기본은 컨테이너 내 mysqldump |
 
 출력 `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, 기본 최근 7일 보관（`--keep-days=`로 조정 가능）.
 
@@ -34,7 +34,7 @@ bash scripts/backup.sh
 1. 최근 백업 1건 선택: `ls -t backups/backup_*.sql.gz`
 2. **별도 환경**（또는 임시 DB）에서 복구 실행: [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) 시나리오 A（빈 DB 복구）와 시나리오 B（시점 복구） 참조.
 3. 검증:
-   - 행 수 비교: `SELECT COUNT(*) FROM erik_user;` 백업 전 기록과 일치
+   - 행 수 비교: `SELECT COUNT(*) FROM management_user;` 백업 전 기록과 일치
    - 암호화 필드 정상 복호화: encryptable 필드 포함 레코드 1건 조회, 값 정확, 로그에 decrypt 오류 없음
    - 업무 스모크: 로그인, 목록 인터페이스 정상
 4. 훈련 소요 시간과 결과 기록（RTO 평가용）.

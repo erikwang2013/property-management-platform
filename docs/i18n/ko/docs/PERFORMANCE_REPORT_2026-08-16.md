@@ -44,7 +44,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ## 3. 슬로우 쿼리 검토
 
-- 요금 테이블 `erik_fee_bill` / `erik_fee_payment` 인덱스 완비（paid_at, bill_id, owner_id, payment_number 등）, 핵심 쿼리에 모두 인덱스 사용 가능.
+- 요금 테이블 `management_fee_bill` / `management_fee_payment` 인덱스 완비（paid_at, bill_id, owner_id, payment_number 등）, 핵심 쿼리에 모두 인덱스 사용 가능.
 - 발견 포인트: 요금 목록이 `payment_number like %kw%` 퍼지 검색（선행 와일드카드）으로 인덱스를 탈 수 없어, 데이터량이 많아지면 해당 조건이 전체 테이블 스캔으로 퇴화. 저빈도 관리측 검색으로 현재는 처리 안 함; 데이터량 증가 후 역인덱스 또는 접두사 인덱스로 변경 가능.
 - **MySQL slow_query_log가 OFF**: 활성화하고 `long_query_time=1` 설정 권장, 부하 테스트 추론이 아닌 실제 슬로우 SQL 지속 관찰. 프로덕션 실행:
   ```sql

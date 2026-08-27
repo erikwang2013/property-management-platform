@@ -60,7 +60,7 @@ property-management-platform/
 
 | Слой | Кол-во | Детали |
 |----|------|------|
-| Таблицы БД | 65 | все с префиксом `erik_`, BIGINT неавтоинкрементный первичный ключ |
+| Таблицы БД | 65 | все с префиксом `management_`, BIGINT неавтоинкрементный первичный ключ |
 | Модели PHP | admin 64 / service 57 | все модели Eloquent, включая шифруемые поля encryptable; 57 в service — число файлов моделей (включая базовый класс BaseModel) |
 | Контроллеры admin | 58 | общее управление + 22 модуля недвижимости + 12 расширенных функций |
 | Контроллеры service | 17 | все API портала жильцов |
@@ -108,7 +108,7 @@ property-management-platform/
 ### Бэкенд
 - **Фреймворк**: webman v2 (workerman/webman)
 - **Язык**: PHP 8.3+
-- **БД**: MySQL 8.0+, префикс таблиц `erik_`, первичный ключ BIGINT неавтоинкрементный
+- **БД**: MySQL 8.0+, префикс таблиц `management_`, первичный ключ BIGINT неавтоинкрементный
 - **Поисковая система**: Elasticsearch 8.x
 - **Кэш**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### 1. Инициализация базы данных
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Запуск админ-панели

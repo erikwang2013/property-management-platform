@@ -5,11 +5,11 @@
 
 ## 1. Backup e restauração do banco de dados
 
-admin e service compartilham a mesma instância MySQL e o mesmo banco `property_management`; um único backup é suficiente. Entry unificado:
+admin e service compartilham a mesma instância MySQL e o mesmo banco `management`; um único backup é suficiente. Entry unificado:
 
 | Banco | Script de backup | Descrição |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Lê a conexão de `admin/.env` (é possível sobrescrever o nome do contêiner com `--container=`), mysqldump dentro do contêiner por padrão |
+| `management` | `scripts/backup.sh` | Lê a conexão de `admin/.env` (é possível sobrescrever o nome do contêiner com `--container=`), mysqldump dentro do contêiner por padrão |
 
 Saída `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, retenção padrão dos últimos 7 dias (`--keep-days=` ajustável).
 
@@ -34,7 +34,7 @@ Recomendação de produção: montar o diretório de backups em disco independen
 1. Escolher o backup mais recente: `ls -t backups/backup_*.sql.gz`
 2. Executar a restauração em **ambiente independente** (ou banco temporário): ver [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md), cenário A (restauração em banco vazio) e cenário B (restauração em ponto no tempo).
 3. Verificar:
-   - Comparação de contagem de linhas: `SELECT COUNT(*) FROM erik_user;` consistente com o registro anterior ao backup
+   - Comparação de contagem de linhas: `SELECT COUNT(*) FROM management_user;` consistente com o registro anterior ao backup
    - Campos criptografados decriptografam normalmente: consultar um registro com campo encryptable, valor correto, sem erros de decrypt nos logs
    - Smoke de negócio: login e listagem de interfaces funcionando normalmente
 4. Registrar o tempo e o resultado do exercício (para avaliação de RTO).

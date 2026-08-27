@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) खाली डेटाबेस बनाएं (अभ्यास डेटाबेस नाम में _drill प्रत्यय, प्रोडक्शन डेटा को गलती से अधिलेखित न करने के लिए)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) इम्पोर्ट करें (-T TTY बंद करता है, गैर-इंटरैक्टिव सुनिश्चित करता है; वास्तविक माप लगभग 1-5 मिनट)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    binlog को लक्ष्य समय बिंदु तक रीप्ले करें (उदाहरण: 2026-08-16 10:30:00 तक पुनर्स्थापित करें)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 मुख्य बिंदु:
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | जांच आइटम | कमांड | पास मानदंड |
 |---|---|---|
 | बैकअप फ़ाइल पूर्णता | `gzip -t <बैकअप>` | कोई त्रुटि नहीं |
-| मुख्य टेबल पंक्ति संख्या | `SELECT COUNT(*) FROM erik_admin_user;` | बैकअप से पहले दर्ज पंक्ति संख्या के अनुरूप |
-| व्यवसाय टेबल स्पॉट चेक | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | तीन से अधिक में मात्रा उचित (गैर-0 और बैकअप से पहले के अनुरूप) |
-| एन्क्रिप्टेड फ़ील्ड डिक्रिप्ट योग्य | encryptable फ़ील्ड वाला एक रिकॉर्ड देखें (जैसे `erik_owner` आधार कार्ड/फोन नंबर) | मान सही, एप्लिकेशन लॉग में decrypt त्रुटि नहीं |
+| मुख्य टेबल पंक्ति संख्या | `SELECT COUNT(*) FROM management_admin_user;` | बैकअप से पहले दर्ज पंक्ति संख्या के अनुरूप |
+| व्यवसाय टेबल स्पॉट चेक | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | तीन से अधिक में मात्रा उचित (गैर-0 और बैकअप से पहले के अनुरूप) |
+| एन्क्रिप्टेड फ़ील्ड डिक्रिप्ट योग्य | encryptable फ़ील्ड वाला एक रिकॉर्ड देखें (जैसे `management_owner` आधार कार्ड/फोन नंबर) | मान सही, एप्लिकेशन लॉग में decrypt त्रुटि नहीं |
 | व्यवसाय स्मोक टेस्ट | लॉगिन、सूची API प्रत्येक 1 बार | 200 / सामान्य रिटर्न |
 
 स्पॉट चेक स्क्रिप्ट उदाहरण (अभ्यास वातावरण):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > पंक्ति संख्या स्थिरता: बैकअप से पहले उसी SQL से आधार रेखा दर्ज करें, पुनर्स्थापना के बाद तुलना करें; अभ्यास के समय आधार रेखा अभ्यास रिकॉर्ड में लिखें।
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 मिनट | बैकअप चुनें、`gzip -t`、खाली डेटाबेस बनाएं、आधार रेखा पंक्ति संख्या दर्ज करें | संचालन |
 | 5-15 मिनट | परिदृश्य A पुनर्स्थापना इम्पोर्ट | संचालन |
 | 15-25 मिनट | खंड 3 स्थिरता सत्यापन + व्यवसाय स्मोक टेस्ट | संचालन + व्यवसाय |
-| 25-30 मिनट | परिणाम दर्ज करें、अभ्यास डेटाबेस साफ़ करें (`DROP DATABASE property_management_drill`)、OPS_RUNBOOK 1.4 का वास्तविक RTO अपडेट करें | संचालन |
+| 25-30 मिनट | परिणाम दर्ज करें、अभ्यास डेटाबेस साफ़ करें (`DROP DATABASE management_drill`)、OPS_RUNBOOK 1.4 का वास्तविक RTO अपडेट करें | संचालन |
 
 ## 5. विफलता प्रबंधन
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 दिनांक: 2026-08-16
 पुनर्स्थापना लक्ष्य: खाली डेटाबेस (परिदृश्य A) / समय बिंदु (परिदृश्य B)
 बैकअप फ़ाइल: backups/backup_20260816_020000.sql.gz
-आधार रेखा पंक्ति संख्या: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+आधार रेखा पंक्ति संख्या: management_admin_user=1, management_owner=42, management_fee_bill=128
 पुनर्स्थापना समय: XX मिनट    सत्यापन समय: XX मिनट    कुल: XX मिनट (लक्ष्य ≤ 30)
 परिणाम: पास / विफल (विफलता कारण और प्रबंधन संलग्न करें)
 ```

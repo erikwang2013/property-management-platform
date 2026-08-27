@@ -16,7 +16,7 @@ class DatabaseSchemaTest extends TestCase
      */
     public function testAllRequiredTablesExist(): void
     {
-        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=property_management';
+        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=management';
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
 
@@ -30,18 +30,18 @@ class DatabaseSchemaTest extends TestCase
 
         $expectedTables = [
             // Batch 1
-            'erik_community', 'erik_building', 'erik_unit', 'erik_room_type',
-            'erik_room', 'erik_owner', 'erik_room_owner', 'erik_tenant',
-            'erik_fee_type', 'erik_fee_bill', 'erik_fee_payment',
-            'erik_repair_order', 'erik_repair_progress', 'erik_announcement',
+            'management_community', 'management_building', 'management_unit', 'management_room_type',
+            'management_room', 'management_owner', 'management_room_owner', 'management_tenant',
+            'management_fee_type', 'management_fee_bill', 'management_fee_payment',
+            'management_repair_order', 'management_repair_progress', 'management_announcement',
             // Batch 2
-            'erik_parking_space', 'erik_parking_vehicle', 'erik_parking_record',
-            'erik_equipment', 'erik_equipment_maintenance',
-            'erik_complaint', 'erik_visitor', 'erik_contract',
-            'erik_finance_income', 'erik_finance_expense',
+            'management_parking_space', 'management_parking_vehicle', 'management_parking_record',
+            'management_equipment', 'management_equipment_maintenance',
+            'management_complaint', 'management_visitor', 'management_contract',
+            'management_finance_income', 'management_finance_expense',
         ];
 
-        $stmt = $pdo->query("SHOW TABLES LIKE 'erik_%'");
+        $stmt = $pdo->query("SHOW TABLES LIKE 'management_%'");
         $actualTables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         foreach ($expectedTables as $table) {
@@ -57,7 +57,7 @@ class DatabaseSchemaTest extends TestCase
      */
     public function testPrimaryKeysAreBigintNotNullNonAutoIncrement(): void
     {
-        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=property_management';
+        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=management';
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
 
@@ -69,7 +69,7 @@ class DatabaseSchemaTest extends TestCase
             $this->markTestSkipped('Database not available: ' . $e->getMessage());
         }
 
-        $stmt = $pdo->query("SHOW TABLES LIKE 'erik_%'");
+        $stmt = $pdo->query("SHOW TABLES LIKE 'management_%'");
         $tables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         foreach ($tables as $table) {
@@ -96,11 +96,11 @@ class DatabaseSchemaTest extends TestCase
     }
 
     /**
-     * RED: 验证表前缀统一为 erik_
+     * RED: 验证表前缀统一为 management_
      */
     public function testTablePrefixIsErik(): void
     {
-        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=property_management';
+        $dsn = getenv('DB_DSN') ?: 'mysql:host=127.0.0.1;port=3306;dbname=management';
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
 
@@ -112,15 +112,15 @@ class DatabaseSchemaTest extends TestCase
             $this->markTestSkipped('Database not available: ' . $e->getMessage());
         }
 
-        $stmt = $pdo->query("SHOW TABLES LIKE 'erik_%'");
+        $stmt = $pdo->query("SHOW TABLES LIKE 'management_%'");
         $tables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
-        $this->assertNotEmpty($tables, '应有erik_前缀的表存在');
+        $this->assertNotEmpty($tables, '应有management_前缀的表存在');
 
         foreach ($tables as $table) {
             $this->assertStringStartsWith(
-                'erik_', $table,
-                "表 {$table} 应以 erik_ 开头"
+                'management_', $table,
+                "表 {$table} 应以 management_ 开头"
             );
         }
     }

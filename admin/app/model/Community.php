@@ -14,7 +14,7 @@ class Community extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_community';
+    protected $table = 'management_community';
 
     // tenant_id 不入 fillable：禁止批量赋值伪造租户归属
     protected $fillable = [

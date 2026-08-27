@@ -45,7 +45,7 @@ php start.php start
 - 运行 `vendor/bin/phpstan analyse` 静态分析
 
 ### 数据库
-- 表前缀 `erik_`
+- 表前缀 `management_`
 - 主键 BIGINT 非自增，由 Snowflake 生成
 - 敏感字段使用 Encryptable trait
 - 迁移文件使用 SQL 格式

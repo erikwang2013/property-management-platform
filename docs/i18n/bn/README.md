@@ -60,7 +60,7 @@ property-management-platform/
 
 | স্তর | সংখ্যা | বিবরণ |
 |----|------|------|
-| ডেটাবেস টেবিল | ৬৫টি | সবগুলো `erik_` প্রিফিক্স, BIGINT নন-অটো-ইনক্রিমেন্ট প্রাইমারি কি |
+| ডেটাবেস টেবিল | ৬৫টি | সবগুলো `management_` প্রিফিক্স, BIGINT নন-অটো-ইনক্রিমেন্ট প্রাইমারি কি |
 | PHP মডেল | admin ৬৪ / service ৫৭ | সবগুলো Eloquent মডেল, encryptable এনক্রিপশন ফিল্ড সহ; service-এর ৫৭ হলো মডেল ফাইলের সংখ্যা (BaseModel বেস ক্লাস সহ) |
 | admin কন্ট্রোলার | ৫৮টি | সাধারণ ব্যবস্থাপনা + ২২টি সম্পত্তি মডিউল + ১২টি এক্সটেনশন ফিচার |
 | service কন্ট্রোলার | ১৭টি | মালিক পোর্টালের সব API |
@@ -108,7 +108,7 @@ property-management-platform/
 ### ব্যাকএন্ড
 - **ফ্রেমওয়ার্ক**: webman v2 (workerman/webman)
 - **ভাষা**: PHP 8.3+
-- **ডেটাবেস**: MySQL 8.0+, টেবিল প্রিফিক্স `erik_`, প্রাইমারি কি BIGINT নন-অটো-ইনক্রিমেন্ট
+- **ডেটাবেস**: MySQL 8.0+, টেবিল প্রিফিক্স `management_`, প্রাইমারি কি BIGINT নন-অটো-ইনক্রিমেন্ট
 - **সার্চ ইঞ্জিন**: Elasticsearch 8.x
 - **ক্যাশে**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### ১. ডেটাবেস ইনিশিয়ালাইজেশন
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### ২. অ্যাডমিন প্যানেল চালু করুন

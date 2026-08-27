@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) Buat database kosong (nama database latihan tambah sufiks _drill, hindari menimpa data produksi secara tidak sengaja)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) Impor (-T menonaktifkan TTY, pastikan non-interaktif; terukur sekitar 1-5 menit)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    Replay binlog ke titik waktu target (contoh: pulihkan ke 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 Poin penting:
@@ -78,21 +78,21 @@ Poin penting:
 | Item pemeriksaan | Perintah | Standar kelulusan |
 |---|---|---|
 | Integritas file backup | `gzip -t <backup>` | Tanpa error |
-| Jumlah baris tabel kunci | `SELECT COUNT(*) FROM erik_admin_user;` | Konsisten dengan jumlah baris yang dicatat sebelum backup |
-| Pemeriksaan acak tabel bisnis | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | Tiga tabel atau lebih besaran wajar (bukan 0 dan konsisten dengan sebelum backup) |
-| Field terenkripsi dapat didekripsi | Cek satu rekaman berisi field encryptable (misal `erik_owner` KTP/nomor ponsel) | Nilai benar, log aplikasi tanpa error decrypt |
+| Jumlah baris tabel kunci | `SELECT COUNT(*) FROM management_admin_user;` | Konsisten dengan jumlah baris yang dicatat sebelum backup |
+| Pemeriksaan acak tabel bisnis | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | Tiga tabel atau lebih besaran wajar (bukan 0 dan konsisten dengan sebelum backup) |
+| Field terenkripsi dapat didekripsi | Cek satu rekaman berisi field encryptable (misal `management_owner` KTP/nomor ponsel) | Nilai benar, log aplikasi tanpa error decrypt |
 | Smoke bisnis | Login、tarik daftar endpoint masing-masing 1 kali | 200 / normal |
 
 Contoh skrip pemeriksaan acak (lingkungan latihan):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > Konsistensi jumlah baris: sebelum backup catat baseline dengan SQL yang sama, bandingkan setelah pemulihan; saat latihan tulis baseline ke catatan latihan.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | Pilih backup、`gzip -t`、buat database kosong、catat jumlah baris baseline | Operasional |
 | 5-15 min | Impor pemulihan skenario A | Operasional |
 | 15-25 min | Verifikasi konsistensi bagian 3 + smoke bisnis | Operasional + bisnis |
-| 25-30 min | Catat hasil、bersihkan database latihan (`DROP DATABASE property_management_drill`)、perbarui RTO terukur OPS_RUNBOOK 1.4 | Operasional |
+| 25-30 min | Catat hasil、bersihkan database latihan (`DROP DATABASE management_drill`)、perbarui RTO terukur OPS_RUNBOOK 1.4 | Operasional |
 
 ## 5. Penanganan Kegagalan
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 Tanggal: 2026-08-16
 Target pemulihan: database kosong (skenario A) / titik waktu (skenario B)
 File backup: backups/backup_20260816_020000.sql.gz
-Baseline jumlah baris: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+Baseline jumlah baris: management_admin_user=1, management_owner=42, management_fee_bill=128
 Durasi pemulihan: XX menit    Durasi verifikasi: XX menit    Total: XX menit (target ≤ 30)
 Hasil: Lulus / Gagal (sertakan alasan kegagalan dan penanganan)
 ```

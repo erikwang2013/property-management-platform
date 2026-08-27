@@ -9,11 +9,11 @@
 
 | 카테고리 | 테이블 | 설명 |
 |------|-----|------|
-| 전역/플랫폼 테이블 | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | 인증, 설정, 감사, 본질적으로 플랫폼급, 테넌트 미부착 |
-| 커뮤니티 차원 테이블 | erik_community 및 community_id로 귀속되는 40+개 비즈니스 테이블（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 등） | community_id를 통해 간접적으로 테넌트에 귀속 |
-| 그룹 연관 테이블 | erik_group（그룹）、erik_group_community（그룹↔단지） | 현재 **선택적 연관**, 테넌트 의미 없음, 단지 간 집계는 join 사용 |
-| 플랫폼 확장 테이블 | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info 등 | 일부는 플랫폼급, 일부는 커뮤니티급, 개별 확인 필요 |
-| 혼동 쉬운 테이블 | **erik_tenant（임차인 테이블）** | ⚠️ 의미 충돌: "세대 임차인"（room_id/owner_id 차원）이며, **SaaS 테넌트가 아님** |
+| 전역/플랫폼 테이블 | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | 인증, 설정, 감사, 본질적으로 플랫폼급, 테넌트 미부착 |
+| 커뮤니티 차원 테이블 | management_community 및 community_id로 귀속되는 40+개 비즈니스 테이블（building/unit/room/owner/fee_*/repair_order/parking_*/announcement 등） | community_id를 통해 간접적으로 테넌트에 귀속 |
+| 그룹 연관 테이블 | management_group（그룹）、management_group_community（그룹↔단지） | 현재 **선택적 연관**, 테넌트 의미 없음, 단지 간 집계는 join 사용 |
+| 플랫폼 확장 테이블 | management_notification_template、management_knowledge_base、management_mall_*、management_face_info 등 | 일부는 플랫폼급, 일부는 커뮤니티급, 개별 확인 필요 |
+| 혼동 쉬운 테이블 | **management_tenant（임차인 테이블）** | ⚠️ 의미 충돌: "세대 임차인"（room_id/owner_id 차원）이며, **SaaS 테넌트가 아님** |
 
 ### 1.2 인증 체인（admin측, 코드 검증）
 
@@ -28,7 +28,7 @@
 
 ### 1.3 핵심 결론
 
-- 기성 SaaS 테넌트 모델 없음; `erik_tenant` 이름이 이미 임차인에 사용 중, 새 개념은 이름을 피해야 함
+- 기성 SaaS 테넌트 모델 없음; `management_tenant` 이름이 이미 임차인에 사용 중, 새 개념은 이름을 피해야 함
 - 모든 컨트롤러가 Eloquent 직접 쿼리, repository 계층·전역 스코프 없음 —— 격리 개조는 모델 계층에서 해야 함
 - config/database.php 단일 커넥션, 하지만 illuminate/database는 멀티 connection을 원래 지원（독립 DB 진화 대비 예약）
 
@@ -51,9 +51,9 @@
 
 ### 3.1 데이터 모델（최소 집합）
 
-- 신규 `erik_platform_tenant`（임차인 테이블 erik_tenant와 충돌 방지）: id/name/status/created_at 등
-- `erik_community`에 `tenant_id BIGINT NOT NULL DEFAULT 0` 추가, 인덱스 `(tenant_id, community_id)`
-- `erik_admin_user`에 `tenant_id BIGINT NOT NULL DEFAULT 0` 추가（0 = 플랫폼 슈퍼 관리자）
+- 신규 `management_platform_tenant`（임차인 테이블 management_tenant와 충돌 방지）: id/name/status/created_at 등
+- `management_community`에 `tenant_id BIGINT NOT NULL DEFAULT 0` 추가, 인덱스 `(tenant_id, community_id)`
+- `management_admin_user`에 `tenant_id BIGINT NOT NULL DEFAULT 0` 추가（0 = 플랫폼 슈퍼 관리자）
 - 비즈니스 중간 테이블（building/room/fee_bill 등 40개）**컬럼 미추가**, community_id로 귀속
 
 ### 3.2 실행 계층 3종 세트
@@ -94,13 +94,13 @@
 | 기존 데이터 백필 오류 | 전체 기존 데이터 | 멱등 스크립트 + 백필 검증 + 드라이런 모드 |
 | 인덱스/성능 영향 | 고빈도 테이블（fee_bill/room/owner） | (tenant_id, community_id) 결합 인덱스; 슬로우 쿼리 로그 재검토 |
 | 133개 테스트 회귀 | 전체 | 스코프 주입 후 전체 회귀 먼저 실행 후 파일럿 시작 |
-| 명명 혼동（erik_tenant 임차인 vs SaaS 테넌트） | 개발 인지 | 신규 테이블 platform_tenant 명명, 문서에 명시 선언 |
+| 명명 혼동（management_tenant 임차인 vs SaaS 테넌트） | 개발 인지 | 신규 테이블 platform_tenant 명명, 문서에 명시 선언 |
 | **롤백 방안** | — | 전역 스코프는 설정 스위치로 원클릭 비활성화（단일 테넌트 의미 복원）, 데이터 컬럼은 보존·삭제 안 함, 파괴적 변경 없음 |
 
 ## 6. 검토 결론
 
 **즉시 진행 권장**:
-- 공유 DB + tenant_id 행 격리（방안 A）, 신규 `erik_platform_tenant` 테이블 생성, community/admin_user 컬럼 추가
+- 공유 DB + tenant_id 행 격리（방안 A）, 신규 `management_platform_tenant` 테이블 생성, community/admin_user 컬럼 추가
 - TenantContext 미들웨어 + TenantScope 전역 스코프 + Tenant::for() 툴
 - 파일럿 순서: 그룹 → 단지 → 입주민 → 요금
 - 선행 의존: 완료됨 — 멀티 테넌트 테이블/컬럼/백필이 docs/install.sql에 인라인 병합（2026-08-16 합병 완료, 단일 DB 구축 진입점）
@@ -113,4 +113,4 @@
 - Schema급 격리（MySQL은 독립 schema 의미 없음, 비용이 독립 DB와 동일）
 - 동적 멀티 DB 라우팅（단일 서버 배포에서 이점 없음）
 - 테넌트급 맞춤 schema/필드（YAGNI）
-- erik_tenant 임차인 테이블을 SaaS 테넌트로 재사용/개조（의미 충돌, 임차인 업무 파괴）
+- management_tenant 임차인 테이블을 SaaS 테넌트로 재사용/개조（의미 충돌, 임차인 업무 파괴）

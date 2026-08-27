@@ -55,7 +55,7 @@
 
 | Goal | Key Tasks | Acceptance Criteria |
 |------|---------|---------|
-| Multi-tenant, performance targets met, mobile completed | ① Multi-tenant SaaS: starting with group management, add tenant_id to erik_community + middleware isolation (plan review first; independent databases as evolution direction) ② Performance load testing: wrk/k6 on login/charges/dashboard, slow query + Redis cache re-check ③ Mobile completion: expand HarmonyOS from 5 pages to core paths (payments/repairs/announcements/visitors/parking), Flutter owner mobile adaptation ④ Open API / Webhook (optional) | Tenant authorization-bypass tests pass; core endpoint P95 < 300ms; HarmonyOS core paths complete |
+| Multi-tenant, performance targets met, mobile completed | ① Multi-tenant SaaS: starting with group management, add tenant_id to management_community + middleware isolation (plan review first; independent databases as evolution direction) ② Performance load testing: wrk/k6 on login/charges/dashboard, slow query + Redis cache re-check ③ Mobile completion: expand HarmonyOS from 5 pages to core paths (payments/repairs/announcements/visitors/parking), Flutter owner mobile adaptation ④ Open API / Webhook (optional) | Tenant authorization-bypass tests pass; core endpoint P95 < 300ms; HarmonyOS core paths complete |
 
 **P3 status**: ✅ All complete (delivered 2026-08-16: multi-tenant trio + real load tests with P95 meeting targets + HarmonyOS expanded to 5 pages).
 

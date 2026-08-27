@@ -9,11 +9,11 @@
 
 | Catégorie | Tables | Description |
 |------|-----|------|
-| Tables globales/plateforme | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | Authentification, configuration, audit : naturellement au niveau plateforme, non rattachées à un locataire |
-| Tables de dimension résidence | erik_community et les 40+ tables métier rattachées via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Rattachement indirect au locataire via community_id |
-| Tables d'association de groupe | erik_group (groupe)、erik_group_community (groupe↔résidence) | Actuellement **association facultative**, sans sémantique de locataire, la synthèse inter-résidences passe par des joins |
-| Tables d'extension plateforme | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info, etc. | Certaines au niveau plateforme, d'autres au niveau résidence, à confirmer au cas par cas |
-| Tables ambiguës | **erik_tenant (table des locataires)** | ⚠️ Conflit sémantique : ce sont les « locataires de logement » (dimension room_id/owner_id), **pas** des locataires SaaS |
+| Tables globales/plateforme | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | Authentification, configuration, audit : naturellement au niveau plateforme, non rattachées à un locataire |
+| Tables de dimension résidence | management_community et les 40+ tables métier rattachées via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Rattachement indirect au locataire via community_id |
+| Tables d'association de groupe | management_group (groupe)、management_group_community (groupe↔résidence) | Actuellement **association facultative**, sans sémantique de locataire, la synthèse inter-résidences passe par des joins |
+| Tables d'extension plateforme | management_notification_template、management_knowledge_base、management_mall_*、management_face_info, etc. | Certaines au niveau plateforme, d'autres au niveau résidence, à confirmer au cas par cas |
+| Tables ambiguës | **management_tenant (table des locataires)** | ⚠️ Conflit sémantique : ce sont les « locataires de logement » (dimension room_id/owner_id), **pas** des locataires SaaS |
 
 ### 1.2 Chaîne d'authentification (côté admin, vérifié dans le code)
 
@@ -28,7 +28,7 @@ Middlewares du groupe de routes : AdminAuth(JWT → $request->adminId) → Admin
 
 ### 1.3 Conclusions clés
 
-- Aucun modèle de locataire SaaS existant ; le nom `erik_tenant` est déjà pris par les locataires de logement, le nouveau concept doit éviter ce nom
+- Aucun modèle de locataire SaaS existant ; le nom `management_tenant` est déjà pris par les locataires de logement, le nouveau concept doit éviter ce nom
 - Tous les contrôleurs font des requêtes Eloquent directes, sans couche repository, sans portée globale — la refonte de l'isolation doit se faire au niveau des modèles
 - config/database.php a une connexion unique, mais illuminate/database supporte nativement plusieurs connexions (réserve pour une évolution vers des bases séparées)
 
@@ -51,9 +51,9 @@ Middlewares du groupe de routes : AdminAuth(JWT → $request->adminId) → Admin
 
 ### 3.1 Modèle de données (ensemble minimal)
 
-- Nouvelle table `erik_platform_tenant` (pour éviter le conflit avec la table des locataires erik_tenant) : id/name/status/created_at, etc.
-- `erik_community` + colonne `tenant_id BIGINT NOT NULL DEFAULT 0`, index `(tenant_id, community_id)`
-- `erik_admin_user` + colonne `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = super administrateur plateforme)
+- Nouvelle table `management_platform_tenant` (pour éviter le conflit avec la table des locataires management_tenant) : id/name/status/created_at, etc.
+- `management_community` + colonne `tenant_id BIGINT NOT NULL DEFAULT 0`, index `(tenant_id, community_id)`
+- `management_admin_user` + colonne `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = super administrateur plateforme)
 - Les tables métier intermédiaires (building/room/fee_bill, etc., 40 tables) **sans colonne ajoutée**, rattachées via community_id
 
 ### 3.2 Le trio de la couche d'exécution
@@ -94,13 +94,13 @@ Stratégie de migration des données : toutes les données existantes sont ratta
 | Erreur de remplissage des données existantes | Toutes les données existantes | Script idempotent + validation du remplissage + mode à blanc |
 | Impact index/performance | Tables à haute fréquence (fee_bill/room/owner) | Index conjoint (tenant_id, community_id) ; réexamen du journal des requêtes lentes |
 | Régression des 133 tests | Tout | Après injection de la portée, lancer d'abord la régression complète avant le pilote |
-| Confusion de noms (erik_tenant locataire vs locataire SaaS) | Cognition des développeurs | Nouvelle table nommée platform_tenant, déclaration explicite dans la documentation |
+| Confusion de noms (management_tenant locataire vs locataire SaaS) | Cognition des développeurs | Nouvelle table nommée platform_tenant, déclaration explicite dans la documentation |
 | **Plan de retour arrière** | — | La portée globale peut être désactivée d'un interrupteur de configuration (retour à la sémantique mono-locataire), les colonnes de données sont conservées sans suppression, aucun changement destructif |
 
 ## 6. Conclusion de l'évaluation
 
 **À faire immédiatement** :
-- Base partagée + isolation par lignes tenant_id (solution A), nouvelle table `erik_platform_tenant`, colonnes sur community/admin_user
+- Base partagée + isolation par lignes tenant_id (solution A), nouvelle table `management_platform_tenant`, colonnes sur community/admin_user
 - Middleware TenantContext + portée globale TenantScope + outil Tenant::for()
 - Ordre du pilote : groupe → résidence → propriétaire → frais
 - Dépendance préalable : déjà réalisée — les tables/colonnes/remplissage multi-tenant sont intégrés dans docs/install.sql (fusionné le 2026-08-16, point d'entrée unique de création de base)
@@ -113,4 +113,4 @@ Stratégie de migration des données : toutes les données existantes sont ratta
 - Isolation au niveau schéma (MySQL n'a pas de sémantique de schéma indépendante, coût équivalent à une base séparée)
 - Routage multi-bases dynamique (aucun bénéfice en déploiement mono-machine)
 - Schéma/champs personnalisés par locataire (YAGNI)
-- Réutiliser/adapter la table des locataires erik_tenant comme locataire SaaS (conflit sémantique, casse le métier des locataires)
+- Réutiliser/adapter la table des locataires management_tenant comme locataire SaaS (conflit sémantique, casse le métier des locataires)

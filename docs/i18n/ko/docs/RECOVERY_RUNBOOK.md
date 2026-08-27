@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) 建空库（演练库名加 _drill 后缀，避免误覆盖生产数据）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) 导入（-T 关闭 TTY，保证非交互；实测约 1-5 分钟）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    回放 binlog 到目标时间点（示例：恢复到 2026-08-16 10:30:00）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 요점:
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | 검사 항목 | 명령 | 통과 기준 |
 |---|---|---|
 | 백업 파일 무결성 | `gzip -t <백업>` | 오류 없음 |
-| 핵심 테이블 행 수 | `SELECT COUNT(*) FROM erik_admin_user;` | 백업 전 기록 행 수와 일치 |
-| 비즈니스 테이블 표본 조사 | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | 3개 이상 수량급 합리적（0이 아니고 백업 전과 일치） |
-| 암호화 필드 복호화 가능 | encryptable 필드 포함 레코드 1건 조회（예: `erik_owner` 주민등록번호/휴대폰） | 값 정확, 애플리케이션 로그에 decrypt 오류 없음 |
+| 핵심 테이블 행 수 | `SELECT COUNT(*) FROM management_admin_user;` | 백업 전 기록 행 수와 일치 |
+| 비즈니스 테이블 표본 조사 | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | 3개 이상 수량급 합리적（0이 아니고 백업 전과 일치） |
+| 암호화 필드 복호화 가능 | encryptable 필드 포함 레코드 1건 조회（예: `management_owner` 주민등록번호/휴대폰） | 값 정확, 애플리케이션 로그에 decrypt 오류 없음 |
 | 업무 스모크 | 로그인, 목록 인터페이스 각 1회 | 200 / 정상 반환 |
 
 표본 조사 스크립트 예시（훈련 환경）:
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > 행 수 일치: 백업 전 동일 SQL로 베이스라인 기록, 복구 후 비교; 훈련 시 베이스라인을 훈련 기록에 작성.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | 백업 선택, `gzip -t`, 빈 DB 생성, 베이스라인 행 수 기록 | 운영 |
 | 5-15 min | 시나리오 A 복구 가져오기 | 운영 |
 | 15-25 min | 제3절 일관성 검증 + 업무 스모크 | 운영 + 업무 |
-| 25-30 min | 결과 기록, 훈련 DB 정리（`DROP DATABASE property_management_drill`）, OPS_RUNBOOK 1.4 실측 RTO 업데이트 | 운영 |
+| 25-30 min | 결과 기록, 훈련 DB 정리（`DROP DATABASE management_drill`）, OPS_RUNBOOK 1.4 실측 RTO 업데이트 | 운영 |
 
 ## 5. 실패 처리
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 日期: 2026-08-16
 恢复目标: 空库（场景 A）/ 时间点（场景 B）
 备份文件: backups/backup_20260816_020000.sql.gz
-基线行数: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+基线行数: management_admin_user=1, management_owner=42, management_fee_bill=128
 恢复耗时: XX 分钟    验证耗时: XX 分钟    总计: XX 分钟（目标 ≤ 30）
 结果: 通过 / 失败（附失败原因与处理）
 ```

@@ -11,7 +11,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class FaceInfo extends BaseModel
 {
-    protected $table = 'erik_face_info';
+    protected $table = 'management_face_info';
 
     protected $fillable = [
         'owner_id', 'face_image', 'face_token', 'feature_data',

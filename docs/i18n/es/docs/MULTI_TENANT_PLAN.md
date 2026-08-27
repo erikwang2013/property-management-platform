@@ -9,11 +9,11 @@
 
 | Categoría | Tablas | Descripción |
 |------|-----|------|
-| Tablas globales/de plataforma | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、erik_system_config、erik_operation_log | Autenticación, configuración, auditoría; naturalmente a nivel de plataforma, sin inquilino |
-| Tablas de dimensión de comunidad | erik_community y 40+ tablas de negocio atribuidas mediante community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Atribuidas indirectamente al inquilino mediante community_id |
-| Tablas de asociación de grupo | erik_group (grupo)、erik_group_community (grupo↔comunidad) | Actualmente es una **asociación opcional**, sin semántica de inquilino; el resumen multicomunidad depende de join |
-| Tablas de extensión de plataforma | erik_notification_template、erik_knowledge_base、erik_mall_*、erik_face_info, etc. | Algunas a nivel de plataforma, otras a nivel de comunidad; requiere confirmación caso por caso |
-| Tablas fácilmente confundibles | **erik_tenant (tabla de inquilinos de vivienda)** | ⚠️ Conflicto semántico: es «inquilino de vivienda» (dimensión room_id/owner_id), **no** es un inquilino SaaS |
+| Tablas globales/de plataforma | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission、management_system_config、management_operation_log | Autenticación, configuración, auditoría; naturalmente a nivel de plataforma, sin inquilino |
+| Tablas de dimensión de comunidad | management_community y 40+ tablas de negocio atribuidas mediante community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Atribuidas indirectamente al inquilino mediante community_id |
+| Tablas de asociación de grupo | management_group (grupo)、management_group_community (grupo↔comunidad) | Actualmente es una **asociación opcional**, sin semántica de inquilino; el resumen multicomunidad depende de join |
+| Tablas de extensión de plataforma | management_notification_template、management_knowledge_base、management_mall_*、management_face_info, etc. | Algunas a nivel de plataforma, otras a nivel de comunidad; requiere confirmación caso por caso |
+| Tablas fácilmente confundibles | **management_tenant (tabla de inquilinos de vivienda)** | ⚠️ Conflicto semántico: es «inquilino de vivienda» (dimensión room_id/owner_id), **no** es un inquilino SaaS |
 
 ### 1.2 Cadena de autenticación (extremo admin, verificado en código)
 
@@ -28,7 +28,7 @@ Middleware de grupo de rutas: AdminAuth(JWT → $request->adminId) → AdminPerm
 
 ### 1.3 Conclusiones clave
 
-- No existe ningún modelo SaaS de inquilinos actual; el nombre `erik_tenant` ya está ocupado por los inquilinos de vivienda; el nuevo concepto debe evitar ese nombre
+- No existe ningún modelo SaaS de inquilinos actual; el nombre `management_tenant` ya está ocupado por los inquilinos de vivienda; el nuevo concepto debe evitar ese nombre
 - Todos los controladores consultan directamente con Eloquent, sin capa repository, sin scopes globales — la transformación de aislamiento debe hacerse en la capa de modelos
 - config/database.php tiene una sola conexión, pero illuminate/database soporta nativamente múltiples connections (reservado para la evolución a base de datos separada)
 
@@ -51,9 +51,9 @@ Middleware de grupo de rutas: AdminAuth(JWT → $request->adminId) → AdminPerm
 
 ### 3.1 Modelo de datos (conjunto mínimo)
 
-- Crear `erik_platform_tenant` (para evitar conflicto con la tabla de inquilinos erik_tenant): id/name/status/created_at, etc.
-- `erik_community` añade `tenant_id BIGINT NOT NULL DEFAULT 0`, índice `(tenant_id, community_id)`
-- `erik_admin_user` añade `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = superadministrador de plataforma)
+- Crear `management_platform_tenant` (para evitar conflicto con la tabla de inquilinos management_tenant): id/name/status/created_at, etc.
+- `management_community` añade `tenant_id BIGINT NOT NULL DEFAULT 0`, índice `(tenant_id, community_id)`
+- `management_admin_user` añade `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = superadministrador de plataforma)
 - Las tablas de negocio intermedias (building/room/fee_bill y otras 40) **no añaden columnas**, se atribuyen mediante community_id
 
 ### 3.2 Tríada de capa de ejecución
@@ -94,13 +94,13 @@ Estrategia de migración de datos: todos los datos existentes se asignan al «in
 | Errores de relleno de datos existentes | Todos los datos existentes | Script idempotente + validación de relleno + modo dry-run |
 | Impacto de índices/rendimiento | Tablas de alta frecuencia (fee_bill/room/owner) | Índice compuesto (tenant_id, community_id); revisión con log de consultas lentas |
 | Regresión de las 133 pruebas | Todo | Ejecutar regresión completa después de inyectar el scope antes de iniciar el piloto |
-| Confusión de nombres (inquilino de vivienda erik_tenant vs inquilino SaaS) | Cognición de desarrollo | Nombrar la nueva tabla platform_tenant, declararlo explícitamente en la documentación |
+| Confusión de nombres (inquilino de vivienda management_tenant vs inquilino SaaS) | Cognición de desarrollo | Nombrar la nueva tabla platform_tenant, declararlo explícitamente en la documentación |
 | **Plan de reversión** | — | El scope global se puede desactivar con un interruptor de configuración en un clic (restaurando la semántica de inquilino único); las columnas de datos se conservan sin eliminar; sin cambios destructivos |
 
 ## 6. Conclusión de la evaluación
 
 **Se recomienda hacer inmediatamente**:
-- Base compartida + aislamiento por filas con tenant_id (plan A), crear la tabla `erik_platform_tenant`, añadir columnas a community/admin_user
+- Base compartida + aislamiento por filas con tenant_id (plan A), crear la tabla `management_platform_tenant`, añadir columnas a community/admin_user
 - Middleware TenantContext + scope global TenantScope + utilidad Tenant::for()
 - Orden del piloto: grupo → comunidad → propietarios → cargos
 - Dependencia previa: completada — tablas/columnas/relleno de multiusuario ya integrados en docs/install.sql (fusionado el 2026-08-16, entrada única de creación de base)
@@ -113,4 +113,4 @@ Estrategia de migración de datos: todos los datos existentes se asignan al «in
 - Aislamiento a nivel de esquema (MySQL no tiene semántica de esquema independiente; el costo equivale a base independiente)
 - Enrutamiento dinámico multi-base (sin beneficio en despliegue de una sola máquina)
 - Esquemas/campos personalizados por inquilino (YAGNI)
-- Reutilizar/transformar la tabla de inquilinos de vivienda erik_tenant como inquilino SaaS (conflicto semántico, rompe el negocio de inquilinos)
+- Reutilizar/transformar la tabla de inquilinos de vivienda management_tenant como inquilino SaaS (conflicto semántico, rompe el negocio de inquilinos)

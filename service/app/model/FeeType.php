@@ -9,7 +9,7 @@ namespace app\model;
 
 class FeeType extends BaseModel
 {
-    protected $table = 'erik_fee_type';
+    protected $table = 'management_fee_type';
 
     protected $fillable = [
         'name', 'category', 'unit_price', 'unit_type',

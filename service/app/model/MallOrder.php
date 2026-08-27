@@ -11,7 +11,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class MallOrder extends BaseModel
 {
-    protected $table = 'erik_mall_order';
+    protected $table = 'management_mall_order';
 
     protected $fillable = [
         'order_number', 'owner_id', 'product_id', 'quantity', 'amount',

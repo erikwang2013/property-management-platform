@@ -8,7 +8,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Visitor extends BaseModel
 {
-    protected $table = 'erik_visitor';
+    protected $table = 'management_visitor';
     protected $fillable = ['room_id', 'owner_id', 'visitor_name', 'visitor_phone', 'visitor_id_card', 'plate_number', 'visitor_count', 'purpose', 'expected_start', 'expected_end', 'actual_start', 'actual_end', 'pass_code', 'status'];
     protected $casts = [
         'visitor_count' => 'integer', 'status' => 'integer',

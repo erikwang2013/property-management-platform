@@ -60,7 +60,7 @@ property-management-platform/
 
 | 层 | 数量 | 详情 |
 |----|------|------|
-| 数据库表 | 65张 | 全部 `erik_` 前缀，BIGINT 非自增主键 |
+| 数据库表 | 65张 | 全部 `management_` 前缀，BIGINT 非自增主键 |
 | PHP 模型 | admin 64 / service 57 | 均为 Eloquent 模型，含 encryptable 加密字段；service 端 57 为模型文件数（含 BaseModel 基类） |
 | admin 控制器 | 58个 | 通用管理 + 22个物业模块 + 12个扩展功能 |
 | service 控制器 | 17个 | 业主端全部 API |
@@ -108,7 +108,7 @@ property-management-platform/
 ### 后端
 - **框架**: webman v2 (workerman/webman)
 - **语言**: PHP 8.3+
-- **数据库**: MySQL 8.0+，表前缀 `erik_`，主键 BIGINT 非自增
+- **数据库**: MySQL 8.0+，表前缀 `management_`，主键 BIGINT 非自增
 - **搜索引擎**: Elasticsearch 8.x
 - **缓存**: Redis 7.x
 
@@ -189,8 +189,8 @@ php start.php start -d
 #### 1. 初始化数据库
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. 启动管理端

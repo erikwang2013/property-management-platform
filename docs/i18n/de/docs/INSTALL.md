@@ -90,7 +90,7 @@ php -m | grep -E "pcntl|pdo_mysql|redis|gd|mbstring|curl|json|xml|dom"
 
 ```bash
 mysql -u root -p <<SQL
-CREATE DATABASE IF NOT EXISTS property_management
+CREATE DATABASE IF NOT EXISTS management
   DEFAULT CHARSET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 SQL
@@ -99,7 +99,7 @@ SQL
 ### 2. Zusammengeführtes Installationsskript importieren
 
 ```bash
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p management < docs/install.sql
 ```
 
 `docs/install.sql` enthält alle 65 Tabellen + RBAC-Berechtigungs-Seed-Daten und verwendet `CREATE TABLE IF NOT EXISTS`, um die erneute Ausführbarkeit sicherzustellen.
@@ -107,7 +107,7 @@ mysql -u root -p property_management < docs/install.sql
 Nach der Ausführung verifizieren:
 
 ```bash
-mysql -u root -p property_management -e "SHOW TABLES;" | wc -l
+mysql -u root -p management -e "SHOW TABLES;" | wc -l
 # Sollte ausgeben: 66 (65 Tabellen + 1 Kopfzeile)
 ```
 
@@ -293,9 +293,9 @@ Zur Verbindung Containernamen statt IPs verwenden (z. B. `DB_HOST=mysql`).
 ### F: Wie setze ich die Datenbank zurück?
 
 ```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS property_management;"
-mysql -u root -p -e "CREATE DATABASE property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p property_management < docs/install.sql
+mysql -u root -p -e "DROP DATABASE IF EXISTS management;"
+mysql -u root -p -e "CREATE DATABASE management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p management < docs/install.sql
 ```
 
 ### F: Wie konfiguriere ich HTTPS?

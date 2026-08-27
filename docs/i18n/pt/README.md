@@ -60,7 +60,7 @@ property-management-platform/
 
 | Camada | Quantidade | Detalhes |
 |----|------|------|
-| Tabelas do banco | 65 | Todas com prefixo `erik_`, chave primária BIGINT sem autoincremento |
+| Tabelas do banco | 65 | Todas com prefixo `management_`, chave primária BIGINT sem autoincremento |
 | Modelos PHP | admin 64 / service 57 | Todos modelos Eloquent, com campos criptografados via encryptable; os 57 do service são arquivos de modelo (incluindo a classe base BaseModel) |
 | Controladores admin | 58 | Gestão geral + 22 módulos de propriedades + 12 funcionalidades estendidas |
 | Controladores service | 17 | Todas as APIs do portal de proprietários |
@@ -108,7 +108,7 @@ property-management-platform/
 ### Back-end
 - **Framework**: webman v2 (workerman/webman)
 - **Linguagem**: PHP 8.3+
-- **Banco de dados**: MySQL 8.0+, prefixo de tabelas `erik_`, chave primária BIGINT sem autoincremento
+- **Banco de dados**: MySQL 8.0+, prefixo de tabelas `management_`, chave primária BIGINT sem autoincremento
 - **Mecanismo de busca**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
@@ -189,8 +189,8 @@ Consulte o [Guia de instalação](docs/INSTALL.md).
 #### 1. Inicializar o banco de dados
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Iniciar o painel de administração

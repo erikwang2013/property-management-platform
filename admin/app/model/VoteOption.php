@@ -9,7 +9,7 @@ namespace app\model;
 
 class VoteOption extends BaseModel
 {
-    protected $table = 'erik_vote_option';
+    protected $table = 'management_vote_option';
 
     protected $fillable = [
         'vote_id', 'content', 'sort', 'vote_count', 'area_weighted_count',

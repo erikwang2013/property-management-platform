@@ -44,7 +44,7 @@ Sobre o script de login: o login tem dupla proteção de código de verificaçã
 
 ## 3. Revisão de consultas lentas
 
-- As tabelas de cobranças `erik_fee_bill` / `erik_fee_payment` têm índices completos (paid_at, bill_id, owner_id, payment_number etc.), as consultas principais têm índice disponível.
+- As tabelas de cobranças `management_fee_bill` / `management_fee_payment` têm índices completos (paid_at, bill_id, owner_id, payment_number etc.), as consultas principais têm índice disponível.
 - Ponto encontrado: a lista de cobranças faz busca difusa por `payment_number like %kw%` (curinga à esquerda), que não usa índice; com volume grande, essa condição degenera para varredura de tabela inteira. É busca de baixa frequência no painel de administração; por enquanto não tratado; com o crescimento dos dados, pode ser trocado para índice invertido ou prefixo.
 - **MySQL slow_query_log está OFF**: recomenda-se habilitar com `long_query_time=1` e observar as SQLs realmente lentas (em vez de inferir pelo teste de carga). Executar em produção:
   ```sql

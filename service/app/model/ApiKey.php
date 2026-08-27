@@ -9,7 +9,7 @@ namespace app\model;
 
 class ApiKey extends BaseModel
 {
-    protected $table = 'erik_api_key';
+    protected $table = 'management_api_key';
 
     protected $fillable = [
         'name', 'api_key_hash', 'status',

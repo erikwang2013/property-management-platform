@@ -279,9 +279,9 @@ class FeeController extends BaseController
         // 分类统计
         $categoryStats = FeeBill::where('owner_id', $ownerId)
             ->whereYear('created_at', (string) $year)
-            ->join('erik_fee_type', 'erik_fee_bill.fee_type_id', '=', 'erik_fee_type.id')
-            ->select(Db::raw('erik_fee_type.category'), Db::raw('SUM(erik_fee_bill.amount) as total'))
-            ->groupBy('erik_fee_type.category')
+            ->join('management_fee_type', 'management_fee_bill.fee_type_id', '=', 'management_fee_type.id')
+            ->select(Db::raw('management_fee_type.category'), Db::raw('SUM(management_fee_bill.amount) as total'))
+            ->groupBy('management_fee_type.category')
             ->get()
             ->map(function ($item) {
                 return [

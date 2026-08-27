@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) 建空库（演练库名加 _drill 后缀，避免误覆盖生产数据）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) 导入（-T 关闭 TTY，保证非交互；实测约 1-5 分钟）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    回放 binlog 到目标时间点（示例：恢复到 2026-08-16 10:30:00）
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 要点：
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | 检查项 | 命令 | 通过标准 |
 |---|---|---|
 | 备份文件完整性 | `gzip -t <备份>` | 无报错 |
-| 关键表行数 | `SELECT COUNT(*) FROM erik_admin_user;` | 与备份前记录的行数一致 |
-| 业务表抽查 | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | 三张以上数量级合理（非 0 且与备份前一致） |
-| 加密字段可解密 | 查一条含 encryptable 字段的记录（如 `erik_owner` 身份证/手机号） | 值正确、应用日志无 decrypt 报错 |
+| 关键表行数 | `SELECT COUNT(*) FROM management_admin_user;` | 与备份前记录的行数一致 |
+| 业务表抽查 | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | 三张以上数量级合理（非 0 且与备份前一致） |
+| 加密字段可解密 | 查一条含 encryptable 字段的记录（如 `management_owner` 身份证/手机号） | 值正确、应用日志无 decrypt 报错 |
 | 业务冒烟 | 登录、拉取列表接口各 1 次 | 200 / 正常返回 |
 
 抽查脚本示例（演练环境）：
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > 行数一致性：备份前用同一条 SQL 记录基线，恢复后对比；演练时把基线写入演练记录。
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | 选备份、`gzip -t`、建空库、记录基线行数 | 运维 |
 | 5-15 min | 场景 A 恢复导入 | 运维 |
 | 15-25 min | 第 3 节一致性验证 + 业务冒烟 | 运维 + 业务 |
-| 25-30 min | 记录结果、清理演练库（`DROP DATABASE property_management_drill`）、更新 OPS_RUNBOOK 1.4 实测 RTO | 运维 |
+| 25-30 min | 记录结果、清理演练库（`DROP DATABASE management_drill`）、更新 OPS_RUNBOOK 1.4 实测 RTO | 运维 |
 
 ## 5. 失败处理
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 日期: 2026-08-16
 恢复目标: 空库（场景 A）/ 时间点（场景 B）
 备份文件: backups/backup_20260816_020000.sql.gz
-基线行数: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+基线行数: management_admin_user=1, management_owner=42, management_fee_bill=128
 恢复耗时: XX 分钟    验证耗时: XX 分钟    总计: XX 分钟（目标 ≤ 30）
 结果: 通过 / 失败（附失败原因与处理）
 ```

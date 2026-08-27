@@ -13,7 +13,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ## 技术栈
 
 - PHP 8.3+, webman v2 (workerman/webman)
-- 数据库: MySQL 8.0+，表前缀 `erik_`
+- 数据库: MySQL 8.0+，表前缀 `management_`
 - 主键: BIGINT 非自增，`erikwang2013/snowflake-php`
 - ID 混淆: `erikwang2013/hashids`
 - JWT: `erikwang2013/jwt-webman`

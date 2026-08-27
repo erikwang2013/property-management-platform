@@ -18,7 +18,7 @@ use Erikwang2013\Jwt\JWTException;
 /**
  * 业主端 JWT 认证中间件
  * 验证 Bearer Token，注入 $request->ownerId 和 $request->ownerPhone
- * 参考 admin/app/middleware/AdminAuth.php 但针对 erik_owner 表
+ * 参考 admin/app/middleware/AdminAuth.php 但针对 management_owner 表
  */
 class ServiceAuth
 {

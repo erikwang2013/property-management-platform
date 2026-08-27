@@ -13,7 +13,7 @@ use support\Response;
 
 /**
  * 开放 API Key 鉴权中间件（/open/* 只读接口）
- * 校验 X-API-Key 头，与 erik_api_key 表中启用的 Key（SHA-256 摘要）比对
+ * 校验 X-API-Key 头，与 management_api_key 表中启用的 Key（SHA-256 摘要）比对
  */
 class ApiKeyAuth
 {

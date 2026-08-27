@@ -9,7 +9,7 @@ namespace app\model;
 
 class ChatRecord extends BaseModel
 {
-    protected $table = 'erik_chat_record';
+    protected $table = 'management_chat_record';
 
     protected $fillable = [
         'user_id', 'user_type', 'question', 'answer',

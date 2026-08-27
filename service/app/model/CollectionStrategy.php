@@ -9,7 +9,7 @@ namespace app\model;
 
 class CollectionStrategy extends BaseModel
 {
-    protected $table = 'erik_collection_strategy';
+    protected $table = 'management_collection_strategy';
 
     protected $fillable = [
         'name', 'overdue_days', 'action', 'template_id',

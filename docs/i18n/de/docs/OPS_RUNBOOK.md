@@ -5,11 +5,11 @@
 
 ## 1. Datenbank-Backup und -Wiederherstellung
 
-Die admin-Seite und die service-Seite nutzen dieselbe MySQL-Instanz und dieselbe Datenbank `property_management`; ein Backup genügt. Einheitlicher Einstiegspunkt:
+Die admin-Seite und die service-Seite nutzen dieselbe MySQL-Instanz und dieselbe Datenbank `management`; ein Backup genügt. Einheitlicher Einstiegspunkt:
 
 | Datenbank | Backup-Skript | Beschreibung |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Liest die Verbindung aus `admin/.env` (Container-Name mit `--container=` überschreibbar), standardmäßig mysqldump im Container |
+| `management` | `scripts/backup.sh` | Liest die Verbindung aus `admin/.env` (Container-Name mit `--container=` überschreibbar), standardmäßig mysqldump im Container |
 
 Ausgabe: `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, standardmäßig werden die letzten 7 Tage behalten (`--keep-days=` einstellbar).
 
@@ -34,7 +34,7 @@ Produktionsempfehlung: Backup-Verzeichnis auf eine separate Festplatte/Offsite-S
 1. Neuestes Backup auswählen: `ls -t backups/backup_*.sql.gz`
 2. Wiederherstellung in **separater Umgebung** (oder temporärer Datenbank) durchführen: siehe [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) Szenario A (Wiederherstellung in leere Datenbank) und Szenario B (Point-in-Time-Wiederherstellung).
 3. Verifizieren:
-   - Zeilenzahl-Vergleich: `SELECT COUNT(*) FROM erik_user;` muss mit den vor dem Backup erfassten Werten übereinstimmen
+   - Zeilenzahl-Vergleich: `SELECT COUNT(*) FROM management_user;` muss mit den vor dem Backup erfassten Werten übereinstimmen
    - Verschlüsselte Felder sind normal entschlüsselbar: einen Datensatz mit encryptable-Feldern abfragen — Wert korrekt, keine decrypt-Fehler im Protokoll
    - Geschäfts-Smoke-Test: Anmeldung, Listen-Schnittstellen funktionieren normal
 4. Dauer und Ergebnis der Übung protokollieren (für die RTO-Bewertung).

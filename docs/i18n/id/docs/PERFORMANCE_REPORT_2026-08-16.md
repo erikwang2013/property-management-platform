@@ -44,7 +44,7 @@ Penjelasan skrip login: login memiliki perlindungan ganda captcha + rate limit (
 
 ## 3. Tinjauan Slow Query
 
-- Tabel biaya `erik_fee_bill` / `erik_fee_payment` memiliki indeks lengkap (paid_at, bill_id, owner_id, payment_number, dst.), query inti semua punya indeks yang tersedia.
+- Tabel biaya `management_fee_bill` / `management_fee_payment` memiliki indeks lengkap (paid_at, bill_id, owner_id, payment_number, dst.), query inti semua punya indeks yang tersedia.
 - Temuan: pencarian fuzzy daftar biaya berdasarkan `payment_number like %kw%` (wildcard awalan), tidak bisa memakai indeks, saat data besar kondisi ini akan menurun menjadi full table scan. Ini pencarian panel admin frekuensi rendah, tidak ditangani untuk saat ini; setelah data bertambah bisa diubah menjadi inverted index atau prefix index.
 - **MySQL slow_query_log dalam keadaan OFF**: disarankan mengaktifkan dan set `long_query_time=1`, terus amati SQL lambat yang sebenarnya (bukan mengandalkan inferensi uji beban). Eksekusi produksi:
   ```sql

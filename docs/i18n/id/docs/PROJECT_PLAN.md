@@ -55,7 +55,7 @@
 
 | Tujuan | Tugas kunci | Standar penerimaan |
 |------|---------|---------|
-| Multi-tenant、performa tercapai、mobile lengkap | ① SaaS multi-tenant: mulai dari manajemen grup, erik_community tambah tenant_id + isolasi middleware (review solusi dulu, database terpisah sebagai arah evolusi) ② Uji beban performa: wrk/k6 uji login/biaya/dashboard, tinjau ulang slow query + cache Redis ③ Pelengkapan mobile: HarmonyOS 5 halaman diperluas ke jalur inti (pembayaran/perbaikan/pengumuman/tamu/parkir), adaptasi mobile Flutter portal pemilik ④ Open API / Webhook (opsional) | Tes otorisasi berlebih tenant lulus; P95 endpoint inti < 300ms; jalur inti HarmonyOS selesai |
+| Multi-tenant、performa tercapai、mobile lengkap | ① SaaS multi-tenant: mulai dari manajemen grup, management_community tambah tenant_id + isolasi middleware (review solusi dulu, database terpisah sebagai arah evolusi) ② Uji beban performa: wrk/k6 uji login/biaya/dashboard, tinjau ulang slow query + cache Redis ③ Pelengkapan mobile: HarmonyOS 5 halaman diperluas ke jalur inti (pembayaran/perbaikan/pengumuman/tamu/parkir), adaptasi mobile Flutter portal pemilik ④ Open API / Webhook (opsional) | Tes otorisasi berlebih tenant lulus; P95 endpoint inti < 300ms; jalur inti HarmonyOS selesai |
 
 **Status P3**: ✅ Semua selesai (diserahkan 2026-08-16: tiga perangkat multi-tenant + uji beban nyata P95 tercapai + HarmonyOS diperluas ke 5 halaman).
 

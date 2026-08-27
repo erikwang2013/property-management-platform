@@ -9,7 +9,7 @@ namespace app\model;
 
 class SlaRule extends BaseModel
 {
-    protected $table = 'erik_sla_rule';
+    protected $table = 'management_sla_rule';
 
     protected $fillable = [
         'name', 'category', 'urgency', 'response_minutes', 'resolve_minutes',

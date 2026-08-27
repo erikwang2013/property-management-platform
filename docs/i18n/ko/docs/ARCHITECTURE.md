@@ -26,7 +26,7 @@ flowchart TB
     end
 
     subgraph "存储层"
-        D1[("MySQL 8.0<br/>主存储<br/>表前缀 erik_")]
+        D1[("MySQL 8.0<br/>主存储<br/>表前缀 management_")]
         D2[("Elasticsearch 8.x<br/>全文检索")]
         D3[("Redis 7.x<br/>缓存/限流/Session")]
     end
@@ -211,7 +211,7 @@ flowchart LR
     end
 
     subgraph "2. 存储"
-        S1["MySQL erik_* 表<br/>id BIGINT UNSIGNED NOT NULL"]
+        S1["MySQL management_* 表<br/>id BIGINT UNSIGNED NOT NULL"]
         S2["敏感字段<br/>encryptable cast<br/>AES-256-CBC 加密"]
         G2 --> S1 --> S2
     end
@@ -266,14 +266,14 @@ flowchart TB
 
 ```mermaid
 erDiagram
-    erik_community {
+    management_community {
         BIGINT id PK "Snowflake"
         VARCHAR name "小区名称"
         VARCHAR address "详细地址"
         TINYINT status "0停用1正常"
     }
 
-    erik_building {
+    management_building {
         BIGINT id PK
         BIGINT community_id FK
         VARCHAR name "楼栋名称"
@@ -281,13 +281,13 @@ erDiagram
         INT floor_count "总层数"
     }
 
-    erik_unit {
+    management_unit {
         BIGINT id PK
         BIGINT building_id FK
         VARCHAR name "单元名称"
     }
 
-    erik_room {
+    management_room {
         BIGINT id PK
         BIGINT community_id FK
         BIGINT building_id FK
@@ -297,7 +297,7 @@ erDiagram
         TINYINT status "0空置1已售2出租3自住"
     }
 
-    erik_owner {
+    management_owner {
         BIGINT id PK
         VARCHAR name "姓名"
         VARCHAR phone "手机号加密"
@@ -305,14 +305,14 @@ erDiagram
         TINYINT status "0迁出1入住"
     }
 
-    erik_room_owner {
+    management_room_owner {
         BIGINT id PK
         BIGINT room_id FK
         BIGINT owner_id FK
         TINYINT relation_type "1所有权2使用权3共有"
     }
 
-    erik_fee_bill {
+    management_fee_bill {
         BIGINT id PK
         BIGINT room_id FK
         BIGINT owner_id FK
@@ -321,7 +321,7 @@ erDiagram
         TINYINT status "0未缴1部分缴2已缴3逾期"
     }
 
-    erik_fee_payment {
+    management_fee_payment {
         BIGINT id PK
         BIGINT bill_id FK
         BIGINT owner_id FK
@@ -329,7 +329,7 @@ erDiagram
         TINYINT payment_method "1微信2支付宝3现金"
     }
 
-    erik_repair_order {
+    management_repair_order {
         BIGINT id PK
         BIGINT room_id FK
         BIGINT owner_id FK
@@ -337,7 +337,7 @@ erDiagram
         TINYINT status "0待派单1已派单2维修中3已完成"
     }
 
-    erik_announcement {
+    management_announcement {
         BIGINT id PK
         BIGINT community_id FK
         VARCHAR title "标题"
@@ -345,19 +345,19 @@ erDiagram
         TINYINT is_published "0草稿1已发布"
     }
 
-    erik_community ||--o{ erik_building : "community_id"
-    erik_building ||--o{ erik_unit : "building_id"
-    erik_community ||--o{ erik_room : "community_id"
-    erik_building ||--o{ erik_room : "building_id"
-    erik_unit ||--o{ erik_room : "unit_id"
-    erik_room ||--o{ erik_room_owner : "room_id"
-    erik_owner ||--o{ erik_room_owner : "owner_id"
-    erik_room ||--o{ erik_fee_bill : "room_id"
-    erik_owner ||--o{ erik_fee_bill : "owner_id"
-    erik_fee_bill ||--o{ erik_fee_payment : "bill_id"
-    erik_room ||--o{ erik_repair_order : "room_id"
-    erik_owner ||--o{ erik_repair_order : "owner_id"
-    erik_community ||--o{ erik_announcement : "community_id"
+    management_community ||--o{ management_building : "community_id"
+    management_building ||--o{ management_unit : "building_id"
+    management_community ||--o{ management_room : "community_id"
+    management_building ||--o{ management_room : "building_id"
+    management_unit ||--o{ management_room : "unit_id"
+    management_room ||--o{ management_room_owner : "room_id"
+    management_owner ||--o{ management_room_owner : "owner_id"
+    management_room ||--o{ management_fee_bill : "room_id"
+    management_owner ||--o{ management_fee_bill : "owner_id"
+    management_fee_bill ||--o{ management_fee_payment : "bill_id"
+    management_room ||--o{ management_repair_order : "room_id"
+    management_owner ||--o{ management_repair_order : "owner_id"
+    management_community ||--o{ management_announcement : "community_id"
 ```
 
 ---
@@ -380,7 +380,7 @@ flowchart TB
     end
 
     subgraph "数据层"
-        MYSQL["MySQL 8.0<br/>erik_ 前缀"]
+        MYSQL["MySQL 8.0<br/>management_ 前缀"]
         ES["Elasticsearch 8.x"]
         REDIS["Redis 7.x<br/>缓存/限流/Session"]
     end

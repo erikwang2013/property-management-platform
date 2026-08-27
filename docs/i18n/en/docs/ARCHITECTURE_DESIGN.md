@@ -75,7 +75,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
       datacenter_id(5bit) + worker_id(5bit) + timestamp(41bit) + sequence(12bit)
       → BIGINT(18) 例: 1750123456789
 
-存储: MySQL erik_* 表
+存储: MySQL management_* 表
       id BIGINT UNSIGNED NOT NULL（非自增）
       敏感字段 encryptable cast → AES-256-CBC 加密存储
 
@@ -283,7 +283,7 @@ REFACTOR: 清理代码，保持测试绿
 | Layer | Framework | Test Content |
 |----|---------|---------|
 | Base services | PHPUnit | Snowflake ID generation, Hashids encode/decode, response format |
-| Database | PHPUnit + PDO | Table structure validation (BIGINT primary keys, non-auto-increment, erik_ prefix) |
+| Database | PHPUnit + PDO | Table structure validation (BIGINT primary keys, non-auto-increment, management_ prefix) |
 | Internationalization | PHPUnit | Translation file existence, Chinese/English key consistency |
 | API endpoints | PHPUnit | Health check, response format |
 | Middleware | Integration tests | JWT auth, rate limiting, permissions |

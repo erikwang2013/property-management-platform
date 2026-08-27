@@ -14,7 +14,7 @@ use Webman\RedisQueue\Redis as QueueRedis;
 /**
  * Webhook 投递：订阅配置 → HMAC-SHA256 签名 → POST JSON → 失败入队异步重试
  *
- * 配置存 erik_system_config（group=webhook, key=webhook_config, type=json）：
+ * 配置存 management_system_config（group=webhook, key=webhook_config, type=json）：
  *   {"url":"https://example.com/hook","secret":"...","events":["fee_paid"],"enabled":true}
  *
  * 首次投递同步执行（保持调用方语义，"一次成功零延迟"），失败后把事件入队
@@ -25,7 +25,7 @@ class WebhookService
 {
     public const EVENTS = ['fee_paid', 'repair_created', 'announcement_published'];
 
-    /** 可测注入点：返回配置数组（默认读 erik_system_config），null 表示未配置 */
+    /** 可测注入点：返回配置数组（默认读 management_system_config），null 表示未配置 */
     public static $configResolver = null;
 
     /** 可测注入点：fn(string $url, string $payload, string $signature): int 返回 HTTP 状态码，0=网络失败 */

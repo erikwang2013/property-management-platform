@@ -113,7 +113,7 @@ class PaymentServiceTest extends TestCase
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/docs/install.sql');
         // 支付单号唯一约束：重复回调不会产生第二笔入账记录
         $this->assertMatchesRegularExpression(
-            '/CREATE TABLE IF NOT EXISTS `erik_payment_order`.*?UNIQUE KEY `uk_order_number` \(`order_number`\)/s',
+            '/CREATE TABLE IF NOT EXISTS `management_payment_order`.*?UNIQUE KEY `uk_order_number` \(`order_number`\)/s',
             $sql
         );
     }

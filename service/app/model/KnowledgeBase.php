@@ -9,7 +9,7 @@ namespace app\model;
 
 class KnowledgeBase extends BaseModel
 {
-    protected $table = 'erik_knowledge_base';
+    protected $table = 'management_knowledge_base';
 
     protected $fillable = [
         'category_id', 'question', 'answer', 'keywords',

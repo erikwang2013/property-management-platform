@@ -13,7 +13,7 @@ class Announcement extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'erik_announcement';
+    protected $table = 'management_announcement';
 
     protected $fillable = [
         'community_id', 'title', 'content', 'category',

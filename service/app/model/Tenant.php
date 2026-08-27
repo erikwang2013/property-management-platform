@@ -11,7 +11,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Tenant extends BaseModel
 {
-    protected $table = 'erik_tenant';
+    protected $table = 'management_tenant';
 
     protected $fillable = [
         'room_id', 'owner_id', 'name', 'phone', 'id_card',

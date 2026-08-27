@@ -44,7 +44,7 @@ Note sur le script de connexion : la connexion est doublement protégée par cod
 
 ## 3. Examen des requêtes lentes
 
-- Les tables de frais `erik_fee_bill` / `erik_fee_payment` ont des index complets (paid_at、bill_id、owner_id、payment_number, etc.), les requêtes principales disposent toutes d'index utilisables.
+- Les tables de frais `management_fee_bill` / `management_fee_payment` ont des index complets (paid_at、bill_id、owner_id、payment_number, etc.), les requêtes principales disposent toutes d'index utilisables.
 - Point relevé : la liste des frais utilise une recherche floue `payment_number like %kw%` (wildcard de tête), inutilisable avec index ; sur de gros volumes cette condition dégénère en scan complet de table. Recherche d'administration à basse fréquence, non traitée pour l'instant ; on pourra passer à un index inversé ou préfixe quand le volume augmentera.
 - **MySQL slow_query_log est OFF** : il est recommandé de l'activer avec `long_query_time=1` pour observer les vraies requêtes lentes (plutôt que d'inférer par test de charge). En production :
   ```sql

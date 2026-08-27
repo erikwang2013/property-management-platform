@@ -643,7 +643,7 @@ curl -H "X-API-Key: <ваш Key>" http://localhost:8788/open/announcements
 ```
 
 - Отсутствующий или неверный Key возвращает `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
-- Управление Key: `php scripts/gen_api_key.php [--name=назначение]` для генерации; отключение/удаление — напрямую в таблице `erik_api_key` (`status=0` — отключено, ключ немедленно теряет силу)
+- Управление Key: `php scripts/gen_api_key.php [--name=назначение]` для генерации; отключение/удаление — напрямую в таблице `management_api_key` (`status=0` — отключено, ключ немедленно теряет силу)
 
 ### Эндпоинты
 

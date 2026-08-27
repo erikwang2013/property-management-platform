@@ -9,7 +9,7 @@ namespace app\model;
 
 class RepairProgress extends BaseModel
 {
-    protected $table = 'erik_repair_progress';
+    protected $table = 'management_repair_progress';
 
     protected $fillable = [
         'repair_order_id', 'staff_id', 'status_from',

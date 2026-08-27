@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) খালি ডেটাবেস তৈরি (ড্রিল ডেটাবেসের নামে _drill সাফিক্স, প্রোডাকশন ডেটা ভুলভাবে ওভাররাইট এড়াতে)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) ইমপোর্ট (-T TTY বন্ধ, নন-ইন্টারঅ্যাক্টিভ নিশ্চিত; বাস্তবে প্রায় ১-৫ মিনিট)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    binlog টার্গেট টাইম পয়েন্টে রিপ্লে (উদাহরণ: 2026-08-16 10:30:00 এ রিকভারি)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 মূল পয়েন্ট:
@@ -78,21 +78,21 @@ docker compose -f admin/docker-compose.yml exec -T \
 | পরীক্ষা আইটেম | কমান্ড | পাসের মানদণ্ড |
 |---|---|---|
 | ব্যাকআপ ফাইল অখণ্ডতা | `gzip -t <ব্যাকআপ>` | কোনো এরে নেই |
-| মূল টেবিল সারি সংখ্যা | `SELECT COUNT(*) FROM erik_admin_user;` | ব্যাকআপের আগের রেকর্ডের সারি সংখ্যার সাথে মেলে |
-| ব্যবসা টেবিল নমুনা | `SELECT COUNT(*) FROM erik_owner;`, `erik_tenant`, `erik_fee_bill`, `erik_repair_order` | তিনটির বেশি মাত্রা যুক্তিসঙ্গত (অ-শূন্য ও ব্যাকআপের আগের সাথে মেলে) |
-| এনক্রিপ্টেড ফিল্ড ডিক্রিপ্টযোগ্য | encryptable ফিল্ড বিশিষ্ট রেকর্ড দেখুন (যেমন `erik_owner`-এর আইডি কার্ড/মোবাইল) | মান সঠিক, অ্যাপ্লিকেশন লগে decrypt এরে নেই |
+| মূল টেবিল সারি সংখ্যা | `SELECT COUNT(*) FROM management_admin_user;` | ব্যাকআপের আগের রেকর্ডের সারি সংখ্যার সাথে মেলে |
+| ব্যবসা টেবিল নমুনা | `SELECT COUNT(*) FROM management_owner;`, `management_tenant`, `management_fee_bill`, `management_repair_order` | তিনটির বেশি মাত্রা যুক্তিসঙ্গত (অ-শূন্য ও ব্যাকআপের আগের সাথে মেলে) |
+| এনক্রিপ্টেড ফিল্ড ডিক্রিপ্টযোগ্য | encryptable ফিল্ড বিশিষ্ট রেকর্ড দেখুন (যেমন `management_owner`-এর আইডি কার্ড/মোবাইল) | মান সঠিক, অ্যাপ্লিকেশন লগে decrypt এরে নেই |
 | ব্যবসা স্মোক | লগইন, লিস্ট ইন্টারফেস প্রতিটি ১ বার | 200 / স্বাভাবিক রিটার্ন |
 
 নমুনা চেক স্ক্রিপ্ট (ড্রিল পরিবেশ):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > সারি সংখ্যা কনসিস্টেন্সি: ব্যাকআপের আগে একই SQL দিয়ে বেসলাইন রেকর্ড করুন, রিকভারির পরে তুলনা; ড্রিলের সময় বেসলাইন ড্রিল রেকর্ডে লিখুন।
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | ব্যাকআপ নির্বাচন, `gzip -t`, খালি ডেটাবেস তৈরি, বেসলাইন সারি সংখ্যা রেকর্ড | অপারেশন |
 | 5-15 min | দৃশ্য A রিকভারি ইমপোর্ট | অপারেশন |
 | 15-25 min | ৩য় অনুচ্ছেদ কনসিস্টেন্সি যাচাই + ব্যবসা স্মোক | অপারেশন + ব্যবসা |
-| 25-30 min | ফলাফল রেকর্ড, ড্রিল ডেটাবেস পরিষ্কার (`DROP DATABASE property_management_drill`), OPS_RUNBOOK 1.4 বাস্তব RTO আপডেট | অপারেশন |
+| 25-30 min | ফলাফল রেকর্ড, ড্রিল ডেটাবেস পরিষ্কার (`DROP DATABASE management_drill`), OPS_RUNBOOK 1.4 বাস্তব RTO আপডেট | অপারেশন |
 
 ## 5. ব্যর্থতা হ্যান্ডলিং
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 তারিখ: 2026-08-16
 রিকভারি টার্গেট: খালি ডেটাবেস (দৃশ্য A) / টাইম পয়েন্ট (দৃশ্য B)
 ব্যাকআপ ফাইল: backups/backup_20260816_020000.sql.gz
-বেসলাইন সারি সংখ্যা: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+বেসলাইন সারি সংখ্যা: management_admin_user=1, management_owner=42, management_fee_bill=128
 রিকভারি সময়: XX মিনিট    যাচাই সময়: XX মিনিট    মোট: XX মিনিট (লক্ষ্য ≤ ৩০)
 ফলাফল: পাস / ব্যর্থ (ব্যর্থতার কারণ ও হ্যান্ডলিং সহ)
 ```

@@ -643,7 +643,7 @@ curl -H "X-API-Key: <مفتاحك>" http://localhost:8788/open/announcements
 ```
 
 - المفتاح الناقص أو الخاطئ يُرجع `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
-- إدارة المفاتيح: `php scripts/gen_api_key.php [--name=الغرض]` للتوليد؛ التعطيل/الحذف بالتعامل المباشر مع جدول `erik_api_key` (`status=0` تعطيل فوري للمفتاح)
+- إدارة المفاتيح: `php scripts/gen_api_key.php [--name=الغرض]` للتوليد؛ التعطيل/الحذف بالتعامل المباشر مع جدول `management_api_key` (`status=0` تعطيل فوري للمفتاح)
 
 ### النقاط
 

@@ -62,7 +62,7 @@ property-management-platform/
 
 | Lapisan | Jumlah | Detail |
 |----|------|------|
-| Tabel database | 65 | Semua berprefiks `erik_`, primary key BIGINT non-auto-increment |
+| Tabel database | 65 | Semua berprefiks `management_`, primary key BIGINT non-auto-increment |
 | Model PHP | admin 64 / service 57 | Semua model Eloquent, berisi field terenkripsi encryptable; 57 di service adalah jumlah file model (termasuk kelas dasar BaseModel) |
 | Controller admin | 58 | Umum + 22 modul properti + 12 fitur ekstensi |
 | Controller service | 17 | Semua API portal pemilik |
@@ -110,7 +110,7 @@ property-management-platform/
 ### Backend
 - **Framework**: webman v2 (workerman/webman)
 - **Bahasa**: PHP 8.3+
-- **Database**: MySQL 8.0+, prefiks tabel `erik_`, primary key BIGINT non-auto-increment
+- **Database**: MySQL 8.0+, prefiks tabel `management_`, primary key BIGINT non-auto-increment
 - **Mesin pencari**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
@@ -191,8 +191,8 @@ Lihat [Panduan Instalasi](docs/INSTALL.md).
 #### 1. Inisialisasi Database
 
 ```bash
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS property_management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root property_management < docs/install.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root management < docs/install.sql
 ```
 
 #### 2. Menjalankan Panel Admin

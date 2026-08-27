@@ -45,7 +45,7 @@ async function fixedMode(page, api) {
     await page.locator('#host').inputValue());
   report('fixed: step1 默认值 port=3306', await page.locator('#port').inputValue() === '3306',
     await page.locator('#port').inputValue());
-  report('fixed: step1 默认值 database=property_management', await page.locator('#database').inputValue() === 'property_management',
+  report('fixed: step1 默认值 database=management', await page.locator('#database').inputValue() === 'management',
     await page.locator('#database').inputValue());
   report('fixed: step1 隐藏 _step=2', await page.locator('input[name=_step]').inputValue() === '2');
   report('fixed: step1 提交按钮文案', (await page.locator('button[type=submit]').textContent()).includes('下一步'));
@@ -73,7 +73,7 @@ async function fixedMode(page, api) {
   await page.goto(`${BASE}/install`, { waitUntil: 'domcontentloaded' });
   await page.locator('#host').fill('127.0.0.1');
   await page.locator('#port').fill('3306');
-  await page.locator('#database').fill('property_management');
+  await page.locator('#database').fill('management');
   await page.locator('#username').fill('root');
   await page.click('button[type=submit]');
   await page.waitForLoadState('domcontentloaded');
@@ -97,7 +97,7 @@ async function fixedMode(page, api) {
   report('fixed: step2 两次密码不一致提示', uText.includes('两次输入的密码不一致'));
   await page.goto(`${BASE}/install`, { waitUntil: 'domcontentloaded' });
   await page.locator('#host').fill('127.0.0.1'); await page.locator('#port').fill('3306');
-  await page.locator('#database').fill('property_management'); await page.locator('#username').fill('root');
+  await page.locator('#database').fill('management'); await page.locator('#username').fill('root');
   await page.click('button[type=submit]');
   await page.waitForLoadState('domcontentloaded');
   // 注: 'ab'/'abcdef' 会被 HTML5 minlength 拦截，用 form.submit() 绕过客户端校验直测服务端

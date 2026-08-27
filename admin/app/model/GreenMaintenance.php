@@ -7,7 +7,7 @@ namespace app\model;
 
 class GreenMaintenance extends BaseModel
 {
-    protected $table = 'erik_green_maintenance';
+    protected $table = 'management_green_maintenance';
     protected $fillable = ['area_id', 'maintenance_type', 'staff_id', 'description', 'cost', 'maintained_at'];
     protected $casts = [
         'maintenance_type' => 'integer', 'cost' => 'decimal:2',

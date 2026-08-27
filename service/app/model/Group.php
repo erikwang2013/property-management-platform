@@ -11,7 +11,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Group extends BaseModel
 {
-    protected $table = 'erik_group';
+    protected $table = 'management_group';
 
     protected $fillable = [
         'name', 'contact_person', 'contact_phone', 'description', 'status',

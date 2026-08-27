@@ -4,7 +4,7 @@
 /**
  * Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
  *
- * 生成开放 API Key（X-API-Key 鉴权，写入 erik_api_key 表）
+ * 生成开放 API Key（X-API-Key 鉴权，写入 management_api_key 表）
  *
  * 用法:
  *   php scripts/gen_api_key.php                # 生成 Key，名称默认 "default"

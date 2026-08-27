@@ -9,7 +9,7 @@ namespace app\model;
 
 class NotificationTemplate extends BaseModel
 {
-    protected $table = 'erik_notification_template';
+    protected $table = 'management_notification_template';
 
     protected $fillable = [
         'code', 'name', 'title_template', 'content_template', 'channels', 'status',

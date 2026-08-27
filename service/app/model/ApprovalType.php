@@ -9,7 +9,7 @@ namespace app\model;
 
 class ApprovalType extends BaseModel
 {
-    protected $table = 'erik_approval_type';
+    protected $table = 'management_approval_type';
 
     protected $fillable = [
         'code', 'name', 'steps', 'status',

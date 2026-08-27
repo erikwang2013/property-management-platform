@@ -8,7 +8,7 @@ use Erikwang2013\Encryptable\Encryptable;
 
 class Contract extends BaseModel
 {
-    protected $table = 'erik_contract';
+    protected $table = 'management_contract';
     protected $fillable = ['community_id', 'owner_id', 'room_id', 'contract_number', 'contract_type', 'title', 'content', 'start_date', 'end_date', 'amount', 'status', 'signed_at', 'remark'];
     protected $casts = [
         'contract_type' => 'integer', 'amount' => 'decimal:2', 'status' => 'integer',

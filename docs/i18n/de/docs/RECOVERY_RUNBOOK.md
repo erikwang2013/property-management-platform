@@ -34,12 +34,12 @@ docker compose -f admin/docker-compose.yml ps mysql
 # 4) Leere Datenbank anlegen (Übungsdatenbank mit _drill-Suffix, um versehentliches Überschreiben von Produktionsdaten zu vermeiden)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS property_management_drill DEFAULT CHARACTER SET utf8mb4;"'
+  sh -c 'mysql -uroot -e "CREATE DATABASE IF NOT EXISTS management_drill DEFAULT CHARACTER SET utf8mb4;"'
 
 # 5) Importieren (-T deaktiviert TTY, nicht-interaktiv; gemessen ca. 1-5 Minuten)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot --default-character-set=utf8mb4 property_management_drill' \
+  sh -c 'mysql -uroot --default-character-set=utf8mb4 management_drill' \
   < backups/backup_20260816_020000.sql.gz
 ```
 
@@ -64,7 +64,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 #    binlog bis zum Zielzeitpunkt replayen (Beispiel: Wiederherstellung bis 2026-08-16 10:30:00)
 docker compose -f admin/docker-compose.yml exec -T \
   -e MYSQL_PWD=root mysql \
-  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot property_management_drill'
+  sh -c 'mysqlbinlog --stop-datetime="2026-08-16 10:30:00" /var/lib/mysql/binlog.000012 | mysql -uroot management_drill'
 ```
 
 Wichtige Punkte:
@@ -78,21 +78,21 @@ Wichtige Punkte:
 | Prüfpunkt | Befehl | Bestehenskriterium |
 |---|---|---|
 | Integrität der Backup-Datei | `gzip -t <Backup>` | keine Fehler |
-| Zeilenzahl der Schlüsseltabellen | `SELECT COUNT(*) FROM erik_admin_user;` | stimmt mit den vor dem Backup erfassten Zeilenzahlen überein |
-| Stichprobe der Geschäftstabellen | `SELECT COUNT(*) FROM erik_owner;`、`erik_tenant`、`erik_fee_bill`、`erik_repair_order` | mindestens drei mit plausibler Größenordnung (nicht 0 und identisch mit dem Stand vor dem Backup) |
-| Verschlüsselte Felder entschlüsselbar | einen Datensatz mit encryptable-Feldern abfragen (z. B. `erik_owner` Personalausweis/Telefonnummer) | Wert korrekt, keine decrypt-Fehler in den Anwendungsprotokollen |
+| Zeilenzahl der Schlüsseltabellen | `SELECT COUNT(*) FROM management_admin_user;` | stimmt mit den vor dem Backup erfassten Zeilenzahlen überein |
+| Stichprobe der Geschäftstabellen | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | mindestens drei mit plausibler Größenordnung (nicht 0 und identisch mit dem Stand vor dem Backup) |
+| Verschlüsselte Felder entschlüsselbar | einen Datensatz mit encryptable-Feldern abfragen (z. B. `management_owner` Personalausweis/Telefonnummer) | Wert korrekt, keine decrypt-Fehler in den Anwendungsprotokollen |
 | Geschäfts-Smoke-Test | Anmeldung und Listen-Schnittstelle je 1× | 200 / normale Rückgabe |
 
 Beispiel für das Stichprobenskript (Übungsumgebung):
 
 ```bash
 docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
-  sh -c 'mysql -uroot property_management_drill -e "
-    SELECT (SELECT COUNT(*) FROM erik_admin_user) AS users,
-           (SELECT COUNT(*) FROM erik_owner) AS owners,
-           (SELECT COUNT(*) FROM erik_tenant) AS tenants,
-           (SELECT COUNT(*) FROM erik_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM erik_repair_order) AS repair_orders;"'
+  sh -c 'mysql -uroot management_drill -e "
+    SELECT (SELECT COUNT(*) FROM management_admin_user) AS users,
+           (SELECT COUNT(*) FROM management_owner) AS owners,
+           (SELECT COUNT(*) FROM management_tenant) AS tenants,
+           (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
+           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
 ```
 
 > Zeilenzahl-Konsistenz: vor dem Backup mit derselben SQL eine Baseline aufzeichnen, nach der Wiederherstellung vergleichen; die Baseline bei der Übung ins Übungsprotokoll schreiben.
@@ -104,7 +104,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 | 0-5 min | Backup auswählen、`gzip -t`、leere Datenbank anlegen、Baseline-Zeilenzahlen aufzeichnen | Betrieb |
 | 5-15 min | Szenario-A-Wiederherstellung und Import | Betrieb |
 | 15-25 min | Konsistenzvalidierung aus Abschnitt 3 + Geschäfts-Smoke | Betrieb + Fachbereich |
-| 25-30 min | Ergebnisse protokollieren、Übungsdatenbank aufräumen（`DROP DATABASE property_management_drill`）、gemessenes RTO in OPS_RUNBOOK 1.4 aktualisieren | Betrieb |
+| 25-30 min | Ergebnisse protokollieren、Übungsdatenbank aufräumen（`DROP DATABASE management_drill`）、gemessenes RTO in OPS_RUNBOOK 1.4 aktualisieren | Betrieb |
 
 ## 5. Fehlerbehandlung
 
@@ -121,7 +121,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
 日期: 2026-08-16
 恢复目标: 空库（场景 A）/ 时间点（场景 B）
 备份文件: backups/backup_20260816_020000.sql.gz
-基线行数: erik_admin_user=1, erik_owner=42, erik_fee_bill=128
+基线行数: management_admin_user=1, management_owner=42, management_fee_bill=128
 恢复耗时: XX 分钟    验证耗时: XX 分钟    总计: XX 分钟（目标 ≤ 30）
 结果: 通过 / 失败（附失败原因与处理）
 ```

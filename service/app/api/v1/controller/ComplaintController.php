@@ -31,14 +31,14 @@ class ComplaintController extends BaseController
         $ownerId = $this->getOwnerId($request);
         $page    = (int) $request->input('page', 1);
 
-        $total = Db::table('erik_complaint')
+        $total = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->count();
 
         $perPage = 20;
         $offset  = ($page - 1) * $perPage;
 
-        $items = Db::table('erik_complaint')
+        $items = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->orderBy('created_at', 'desc')
             ->offset($offset)
@@ -82,7 +82,7 @@ class ComplaintController extends BaseController
 
         $ownerId = $this->getOwnerId($request);
 
-        $complaint = Db::table('erik_complaint')
+        $complaint = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->where('id', $complaintId)
             ->first();
@@ -136,7 +136,7 @@ class ComplaintController extends BaseController
         $complaintId = $this->generateId();
         $now = date('Y-m-d H:i:s');
 
-        Db::table('erik_complaint')->insert([
+        Db::table('management_complaint')->insert([
             'id'           => $complaintId,
             'owner_id'     => $ownerId,
             'type'         => $type,
@@ -170,7 +170,7 @@ class ComplaintController extends BaseController
             return $this->fail('无效的投诉ID', 404);
         }
 
-        $complaint = Db::table('erik_complaint')
+        $complaint = Db::table('management_complaint')
             ->where('owner_id', $ownerId)
             ->where('id', $complaintId)
             ->first();
@@ -189,7 +189,7 @@ class ComplaintController extends BaseController
             return $this->fail('评分必须在1-5之间', 422);
         }
 
-        Db::table('erik_complaint')
+        Db::table('management_complaint')
             ->where('id', $complaintId)
             ->update([
                 'satisfaction' => $score,

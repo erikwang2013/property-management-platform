@@ -5,11 +5,11 @@
 
 ## 1. Database Backup & Restore
 
-The admin and service ends share the same MySQL instance and database `property_management`; one backup suffices. Unified entry:
+The admin and service ends share the same MySQL instance and database `management`; one backup suffices. Unified entry:
 
 | Database | Backup Script | Description |
 |---|---|---|
-| `property_management` | `scripts/backup.sh` | Reads the connection from `admin/.env` (override the container name with `--container=`), defaults to mysqldump inside the container |
+| `management` | `scripts/backup.sh` | Reads the connection from `admin/.env` (override the container name with `--container=`), defaults to mysqldump inside the container |
 
 Outputs `backups/backup_YYYYMMDD_HHMMSS.sql.gz`, retaining the last 7 days by default (`--keep-days=` adjustable).
 
@@ -34,7 +34,7 @@ Production recommendation: mount the backup directory on a separate disk/off-sit
 1. Pick the most recent backup: `ls -t backups/backup_*.sql.gz`
 2. Restore in an **isolated environment** (or a temporary database): see [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md) Scenario A (empty-database restore) and Scenario B (point-in-time restore).
 3. Verify:
-   - Row-count comparison: `SELECT COUNT(*) FROM erik_user;` matches the pre-backup record
+   - Row-count comparison: `SELECT COUNT(*) FROM management_user;` matches the pre-backup record
    - Encrypted fields decrypt correctly: query a record with encryptable fields; values correct, no decrypt errors in logs
    - Business smoke test: login and list endpoints work normally
 4. Record the drill duration and result (for RTO assessment).

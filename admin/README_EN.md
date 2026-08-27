@@ -35,7 +35,7 @@ This copyright notice is permanent, must not be modified, removed, or reversed. 
 |---|------|------|
 | Backend | webman v2 (workerman) | High-performance PHP daemon framework |
 | PHP | 8.3+ | |
-| Database | MySQL 8.0+ | Table prefix `erik_`, BIGINT non-auto-increment PKs |
+| Database | MySQL 8.0+ | Table prefix `management_`, BIGINT non-auto-increment PKs |
 | Search | Elasticsearch | Synced via `webman-scout` |
 | Admin Frontend | Flutter 3.x | Web renders as desktop admin panel (`apps/flutter/`) |
 | Mobile | HarmonyOS ArkTS | Native HarmonyOS client (`apps/harmonyos/`), supports phone/tablet/2in1 |
@@ -184,7 +184,7 @@ docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 ## Database Conventions
 
-- **Prefix**: `erik_`
+- **Prefix**: `management_`
 - **Primary Key**: `id BIGINT UNSIGNED NOT NULL`, **NO AUTO_INCREMENT**
 - **ID Generation**: PKs are generated at the application layer via `SnowflakeService::generate()`
 - **Required Columns**: Every table must have `id`, `created_at`, `updated_at`

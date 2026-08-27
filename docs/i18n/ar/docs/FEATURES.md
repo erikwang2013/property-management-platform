@@ -6,44 +6,44 @@
 
 | الرقم | الوحدة | الدفعة | لوحة الإدارة | بوابة الملاك | جدول البيانات |
 |------|------|---------|---------|--------|--------|
-| 1 | إدارة المجمعات السكنية | الدفعة 1 | CRUD + بحث وترقيم صفحات | عرض المجمع المرتبط | erik_community |
-| 2 | إدارة المباني | الدفعة 1 | CRUD + تصفية حسب المجمع | - | erik_building |
-| 3 | إدارة الوحدات | الدفعة 1 | CRUD + تصفية حسب المبنى | - | erik_unit |
-| 4 | إدارة أنواع الوحدات | الدفعة 1 | CRUD | - | erik_room_type |
-| 5 | إدارة العقارات | الدفعة 1 | CRUD + شجرة العقارات + ربط الملاك دفعة واحدة | قائمة/تفاصيل عقاراتي | erik_room |
-| 6 | إدارة الملاك | الدفعة 1 | CRUD + استيراد دفعة واحدة/تفعيل وتعطيل/حذف | تسجيل/تسجيل دخول/معلومات شخصية | erik_owner, erik_room_owner |
-| 7 | إدارة المستأجرين | الدفعة 1 | CRUD + تصفية حسب العقار | - | erik_tenant |
-| 8 | إدارة الرسوم | الدفعة 1 | CRUD لأنواع الرسوم + إدارة الفواتير + إنشاء دفعة واحدة + تحصيل خارجي | استعلام الفواتير + الدفع عبر الإنترنت + إحصائيات الرسوم | erik_fee_type, erik_fee_bill, erik_fee_payment |
-| 9 | إدارة طلبات الإصلاح | الدفعة 1 | قائمة الطلبات + الإرسال + تحديث التقدم | تقديم طلب إصلاح + عرض التقدم + التقييم | erik_repair_order, erik_repair_progress |
-| 10 | الإعلانات والإشعارات | الدفعة 1 | CRUD + نشر/تثبيت | قائمة/تفاصيل الإعلانات | erik_announcement |
-| 11 | إدارة المواقف | الدفعة 2 | إدارة المواقف/المركبات + سجلات المواقف | مواقفي/مركباتي + سجلات المواقف | erik_parking_space, erik_parking_vehicle, erik_parking_record |
-| 12 | إدارة المعدات | الدفعة 2 | سجل المعدات + سجلات الصيانة | - | erik_equipment, erik_equipment_maintenance |
-| 13 | الشكاوى والاقتراحات | الدفعة 2 | قائمة الشكاوى + المعالجة + المتابعة | تقديم شكوى + عرض التقدم + التقييم | erik_complaint |
-| 14 | إدارة الزوار | الدفعة 2 | موافقات الزوار + استعلام السجلات | حجز الزوار + رمز المرور | erik_visitor |
-| 15 | إدارة العقود | الدفعة 2 | CRUD + إدارة الحالة | - | erik_contract |
-| 16 | الإدارة المالية | الدفعة 2 | إدارة الإيرادات والمصروفات + تقارير إحصائية | - | erik_finance_income, erik_finance_expense |
-| 17 | الدوريات الأمنية | الدفعة 3 | مسارات الدوريات + سجلات الدوريات | - | erik_security_patrol, erik_patrol_record |
-| 18 | إدارة النظافة | الدفعة 3 | مناطق النظافة + سجلات النظافة | - | erik_cleaning_area, erik_cleaning_record |
-| 19 | إدارة المساحات الخضراء | الدفعة 3 | المناطق الخضراء + سجلات الصيانة | - | erik_green_area, erik_green_maintenance |
-| 20 | أنشطة المجتمع | الدفعة 3 | إدارة الأنشطة + عرض التسجيلات | قائمة الأنشطة + التسجيل | erik_community_activity, erik_activity_signup |
-| 21 | إدارة استهلاك الطاقة | الدفعة 3 | إدارة العدادات + سجلات القراءة | - | erik_energy_meter, erik_energy_record |
-| 22 | إدارة الموظفين | الدفعة 3 | CRUD + إدارة الحالة | - | erik_staff |
+| 1 | إدارة المجمعات السكنية | الدفعة 1 | CRUD + بحث وترقيم صفحات | عرض المجمع المرتبط | management_community |
+| 2 | إدارة المباني | الدفعة 1 | CRUD + تصفية حسب المجمع | - | management_building |
+| 3 | إدارة الوحدات | الدفعة 1 | CRUD + تصفية حسب المبنى | - | management_unit |
+| 4 | إدارة أنواع الوحدات | الدفعة 1 | CRUD | - | management_room_type |
+| 5 | إدارة العقارات | الدفعة 1 | CRUD + شجرة العقارات + ربط الملاك دفعة واحدة | قائمة/تفاصيل عقاراتي | management_room |
+| 6 | إدارة الملاك | الدفعة 1 | CRUD + استيراد دفعة واحدة/تفعيل وتعطيل/حذف | تسجيل/تسجيل دخول/معلومات شخصية | management_owner, management_room_owner |
+| 7 | إدارة المستأجرين | الدفعة 1 | CRUD + تصفية حسب العقار | - | management_tenant |
+| 8 | إدارة الرسوم | الدفعة 1 | CRUD لأنواع الرسوم + إدارة الفواتير + إنشاء دفعة واحدة + تحصيل خارجي | استعلام الفواتير + الدفع عبر الإنترنت + إحصائيات الرسوم | management_fee_type, management_fee_bill, management_fee_payment |
+| 9 | إدارة طلبات الإصلاح | الدفعة 1 | قائمة الطلبات + الإرسال + تحديث التقدم | تقديم طلب إصلاح + عرض التقدم + التقييم | management_repair_order, management_repair_progress |
+| 10 | الإعلانات والإشعارات | الدفعة 1 | CRUD + نشر/تثبيت | قائمة/تفاصيل الإعلانات | management_announcement |
+| 11 | إدارة المواقف | الدفعة 2 | إدارة المواقف/المركبات + سجلات المواقف | مواقفي/مركباتي + سجلات المواقف | management_parking_space, management_parking_vehicle, management_parking_record |
+| 12 | إدارة المعدات | الدفعة 2 | سجل المعدات + سجلات الصيانة | - | management_equipment, management_equipment_maintenance |
+| 13 | الشكاوى والاقتراحات | الدفعة 2 | قائمة الشكاوى + المعالجة + المتابعة | تقديم شكوى + عرض التقدم + التقييم | management_complaint |
+| 14 | إدارة الزوار | الدفعة 2 | موافقات الزوار + استعلام السجلات | حجز الزوار + رمز المرور | management_visitor |
+| 15 | إدارة العقود | الدفعة 2 | CRUD + إدارة الحالة | - | management_contract |
+| 16 | الإدارة المالية | الدفعة 2 | إدارة الإيرادات والمصروفات + تقارير إحصائية | - | management_finance_income, management_finance_expense |
+| 17 | الدوريات الأمنية | الدفعة 3 | مسارات الدوريات + سجلات الدوريات | - | management_security_patrol, management_patrol_record |
+| 18 | إدارة النظافة | الدفعة 3 | مناطق النظافة + سجلات النظافة | - | management_cleaning_area, management_cleaning_record |
+| 19 | إدارة المساحات الخضراء | الدفعة 3 | المناطق الخضراء + سجلات الصيانة | - | management_green_area, management_green_maintenance |
+| 20 | أنشطة المجتمع | الدفعة 3 | إدارة الأنشطة + عرض التسجيلات | قائمة الأنشطة + التسجيل | management_community_activity, management_activity_signup |
+| 21 | إدارة استهلاك الطاقة | الدفعة 3 | إدارة العدادات + سجلات القراءة | - | management_energy_meter, management_energy_record |
+| 22 | إدارة الموظفين | الدفعة 3 | CRUD + إدارة الحالة | - | management_staff |
 
 ## الوظائف الموسعة (الدفعة 4 — 12 وحدة)
 
 | الرقم | الوحدة | لوحة الإدارة | بوابة الملاك | جدول البيانات |
 |------|------|---------|--------|--------|
-| 23 | إشعارات الرسائل | CRUD للقوالب + إرسال يدوي + قائمة | رسائلي + تعليم كمقروء | erik_notification_template, erik_notification |
-| 24 | سير عمل الموافقات | أنواع الموافقات + الحالات + تدفق الخطوات | - | erik_approval_type, erik_approval, erik_approval_record |
-| 25 | تكامل الدفع | إدارة الطلبات + الاسترداد + استدعاء WeChat/Alipay | - | erik_payment_order |
-| 26 | تصويت الملاك | CRUD للتصويت + الخيارات + إحصائيات مرجحة بالمساحة | قائمة التصويت + التصويت + الترجيح بالمساحة | erik_vote, erik_vote_option, erik_vote_record |
-| 27 | ترقية SLA التلقائية | إعداد القواعد + فحص المهلة + الغرامات | - | erik_sla_rule, erik_sla_record |
-| 28 | التحصيل الذكي | إعداد الاستراتيجيات + مطابقة المتأخرات + غرامات التأخير | - | erik_collection_strategy, erik_collection_record |
-| 29 | التفتيش المتنقل | توزيع المهام + تسجيل GPS + التصوير | - | erik_inspection_task, erik_inspection_checkpoint |
-| 30 | متجر المجتمع | إدارة التصنيفات/المنتجات/الطلبات/الشحن | تصفح المنتجات + الطلب + طلباتي | erik_mall_category, erik_mall_product, erik_mall_order |
-| 31 | التعرف على الوجوه | إدارة المراجعات | تسجيل الوجه + حالة المصادقة | erik_face_info |
-| 32 | إدارة المجموعة | CRUD للمجموعات + ربط المجمعات + إجماليات عبر المناطق | - | erik_group, erik_group_community |
-| 33 | الأسئلة والأجوبة الذكية | قاعدة المعرفة + سجلات المحادثة + الإحصائيات | طرح الأسئلة + مطابقة الكلمات المفتاحية | erik_knowledge_base, erik_chat_record |
+| 23 | إشعارات الرسائل | CRUD للقوالب + إرسال يدوي + قائمة | رسائلي + تعليم كمقروء | management_notification_template, management_notification |
+| 24 | سير عمل الموافقات | أنواع الموافقات + الحالات + تدفق الخطوات | - | management_approval_type, management_approval, management_approval_record |
+| 25 | تكامل الدفع | إدارة الطلبات + الاسترداد + استدعاء WeChat/Alipay | - | management_payment_order |
+| 26 | تصويت الملاك | CRUD للتصويت + الخيارات + إحصائيات مرجحة بالمساحة | قائمة التصويت + التصويت + الترجيح بالمساحة | management_vote, management_vote_option, management_vote_record |
+| 27 | ترقية SLA التلقائية | إعداد القواعد + فحص المهلة + الغرامات | - | management_sla_rule, management_sla_record |
+| 28 | التحصيل الذكي | إعداد الاستراتيجيات + مطابقة المتأخرات + غرامات التأخير | - | management_collection_strategy, management_collection_record |
+| 29 | التفتيش المتنقل | توزيع المهام + تسجيل GPS + التصوير | - | management_inspection_task, management_inspection_checkpoint |
+| 30 | متجر المجتمع | إدارة التصنيفات/المنتجات/الطلبات/الشحن | تصفح المنتجات + الطلب + طلباتي | management_mall_category, management_mall_product, management_mall_order |
+| 31 | التعرف على الوجوه | إدارة المراجعات | تسجيل الوجه + حالة المصادقة | management_face_info |
+| 32 | إدارة المجموعة | CRUD للمجموعات + ربط المجمعات + إجماليات عبر المناطق | - | management_group, management_group_community |
+| 33 | الأسئلة والأجوبة الذكية | قاعدة المعرفة + سجلات المحادثة + الإحصائيات | طرح الأسئلة + مطابقة الكلمات المفتاحية | management_knowledge_base, management_chat_record |
 | - | شاشة البيانات الكبيرة | عرض كامل الشاشة لتصور بيانات العقارات اللحظية | - | (إعادة استخدام واجهات البيانات الموجودة) |
 
 ## وحدات لوحة الإدارة (موجودة في admin)
@@ -89,7 +89,7 @@
 ### محرك البحث
 - مشغل Elasticsearch عبر `erikwang2013/webman-scout`
 - مزامنة فهرس تلقائية (دفع تلقائي عند الإضافة/الحذف/التعديل)
-- بادئة الفهرس `erik_`، مطابقة لبادئة جداول قاعدة البيانات
+- بادئة الفهرس `management_`، مطابقة لبادئة جداول قاعدة البيانات
 
 ### التدويل (i18n)
 - **خادم PHP**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`، 42 مفتاح ترجمة، تصل المتحكمات إلى الترجمات عبر `__()`

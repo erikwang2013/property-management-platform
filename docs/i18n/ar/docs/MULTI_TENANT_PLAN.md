@@ -9,11 +9,11 @@
 
 | الفئة | الجداول | الوصف |
 |------|-----|------|
-| جداول عامة/منصة | erik_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission، erik_system_config، erik_operation_log | مصادقة، إعدادات، تدقيق، طبيعتها منصة، لا تُربط بمستأجر |
-| جداول بعد المجتمع | erik_community و40+ جدول أعمال تتبع community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement وغيرها) | تتبع المستأجر بشكل غير مباشر عبر community_id |
-| جداول ربط المجموعة | erik_group (مجموعة)، erik_group_community (مجموعة↔مجمع) | حاليًا **ربط اختياري**، بلا دلالة مستأجر، التجميع عبر المجمعات يتم بالـ join |
-| جداول تمديد المنصة | erik_notification_template، erik_knowledge_base، erik_mall_*، erik_face_info وغيرها | بعضها مستوى منصة وبعضها مستوى مجتمع، يحتاج تأكيدًا لكل حالة |
-| جداول سهلة الالتباس | **erik_tenant (جدول المستأجرين السكنيين)** | ⚠️ تعارض دلالي: هو «مستأجر عقاري» (ببعد room_id/owner_id)، **ليس** مستأجر SaaS |
+| جداول عامة/منصة | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission، management_system_config، management_operation_log | مصادقة، إعدادات، تدقيق، طبيعتها منصة، لا تُربط بمستأجر |
+| جداول بعد المجتمع | management_community و40+ جدول أعمال تتبع community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement وغيرها) | تتبع المستأجر بشكل غير مباشر عبر community_id |
+| جداول ربط المجموعة | management_group (مجموعة)، management_group_community (مجموعة↔مجمع) | حاليًا **ربط اختياري**، بلا دلالة مستأجر، التجميع عبر المجمعات يتم بالـ join |
+| جداول تمديد المنصة | management_notification_template، management_knowledge_base، management_mall_*، management_face_info وغيرها | بعضها مستوى منصة وبعضها مستوى مجتمع، يحتاج تأكيدًا لكل حالة |
+| جداول سهلة الالتباس | **management_tenant (جدول المستأجرين السكنيين)** | ⚠️ تعارض دلالي: هو «مستأجر عقاري» (ببعد room_id/owner_id)، **ليس** مستأجر SaaS |
 
 ### 1.2 سلسلة المصادقة (طرف admin، تحقق بالكود)
 
@@ -28,7 +28,7 @@
 
 ### 1.3 الخلاصات الرئيسية
 
-- لا يوجد أي نموذج SaaS مستأجر جاهز؛ اسم `erik_tenant` مشغول بالمستأجر السكني، والمفهوم الجديد يجب أن يتجنب الاسم
+- لا يوجد أي نموذج SaaS مستأجر جاهز؛ اسم `management_tenant` مشغول بالمستأجر السكني، والمفهوم الجديد يجب أن يتجنب الاسم
 - كل المتحكمات تستعلم Eloquent مباشرة، بلا طبقة repository وبلا نطاق عام — إصلاح العزل يجب أن يتم في طبقة النماذج
 - config/database.php اتصال واحد، لكن illuminate/database يدعم اتصالات متعددة أصليًا (محجوز لتطور القاعدة المستقلة)
 
@@ -51,9 +51,9 @@
 
 ### 3.1 نموذج البيانات (الحد الأدنى)
 
-- جدول جديد `erik_platform_tenant` (تجنبًا للتعارض مع جدول المستأجرين erik_tenant): id/name/status/created_at وغيرها
-- `erik_community` يضاف `tenant_id BIGINT NOT NULL DEFAULT 0`، فهرس `(tenant_id, community_id)`
-- `erik_admin_user` يضاف `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = مدير المنصة الأعلى)
+- جدول جديد `management_platform_tenant` (تجنبًا للتعارض مع جدول المستأجرين management_tenant): id/name/status/created_at وغيرها
+- `management_community` يضاف `tenant_id BIGINT NOT NULL DEFAULT 0`، فهرس `(tenant_id, community_id)`
+- `management_admin_user` يضاف `tenant_id BIGINT NOT NULL DEFAULT 0` (0 = مدير المنصة الأعلى)
 - جداول الأعمال الوسيطة (building/room/fee_bill وغيرها الـ40) **لا يضاف لها عمود**، تتبع عبر community_id
 
 ### 3.2 ثلاثية طبقة التشغيل
@@ -94,13 +94,13 @@
 | خطأ إعادة تعبئة المخزون | كل بيانات المخزون | سكربت idempotent + تحقق التعبئة + وضع تشغيل جاف |
 | أثر الفهارس/الأداء | الجداول عالية التردد (fee_bill/room/owner) | فهرس مركب (tenant_id, community_id)؛ إعادة فحص سجلات الاستعلامات البطيئة |
 | تراجع اختبارات الـ133 | الكل | بعد حقن النطاق شغّل التراجع الكامل أولًا ثم ابدأ التجريب |
-| التباس التسمية (erik_tenant مستأجر سكني مقابل مستأجر SaaS) | وعي التطوير | تسمية الجدول الجديد platform_tenant، توثيق صريح |
+| التباس التسمية (management_tenant مستأجر سكني مقابل مستأجر SaaS) | وعي التطوير | تسمية الجدول الجديد platform_tenant، توثيق صريح |
 | **خطة التراجع** | — | النطاق العام يمكن إيقافه بمفتاح إعداد بخطوة واحدة (استعادة دلالة المستأجر الواحد)، أعمدة البيانات تُبقي ولا تُحذف، بلا تغيير مدمر |
 
 ## 6. خلاصة المراجعة
 
 **يُوصى بتنفيذه فورًا**:
-- قاعدة مشتركة + عزل صفوف tenant_id (حل أ)، جدول جديد `erik_platform_tenant`، إضافة أعمدة community/admin_user
+- قاعدة مشتركة + عزل صفوف tenant_id (حل أ)، جدول جديد `management_platform_tenant`، إضافة أعمدة community/admin_user
 - وسيطة TenantContext + نطاق عام TenantScope + أداة Tenant::for()
 - ترتيب التجربة: مجموعة ← مجمع ← ملاك ← رسوم
 - الاعتماد المسبق: اكتمل — جداول/أعمدة/تعبئة متعدد المستأجرين مدمجة في docs/install.sql (دُمجت 2026-08-16، مدخل إنشاء قاعدة واحد)
@@ -113,4 +113,4 @@
 - عزل على مستوى Schema (MySQL بلا دلالة schema مستقلة، تكلفتها كالقاعدة المستقلة)
 - توجيه ديناميكي متعدد القواعد (بلا فائدة تحت النشر الأحادي)
 - schema/حقول مخصصة لكل مستأجر (YAGNI)
-- إعادة استخدام/تعديل جدول المستأجرين erik_tenant ليكون مستأجر SaaS (تعارض دلالي، يكسر أعمال المستأجرين)
+- إعادة استخدام/تعديل جدول المستأجرين management_tenant ليكون مستأجر SaaS (تعارض دلالي، يكسر أعمال المستأجرين)
