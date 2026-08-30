@@ -102,6 +102,7 @@ property-management-platform/
 | الدفعة الثانية | مواقف، معدات، شكاوى، زوار، عقود، مالية (6 وحدات) + تصور اللوحات + تصدير Excel/PDF (وظائف المنصة) | ✅ اكتملت جميعها |
 | الدفعة الثالثة | دوريات أمنية، نظافة، مساحات خضراء، أنشطة مجتمع، طاقة، موظفون (6 وحدات) | ✅ اكتملت جميعها |
 | الموسعة | إشعارات الرسائل، سير عمل الموافقات، تكامل الدفع، تصويت الملاك، ترقية SLA التلقائية، شاشة البيانات الكبيرة، التحصيل الذكي، التفتيش المتنقل، متجر المجتمع، التعرف على الوجوه، إدارة مجموعة المجمعات المتعددة، الأسئلة الذكية (12 وحدة) | ✅ اكتملت جميعها |
+| وظائف المنصة | مركز التقارير (اتجاهات الإيرادات/المصروفات، معدل التحصيل، التوزيع، المتأخرات، تصدير PDF) + إحصائيات الصفحة الرئيسية (الشكاوى/الفعاليات/التصويتات/غير المقروء) | ✅ اكتملت جميعها |
 
 ## مجموعة التقنيات
 
@@ -161,6 +162,16 @@ property-management-platform/
 - معرّفات نقل API تستخدم تشفير/فك تشفير hashids
 
 ## بدء سريع
+### ⚡ التثبيت بنقرة واحدة (الأسرع)
+
+```bash
+bash scripts/deploy.sh
+# تلقائيًا: git pull ← توليد .env والمفاتيح ← تشغيل Docker Compose ← تهيئة قاعدة البيانات (قابل للإعادة) ← اختبار المراقبة
+# الإدارة http://localhost:8787 · الخدمة http://localhost:8788
+```
+
+> يتطلب Docker و Docker Compose. البرنامج قابل للإعادة؛ راجع [scripts/deploy.sh](scripts/deploy.sh).
+
 
 ### الطريقة الأولى: معالج التثبيت عبر الويب (موصى به)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 الملفات الثابتة: Flutter Web build/
 ```
 
+## دليل الاستخدام
+
+### لوحة الإدارة
+1. افتح `http://localhost:8787` وسجّل الدخول بحساب المسؤول الافتراضي.
+2. أدخل البيانات الأساسية: المجمع ← المبنى ← الوحدة ← نوع الوحدة ← العقار ← ربط الملاك.
+3. العمليات اليومية: إعداد الرسوم وتوليد الفواتير والتحصيل؛ إصلاحات (تعيين/متابعة)؛ شكاوى (معالجة/زيارة)؛ مركز التقارير لعرض الإيرادات والتحصيل.
+4. النظام: إضافة المسؤولين، صلاحيات RBAC، إعدادات النظام، سجلات التدقيق.
+
+### بوابة المالك
+افتح `http://localhost:8788` (أو Flutter Web / HarmonyOS): الصفحة الرئيسية تعرض العقارات والرسوم المستحقة والإصلاحات والشكاوى والفعاليات والتصويتات والرسائل غير المقروءة.
+
 ## المسؤول الافتراضي
 
 | اسم المستخدم | كلمة المرور | الدور |
@@ -308,6 +330,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 >
 > - **إيداع الدولار الهونغ كونغي واليوان الصيني والدولار الأمريكي** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`، رقم البنك 006، رقم الفرع 391، العنوان: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **إيداع العملات الأخرى** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`، العنوان: 240 GREENWICH STREET, NEW YORK, United States
+
+### التبرع بالعملات الرقمية (Crypto Donation)
+
+إذا كان هذا المشروع مفيدًا لك، فمرحبًا بمسح رمز الاستجابة السريعة للتبرع، شكرًا لك!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 نرحب بدعم هذا المشروع!
 

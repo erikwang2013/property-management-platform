@@ -56,6 +56,7 @@ class _AdminLayoutState extends State<AdminLayout> {
   static const _menuGroups = <_MenuGroup>[
     _MenuGroup('系统管理', Icons.admin_panel_settings, [
       _MenuItem('仪表盘', Icons.dashboard, '/dashboard'),
+      _MenuItem('报表中心', Icons.assessment, '/reports'),
       _MenuItem('用户管理', Icons.people, '/users'),
       _MenuItem('角色权限', Icons.security, '/roles'),
       _MenuItem('系统配置', Icons.settings, '/config'),

@@ -13,6 +13,10 @@ use app\model\FeeBill;
 use app\model\RepairOrder;
 use app\model\Announcement;
 use app\model\Room;
+use app\model\Complaint;
+use app\model\CommunityActivity;
+use app\model\Vote;
+use app\model\Notification;
 use support\Request;
 use support\Response;
 
@@ -44,6 +48,15 @@ class HomeController extends BaseController
         $repairingCount = RepairOrder::where('owner_id', $ownerId)
             ->whereIn('status', [0, 1, 2])->count();
 
+        // 起始页统计：待处理投诉 / 报名中活动 / 进行中投票 / 未读通知
+        $pendingComplaints = Complaint::where('owner_id', $ownerId)
+            ->where('status', 0)->count();
+        $activeActivities = CommunityActivity::whereIn('status', [1, 2])
+            ->whereDate('end_time', '>=', date('Y-m-d'))->count();
+        $openVotes = Vote::where('status', 1)->count();
+        $unreadNotifications = Notification::where('user_id', $ownerId)
+            ->where('user_type', 1)->where('is_read', 0)->count();
+
         $announcements = Announcement::where('is_published', 1)
             ->orderBy('is_top', 'desc')
             ->orderBy('published_at', 'desc')
@@ -63,6 +76,10 @@ class HomeController extends BaseController
             'pending_amount' => number_format($pendingAmount, 2, '.', ''),
             'pending_bill_count' => $pendingBills->count(),
             'repairing_count' => $repairingCount,
+            'pending_complaint_count' => $pendingComplaints,
+            'active_activity_count' => $activeActivities,
+            'open_vote_count' => $openVotes,
+            'unread_count' => $unreadNotifications,
             'announcements' => $announcements,
         ]);
     }

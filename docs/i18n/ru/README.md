@@ -102,6 +102,7 @@ property-management-platform/
 | Партия 2 | парковка, оборудование, жалобы, посетители, договоры, финансы (6 модулей) + визуализация панелей + экспорт Excel/PDF (функции платформы) | ✅ полностью готово |
 | Партия 3 | охрана и патрулирование, уборка, озеленение, мероприятия сообщества, энергопотребление, персонал (6 модулей) | ✅ полностью готово |
 | Расширения | сообщения, рабочие процессы согласования, интеграция платежей, голосования владельцев, автоматическая эскалация SLA, большой экран данных, интеллектуальное взыскание, мобильное патрулирование, комьюнити-магазин, распознавание лиц, управление группой комплексов, интеллектуальные ответы (12 модулей) | ✅ полностью готово |
+| Функции платформы | Центр отчётов (доходы/расходы, собираемость, распределение, задолженность, экспорт PDF) + статистика на главной (жалобы/мероприятия/голосования/непрочитанные) | ✅ полностью готово |
 
 ## Технологический стек
 
@@ -161,6 +162,16 @@ property-management-platform/
 - ID при передаче API шифруются/расшифровываются через hashids
 
 ## Быстрый старт
+### ⚡ Установка в один клик (самая быстрая)
+
+```bash
+bash scripts/deploy.sh
+# Автоматически: git pull → сгенерировать .env и ключи → запустить Docker Compose → инициализация БД (идемпотентно) → проверка мониторинга
+# Админ http://localhost:8787 · Сервис http://localhost:8788
+```
+
+> Требуется Docker + Docker Compose. Скрипт идемпотентен; подробнее см. [scripts/deploy.sh](scripts/deploy.sh).
+
 
 ### Способ 1: Web-мастер установки (рекомендуется)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 Статические файлы: Flutter Web build/
 ```
 
+## Руководство по использованию
+
+### Панель администратора
+1. Откройте `http://localhost:8787` и войдите под учётной записью администратора по умолчанию.
+2. Базовые данные: комплекс → корпус → квартира → планировка → объект → привязка владельцев.
+3. Ежедневная работа: настройка тарифов, генерация счетов, сбор; ремонт (назначение/ход); жалобы (обработка/визит); Центр отчётов для доходов и собираемости.
+4. Система: добавление админов, RBAC, конфигурация, журналы аудита.
+
+### Портал владельца
+Откройте `http://localhost:8788` (или Flutter Web / HarmonyOS): на главной — объекты, задолженности, ремонты, жалобы, мероприятия, голосования и непрочитанные сообщения.
+
 ## Администратор по умолчанию
 
 | Имя пользователя | Пароль | Роль |
@@ -308,6 +330,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 >
 > - **Переводы в гонконгских долларах, юанях и долларах США** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, код банка 006, код отделения 391, адрес: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **Переводы в других валютах** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, адрес: 240 GREENWICH STREET, NEW YORK, United States
+
+### Пожертвование в криптовалюте (Crypto Donation)
+
+Если этот проект помог вам, отсканируйте QR-код, чтобы сделать пожертвование, спасибо!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 Поддержите этот проект!
 

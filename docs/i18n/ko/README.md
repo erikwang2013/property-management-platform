@@ -102,6 +102,7 @@ property-management-platform/
 | 2차 | 주차, 설비, 민원, 방문객, 계약, 재무(6개 모듈) + 패널 시각화 + Excel/PDF 내보내기(플랫폼 기능) | ✅ 전부 완료 |
 | 3차 | 경비 순찰, 청소, 조경, 커뮤니티 활동, 에너지, 직원(6개 모듈) | ✅ 전부 완료 |
 | 확장 | 메시지 알림, 승인 워크플로, 결제 연동, 입주민 투표, SLA 자동 승격, 데이터 스크린, 스마트 납부 독촉, 모바일 순찰, 커뮤니티 몰, 얼굴 인식, 다단지 그룹 관리, 스마트 Q&A(12개 모듈) | ✅ 전부 완료 |
+| 플랫폼 기능 | 보고 센터(수지 추이/징수율/업무 분포/체납 순위/PDF 내보내기) + 입주민 홈 통계(민원/행사/투표/안읽음) | ✅ 전부 완료 |
 
 ## 기술 스택
 
@@ -161,6 +162,16 @@ property-management-platform/
 - API 전송 ID는 hashids로 암/복호화
 
 ## 빠른 시작
+### ⚡ 원클릭 설치 (가장 빠름)
+
+```bash
+bash scripts/deploy.sh
+# 자동: git pull → .env 및 키 생성 → Docker Compose 시작 → DB 초기화(멱등) → 모니터링 스모크 테스트
+# 관리자 http://localhost:8787 · 서비스 http://localhost:8788
+```
+
+> Docker + Docker Compose 필요. 멱등이며 재실행 가능. 자세한 내용은 [scripts/deploy.sh](scripts/deploy.sh) 참조.
+
 
 ### 방법 1: Web 설치 마법사(권장)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 정적 파일: Flutter Web build/
 ```
 
+## 사용 안내
+
+### 관리자 패널
+1. `http://localhost:8787`을 열고 기본 관리자 계정으로 로그인.
+2. 기본 데이터: 단지 → 동 → 호 → 세대 유형 → 부동산 → 입주민 연결.
+3. 일상 업무: 요금 설정, 청구서 생성, 징수; 수리(배정/진행); 민원(처리/방문); 보고 센터에서 수입·징수 현황 확인.
+4. 시스템: 관리자 추가, RBAC, 설정, 감사 로그.
+
+### 입주민 포털
+`http://localhost:8788`(또는 Flutter Web / HarmonyOS)을 엽니다: 홈에 부동산, 미납, 수리, 민원, 행사, 투표, 안읽은 메시지 표시.
+
 ## 기본 관리자
 
 | 사용자명 | 비밀번호 | 역할 |
@@ -308,6 +330,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 >
 > - **홍콩달러, 위안화, 달러 송금**(Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, 은행 번호 006, 지점 번호 391, 주소: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **기타 통화 송금**(THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, 주소: 240 GREENWICH STREET, NEW YORK, United States
+
+### 암호화폐 후원 (Crypto Donation)
+
+이 프로젝트가 도움이 되셨다면, QR 코드를 스캔하여 후원해 주세요. 감사합니다!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 이 프로젝트에 대한 지원을 환영합니다!
 

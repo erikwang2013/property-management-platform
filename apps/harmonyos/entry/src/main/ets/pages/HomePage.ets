@@ -20,6 +20,9 @@ struct HomePage {
   @State balance: number = 0;
   @State pendingRepairs: number = 0;
   @State rooms: number = 0;
+  @State pendingComplaints: number = 0;
+  @State activeActivities: number = 0;
+  @State unreadCount: number = 0;
   private api: ApiService = ApiService.getInstance();
   private entries: EntryItem[] = [
     { label: '缴费', glyph: '¥', color: '#FF6B6B', url: 'pages/FeeBillsPage' },
@@ -43,6 +46,9 @@ struct HomePage {
         this.balance = parseFloat(data['pending_amount'] as string) || 0;
         this.pendingRepairs = (data['repairing_count'] as number) || 0;
         this.rooms = (data['room_count'] as number) || 0;
+        this.pendingComplaints = (data['pending_complaint_count'] as number) || 0;
+        this.activeActivities = (data['active_activity_count'] as number) || 0;
+        this.unreadCount = (data['unread_count'] as number) || 0;
         this.announcements = (data['announcements'] as Announcement[]) || [];
       }
     } catch (e) {
@@ -72,6 +78,14 @@ struct HomePage {
         this.statCard('我的房产', `${this.rooms}套`, '#45B7D1')
       }
       .width('100%').padding({ left: 16, right: 16 }).justifyContent(FlexAlign.SpaceBetween)
+
+      Row() {
+        this.statCard('待处理投诉', `${this.pendingComplaints}件`, '#D4380D')
+        this.statCard('进行中活动', `${this.activeActivities}场`, '#722ED1')
+        this.statCard('未读消息', `${this.unreadCount}条`, '#FA8C16')
+      }
+      .width('100%').padding({ left: 16, right: 16 }).justifyContent(FlexAlign.SpaceBetween)
+      .margin({ top: 12 })
 
       // 功能入口
       Flex({ wrap: FlexWrap.Wrap }) {

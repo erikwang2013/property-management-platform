@@ -104,6 +104,7 @@ property-management-platform/
 | 第2バッチ | 駐車、設備、苦情、来訪者、契約、財務（6モジュール）+ パネル可視化 + Excel/PDFエクスポート（プラットフォーム機能） | ✅ 全て完了 |
 | 第3バッチ | 警備巡回、清掃、緑化、コミュニティイベント、エネルギー、スタッフ（6モジュール） | ✅ 全て完了 |
 | 拡張 | メッセージ通知、承認ワークフロー、決済統合、所有者投票、SLA自動エスカレーション、データ大画面、スマート督促、巡回点検モバイル、コミュニティモール、顔認証、多小区グループ管理、スマートQ&A（12モジュール） | ✅ 全て完了 |
+| プラットフォーム機能 | レポートセンター（収支トレンド/収納率/業務分布/滞納ランキング/PDFエクスポート）+ 所有者ホーム統計（苦情/イベント/投票/未読） | ✅ 全て完了 |
 
 ## 技術スタック
 
@@ -163,6 +164,16 @@ property-management-platform/
 - API 転送 ID は hashids で暗号化/復号
 
 ## クイックスタート
+### ⚡ ワンクリックインストール（最速）
+
+```bash
+bash scripts/deploy.sh
+# 自動: git pull → .env と鍵を生成 → Docker Compose 起動 → DB初期化（冪等）→ 監視スモークテスト
+# 管理端 http://localhost:8787 · 業務端 http://localhost:8788
+```
+
+> Docker + Docker Compose が必要。冪等で再実行可能。詳細は [scripts/deploy.sh](scripts/deploy.sh)。
+
 
 ### 方法1：Web インストールウィザード（推奨）
 
@@ -259,6 +270,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 静的ファイル: Flutter Web build/
 ```
 
+## 使い方
+
+### 管理画面
+1. `http://localhost:8787` を開き、デフォルト管理者アカウントでログイン。
+2. 基本データ: 小区 → 建物 → ユニット → 間取り → 物件 → 所有者を紐付け。
+3. 日常業務: 料金設定、請求書生成、収納; 修理（アサイン/進捗）; 苦情（対応/訪問）; レポートセンターで収支と収納率を確認。
+4. システム: 管理者追加、RBAC、設定、監査ログ。
+
+### 所有者ポータル
+`http://localhost:8788`（または Flutter Web / HarmonyOS）を開く: ホームに物件・未納・修理・苦情・イベント・投票・未読を表示。
+
 ## デフォルト管理者
 
 | ユーザー名 | パスワード | ロール |
@@ -310,6 +332,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 >
 > - **香港ドル・人民元・米ドル**（Citibank N.A. Hong Kong）：SWIFT `CITIHKXXXX`、銀行番号 006、支店番号 391、住所：Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **その他の通貨**（THE BANK OF NEW YORK MELLON）：SWIFT `IRVTUS3NXXX`、住所：240 GREENWICH STREET, NEW YORK, United States
+
+### 仮想通貨の寄付 (Crypto Donation)
+
+このプロジェクトがお役に立ったら、QRコードをスキャンして寄付してください。ありがとうございます！
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 本プロジェクトへのご支援を歓迎します！
 

@@ -104,6 +104,7 @@ property-management-platform/
 | Batch 2 | parkir, peralatan, keluhan, tamu, kontrak, keuangan (6 modul) + visualisasi panel + ekspor Excel/PDF (fitur platform) | ✅ Semua selesai |
 | Batch 3 | patroli keamanan, kebersihan, penghijauan, aktivitas komunitas, energi, karyawan (6 modul) | ✅ Semua selesai |
 | Ekstensi | notifikasi pesan, alur persetujuan, integrasi pembayaran, voting pemilik, eskalasi SLA otomatis, data besar, penagihan cerdas, pemeliharaan mobile, toko komunitas, pengenalan wajah, manajemen grup multi-komunitas, tanya jawab cerdas (12 modul) | ✅ Semua selesai |
+| Fitur platform | Pusat laporan (tren pendapatan/pengeluaran, tingkat penagihan, distribusi, tunggakan, ekspor PDF) + statistik beranda (keluhan/aktivitas/voting/belum dibaca) | ✅ Semua selesai |
 
 ## Tumpukan Teknologi
 
@@ -163,6 +164,16 @@ Seluruh endpoint API dan deskripsi parameter lihat dokumen terpisah [docs/API.md
 - ID transfer API menggunakan enkripsi/dekripsi hashids
 
 ## Memulai dengan Cepat
+### ⚡ Instalasi Sekali Klik (Tercepat)
+
+```bash
+bash scripts/deploy.sh
+# Otomatis: git pull → buat .env + kunci → jalankan Docker Compose → inisialisasi DB (idempoten) → uji asap monitoring
+# Admin http://localhost:8787 · Service http://localhost:8788
+```
+
+> Membutuhkan Docker + Docker Compose. Idempoten dan dapat dijalankan ulang; lihat [scripts/deploy.sh](scripts/deploy.sh).
+
 
 ### Cara 1: Panduan Instalasi Web (Disarankan)
 
@@ -259,6 +270,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 File statis: Flutter Web build/
 ```
 
+## Panduan Penggunaan
+
+### Panel Admin
+1. Buka `http://localhost:8787` dan masuk dengan akun admin default.
+2. Data dasar: Komunitas → Gedung → Unit → Tipe Ruangan → Properti → tautkan pemilik.
+3. Operasi harian: konfigurasi biaya, buat tagihan, penagihan; perbaikan (tugaskan/progres); keluhan (tangani/kunjungi); Pusat Laporan untuk pendapatan & penagihan.
+4. Sistem: tambah admin, RBAC, konfigurasi, log audit.
+
+### Portal Pemilik
+Buka `http://localhost:8788` (atau Flutter Web / HarmonyOS): beranda menampilkan properti, tagihan, perbaikan, keluhan, aktivitas, voting dan pesan belum dibaca.
+
 ## Admin Default
 
 | Username | Kata sandi | Peran |
@@ -310,6 +332,16 @@ Mendukung transfer bank dari seluruh dunia, akun penerima adalah ZA Bank Hong Ko
 >
 > - **Masuk dalam HKD, RMB, dan USD** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, kode bank 006, kode cabang 391, alamat: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **Masuk dalam mata uang lain** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, alamat: 240 GREENWICH STREET, NEW YORK, United States
+
+### Donasi Kripto (Crypto Donation)
+
+Jika proyek ini membantu Anda, silakan pindai kode QR untuk berdonasi, terima kasih!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 Selamat datang untuk mendukung proyek ini!
 

@@ -102,6 +102,7 @@ property-management-platform/
 | ২য় ব্যাচ | পার্কিং, যন্ত্রপাতি, অভিযোগ, দর্শনার্থী, চুক্তি, আর্থিক (৬ মডিউল) + প্যানেল ভিজ্যুয়ালাইজেশন + Excel/PDF এক্সপোর্ট (প্ল্যাটফর্ম ফিচার) | ✅ সব সম্পন্ন |
 | ৩য় ব্যাচ | নিরাপত্তা টহল, পরিচ্ছন্নতা, বাগান, কমিউনিটি কার্যক্রম, শক্তি, কর্মচারী (৬ মডিউল) | ✅ সব সম্পন্ন |
 | এক্সটেনশন | বার্তা বিজ্ঞপ্তি, অনুমোদন ওয়ার্কফ্লো, পেমেন্ট ইন্টিগ্রেশন, মালিক ভোট, SLA স্বয়ংক্রিয় আপগ্রেড, ডেটা ড্যাশবোর্ড, স্মার্ট আদায়, পরিদর্শন মোবাইল, কমিউনিটি মল, ফেসিয়াল রিকগনিশন, মাল্টি-কমিউনিটি গ্রুপ ব্যবস্থাপনা, স্মার্ট Q&A (১২ মডিউল) | ✅ সব সম্পন্ন |
+| প্ল্যাটফর্ম ফিচার | রিপোর্ট সেন্টার (আয়/ব্যয় প্রবণতা, আদায় হার, বিতরণ, বকেয়া, PDF এক্সপোর্ট) + হোম পরিসংখ্যান (অভিযোগ/কার্যক্রম/ভোট/অপঠিত) | ✅ সব সম্পন্ন |
 
 ## টেকনোলজি স্ট্যাক
 
@@ -161,6 +162,16 @@ property-management-platform/
 - API ট্রান্সমিশন ID hashids দিয়ে এনক্রিপ্ট/ডিক্রিপ্ট হয়
 
 ## দ্রুত শুরু
+### ⚡ ওয়ান-ক্লিক ইনস্টল (দ্রুততম)
+
+```bash
+bash scripts/deploy.sh
+# স্বয়ংক্রিয়: git pull → .env ও কী তৈরি → Docker Compose চালু → ডাটাবেস সেটআপ (পুনরায় চালানো যায়) → মনিটরিং স্মোক টেস্ট
+# অ্যাডমিন http://localhost:8787 · সার্ভিস http://localhost:8788
+```
+
+> Docker ও Docker Compose প্রয়োজন। স্ক্রিপ্ট পুনরায় চালানো যায়; দেখুন [scripts/deploy.sh](scripts/deploy.sh)।
+
 
 ### পদ্ধতি ১: Web ইনস্টলেশন উইজার্ড (সুপারিশকৃত)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 স্ট্যাটিক ফাইল: Flutter Web build/
 ```
 
+## ব্যবহার নির্দেশিকা
+
+### অ্যাডমিন প্যানেল
+1. `http://localhost:8787` খুলে ডিফল্ট অ্যাডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।
+2. ভিত্তি তথ্য: কমিউনিটি ← ভবন ← ইউনিট ← রুম টাইপ ← সম্পত্তি ← মালিক বাঁধাই।
+3. দৈনন্দিন কাজ: ফি কনফিগার, বিল জেনারেট, আদায়; মেরামত (অ্যাসাইন/অগ্রগতি); অভিযোগ (সমাধান/সফর); রিপোর্ট সেন্টারে আয়-আদায় দেখুন।
+4. সিস্টেম: অ্যাডমিন যোগ, RBAC, কনফিগ, অডিট লগ।
+
+### মালিক পোর্টাল
+`http://localhost:8788` (বা Flutter Web / HarmonyOS): হোম পেজে সম্পত্তি, বকেয়া, মেরামত, অভিযোগ, কার্যক্রম, ভোট ও অপঠিত বার্তা দেখায়।
+
 ## ডিফল্ট অ্যাডমিন
 
 | ব্যবহারকারীর নাম | পাসওয়ার্ড | ভূমিকা |
@@ -308,6 +330,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 >
 > - **HKD, CNY ও USD স্থানান্তর** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, ব্যাংক কোড 006, শাখা কোড 391, ঠিকানা: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **অন্যান্য মুদ্রা স্থানান্তর** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, ঠিকানা: 240 GREENWICH STREET, NEW YORK, United States
+
+### ক্রিপ্টো দান (Crypto Donation)
+
+এই প্রকল্পটি আপনার কাজে লাগলে, দান করতে QR কোড স্ক্যান করুন, ধন্যবাদ!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 প্রকল্পটিকে সমর্থন করতে স্বাগতম!
 

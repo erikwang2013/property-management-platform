@@ -6,6 +6,7 @@ import 'app/theme/app_theme.dart';
 import 'app/layouts/admin_layout.dart';
 import 'app/pages/login/login_page.dart';
 import 'app/pages/dashboard/dashboard_page.dart';
+import 'app/pages/report/report_page.dart';
 import 'app/pages/user/user_list_page.dart';
 import 'app/pages/role/role_list_page.dart';
 import 'app/pages/config/config_page.dart';
@@ -74,6 +75,7 @@ class AdminApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/login', page: () => const LoginPage()),
         GetPage(name: '/dashboard', page: () => const AdminLayout(child: DashboardPage())),
+        GetPage(name: '/reports', page: () => const AdminLayout(child: ReportPage())),
         GetPage(name: '/users', page: () => const AdminLayout(initialIndex: 1, child: UserListPage())),
         GetPage(name: '/roles', page: () => const AdminLayout(initialIndex: 2, child: RoleListPage())),
         GetPage(name: '/config', page: () => const AdminLayout(initialIndex: 3, child: ConfigPage())),

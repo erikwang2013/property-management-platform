@@ -81,6 +81,10 @@ class _HomePageState extends State<HomePage> {
     final roomCount = _homeData?['room_count'] ?? 0;
     final pendingAmount = _homeData?['pending_amount'] ?? 0;
     final repairingCount = _homeData?['repairing_count'] ?? 0;
+    final pendingComplaints = _homeData?['pending_complaint_count'] ?? 0;
+    final activeActivities = _homeData?['active_activity_count'] ?? 0;
+    final openVotes = _homeData?['open_vote_count'] ?? 0;
+    final unreadCount = _homeData?['unread_count'] ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -141,6 +145,51 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.campaign,
                           color: AppTheme.success,
                           subtitle: '查看全部',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // 第二行统计卡片（投诉/活动/投票/未读）
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 2.2,
+                    children: [
+                      StatCard(
+                        title: '待处理投诉',
+                        value: '$pendingComplaints 件',
+                        icon: Icons.feedback,
+                        color: const Color(0xFFD4380D),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/activities'),
+                        child: StatCard(
+                          title: '进行中活动',
+                          value: '$activeActivities 场',
+                          icon: Icons.celebration,
+                          color: const Color(0xFF722ED1),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/votes'),
+                        child: StatCard(
+                          title: '进行中投票',
+                          value: '$openVotes 个',
+                          icon: Icons.how_to_vote,
+                          color: const Color(0xFF13A8A8),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.toNamed('/notifications'),
+                        child: StatCard(
+                          title: '未读消息',
+                          value: '$unreadCount 条',
+                          icon: Icons.notifications,
+                          color: const Color(0xFFFA8C16),
                         ),
                       ),
                     ],

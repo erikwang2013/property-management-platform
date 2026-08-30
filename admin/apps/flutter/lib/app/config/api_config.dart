@@ -16,6 +16,9 @@ class ApiConfig {
   static const String dashboard = '/admin/dashboard';
   static const String dashboardProperty = '/admin/dashboard/property';
 
+  // 报表中心
+  static const String report = '/admin/report';
+
   // 用户管理
   static const String user = '/admin/user';
   static String userItem(String hashid) => '/admin/user/$hashid';

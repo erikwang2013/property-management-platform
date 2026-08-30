@@ -102,6 +102,7 @@ property-management-platform/
 | Lote 2 | Estacionamiento, equipos, quejas, visitantes, contratos, finanzas (6 módulos) + visualización de panel + exportación Excel/PDF (funciones de plataforma) | ✅ Todo completado |
 | Lote 3 | Patrullaje de seguridad, limpieza, jardinería, actividades comunitarias, energía, empleados (6 módulos) | ✅ Todo completado |
 | Extensiones | Notificaciones de mensajes, flujo de aprobación, integración de pagos, votaciones de propietarios, escalado automático SLA, pantalla de datos, cobros inteligentes, inspección móvil, tienda comunitaria, reconocimiento facial, gestión de grupo multicomunidad, Q&A inteligente (12 módulos) | ✅ Todo completado |
+| Funciones de plataforma | Centro de informes (tendencias de ingresos/gastos, tasa de recaudación, distribución, morosidad, exportación PDF) + estadísticas de inicio (reclamaciones/actividades/votaciones/no leídos) | ✅ Todo completado |
 
 ## Pila tecnológica
 
@@ -161,6 +162,16 @@ Todos los endpoints de API y descripciones de parámetros se encuentran en el do
 - Los ID de transmisión de API usan cifrado/descifrado hashids
 
 ## Inicio rápido
+### ⚡ Instalación con un clic (la más rápida)
+
+```bash
+bash scripts/deploy.sh
+# Automáticamente: git pull → generar .env + claves → iniciar Docker Compose → inicializar BD (idempotente) → prueba de monitorización
+# Admin http://localhost:8787 · Servicio http://localhost:8788
+```
+
+> Requiere Docker + Docker Compose. Idempotente y repetible; ver [scripts/deploy.sh](scripts/deploy.sh).
+
 
 ### Método 1: Asistente de instalación Web (recomendado)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 Archivos estáticos: Flutter Web build/
 ```
 
+## Guía de uso
+
+### Panel de administración
+1. Abra `http://localhost:8787` e inicie sesión con la cuenta de administrador predeterminada.
+2. Datos base: Comunidad → Edificio → Unidad → Tipo de vivienda → Propiedad → vincular propietarios.
+3. Operaciones diarias: configurar tarifas, generar facturas, cobrar; reparaciones (asignar/progreso); reclamaciones (gestionar/visitar); Centro de informes para ingresos y recaudación.
+4. Sistema: añadir administradores, RBAC, configuración, registros de auditoría.
+
+### Portal del propietario
+Abra `http://localhost:8788` (o Flutter Web / HarmonyOS): la página de inicio muestra propiedades, pagos pendientes, reparaciones, reclamaciones, actividades, votaciones y mensajes no leídos.
+
 ## Administrador predeterminado
 
 | Usuario | Contraseña | Rol |
@@ -308,6 +330,16 @@ Se admiten transferencias bancarias desde todo el mundo; la cuenta receptora es 
 >
 > - **Para HKD, CNY y USD** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, número de banco 006, número de sucursal 391, dirección: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **Para otras monedas** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, dirección: 240 GREENWICH STREET, NEW YORK, United States
+
+### Donación en criptomonedas (Crypto Donation)
+
+Si este proyecto te resulta útil, escanea el código QR para donar, ¡gracias!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 ¡Bienvenido a apoyar este proyecto!
 

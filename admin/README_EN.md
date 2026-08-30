@@ -12,6 +12,7 @@ A full-stack admin dashboard built with webman v2 + Flutter.
 | | Account lockout | 5 failures → 15 min lock |
 | | Concurrent session limit | Max 3 active tokens per user |
 | 📊 Dashboard | Real-time stats/trends/distribution/logs | Redis cached 5 min |
+| 📈 Report Center | Date-range filter + income/expense trends/collection rate/business distribution/arrears ranking + PDF export | Redis cached 5 min |
 | 👥 Users | CRUD + batch delete/toggle status | Soft delete + password confirmation |
 | | Excel batch import | Row-level validation + error report |
 | 🔒 Roles & Perms | Role CRUD + permission tree | RBAC method.path granularity |
@@ -103,6 +104,14 @@ open-admin/
 - Elasticsearch >= 7.x (optional, for search)
 
 ## Quick Start
+
+### 0. One-Click Install (Recommended)
+
+```bash
+bash ../scripts/deploy.sh   # repo-root script: generates .env + keys, Docker Compose up, DB init
+```
+
+See [README.md](../README.md) "One-Click Install Script" for details.
 
 ### 1. Install Dependencies
 
@@ -366,9 +375,10 @@ Authorization: Bearer <token>
 ### Flutter Admin Panel (Desktop Style)
 
 - **Layout**: Collapsible sidebar (64px/240px) + header + content area, responsive breakpoints (phone/tablet/desktop)
-- **Pages**: Login, Dashboard, User Management, Roles & Permissions, System Config, Operation Logs, Profile
+- **Pages**: Login, Dashboard, Report Center, User Management, Roles & Permissions, System Config, Operation Logs, Profile
 - **State**: GetX (`ApiService` singleton + `AuthService` token persistence)
 - **Dashboard**: Stats cards, trend line chart (fl_chart), pie chart, recent activity log
+- **Report Center**: date-range filter, income/expense bar chart, payment-method pie, status bars, arrears ranking, PDF export
 - **Export**: Excel/PDF with non-removable copyright info
 - **Batch Ops**: Multi-select batch delete, batch enable/disable
 - **Theme**: Material 3 light/dark dual theme
@@ -378,6 +388,13 @@ Authorization: Bearer <token>
 - **Pages**: Login, Dashboard, User List/Detail, Profile
 - **Auth**: JWT Bearer + silent token refresh on 401, auto-redirect to login on refresh failure
 - **Storage**: Token managed via AppStorage
+
+## Usage Guide
+
+1. **Sign in**: default account `admin / admin123` — change the password immediately.
+2. **Base data**: Community → Building → Unit → Room Type → Room → Owner binding.
+3. **Operations**: fee types → batch-generate bills → offline collection; repair assignment/progress; complaint handling/visit; Report Center for income & collection overview.
+4. **System**: add admins, RBAC roles, system config, audit logs.
 
 ## Development Rules
 

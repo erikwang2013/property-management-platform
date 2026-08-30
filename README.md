@@ -102,6 +102,7 @@ property-management-platform/
 | 第2批 | 停车、设备、投诉、访客、合同、财务（6模块）+ 面板可视化 + Excel/PDF导出（平台功能） | ✅ 全部完成 |
 | 第3批 | 安保巡逻、保洁、绿化、社区活动、能耗、员工（6模块） | ✅ 全部完成 |
 | 扩展 | 消息通知、审批工作流、支付集成、业主投票、SLA自动升级、数据大屏、智能催缴、巡检移动端、社区商城、人脸识别、多小区集团管理、智能问答（12模块） | ✅ 全部完成 |
+| 平台功能 | 报表中心（收支趋势 / 收缴率 / 业务分布 / 欠费排行 / PDF导出）+ 业主起始页统计（投诉 / 活动 / 投票 / 未读消息） | ✅ 全部完成 |
 
 ## 技术栈
 
@@ -162,7 +163,18 @@ property-management-platform/
 
 ## 快速开始
 
-### 方式一：Web 安装向导（推荐）
+### 方式一：一键安装脚本（最快）
+
+```bash
+bash scripts/deploy.sh
+# 自动完成：git pull → 生成双端 .env 与密钥 → Docker Compose 启动
+# → 数据库初始化（幂等）→ 监控冒烟验证
+# 管理端 http://localhost:8787 · 业务端 http://localhost:8788
+```
+
+> 要求：Docker + Docker Compose。脚本幂等，可重复执行；详见 [scripts/deploy.sh](scripts/deploy.sh)。
+
+### 方式三：Web 安装向导
 
 启动管理端后访问 `http://localhost:8787/install`，通过界面完成数据库配置和后台管理员账户创建。
 
@@ -176,7 +188,7 @@ php start.php start -d
 
 详见 [安装指南](docs/INSTALL.md)。
 
-### 方式二：手动安装
+### 方式四：手动安装
 
 #### 环境要求
 
@@ -235,9 +247,9 @@ cd service && php vendor/bin/phpunit
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| admin | 258 | 619 | 100% (2个DB门控跳过) |
-| service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
-| **合计** | **459** | **1280** | — |
+| admin | 260 | 622 | 100% (2个DB门控跳过) |
+| service | 201 | 744 | 100% (8个DB门控跳过) |
+| **合计** | **461** | **1366** | — |
 
 service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公共服务类、安全与特性回归
 全部模块单元测试 + API 自动化 + 端到端测试报告见 [docs/tests/](docs/tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）
@@ -257,6 +269,29 @@ docker-compose up -d
 Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
 静态文件: Flutter Web build/
 ```
+
+## 使用说明
+
+### 管理端（admin）
+
+1. 浏览器访问 `http://localhost:8787`，使用默认管理员账号登录（见下表）。
+2. **初始化基础数据**：依次录入 小区 → 楼栋 → 单元 → 户型 → 房产，再通过 业主管理 绑定业主。
+3. **日常运营**：
+   - 费用管理：配置费用类型 → 账单管理批量生成账单 → 业主线上/线下缴费；
+   - 报修管理：业主提交报修 → 管理员派单 → 进度更新 → 完成评价；
+   - 报表中心：按日期范围查看 收支趋势 / 收缴率 / 业务分布 / 欠费排行，一键导出 PDF。
+4. **系统管理**：用户管理（新增管理员）、角色权限（RBAC 授权）、系统配置（键值对）、操作日志（审计追溯）。
+
+### 业主端（service）
+
+1. 访问 `http://localhost:8788`（或 Flutter Web / HarmonyOS App），注册/登录业主账号。
+2. 起始页查看：我的房产、待缴费用、维修工单、待处理投诉、进行中活动/投票、未读消息。
+3. 常用操作：在线缴费、提交报修、访客预约、停车查询、社区活动报名、投票、智能问答。
+
+### 移动端
+
+- **Flutter Web**：`cd apps/flutter && flutter run -d chrome`（业主端）
+- **HarmonyOS**：使用 DevEco Studio 打开 `apps/harmonyos` 构建运行。
 
 ## 默认管理员
 
@@ -311,6 +346,23 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 > - **汇入其他币种**（THE BANK OF NEW YORK MELLON）：SWIFT `IRVTUS3NXXX`，地址：240 GREENWICH STREET, NEW YORK, United States
 
 欢迎支持本项目！
+
+### 虚拟币打赏 (Crypto Donation)
+
+如果这个项目对你有帮助，欢迎扫描二维码打赏支持，谢谢！
+
+| 主网 (Network) | 二维码 (QR Code) | 钱包地址 (Wallet Address) |
+|---|---|---|
+| BNB Smart Chain (BEP20) | [<img src="docs/coin/1.jpg" width="150" alt="BNB Smart Chain (BEP20)">](docs/coin/1.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Tron (TRC20) | [<img src="docs/coin/2.jpg" width="150" alt="Tron (TRC20)">](docs/coin/2.jpg) | `TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| Ethereum (ERC20) | [<img src="docs/coin/3.jpg" width="150" alt="Ethereum (ERC20)">](docs/coin/3.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Aptos | [<img src="docs/coin/4.jpg" width="150" alt="Aptos">](docs/coin/4.jpg) | `0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| Plasma | [<img src="docs/coin/5.jpg" width="150" alt="Plasma">](docs/coin/5.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Polygon POS | [<img src="docs/coin/6.jpg" width="150" alt="Polygon POS">](docs/coin/6.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Solana | [<img src="docs/coin/7.jpg" width="150" alt="Solana">](docs/coin/7.jpg) | `2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` |
+| The Open Network (TON) | [<img src="docs/coin/8.jpg" width="150" alt="The Open Network (TON)">](docs/coin/8.jpg) | `UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| Arbitrum One | [<img src="docs/coin/9.jpg" width="150" alt="Arbitrum One">](docs/coin/9.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| AVAX C-Chain | [<img src="docs/coin/10.jpg" width="150" alt="AVAX C-Chain">](docs/coin/10.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 ## License
 

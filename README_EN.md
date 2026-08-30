@@ -104,6 +104,7 @@ property-management-platform/
 | Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance (6) + Dashboard/Export (platform features) | ✅ Complete |
 | Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
 | Extensions | Notifications, Approval, Payment, Voting, SLA, Data Dashboard, Collection, Inspection, Mall, Face, Group, Knowledge (12) | ✅ Complete |
+| Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home page stats (complaints / activities / votes / unread) | ✅ Complete |
 
 ## Tech Stack
 
@@ -163,7 +164,18 @@ Start the services and access the auto-generated apidoc:
 
 ## Quick Start
 
-### Option 1: Web Installer (Recommended)
+### Option 1: One-Click Install Script (Fastest)
+
+```bash
+bash scripts/deploy.sh
+# Automatically: git pull → generate .env + keys for both apps → Docker Compose up
+# → database init (idempotent) → monitoring smoke test
+# Admin http://localhost:8787 · Service http://localhost:8788
+```
+
+> Requires Docker + Docker Compose. Idempotent and re-runnable; see [scripts/deploy.sh](scripts/deploy.sh).
+
+### Option 2: Web Installer (Recommended)
 
 Start the admin panel and open `http://localhost:8787/install` to configure the database and create an admin account through the UI.
 
@@ -177,7 +189,7 @@ php start.php start -d
 
 See [Installation Guide](docs/INSTALL.md) for details.
 
-### Option 2: Manual Setup
+### Option 3: Manual Setup
 
 #### Requirements
 
@@ -239,9 +251,9 @@ cd service && php vendor/bin/phpunit
 
 | Project | Tests | Assertions | Pass Rate |
 |---------|-------|------------|-----------|
-| admin | 258 | 619 | 100% (2 DB-gated skips) |
-| service | 201 | 661 | 100% (1 app-defect-gated skip) |
-| **Total** | **459** | **1280** | — |
+| admin | 260 | 622 | 100% (2 DB-gated skips) |
+| service | 201 | 744 | 100% (8 DB-gated skips) |
+| **Total** | **461** | **1366** | — |
 
 Service test coverage: all 19 API controllers, 6 middleware, models/common services, security & feature regression
 Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report)
@@ -261,6 +273,29 @@ docker-compose up -d
 Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
 Static files: Flutter Web build/
 ```
+
+## Usage Guide
+
+### Admin Panel
+
+1. Open `http://localhost:8787` in a browser and sign in with the default admin account (see below).
+2. **Set up base data**: enter Community → Building → Unit → Room Type → Room, then bind owners under Owner Management.
+3. **Daily operations**:
+   - Fees: configure fee types → batch-generate bills → owners pay online/offline;
+   - Repairs: owner submits → admin assigns → progress updates → completion review;
+   - Report Center: view income/expense trends, collection rate, business distribution and arrears ranking by date range, export to PDF.
+4. **System**: User Management (admins), Roles & Permissions (RBAC), System Config (key-values), Audit Logs.
+
+### Owner Portal (service)
+
+1. Open `http://localhost:8788` (or Flutter Web / HarmonyOS app), register or sign in.
+2. Home page stats: my rooms, pending fees, active repairs, pending complaints, ongoing activities/votes, unread messages.
+3. Common actions: pay fees, submit repairs, visitor appointments, parking lookup, activity signup, voting, AI Q&A.
+
+### Mobile
+
+- **Flutter Web**: `cd apps/flutter && flutter run -d chrome` (owner portal)
+- **HarmonyOS**: open `apps/harmonyos` in DevEco Studio and build.
 
 ## Default Admin Account
 
@@ -315,6 +350,23 @@ Support from anywhere in the world via bank transfer to ZA Bank (Hong Kong):
 > - **For other currencies** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, Address: 240 GREENWICH STREET, NEW YORK, United States
 
 Your support is greatly appreciated!
+
+### Crypto Donation
+
+If this project helps you, donations are welcome. Thank you!
+
+| Network | QR Code | Wallet Address |
+|---|---|---|
+| BNB Smart Chain (BEP20) | [<img src="docs/coin/1.jpg" width="150" alt="BNB Smart Chain (BEP20)">](docs/coin/1.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Tron (TRC20) | [<img src="docs/coin/2.jpg" width="150" alt="Tron (TRC20)">](docs/coin/2.jpg) | `TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| Ethereum (ERC20) | [<img src="docs/coin/3.jpg" width="150" alt="Ethereum (ERC20)">](docs/coin/3.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Aptos | [<img src="docs/coin/4.jpg" width="150" alt="Aptos">](docs/coin/4.jpg) | `0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| Plasma | [<img src="docs/coin/5.jpg" width="150" alt="Plasma">](docs/coin/5.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Polygon POS | [<img src="docs/coin/6.jpg" width="150" alt="Polygon POS">](docs/coin/6.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| Solana | [<img src="docs/coin/7.jpg" width="150" alt="Solana">](docs/coin/7.jpg) | `2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` |
+| The Open Network (TON) | [<img src="docs/coin/8.jpg" width="150" alt="The Open Network (TON)">](docs/coin/8.jpg) | `UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| Arbitrum One | [<img src="docs/coin/9.jpg" width="150" alt="Arbitrum One">](docs/coin/9.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| AVAX C-Chain | [<img src="docs/coin/10.jpg" width="150" alt="AVAX C-Chain">](docs/coin/10.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 ## License
 

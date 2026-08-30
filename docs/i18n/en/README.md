@@ -102,6 +102,7 @@ property-management-platform/
 | Batch 2 | Parking, equipment, complaints, visitors, contracts, finance (6 modules) + panel visualization + Excel/PDF export (platform features) | ✅ All complete |
 | Batch 3 | Security patrol, cleaning, greening, community activities, energy, staff (6 modules) | ✅ All complete |
 | Extensions | Message notifications, approval workflow, payment integration, owner voting, SLA auto escalation, data dashboard, smart payment reminders, mobile inspection, community mall, face recognition, multi-community group management, intelligent Q&A (12 modules) | ✅ All complete |
+| Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home stats (complaints / activities / votes / unread) | ✅ All complete |
 
 ## Tech Stack
 
@@ -161,6 +162,16 @@ All API endpoints and parameter descriptions are in the standalone [docs/API.md]
 - API-transmitted IDs use hashids encryption/decryption
 
 ## Quick Start
+### ⚡ One-Click Install Script (Fastest)
+
+```bash
+bash scripts/deploy.sh
+# Automatically: git pull → generate .env + keys → Docker Compose up → DB init (idempotent) → monitoring smoke test
+# Admin http://localhost:8787 · Service http://localhost:8788
+```
+
+> Requires Docker + Docker Compose. Idempotent and re-runnable; see [scripts/deploy.sh](scripts/deploy.sh).
+
 
 ### Option 1: Web Installation Wizard (Recommended)
 
@@ -257,6 +268,17 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 Static files: Flutter Web build/
 ```
 
+## Usage Guide
+
+### Admin Panel
+1. Open `http://localhost:8787` and sign in with the default admin account.
+2. Set up base data: Community → Building → Unit → Room Type → Room → bind owners.
+3. Daily operations: configure fee types, batch-generate bills, collect; repairs (assign/progress); complaints (handle/visit); Report Center for income & collection overview.
+4. System: add admins, RBAC roles, config, audit logs.
+
+### Owner Portal
+Open `http://localhost:8788` (or Flutter Web / HarmonyOS): the home page shows rooms, pending fees, repairs, complaints, activities, votes and unread messages.
+
 ## Default Admin Account
 
 | Username | Password | Role |
@@ -308,6 +330,16 @@ Bank transfers from around the world are supported; the receiving account is ZA 
 >
 > - **For HKD, CNY and USD remittances** (Citibank N.A. Hong Kong): SWIFT `CITIHKXXXX`, bank code 006, branch code 391, address: Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
 > - **For other currencies** (THE BANK OF NEW YORK MELLON): SWIFT `IRVTUS3NXXX`, address: 240 GREENWICH STREET, NEW YORK, United States
+
+### Crypto Donation
+
+If this project helps you, scan the QR code to donate, thank you!
+
+| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 Your support is welcome!
 
