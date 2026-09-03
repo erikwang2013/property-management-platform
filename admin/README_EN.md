@@ -75,14 +75,13 @@ open-admin/
 │   │   ├── HealthController.php    # Health check
 │   │   └── DocsController.php      # OpenAPI docs
 │   ├── api/
-│   │   └── v1/controller/          # API v1 (version via API-Version header)
+│   │   └── v1/controller/          # API v1 (version in URL /api/v1/*)
 │   │       ├── CaptchaController.php
 │   │       └── AuthController.php
 │   ├── middleware/             # Middleware
 │   │   ├── Cors.php            # CORS
 │   │   ├── SecurityFilter.php  # Attack detection (HTTP method restriction/XSS/SQLi/path traversal/cmd injection/CSRF)
 │   │   ├── RateLimit.php       # Redis rate limiting
-│   │   ├── ApiVersion.php      # API version validation
 │   │   ├── AdminAuth.php       # JWT auth + blacklist
 │   │   ├── AdminPermission.php # RBAC authorization
 │   │   └── OperationLog.php    # Auto operation logging (with source detection)
@@ -236,15 +235,14 @@ docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 ### API Versioning
 
-The API version is specified via a request header — **not in the URL path**:
+The API version is carried in the route itself (e.g. `/api/v1/*`) — **not via a request header**:
 
 ```http
-API-Version: v1
+POST /api/v1/auth/login
 ```
 
-- Defaults to `v1` when the header is absent
-- Unsupported versions return `400 Bad Request`
-- To add a new version, create `app/api/{version}/controller/` and register it in the middleware
+- To add a version, create `app/api/{version}/controller/` and register a new `/api/v{version}` route group in `config/route.php`
+- Unknown version paths (e.g. `/api/v9/...`) return 404 straight from the router
 
 ### Rate Limiting
 
@@ -262,13 +260,12 @@ Global middleware runs for every request in order:
 Cors (preflight + response headers)
   → SecurityFilter (HTTP method restriction/body size/Content-Type check/XSS/SQLi/path traversal/cmd injection/CSRF blocking)
   → RateLimit (Redis sliding-window + account lockout: 5 failed logins = 15 min lock)
-  → ApiVersion (API version validation, /api group)
-  → AdminAuth (JWT + blacklist, /admin group)
-  → AdminPermission (RBAC, /admin group)
-  → OperationLog (auto-log POST/PUT/DELETE with source detection, /admin group)
+  → public endpoints (/health, /api/docs, /api/v1/*) reach the controller directly
+  → /admin group: AdminAuth (JWT + blacklist) → AdminPermission (RBAC)
+    → OperationLog (auto-log POST/PUT/DELETE with source detection)
 ```
 
-`/health` and `/api/docs` are public, only passing through `Cors → SecurityFilter → RateLimit`.
+Public endpoints (`/health`, `/api/docs`, `/api/v1/*`) only pass through `Cors → SecurityFilter → RateLimit` — no auth required.
 
 Security enhancements:
 - **Account lockout**: 5 consecutive failed login attempts lock the account for 15 minutes; login returns 429 during lockout
@@ -280,12 +277,12 @@ Security enhancements:
 
 Login and registration require **click captcha** verification:
 
-1. Client requests `POST /api/captcha/generate` to get a captcha image (base64 PNG) and target word list
+1. Client requests `POST /api/v1/captcha/generate` to get a captcha image (base64 PNG) and target word list
 2. User clicks the corresponding word positions on the image in order
 3. Login request includes `captcha_key` and `clicks` array — server verifies captcha before credentials
 
 ```http
-POST /api/auth/login
+POST /api/v1/auth/login
 Content-Type: application/json
 
 {
@@ -320,7 +317,7 @@ Authorization: Bearer <token>
 
 ## API Reference
 
-> All `/api/*` endpoints require the `API-Version: v1` header (defaults to v1 if absent).
+> API version lives in the route: public endpoints `/api/v1/*`; admin endpoints `/admin/*` carry no version segment (single current version).
 
 ### Public Endpoints
 
@@ -328,11 +325,11 @@ Authorization: Bearer <token>
 |-----|------|------|
 | `GET` | `/health` | Health check (DB/Redis/ES status) |
 | `GET` | `/api/docs` | OpenAPI 3.0 specification |
-| `POST` | `/api/captcha/generate` | Generate click captcha |
-| `POST` | `/api/captcha/verify` | Verify click positions |
-| `POST` | `/api/auth/login` | Login (requires captcha) |
-| `POST` | `/api/auth/register` | Register (requires captcha) |
-| `POST` | `/api/auth/refresh` | Refresh token |
+| `POST` | `/api/v1/captcha/generate` | Generate click captcha |
+| `POST` | `/api/v1/captcha/verify` | Verify click positions |
+| `POST` | `/api/v1/auth/login` | Login (requires captcha) |
+| `POST` | `/api/v1/auth/register` | Register (requires captcha) |
+| `POST` | `/api/v1/auth/refresh` | Refresh token |
 | `GET` | `/metrics` | Prometheus metrics |
 
 ### Admin Endpoints (requires JWT + RBAC)

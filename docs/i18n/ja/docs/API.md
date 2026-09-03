@@ -8,7 +8,7 @@
 - 業務端 API は `http://localhost:8788` で稼働
 - 統一レスポンス形式: `{"code": 0, "message": "success", "data": {...}}`
 - 全 ID フィールドは hashids エンコードで転送
-- API バージョンはリクエストヘッダー `API-Version` で制御（デフォルト `v1`）
+- API バージョンはルート自体に含める（現在 `/api/v1/*`）、ヘッダーではない
 - 言語はリクエストヘッダー `Accept-Language` で制御（`zh-CN` / `en-US`、デフォルト `zh-CN`）
 
 ### オンライン API ドキュメント
@@ -26,7 +26,7 @@
 
 ### 公開インターフェース — 認証不要
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 クリック認証コードを取得します。
 
 リクエストパラメータ: なし
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 クリック認証コードを検証します。
 
 リクエストパラメータ:
@@ -62,7 +62,7 @@
 
 検証失敗時は `code` が 422、`data.valid` が `false` になります。
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 管理者ログイン。
 
 リクエストパラメータ:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token を更新します。
 
 リクエストパラメータ:
@@ -480,13 +480,13 @@ OpenAPI ドキュメント。
 
 ### 公開インターフェース — 認証不要
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 クリック認証コードを取得します。（管理画面と同じ）
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 クリック認証コードを検証します。（リクエスト/レスポンスは管理画面と同じ）
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 所有者ログイン。
 
 リクエストパラメータ:
@@ -509,7 +509,7 @@ OpenAPI ドキュメント。
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 所有者登録。
 
 リクエストパラメータ:
@@ -523,7 +523,7 @@ OpenAPI ドキュメント。
 | room_id | string | （任意）バインドする部屋番号 hashid |
 | id_card_last4 | string | （任意）身分証の下 4 桁 |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token を更新します。
 
 ---
@@ -534,7 +534,7 @@ Token を更新します。
 
 #### ホーム
 
-**GET /service/home**
+**GET /service/v1/home**
 
 レスポンス:
 ```json
@@ -554,79 +554,79 @@ Token を更新します。
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/rooms | マイ不動産リスト |
-| GET | /service/room/{hashid} | 不動産詳細（面積、向き、権利、コミュニティ情報含む） |
+| GET | /service/v1/rooms | マイ不動産リスト |
+| GET | /service/v1/room/{hashid} | 不動産詳細（面積、向き、権利、コミュニティ情報含む） |
 
 #### 料金管理
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/fees/bills | 請求書リスト (?status=0未缴/1部分缴/2已缴/3逾期) |
-| GET | /service/fees/bill/{hashid} | 請求書詳細（料金タイプ、支払い記録含む） |
-| GET | /service/fees/payments | 支払い記録 |
-| POST | /service/fees/pay | オンライン支払い（{ bill_id, payment_method, password }） |
-| GET | /service/fees/statistics | 料金統計 (?year=2026) |
+| GET | /service/v1/fees/bills | 請求書リスト (?status=0未缴/1部分缴/2已缴/3逾期) |
+| GET | /service/v1/fees/bill/{hashid} | 請求書詳細（料金タイプ、支払い記録含む） |
+| GET | /service/v1/fees/payments | 支払い記録 |
+| POST | /service/v1/fees/pay | オンライン支払い（{ bill_id, payment_method, password }） |
+| GET | /service/v1/fees/statistics | 料金統計 (?year=2026) |
 
 #### 修理依頼
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/repairs | 修理依頼リスト (?status=) |
-| GET | /service/repair/{hashid} | 修理依頼詳細（進捗タイムライン含む） |
-| POST | /service/repair | 修理依頼提出（{ room_id, category, urgency, description, images[], scheduled_at }） |
-| DELETE | /service/repair/{hashid} | キャンセル（パスワードが必要、{ password }） |
-| POST | /service/repair/{hashid}/rate | 評価（{ rating: 1-5, feedback }） |
+| GET | /service/v1/repairs | 修理依頼リスト (?status=) |
+| GET | /service/v1/repair/{hashid} | 修理依頼詳細（進捗タイムライン含む） |
+| POST | /service/v1/repair | 修理依頼提出（{ room_id, category, urgency, description, images[], scheduled_at }） |
+| DELETE | /service/v1/repair/{hashid} | キャンセル（パスワードが必要、{ password }） |
+| POST | /service/v1/repair/{hashid}/rate | 評価（{ rating: 1-5, feedback }） |
 
 #### 苦情・提案
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/complaints | 苦情リスト |
-| GET | /service/complaint/{hashid} | 苦情詳細（処理進捗含む） |
-| POST | /service/complaint | 苦情提出（{ type, category, title, content, is_anonymous, images[] }） |
-| POST | /service/complaint/{hashid}/satisfaction | 満足度評価（{ satisfaction: 1-5 }） |
+| GET | /service/v1/complaints | 苦情リスト |
+| GET | /service/v1/complaint/{hashid} | 苦情詳細（処理進捗含む） |
+| POST | /service/v1/complaint | 苦情提出（{ type, category, title, content, is_anonymous, images[] }） |
+| POST | /service/v1/complaint/{hashid}/satisfaction | 満足度評価（{ satisfaction: 1-5 }） |
 
 #### お知らせ
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/announcements | お知らせリスト (?category=) |
-| GET | /service/announcement/{hashid} | お知らせ詳細 |
+| GET | /service/v1/announcements | お知らせリスト (?category=) |
+| GET | /service/v1/announcement/{hashid} | お知らせ詳細 |
 
 #### 駐車
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/parking/vehicles | マイ車両 |
-| GET | /service/parking/spaces | マイ駐車スペース |
-| GET | /service/parking/records | 駐車記録 |
+| GET | /service/v1/parking/vehicles | マイ車両 |
+| GET | /service/v1/parking/spaces | マイ駐車スペース |
+| GET | /service/v1/parking/records | 駐車記録 |
 
 #### 来訪者
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/visitors | マイ来訪者予約 |
-| POST | /service/visitor | 予約作成（通行コード生成） |
-| PUT | /service/visitor/{hashid} | 予約変更 |
-| DELETE | /service/visitor/{hashid} | 予約キャンセル |
+| GET | /service/v1/visitors | マイ来訪者予約 |
+| POST | /service/v1/visitor | 予約作成（通行コード生成） |
+| PUT | /service/v1/visitor/{hashid} | 予約変更 |
+| DELETE | /service/v1/visitor/{hashid} | 予約キャンセル |
 
 #### コミュニティイベント
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/activities | イベントリスト (?status=) |
-| GET | /service/activity/{hashid} | イベント詳細 |
-| POST | /service/activity/{hashid}/signup | 申し込み |
-| POST | /service/activity/{hashid}/cancel | 申し込みキャンセル |
+| GET | /service/v1/activities | イベントリスト (?status=) |
+| GET | /service/v1/activity/{hashid} | イベント詳細 |
+| POST | /service/v1/activity/{hashid}/signup | 申し込み |
+| POST | /service/v1/activity/{hashid}/cancel | 申し込みキャンセル |
 
 #### 個人情報
 
 | メソッド | パス | 説明 |
 |------|------|------|
-| GET | /service/profile | 個人情報 |
-| PUT | /service/profile | 変更（{ name, email, gender, birthday }） |
-| PUT | /service/profile/password | パスワード変更（{ old_password, new_password }） |
-| POST | /service/profile/logout | ログアウト |
+| GET | /service/v1/profile | 個人情報 |
+| PUT | /service/v1/profile | 変更（{ name, email, gender, birthday }） |
+| PUT | /service/v1/profile/password | パスワード変更（{ old_password, new_password }） |
+| POST | /service/v1/profile/logout | ログアウト |
 
 ---
 
@@ -639,7 +639,7 @@ Token を更新します。
 各リクエストにリクエストヘッダー `X-API-Key` を携帯します。値は `scripts/gen_api_key.php` が生成する Key（64 桁 hex、DB には SHA-256 ダイジェストのみ保存）：
 
 ```bash
-curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - 欠落または誤った Key は `401` を返します（`{"code":401,"message":"无效的API Key","data":[]}`）
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 
 ### エンドポイント
 
-#### GET /open/announcements — お知らせリスト
+#### GET /open/v1/announcements — お知らせリスト
 
-パラメータ：`page`（デフォルト 1）、`category`（任意）。レスポンス構造は `/service/announcements` と同じ。
+パラメータ：`page`（デフォルト 1）、`category`（任意）。レスポンス構造は `/service/v1/announcements` と同じ。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — 請求書照会
+#### GET /open/v1/bills — 請求書照会
 
 パラメータ：`bill_number`（必須、請求書番号）。単一の請求書詳細を返します（料金タイプ、部屋番号、未払い金額含む）。存在しない場合は 404 を返します。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — 修理依頼ステータス照会
+#### GET /open/v1/repairs — 修理依頼ステータス照会
 
 パラメータ：`order_number`（必須、修理依頼番号）。修理依頼の現在のステータスと進捗タイムライン（`progress` 配列）を返します。存在しない場合は 404 を返します。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

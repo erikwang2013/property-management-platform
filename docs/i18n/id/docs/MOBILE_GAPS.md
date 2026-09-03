@@ -8,12 +8,12 @@
 | Halaman | Route (terdaftar di main_pages.json) | API yang dipanggil |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | login (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (dashboard: tagihan tertunda/tiket/properti + daftar pengumuman) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (dashboard: tagihan tertunda/tiket/properti + daftar pengumuman) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **Status navigasi saat ini** (hanya 4 transisi di seluruh aplikasi): Login→Home、Home→Login (keluar)、Profile→Login、RepairList→RepairSubmit。HomePage hanya kartu statistik + daftar pengumuman, tanpa grid entry fungsi; halaman FeeBills/Announcement/Profile ada tetapi **tanpa entry, tidak dapat diakses**。
 

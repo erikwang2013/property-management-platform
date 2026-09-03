@@ -7,6 +7,9 @@ import preferences from '@ohos.data.preferences';
 
 const BASE_URL = 'http://10.0.2.2:8788'; // Android emulator → host; change for real device
 
+// API 版本在接口路由中（/api/v1/*、/service/v1/*），不通过请求头传递
+const VERSION = 'v1';
+
 export class ApiService {
   private static instance: ApiService;
   private token: string = '';
@@ -31,16 +34,21 @@ export class ApiService {
     return headers;
   }
 
+  /** 在接口路由首段后插入版本段: /service/home → /service/v1/home */
+  private versioned(path: string): string {
+    return BASE_URL + path.replace(/^(\/[^/]+)/, `$1/${VERSION}`);
+  }
+
   async get(path: string): Promise<Object> {
     const req = http.createHttp();
-    const resp = await req.request(BASE_URL + path, { method: http.RequestMethod.GET, header: this.getHeaders() });
+    const resp = await req.request(this.versioned(path), { method: http.RequestMethod.GET, header: this.getHeaders() });
     req.destroy();
     return JSON.parse(resp.result as string);
   }
 
   async post(path: string, data?: Object): Promise<Object> {
     const req = http.createHttp();
-    const resp = await req.request(BASE_URL + path, {
+    const resp = await req.request(this.versioned(path), {
       method: http.RequestMethod.POST,
       header: this.getHeaders(),
       extraData: JSON.stringify(data)
@@ -51,7 +59,7 @@ export class ApiService {
 
   async put(path: string, data: Object): Promise<Object> {
     const req = http.createHttp();
-    const resp = await req.request(BASE_URL + path, {
+    const resp = await req.request(this.versioned(path), {
       method: http.RequestMethod.PUT,
       header: this.getHeaders(),
       extraData: JSON.stringify(data)
@@ -62,7 +70,7 @@ export class ApiService {
 
   async delete(path: string): Promise<Object> {
     const req = http.createHttp();
-    const resp = await req.request(BASE_URL + path, { method: http.RequestMethod.DELETE, header: this.getHeaders() });
+    const resp = await req.request(this.versioned(path), { method: http.RequestMethod.DELETE, header: this.getHeaders() });
     req.destroy();
     return JSON.parse(resp.result as string);
   }

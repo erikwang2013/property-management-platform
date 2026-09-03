@@ -8,7 +8,7 @@
 - Les API du portail des propriétaires tournent sur `http://localhost:8788`
 - Format de réponse unifié : `{"code": 0, "message": "success", "data": {...}}`
 - Tous les champs ID sont encodés en hashids pour la transmission
-- La version de l'API est contrôlée par l'en-tête de requête `API-Version` (défaut `v1`)
+- La version de l'API est portée par le chemin (actuellement `/api/v1/*`), pas par un en-tête
 - La langue est contrôlée par l'en-tête de requête `Accept-Language` (`zh-CN` / `en-US`, défaut `zh-CN`)
 
 ### Documentation API en ligne
@@ -26,7 +26,7 @@ Après démarrage du service, accéder à la documentation interactive généré
 
 ### Interfaces publiques — sans authentification
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Obtenir un captcha cliquable.
 
 Paramètres de requête : aucun
@@ -43,7 +43,7 @@ Réponse :
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Vérifier le captcha cliquable.
 
 Paramètres de requête :
@@ -62,7 +62,7 @@ Réponse :
 
 En cas d'échec de vérification, `code` vaut 422 et `data.valid` vaut `false`.
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Connexion administrateur.
 
 Paramètres de requête :
@@ -85,7 +85,7 @@ Réponse :
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Rafraîchir le Token.
 
 Paramètres de requête :
@@ -480,13 +480,13 @@ Obtenir les statistiques du tableau de bord.
 
 ### Interfaces publiques — sans authentification
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Obtenir un captcha cliquable. (Identique au panneau d'administration)
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Vérifier le captcha cliquable. (Requête/réponse identiques au panneau d'administration)
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Connexion propriétaire.
 
 Paramètres de requête :
@@ -509,7 +509,7 @@ Réponse :
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 Inscription propriétaire.
 
 Paramètres de requête :
@@ -523,7 +523,7 @@ Paramètres de requête :
 | room_id | string | (Optionnel) hashid du bien à lier |
 | id_card_last4 | string | (Optionnel) 4 derniers chiffres de la carte d'identité |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Rafraîchir le Token.
 
 ---
@@ -534,7 +534,7 @@ Toutes les interfaces sont préfixées `/service` et nécessitent l'en-tête `Au
 
 #### Accueil
 
-**GET /service/home**
+**GET /service/v1/home**
 
 Réponse :
 ```json
@@ -554,79 +554,79 @@ Réponse :
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/rooms | Liste de mes biens |
-| GET | /service/room/{hashid} | Détails du bien (surface, orientation, propriété, informations de la résidence) |
+| GET | /service/v1/rooms | Liste de mes biens |
+| GET | /service/v1/room/{hashid} | Détails du bien (surface, orientation, propriété, informations de la résidence) |
 
 #### Gestion des frais
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/fees/bills | Liste des factures (?status=0非缴/1部分缴/2已缴/3逾期) |
-| GET | /service/fees/bill/{hashid} | Détails de la facture (type de frais, historique de paiement) |
-| GET | /service/fees/payments | Historique des paiements |
-| POST | /service/fees/pay | Paiement en ligne ({ bill_id, payment_method, password }) |
-| GET | /service/fees/statistics | Statistiques des frais (?year=2026) |
+| GET | /service/v1/fees/bills | Liste des factures (?status=0非缴/1部分缴/2已缴/3逾期) |
+| GET | /service/v1/fees/bill/{hashid} | Détails de la facture (type de frais, historique de paiement) |
+| GET | /service/v1/fees/payments | Historique des paiements |
+| POST | /service/v1/fees/pay | Paiement en ligne ({ bill_id, payment_method, password }) |
+| GET | /service/v1/fees/statistics | Statistiques des frais (?year=2026) |
 
 #### Réparations
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/repairs | Liste des réparations (?status=) |
-| GET | /service/repair/{hashid} | Détails de la réparation (avec chronologie de progression) |
-| POST | /service/repair | Soumettre une réparation ({ room_id, category, urgency, description, images[], scheduled_at }) |
-| DELETE | /service/repair/{hashid} | Annuler (mot de passe requis, { password }) |
-| POST | /service/repair/{hashid}/rate | Évaluer ({ rating: 1-5, feedback }) |
+| GET | /service/v1/repairs | Liste des réparations (?status=) |
+| GET | /service/v1/repair/{hashid} | Détails de la réparation (avec chronologie de progression) |
+| POST | /service/v1/repair | Soumettre une réparation ({ room_id, category, urgency, description, images[], scheduled_at }) |
+| DELETE | /service/v1/repair/{hashid} | Annuler (mot de passe requis, { password }) |
+| POST | /service/v1/repair/{hashid}/rate | Évaluer ({ rating: 1-5, feedback }) |
 
 #### Réclamations et suggestions
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/complaints | Liste des réclamations |
-| GET | /service/complaint/{hashid} | Détails de la réclamation (avec progression du traitement) |
-| POST | /service/complaint | Soumettre une réclamation ({ type, category, title, content, is_anonymous, images[] }) |
-| POST | /service/complaint/{hashid}/satisfaction | Évaluation de satisfaction ({ satisfaction: 1-5 }) |
+| GET | /service/v1/complaints | Liste des réclamations |
+| GET | /service/v1/complaint/{hashid} | Détails de la réclamation (avec progression du traitement) |
+| POST | /service/v1/complaint | Soumettre une réclamation ({ type, category, title, content, is_anonymous, images[] }) |
+| POST | /service/v1/complaint/{hashid}/satisfaction | Évaluation de satisfaction ({ satisfaction: 1-5 }) |
 
 #### Annonces
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/announcements | Liste des annonces (?category=) |
-| GET | /service/announcement/{hashid} | Détails de l'annonce |
+| GET | /service/v1/announcements | Liste des annonces (?category=) |
+| GET | /service/v1/announcement/{hashid} | Détails de l'annonce |
 
 #### Stationnement
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/parking/vehicles | Mes véhicules |
-| GET | /service/parking/spaces | Mes places |
-| GET | /service/parking/records | Historique de stationnement |
+| GET | /service/v1/parking/vehicles | Mes véhicules |
+| GET | /service/v1/parking/spaces | Mes places |
+| GET | /service/v1/parking/records | Historique de stationnement |
 
 #### Visiteurs
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/visitors | Mes réservations de visiteurs |
-| POST | /service/visitor | Créer une réservation (génère un code de passage) |
-| PUT | /service/visitor/{hashid} | Modifier la réservation |
-| DELETE | /service/visitor/{hashid} | Annuler la réservation |
+| GET | /service/v1/visitors | Mes réservations de visiteurs |
+| POST | /service/v1/visitor | Créer une réservation (génère un code de passage) |
+| PUT | /service/v1/visitor/{hashid} | Modifier la réservation |
+| DELETE | /service/v1/visitor/{hashid} | Annuler la réservation |
 
 #### Activités communautaires
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/activities | Liste des activités (?status=) |
-| GET | /service/activity/{hashid} | Détails de l'activité |
-| POST | /service/activity/{hashid}/signup | S'inscrire |
-| POST | /service/activity/{hashid}/cancel | Annuler l'inscription |
+| GET | /service/v1/activities | Liste des activités (?status=) |
+| GET | /service/v1/activity/{hashid} | Détails de l'activité |
+| POST | /service/v1/activity/{hashid}/signup | S'inscrire |
+| POST | /service/v1/activity/{hashid}/cancel | Annuler l'inscription |
 
 #### Informations personnelles
 
 | Méthode | Chemin | Description |
 |------|------|------|
-| GET | /service/profile | Informations personnelles |
-| PUT | /service/profile | Modifier ({ name, email, gender, birthday }) |
-| PUT | /service/profile/password | Changer le mot de passe ({ old_password, new_password }) |
-| POST | /service/profile/logout | Se déconnecter |
+| GET | /service/v1/profile | Informations personnelles |
+| PUT | /service/v1/profile | Modifier ({ name, email, gender, birthday }) |
+| PUT | /service/v1/profile/password | Changer le mot de passe ({ old_password, new_password }) |
+| POST | /service/v1/profile/logout | Se déconnecter |
 
 ---
 
@@ -639,7 +639,7 @@ Interfaces entrantes en lecture seule, destinées aux systèmes tiers (intégrat
 Chaque requête doit porter l'en-tête `X-API-Key`, dont la valeur est la clé générée par `scripts/gen_api_key.php` (hexadécimal 64 bits, seule l'empreinte SHA-256 est stockée en base) :
 
 ```bash
-curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - Clé manquante ou erronée → `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 
 ### Points de terminaison
 
-#### GET /open/announcements — liste des annonces
+#### GET /open/v1/announcements — liste des annonces
 
-Paramètres : `page` (défaut 1), `category` (optionnel). Structure de réponse identique à `/service/announcements`.
+Paramètres : `page` (défaut 1), `category` (optionnel). Structure de réponse identique à `/service/v1/announcements`.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — consultation des factures
+#### GET /open/v1/bills — consultation des factures
 
 Paramètres : `bill_number` (obligatoire, numéro de facture). Renvoie le détail d'une facture (type de frais, numéro de bien, montant impayé). 404 si inexistante.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — consultation du statut des réparations
+#### GET /open/v1/repairs — consultation du statut des réparations
 
 Paramètres : `order_number` (obligatoire, numéro de bon de réparation). Renvoie le statut actuel et la chronologie de progression (tableau `progress`). 404 si inexistante.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

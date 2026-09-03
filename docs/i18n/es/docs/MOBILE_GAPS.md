@@ -8,12 +8,12 @@
 | Página | Ruta (registrada en main_pages.json) | API llamada |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | Inicio de sesión (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (panel: pendientes/órdenes/propiedades + lista de avisos) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (panel: pendientes/órdenes/propiedades + lista de avisos) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **Estado de navegación** (solo 4 saltos en toda la app): Login→Home, Home→Login (salir), Profile→Login, RepairList→RepairSubmit. HomePage solo tiene tarjetas de estadísticas + lista de avisos, sin cuadrícula de entradas de funciones; las páginas FeeBills/Announcement/Profile existen pero **no tienen entrada, son inalcanzables**.
 

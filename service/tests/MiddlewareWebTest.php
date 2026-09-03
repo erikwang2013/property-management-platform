@@ -53,7 +53,7 @@ class MiddlewareWebTest extends TestCase
         }
     }
 
-    private static function request(string $method = 'GET', string $path = '/service/home', array $headers = []): Request
+    private static function request(string $method = 'GET', string $path = '/service/v1/home', array $headers = []): Request
     {
         $buffer = "$method $path HTTP/1.1\r\nHost: localhost:8788\r\n";
         foreach ($headers as $name => $value) {
@@ -71,7 +71,7 @@ class MiddlewareWebTest extends TestCase
 
     public function test_cors_preflight_returns_204_with_headers(): void
     {
-        $response = (new Cors())->process(self::request('OPTIONS', '/service/home'), self::next());
+        $response = (new Cors())->process(self::request('OPTIONS', '/service/v1/home'), self::next());
         $this->assertSame(204, $response->getStatusCode());
         $this->assertSame('http://localhost:8788', $response->getHeader('Access-Control-Allow-Origin'));
         $this->assertStringContainsString('GET', $response->getHeader('Access-Control-Allow-Methods'));
@@ -80,7 +80,7 @@ class MiddlewareWebTest extends TestCase
 
     public function test_cors_adds_security_headers_to_response(): void
     {
-        $response = (new Cors())->process(self::request('GET', '/service/home'), self::next());
+        $response = (new Cors())->process(self::request('GET', '/service/v1/home'), self::next());
         $this->assertSame('nosniff', $response->getHeader('X-Content-Type-Options'));
         $this->assertSame('DENY', $response->getHeader('X-Frame-Options'));
         $this->assertSame('http://localhost:8788', $response->getHeader('Access-Control-Allow-Origin'));
@@ -92,14 +92,14 @@ class MiddlewareWebTest extends TestCase
     {
         $this->requireDb();
         $before = Db::table('management_operation_log')->count();
-        (new OperationLog())->process(self::request('GET', '/service/home'), self::next());
+        (new OperationLog())->process(self::request('GET', '/service/v1/home'), self::next());
         $this->assertSame($before, Db::table('management_operation_log')->count());
     }
 
     public function test_operation_log_post_writes_masked_input(): void
     {
         $this->requireDb();
-        $request = self::request('POST', '/service/profile/password', [
+        $request = self::request('POST', '/service/v1/profile/password', [
             'Content-Type' => 'application/x-www-form-urlencoded',
         ]);
         $request->ownerId = 7;
@@ -107,7 +107,7 @@ class MiddlewareWebTest extends TestCase
 
         $log = Db::table('management_operation_log')->where('user_id', 7)->where('action', 'POST')->first();
         $this->assertNotNull($log);
-        $this->assertSame('/service/profile/password', $log->path);
+        $this->assertSame('/service/v1/profile/password', $log->path);
     }
 
     public function test_operation_log_filter_sensitive_masks_keys(): void
@@ -131,7 +131,7 @@ class MiddlewareWebTest extends TestCase
     public function test_metrics_collector_increments_all_counter(): void
     {
         $before = (int) (Redis::get('property_service_metrics:http_all') ?: 0);
-        (new MetricsCollector())->process(self::request('GET', '/service/home'), self::next());
+        (new MetricsCollector())->process(self::request('GET', '/service/v1/home'), self::next());
         $after = (int) (Redis::get('property_service_metrics:http_all') ?: 0);
         Redis::set('property_service_metrics:http_all', $before); // 还原计数
         $this->assertSame($before + 1, $after);
@@ -152,19 +152,19 @@ class MiddlewareWebTest extends TestCase
 
     public function test_rate_limit_allows_first_request(): void
     {
-        Redis::del('rate_limit:10.0.0.1:_service_home');
+        Redis::del('rate_limit:10.0.0.1:_service_v1_home');
         $response = (new RateLimit())->process(
-            self::request('GET', '/service/home', ['X-Forwarded-For' => '10.0.0.1']),
+            self::request('GET', '/service/v1/home', ['X-Forwarded-For' => '10.0.0.1']),
             self::next()
         );
-        Redis::del('rate_limit:10.0.0.1:_service_home');
+        Redis::del('rate_limit:10.0.0.1:_service_v1_home');
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('60', $response->getHeader('X-RateLimit-Limit'));
     }
 
     public function test_rate_limit_login_path_throttles_after_10(): void
     {
-        $key = 'rate_limit:10.0.0.2:_api_auth_login';
+        $key = 'rate_limit:10.0.0.2:_api_v1_auth_login';
         Redis::del($key);
 
         $middleware = new RateLimit();
@@ -172,7 +172,7 @@ class MiddlewareWebTest extends TestCase
         $statusCodes = [];
         for ($i = 0; $i < 12; $i++) {
             $response = $middleware->process(
-                self::request('POST', '/api/auth/login', ['X-Forwarded-For' => '10.0.0.2']),
+                self::request('POST', '/api/v1/auth/login', ['X-Forwarded-For' => '10.0.0.2']),
                 $handler
             );
             $statusCodes[] = $response->getStatusCode();
@@ -183,7 +183,7 @@ class MiddlewareWebTest extends TestCase
         $this->assertNotSame(429, $statusCodes[9], '第10次请求应放行');
         // 已触发限流后，再请求 remaining 应为 0（在清理 key 之前断言）
         $this->assertSame('0', (new RateLimit())->process(
-            self::request('POST', '/api/auth/login', ['X-Forwarded-For' => '10.0.0.2']),
+            self::request('POST', '/api/v1/auth/login', ['X-Forwarded-For' => '10.0.0.2']),
             $handler
         )->getHeader('X-RateLimit-Remaining'));
         Redis::del($key); // 清理（放在断言之后，避免破坏限流状态）

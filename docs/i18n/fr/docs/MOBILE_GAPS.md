@@ -8,12 +8,12 @@
 | Page | Route (enregistrée dans main_pages.json) | API appelées |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | Connexion (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (tableau de bord : impayés/demandes/nombre de biens + liste des annonces) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (tableau de bord : impayés/demandes/nombre de biens + liste des annonces) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **Navigation actuelle** (seulement 4 transitions dans toute l'application) : Login→Home、Home→Login (déconnexion)、Profile→Login、RepairList→RepairSubmit. HomePage ne contient que des cartes statistiques + la liste des annonces, sans grille d'entrées fonctionnelles ; FeeBills/Announcement/Profile existent mais **sans entrée, inaccessibles**.
 

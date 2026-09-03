@@ -245,7 +245,7 @@ Todos os endpoints e parâmetros da API estão no documento [API.md](API.md). Ap
 ### 3. Teste de login
 
 ```bash
-curl -X POST http://localhost:8787/api/auth/login \
+curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```

@@ -13,7 +13,8 @@ class SecurityRegressionTest extends TestCase
         $this->assertTrue(class_exists(\app\middleware\AdminAuth::class));
         $this->assertTrue(class_exists(\app\middleware\AdminPermission::class));
         $this->assertTrue(class_exists(\app\middleware\OperationLog::class));
-        $this->assertTrue(class_exists(\app\middleware\ApiVersion::class));
+        // 版本已改由路由承载（/api/v1/*），头版本中间件应已移除
+        $this->assertFalse(class_exists(\app\middleware\ApiVersion::class));
         $this->assertTrue(class_exists(\app\middleware\StaticFile::class));
     }
 

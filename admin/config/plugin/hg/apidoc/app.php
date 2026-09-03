@@ -94,7 +94,6 @@ return [
         'params' => [
             'header' => [
                 ['name' => 'Authorization', 'type' => 'string', 'require' => true, 'desc' => '身份令牌 Bearer Token'],
-                ['name' => 'API-Version',   'type' => 'string', 'require' => false, 'desc' => 'API版本，默认v1'],
                 ['name' => 'Accept-Language','type' => 'string', 'require' => false, 'desc' => '语言: zh-CN / en-US'],
             ],
             'query' => [],

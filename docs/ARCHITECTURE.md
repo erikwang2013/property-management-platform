@@ -49,7 +49,7 @@ flowchart TD
     subgraph "中间件层 Middleware"
         M_SF["SecurityFilter<br/>攻击拦截<br/>XSS/SQL注入/CSRF"]
         M_RL["RateLimit<br/>Redis 滑动窗口限流"]
-        M0["ApiVersion<br/>API 版本校验"]
+        M0["版本路由<br/>URL 含 /v1"]
         M1["AdminAuth / ServiceAuth<br/>JWT Token 校验"]
         M2["AdminPermission<br/>RBAC 鉴权<br/>method.path 粒度"]
         M_OP["OperationLog<br/>操作日志记录"]
@@ -137,7 +137,7 @@ sequenceDiagram
     participant CAP as Captcha Service
 
     Note over U,CAP: === 获取验证码 ===
-    CL->>SV: POST /api/captcha/generate
+    CL->>SV: POST /api/v1/captcha/generate
     SV->>CAP: captcha_create('click')
     CAP-->>SV: { key, image(base64), targets }
     SV-->>CL: 200 { key, image }
@@ -147,7 +147,7 @@ sequenceDiagram
     U->>CL: 依次点击图中文字位置
 
     Note over U,CAP: === 登录 ===
-    CL->>SV: POST /api/auth/login { phone, password, captcha_key, clicks }
+    CL->>SV: POST /api/v1/auth/login { phone, password, captcha_key, clicks }
     SV->>CAP: captcha_verify(key, 'click', clicks)
     alt 验证码错误
         SV-->>CL: 422 验证码错误

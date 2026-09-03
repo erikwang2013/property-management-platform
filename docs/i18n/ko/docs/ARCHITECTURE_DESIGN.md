@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### 입주민 포털 (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### 전역 미들웨어 설명
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | 전역 최우선 | CORS 헤더 처리 |
 | SecurityFilter | 전역 | HTTP 메서드 화이트리스트, XSS/SQL 인젝션/경로 탐색/명령 인젝션/CSRF 공격 차단, IP 블랙리스트 |
 | RateLimit | 전역 | Redis 슬라이딩 윈도우 속도 제한（Lua 원자화）, 기본 60회/분 |
-| ApiVersion | /api 라우트 | 요청 헤더 API-Version 검증, 버전 번호 주입 |
 | AdminAuth | /admin 라우트 | JWT Token 검증, adminId 주입 |
 | AdminPermission | /admin 라우트 | RBAC method.path 권한 검증（Redis 60s 캐시）|
 | OperationLog | /admin 라우트 | POST/PUT/DELETE 작업 자동 기록（출처측 감지 포함） |
@@ -150,17 +149,17 @@ Redis Sorted Set 슬라이딩 윈도우 알고리즘 기반, Lua 스크립트로
 | 인터페이스 | 제한 |
 |------|------|
 | 기본 | 60회/분/IP/라우트 |
-| POST /api/auth/login | 10회/분 |
-| POST /api/auth/register | 5회/분 |
+| POST /api/v1/auth/login | 10회/분 |
+| POST /api/v1/auth/register | 5회/분 |
 
 초과 시 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` 응답 헤더 반환.
 
 ## 9. API 버전 정책
 
-- 버전은 요청 헤더 `API-Version`으로 제어（기본 `v1`）, URL에 표시하지 않음
-- 지원하지 않는 버전은 400 반환
+- 버전은 API 라우트 자체에 포함（예: `/api/v1/*`, `/service/v1/*`）, 요청 헤더가 아님
+- 존재하지 않는 버전 경로는 라우터에서 바로 404 반환（미들웨어 불필요）
 - 컨트롤러는 버전별로 구성: `app/api/{version}/controller/`
-- 새 버전은 디렉토리를 만들고 `ApiVersion` 미들웨어에 등록만 하면 됨
+- 새 버전 추가는 새 `/{namespace}/v{version}` 라우트 그룹 등록（컨트롤러는 `app/api/v1/controller/` 하위）；존재하지 않는 버전 경로는 FastRoute가 404 반환
 
 ## 10. 배포 아키텍처
 

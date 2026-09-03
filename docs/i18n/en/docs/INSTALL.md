@@ -245,7 +245,7 @@ All API endpoints and parameter descriptions are in the standalone [API.md](API.
 ### 3. Login Test
 
 ```bash
-curl -X POST http://localhost:8787/api/auth/login \
+curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```

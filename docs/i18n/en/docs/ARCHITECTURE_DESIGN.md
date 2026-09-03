@@ -21,7 +21,7 @@ The property management system uses a "dual backend + multi frontend" layered ar
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -51,8 +51,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### Global Middleware Notes
@@ -62,7 +62,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | First globally | CORS header handling |
 | SecurityFilter | Global | HTTP method whitelist, XSS/SQL injection/path traversal/command injection/CSRF attack blocking, IP blacklist |
 | RateLimit | Global | Redis sliding window rate limiting (Lua atomic), default 60/min |
-| ApiVersion | /api routes | Validates the API-Version request header, injects the version number |
 | AdminAuth | /admin routes | JWT Token validation, injects adminId |
 | AdminPermission | /admin routes | RBAC method.path permission check (Redis 60s cache) |
 | OperationLog | /admin routes | Auto-records POST/PUT/DELETE operations (with source detection) |
@@ -152,17 +151,17 @@ Based on the Redis Sorted Set sliding window algorithm, executed atomically via 
 | Endpoint | Limit |
 |------|------|
 | Default | 60/min/IP/route |
-| POST /api/auth/login | 10/min |
-| POST /api/auth/register | 5/min |
+| POST /api/v1/auth/login | 10/min |
+| POST /api/v1/auth/register | 5/min |
 
 Over-limit returns 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` response headers.
 
 ## 9. API Versioning Strategy
 
-- Version is controlled via the `API-Version` request header (default `v1`), not in the URL
-- Unsupported versions return 400
+- Version is expressed in the API route itself (e.g. `/api/v1/*`, `/service/v1/*`), not via a request header
+- Unknown version paths return 404 directly from the router (no middleware)
 - Controllers are organized by version: `app/api/{version}/controller/`
-- Adding a version only requires creating the directory and registering it in the `ApiVersion` middleware
+- Adding a version means registering a new `/{namespace}/v{version}` route group (controllers under `app/api/v1/controller/`); unknown version paths return 404 from FastRoute
 
 ## 10. Deployment Architecture
 

@@ -21,7 +21,7 @@ Sistem Manajemen Properti menggunakan arsitektur berlapis «dua backend + multi 
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### Portal pemilik (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### Penjelasan Middleware Global
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | Global posisi pertama | Pemrosesan header berbagi sumber daya lintas origin |
 | SecurityFilter | Global | Whitelist metode HTTP、pemblokiran serangan XSS/injeksi SQL/path traversal/injeksi perintah/CSRF、blacklist IP |
 | RateLimit | Global | Rate limit sliding window Redis (atomik Lua), default 60 kali/menit |
-| ApiVersion | Route /api | Validasi header request API-Version, injeksi nomor versi |
 | AdminAuth | Route /admin | Validasi JWT Token, injeksi adminId |
 | AdminPermission | Route /admin | Validasi izin RBAC method.path (cache Redis 60s) |
 | OperationLog | Route /admin | Rekaman otomatis operasi POST/PUT/DELETE (termasuk deteksi sumber) |
@@ -150,17 +149,17 @@ Berdasarkan algoritma sliding window Redis Sorted Set, dieksekusi atomik skrip L
 | Endpoint | Batasan |
 |------|------|
 | Default | 60 kali/menit/IP/route |
-| POST /api/auth/login | 10 kali/menit |
-| POST /api/auth/register | 5 kali/menit |
+| POST /api/v1/auth/login | 10 kali/menit |
+| POST /api/v1/auth/register | 5 kali/menit |
 
 Melebihi batas mengembalikan 429 + header respons `X-RateLimit-Limit/Remaining/Reset/Retry-After`.
 
 ## 9. Kebijakan Versi API
 
-- Versi dikontrol melalui header request `API-Version` (default `v1`), tidak tercermin di URL
-- Versi tidak didukung mengembalikan 400
+- Versi diekspresikan di dalam route API itu sendiri (mis. `/api/v1/*`, `/service/v1/*`), bukan lewat header request
+- Jalur versi yang tidak ada mengembalikan 404 langsung dari router (tanpa middleware)
 - Controller diorganisasi per versi: `app/api/{version}/controller/`
-- Tambah versi baru hanya perlu buat direktori dan daftarkan ke middleware `ApiVersion`
+- Menambah versi baru = mendaftarkan grup route `/{namespace}/v{version}` baru (controller di bawah `app/api/v1/controller/`); jalur versi yang tidak ada mengembalikan 404 dari FastRoute
 
 ## 10. Arsitektur Deployment
 

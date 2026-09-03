@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### 业务端 (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### 全局中间件说明
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | 全局首位 | 跨域资源共享头处理 |
 | SecurityFilter | 全局 | HTTP方法白名单、XSS/SQL注入/路径遍历/命令注入/CSRF攻击拦截、IP黑名单 |
 | RateLimit | 全局 | Redis 滑动窗口限流（Lua 原子化），默认60次/分钟 |
-| ApiVersion | /api路由 | 请求头 API-Version 校验，注入版本号 |
 | AdminAuth | /admin路由 | JWT Token 验证，注入 adminId |
 | AdminPermission | /admin路由 | RBAC method.path 权限校验（Redis 60s 缓存）|
 | OperationLog | /admin路由 | POST/PUT/DELETE 操作自动记录（含来源端检测） |
@@ -150,17 +149,17 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | 接口 | 限制 |
 |------|------|
 | 默认 | 60次/分钟/IP/路由 |
-| POST /api/auth/login | 10次/分钟 |
-| POST /api/auth/register | 5次/分钟 |
+| POST /api/v1/auth/login | 10次/分钟 |
+| POST /api/v1/auth/register | 5次/分钟 |
 
 超限返回 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` 响应头。
 
 ## 9. API 版本策略
 
-- 版本通过请求头 `API-Version` 控制（默认 `v1`），不在 URL 中体现
-- 不支持版本返回 400
+- 版本体现在接口路由中（如 `/api/v1/*`、`/service/v1/*`），不通过请求头传递
+- 不存在的版本路径由路由直接返回 404（无需中间件）
 - 控制器按版本组织: `app/api/{version}/controller/`
-- 新增版本只需创建目录并注册到 `ApiVersion` 中间件
+- 新增版本只需注册新的 `/{namespace}/v{version}` 路由组（控制器按 `app/api/{version}/controller/` 目录组织）；不存在的版本路径由 FastRoute 返回 404
 
 ## 10. 部署架构
 

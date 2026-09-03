@@ -25,6 +25,8 @@ class AuthFeatureTest extends TestCase
         $this->assertTrue(class_exists(\app\middleware\RateLimit::class));
         $this->assertTrue(class_exists(\app\middleware\SecurityFilter::class));
         $this->assertTrue(class_exists(\app\middleware\OperationLog::class));
-        $this->assertTrue(class_exists(\app\middleware\ApiVersion::class));
+        $this->assertTrue(class_exists(\app\middleware\ApiKeyAuth::class));
+        // 版本已改由路由承载（/api/v1/*、/service/v1/*、/open/v1/*），头版本中间件应已移除
+        $this->assertFalse(class_exists(\app\middleware\ApiVersion::class));
     }
 }

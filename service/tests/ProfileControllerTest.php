@@ -153,7 +153,7 @@ class ProfileControllerTest extends TestCase
 
     public function test_logout_without_token_returns_401(): void
     {
-        $request = new \support\Request("POST /service/profile/logout HTTP/1.1\r\nHost: localhost\r\n\r\n");
+        $request = new \support\Request("POST /service/v1/profile/logout HTTP/1.1\r\nHost: localhost\r\n\r\n");
         $response = (new ProfileController())->logout($request);
         $body = json_decode($response->rawBody(), true);
         $this->assertSame(401, $body['code']);

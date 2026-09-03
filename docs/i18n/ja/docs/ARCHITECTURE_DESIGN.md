@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### 業務端 (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### グローバルミドルウェアの説明
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | グローバル先頭 | クロスオリジンリソース共有ヘッダー処理 |
 | SecurityFilter | グローバル | HTTP メソッドホワイトリスト、XSS/SQL インジェクション/パストラバーサル/コマンドインジェクション/CSRF 攻撃のブロック、IP ブラックリスト |
 | RateLimit | グローバル | Redis スライディングウィンドウレート制限（Lua アトミック）、デフォルト 60 回/分 |
-| ApiVersion | /api ルート | リクエストヘッダー API-Version 検証、バージョン番号を注入 |
 | AdminAuth | /admin ルート | JWT Token 検証、adminId を注入 |
 | AdminPermission | /admin ルート | RBAC method.path 権限検証（Redis 60 秒キャッシュ）|
 | OperationLog | /admin ルート | POST/PUT/DELETE 操作の自動記録（送信元端の検出含む） |
@@ -150,17 +149,17 @@ Redis Sorted Set スライディングウィンドウアルゴリズムに基づ
 | インターフェース | 制限 |
 |------|------|
 | デフォルト | 60 回/分/IP/ルート |
-| POST /api/auth/login | 10 回/分 |
-| POST /api/auth/register | 5 回/分 |
+| POST /api/v1/auth/login | 10 回/分 |
+| POST /api/v1/auth/register | 5 回/分 |
 
 超過時は 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` レスポンスヘッダーを返します。
 
 ## 9. API バージョン戦略
 
-- バージョンはリクエストヘッダー `API-Version` で制御（デフォルト `v1`）、URL には含めない
-- サポート外バージョンは 400 を返す
+- バージョンはAPIルート自体に含める（例: `/api/v1/*`、`/service/v1/*`）、リクエストヘッダーではない
+- 存在しないバージョンのパスはルーターから直接 404（ミドルウェア不要）
 - コントローラはバージョン別に編成: `app/api/{version}/controller/`
-- 新バージョンの追加はディレクトリを作成し `ApiVersion` ミドルウェアに登録するだけ
+- 新バージョンの追加は `/{namespace}/v{version}` ルートグループを登録するだけ（コントローラは `app/api/v1/controller/` 配下）；存在しないバージョンのパスは FastRoute が 404 を返す
 
 ## 10. デプロイアーキテクチャ
 

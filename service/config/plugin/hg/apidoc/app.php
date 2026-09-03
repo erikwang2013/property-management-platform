@@ -88,7 +88,6 @@ return [
         'params' => [
             'header' => [
                 ['name' => 'Authorization', 'type' => 'string', 'require' => true, 'desc' => '身份令牌 Bearer Token（公开接口不需要）'],
-                ['name' => 'API-Version',   'type' => 'string', 'require' => false, 'desc' => 'API版本，默认v1'],
                 ['name' => 'Accept-Language','type' => 'string', 'require' => false, 'desc' => '语言: zh-CN / en-US'],
                 ['name' => 'X-Client-Platform','type' => 'string', 'require' => false, 'desc' => '客户端平台: web/ios/android/harmonyos'],
             ],

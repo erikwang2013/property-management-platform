@@ -28,14 +28,14 @@ export const options = {
 
 export default function () {
   const login = http.post(
-    `${BASE}/api/auth/login`,
+    `${BASE}/api/v1/auth/login`,
     JSON.stringify({
       username: 'erik',
       password: 'LoadTest123!',
       captcha_key: 'loadtest-invalid',
       clicks: [[1, 1], [2, 2]],
     }),
-    { headers: { 'Content-Type': 'application/json', 'API-Version': 'v1' } }
+    { headers: { 'Content-Type': 'application/json' } }
   );
   // 200=成功 422=验证码错误 429=限流，均证明登录链路可达
   check(login, { 'login reachable': (r) => [200, 422, 429].includes(r.status) });

@@ -6,10 +6,10 @@
 
 ## 1. 概述
 
-开放管理后台 (open-admin) 基于 webman v2 构建，提供 RESTful JSON API。所有管理端接口需要 JWT 认证与 RBAC 权限校验，公开接口通过 API 版本头路由到版本化控制器。
+开放管理后台 (open-admin) 基于 webman v2 构建，提供 RESTful JSON API。所有管理端接口需要 JWT 认证与 RBAC 权限校验，公开接口版本号体现在接口路由中（`/api/v1/*`），控制器按 `app/api/v1/controller/` 组织。
 
 - **基础 URL**: `http://localhost:8787`
-- **API 版本**: 通过请求头 `API-Version: v1` 控制（缺失时默认 v1）
+- **API 版本**: 版本号体现在接口路由中（当前公开接口 `/api/v1/*`），不通过请求头传递
 
 > **端点总览**: 认证(5) | 仪表盘(1) | 用户(7) | 角色(4) | 权限(4) | 配置(4) | 日志(1) | 个人中心(3) | 导入导出(3) | 上传(1) | 运维(4: health/metrics/docs/security.txt) | 共 37 端点
 - **认证**: `Authorization: Bearer <token>`（JWT）
@@ -43,7 +43,7 @@
 
 ## 3. 公开端点
 
-所有公开端点挂载在 `/api` 分组下，通过 `ApiVersion` 中间件按 `API-Version` 头分发到对应的版本化控制器（如 `app\api\v1\controller\AuthController`）。
+所有公开端点挂载在 `/api/v1` 分组下，路由直接绑定版本化控制器（如 `app\api\v1\controller\AuthController`）；新增版本在 `config/route.php` 注册新的 `/api/v{version}` 分组即可。
 
 ### 3.1 健康检查
 
@@ -86,11 +86,10 @@ GET /api/docs
 ### 3.3 生成点击验证码
 
 ```
-POST /api/captcha/generate
+POST /api/v1/captcha/generate
 ```
 
 - **认证**: 无需
-- **请求头**: `API-Version: v1`（必须）
 - **限流**: 全局默认 (60次/分钟)
 
 **请求体**:
@@ -132,11 +131,10 @@ POST /api/captcha/generate
 ### 3.4 校验点击验证码
 
 ```
-POST /api/captcha/verify
+POST /api/v1/captcha/verify
 ```
 
 - **认证**: 无需
-- **请求头**: `API-Version: v1`（必须）
 - **限流**: 全局默认 (60次/分钟)
 
 **请求体**:
@@ -169,11 +167,10 @@ POST /api/captcha/verify
 ### 3.5 登录
 
 ```
-POST /api/auth/login
+POST /api/v1/auth/login
 ```
 
 - **认证**: 无需
-- **请求头**: `API-Version: v1`（必须）
 - **限流**: 10 次/分钟（按 IP + 路径）
 
 **请求体**:
@@ -233,11 +230,10 @@ POST /api/auth/login
 ### 3.6 注册
 
 ```
-POST /api/auth/register
+POST /api/v1/auth/register
 ```
 
 - **认证**: 无需
-- **请求头**: `API-Version: v1`（必须）
 - **限流**: 5 次/分钟（按 IP + 路径）
 
 **请求体**:
@@ -285,11 +281,10 @@ POST /api/auth/register
 ### 3.7 刷新令牌
 
 ```
-POST /api/auth/refresh
+POST /api/v1/auth/refresh
 ```
 
 - **认证**: 无需
-- **请求头**: `API-Version: v1`（必须）
 - **限流**: 全局默认 (60次/分钟)
 
 **请求体**:
@@ -429,7 +424,7 @@ GET /admin/dashboard
         "id": "hashid...",
         "action": "用户登录",
         "method": "POST",
-        "path": "/api/auth/login",
+        "path": "/api/v1/auth/login",
         "ip": "192.168.1.1",
         "user_name": "admin",
         "created_at": "2026-05-21 10:30:00"
@@ -1249,7 +1244,7 @@ GET /admin/log
         "user_name": "admin",
         "action": "用户登录",
         "method": "POST",
-        "path": "/api/auth/login",
+        "path": "/api/v1/auth/login",
         "ip": "192.168.1.1",
         "source": "web",
         "input": "{\"username\":\"admin\"}",
@@ -1571,8 +1566,8 @@ POST /admin/upload
 
 限流详情:
 - 默认全局限制: 60 次/分钟 / IP+路径
-- 登录端点 `/api/auth/login`: 10 次/分钟
-- 注册端点 `/api/auth/register`: 5 次/分钟
+- 登录端点 `/api/v1/auth/login`: 10 次/分钟
+- 注册端点 `/api/v1/auth/register`: 5 次/分钟
 - 使用 Redis 原子化滑动窗口算法（Lua ZSET），避免 TOCTOU 竞态
 - Redis 不可用时 fail open（放行），不阻塞请求
 
@@ -1581,15 +1576,14 @@ POST /admin/upload
 完整的认证时序：
 
 ```
-1. 客户端请求 POST /api/captcha/generate
-   (请求头: API-Version: v1)
+1. 客户端请求 POST /api/v1/captcha/generate
     ↓
    服务端返回: key + base64 图片 + 点击目标提示
    
 2. 用户点击图片目标位置，前/客户端收集点击坐标
    
-3. 客户端请求 POST /api/auth/login
-   (请求头: API-Version: v1, Content-Type: application/json)
+3. 客户端请求 POST /api/v1/auth/login
+   (Content-Type: application/json)
    请求体: { username, password, captcha_key, clicks: [{x,y}, ...] }
     ↓
    服务端:
@@ -1621,7 +1615,7 @@ POST /admin/upload
    Response + X-RateLimit-* 头
 
 5. Access Token 过期前刷新
-   客户端请求 POST /api/auth/refresh
+   客户端请求 POST /api/v1/auth/refresh
    请求体: { refresh_token: "..." }
     ↓
    服务端解码 refresh_token → 签发新 access + refresh

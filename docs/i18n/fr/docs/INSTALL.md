@@ -245,7 +245,7 @@ Tous les endpoints API et leurs paramètres sont décrits dans le document dédi
 ### 3. Test de connexion
 
 ```bash
-curl -X POST http://localhost:8787/api/auth/login \
+curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```

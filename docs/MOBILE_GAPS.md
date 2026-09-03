@@ -8,12 +8,12 @@
 | 页面 | 路由（main_pages.json 已注册） | 调用 API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | 登录（AuthService） |
-| HomePage | pages/HomePage | GET /service/home（仪表盘：待缴/工单/房产数 + 公告列表） |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home（仪表盘：待缴/工单/房产数 + 公告列表） |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **导航现状**（全应用仅 4 条跳转）：Login→Home、Home→Login（退出）、Profile→Login、RepairList→RepairSubmit。HomePage 只有统计卡 + 公告列表，无功能入口网格；FeeBills/Announcement/Profile 页面存在但**无入口，不可达**。
 

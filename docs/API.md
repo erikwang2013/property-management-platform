@@ -8,7 +8,7 @@
 - 业务端 API 运行在 `http://localhost:8788`
 - 统一响应格式: `{"code": 0, "message": "success", "data": {...}}`
 - 所有 ID 字段使用 hashids 编码传输
-- API 版本通过请求头 `API-Version` 控制（默认 `v1`）
+- API 版本体现在接口路由中（当前 `/api/v1/*`），不通过请求头传递
 - 语言通过请求头 `Accept-Language` 控制（`zh-CN` / `en-US`，默认 `zh-CN`）
 
 ### 在线 API 文档
@@ -26,7 +26,7 @@
 
 ### 公开接口 — 无需认证
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 获取点击验证码。
 
 请求参数: 无
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 校验点击验证码。
 
 请求参数:
@@ -62,7 +62,7 @@
 
 验证失败时 `code` 为 422，`data.valid` 为 `false`。
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 管理员登录。
 
 请求参数:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 刷新 Token。
 
 请求参数:
@@ -480,13 +480,13 @@ OpenAPI 文档。
 
 ### 公开接口 — 无需认证
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 获取点击验证码。（与管理端相同）
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 校验点击验证码。（请求/响应与管理端相同）
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 业主登录。
 
 请求参数:
@@ -509,7 +509,7 @@ OpenAPI 文档。
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 业主注册。
 
 请求参数:
@@ -523,7 +523,7 @@ OpenAPI 文档。
 | room_id | string | （可选）绑定房号 hashid |
 | id_card_last4 | string | （可选）身份证后4位 |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 刷新 Token。
 
 ---
@@ -534,7 +534,7 @@ OpenAPI 文档。
 
 #### 首页
 
-**GET /service/home**
+**GET /service/v1/home**
 
 响应:
 ```json
@@ -554,79 +554,79 @@ OpenAPI 文档。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/rooms | 我的房产列表 |
-| GET | /service/room/{hashid} | 房产详情（含面积、朝向、产权、社区信息） |
+| GET | /service/v1/rooms | 我的房产列表 |
+| GET | /service/v1/room/{hashid} | 房产详情（含面积、朝向、产权、社区信息） |
 
 #### 费用管理
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/fees/bills | 账单列表 (?status=0未缴/1部分缴/2已缴/3逾期) |
-| GET | /service/fees/bill/{hashid} | 账单详情（含费用类型、支付记录） |
-| GET | /service/fees/payments | 缴费记录 |
-| POST | /service/fees/pay | 在线缴费（{ bill_id, payment_method, password }） |
-| GET | /service/fees/statistics | 费用统计 (?year=2026) |
+| GET | /service/v1/fees/bills | 账单列表 (?status=0未缴/1部分缴/2已缴/3逾期) |
+| GET | /service/v1/fees/bill/{hashid} | 账单详情（含费用类型、支付记录） |
+| GET | /service/v1/fees/payments | 缴费记录 |
+| POST | /service/v1/fees/pay | 在线缴费（{ bill_id, payment_method, password }） |
+| GET | /service/v1/fees/statistics | 费用统计 (?year=2026) |
 
 #### 报修
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/repairs | 报修列表 (?status=) |
-| GET | /service/repair/{hashid} | 报修详情（含进度时间线） |
-| POST | /service/repair | 提交报修（{ room_id, category, urgency, description, images[], scheduled_at }） |
-| DELETE | /service/repair/{hashid} | 取消（需密码，{ password }） |
-| POST | /service/repair/{hashid}/rate | 评价（{ rating: 1-5, feedback }） |
+| GET | /service/v1/repairs | 报修列表 (?status=) |
+| GET | /service/v1/repair/{hashid} | 报修详情（含进度时间线） |
+| POST | /service/v1/repair | 提交报修（{ room_id, category, urgency, description, images[], scheduled_at }） |
+| DELETE | /service/v1/repair/{hashid} | 取消（需密码，{ password }） |
+| POST | /service/v1/repair/{hashid}/rate | 评价（{ rating: 1-5, feedback }） |
 
 #### 投诉建议
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/complaints | 投诉列表 |
-| GET | /service/complaint/{hashid} | 投诉详情（含处理进度） |
-| POST | /service/complaint | 提交投诉（{ type, category, title, content, is_anonymous, images[] }） |
-| POST | /service/complaint/{hashid}/satisfaction | 满意度评价（{ satisfaction: 1-5 }） |
+| GET | /service/v1/complaints | 投诉列表 |
+| GET | /service/v1/complaint/{hashid} | 投诉详情（含处理进度） |
+| POST | /service/v1/complaint | 提交投诉（{ type, category, title, content, is_anonymous, images[] }） |
+| POST | /service/v1/complaint/{hashid}/satisfaction | 满意度评价（{ satisfaction: 1-5 }） |
 
 #### 公告
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/announcements | 公告列表 (?category=) |
-| GET | /service/announcement/{hashid} | 公告详情 |
+| GET | /service/v1/announcements | 公告列表 (?category=) |
+| GET | /service/v1/announcement/{hashid} | 公告详情 |
 
 #### 停车
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/parking/vehicles | 我的车辆 |
-| GET | /service/parking/spaces | 我的车位 |
-| GET | /service/parking/records | 停车记录 |
+| GET | /service/v1/parking/vehicles | 我的车辆 |
+| GET | /service/v1/parking/spaces | 我的车位 |
+| GET | /service/v1/parking/records | 停车记录 |
 
 #### 访客
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/visitors | 我的访客预约 |
-| POST | /service/visitor | 创建预约（生成通行码） |
-| PUT | /service/visitor/{hashid} | 修改预约 |
-| DELETE | /service/visitor/{hashid} | 取消预约 |
+| GET | /service/v1/visitors | 我的访客预约 |
+| POST | /service/v1/visitor | 创建预约（生成通行码） |
+| PUT | /service/v1/visitor/{hashid} | 修改预约 |
+| DELETE | /service/v1/visitor/{hashid} | 取消预约 |
 
 #### 社区活动
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/activities | 活动列表 (?status=) |
-| GET | /service/activity/{hashid} | 活动详情 |
-| POST | /service/activity/{hashid}/signup | 报名参加 |
-| POST | /service/activity/{hashid}/cancel | 取消报名 |
+| GET | /service/v1/activities | 活动列表 (?status=) |
+| GET | /service/v1/activity/{hashid} | 活动详情 |
+| POST | /service/v1/activity/{hashid}/signup | 报名参加 |
+| POST | /service/v1/activity/{hashid}/cancel | 取消报名 |
 
 #### 个人信息
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/profile | 个人信息 |
-| PUT | /service/profile | 修改（{ name, email, gender, birthday }） |
-| PUT | /service/profile/password | 改密码（{ old_password, new_password }） |
-| POST | /service/profile/logout | 退出登录 |
+| GET | /service/v1/profile | 个人信息 |
+| PUT | /service/v1/profile | 修改（{ name, email, gender, birthday }） |
+| PUT | /service/v1/profile/password | 改密码（{ old_password, new_password }） |
+| POST | /service/v1/profile/logout | 退出登录 |
 
 ---
 
@@ -639,7 +639,7 @@ OpenAPI 文档。
 每个请求需携带请求头 `X-API-Key`，值为 `scripts/gen_api_key.php` 生成的 Key（64 位 hex，库中仅存 SHA-256 摘要）：
 
 ```bash
-curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - 缺失或错误的 Key 返回 `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 
 ### 端点
 
-#### GET /open/announcements — 公告列表
+#### GET /open/v1/announcements — 公告列表
 
-参数：`page`（默认 1）、`category`（可选）。响应结构与 `/service/announcements` 一致。
+参数：`page`（默认 1）、`category`（可选）。响应结构与 `/service/v1/announcements` 一致。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — 账单查询
+#### GET /open/v1/bills — 账单查询
 
 参数：`bill_number`（必填，账单编号）。返回单个账单详情（含费用类型、房间号、欠费金额）。不存在返回 404。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — 报修状态查询
+#### GET /open/v1/repairs — 报修状态查询
 
 参数：`order_number`（必填，报修单号）。返回报修单当前状态及进度时间线（`progress` 数组）。不存在返回 404。
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

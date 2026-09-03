@@ -68,7 +68,7 @@ open-admin/
 │   │   ├── DocsController.php      # OpenAPI 文档
 │   │   └── BaseController.php      # 基础控制器
 │   ├── api/
-│   │   └── v1/controller/          # API v1 控制器（版本由请求头 API-Version 控制）
+│   │   └── v1/controller/          # API v1 控制器（版本在路由 /api/v1/*）
 │   │       ├── CaptchaController.php # 点击验证码
 │   │       └── AuthController.php    # 登录/注册/刷新令牌
 │   ├── common/                 # 公共工具类
@@ -79,7 +79,6 @@ open-admin/
 │   │   ├── Cors.php            # 跨域
 │   │   ├── SecurityFilter.php  # 攻击检测拦截（HTTP方法限制/XSS/SQL注入/路径遍历/命令注入/CSRF）
 │   │   ├── RateLimit.php       # Redis 限流（滑动窗口 + 响应头）
-│   │   ├── ApiVersion.php      # API 版本校验
 │   │   ├── AdminAuth.php       # JWT 认证 + 黑名单
 │   │   ├── AdminPermission.php # RBAC 权限校验
 │   │   └── OperationLog.php    # 操作日志自动记录（含来源端检测）
@@ -245,15 +244,14 @@ docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 ### API 版本
 
-API 版本通过请求头控制，**不在 URL 中体现**：
+API 版本号体现在接口路由中（如 `/api/v1/*`），**不通过请求头传递**：
 
 ```http
-API-Version: v1
+POST /api/v1/auth/login
 ```
 
-- 未携带版本号时默认使用 `v1`
-- 不支持的版本返回 `400 Bad Request`
-- 新增版本时只需创建 `app/api/{version}/controller/` 目录，中间件注册新版本即可
+- 新增版本时只需创建 `app/api/{version}/controller/` 目录，并在 `config/route.php` 注册新的 `/api/v{version}` 路由组
+- 不存在的版本路径（如 `/api/v9/...`）由路由直接返回 404
 
 ### 限流
 
@@ -271,13 +269,12 @@ API-Version: v1
 Cors（跨域预处理 + 响应头）
   → SecurityFilter（HTTP方法限制/请求体大小/Content-Type校验/XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截）
   → RateLimit（Redis 滑动窗口限流 + 账号锁定：5次登录失败锁定15分钟）
-  → ApiVersion（API 版本校验，/api 路由组）
-  → AdminAuth（JWT 认证 + 黑名单，/admin 路由组）
-  → AdminPermission（RBAC 鉴权，/admin 路由组）
-  → OperationLog（POST/PUT/DELETE 自动记录，含来源端检测，/admin 路由组）
+  → 公开接口（/health、/api/docs、/api/v1/*）直达 Controller
+  → /admin 路由组: AdminAuth（JWT 认证 + 黑名单）→ AdminPermission（RBAC 鉴权）
+    → OperationLog（POST/PUT/DELETE 自动记录，含来源端检测）
 ```
 
-`/health` 和 `/api/docs` 为公开端点，仅经过 `Cors → SecurityFilter → RateLimit`。
+公开接口（`/health`、`/api/docs`、`/api/v1/*`）仅经过全局中间件 `Cors → SecurityFilter → RateLimit`，无需认证。
 
 安全增强：
 - **账号锁定**：连续 5 次登录失败，账号自动锁定 15 分钟，期间登录返回 429
@@ -289,12 +286,12 @@ Cors（跨域预处理 + 响应头）
 
 登录与注册需要先通过**点击验证码**校验：
 
-1. 客户端请求 `POST /api/captcha/generate` 获取验证码图片（base64 PNG）和文字目标列表
+1. 客户端请求 `POST /api/v1/captcha/generate` 获取验证码图片（base64 PNG）和文字目标列表
 2. 用户按顺序点击图中对应文字位置，收集点击坐标 `[{x, y}, ...]`
 3. 登录时一并提交 `captcha_key` 和 `clicks`，服务端先校验验证码再校验凭证
 
 ```http
-POST /api/auth/login
+POST /api/v1/auth/login
 Content-Type: application/json
 
 {
@@ -329,7 +326,7 @@ Authorization: Bearer <token>
 
 ## API 列表
 
-> 所有 `/api/*` 接口需要在请求头中携带 `API-Version: v1`（不传则默认 v1）。
+> API 版本号在接口路由中体现：公开接口 `/api/v1/*`，管理端接口 `/admin/*`（不含版本段，管理端固定当前版本）。
 
 ### 公开接口
 
@@ -337,11 +334,11 @@ Authorization: Bearer <token>
 |-----|------|------|
 | `GET` | `/health` | 健康检查（DB/Redis/ES 状态） |
 | `GET` | `/api/docs` | OpenAPI 3.0 规范文档 |
-| `POST` | `/api/captcha/generate` | 生成点击验证码 |
-| `POST` | `/api/captcha/verify` | 校验点击验证码 |
-| `POST` | `/api/auth/login` | 登录（需 captcha） |
-| `POST` | `/api/auth/register` | 注册（需 captcha） |
-| `POST` | `/api/auth/refresh` | 刷新令牌 |
+| `POST` | `/api/v1/captcha/generate` | 生成点击验证码 |
+| `POST` | `/api/v1/captcha/verify` | 校验点击验证码 |
+| `POST` | `/api/v1/auth/login` | 登录（需 captcha） |
+| `POST` | `/api/v1/auth/register` | 注册（需 captcha） |
+| `POST` | `/api/v1/auth/refresh` | 刷新令牌 |
 | `GET` | `/metrics` | Prometheus 监控指标 |
 
 ### 管理端接口（需 JWT + RBAC）

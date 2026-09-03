@@ -21,7 +21,7 @@ El sistema de gestión de propiedades adopta una arquitectura por capas de «dob
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### Portal de propietarios (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### Explicación del middleware global
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | Primera posición global | Manejo de cabeceras de intercambio de recursos entre orígenes |
 | SecurityFilter | Global | Lista blanca de métodos HTTP, intercepción de XSS/inyección SQL/traversal de rutas/inyección de comandos/CSRF, lista negra de IP |
 | RateLimit | Global | Límite de velocidad de ventana deslizante Redis (Lua atómico), 60 veces/minuto por defecto |
-| ApiVersion | Rutas /api | Validación del encabezado de solicitud API-Version, inyección del número de versión |
 | AdminAuth | Rutas /admin | Validación de Token JWT, inyección de adminId |
 | AdminPermission | Rutas /admin | Validación de permisos RBAC method.path (caché Redis de 60s) |
 | OperationLog | Rutas /admin | Registro automático de operaciones POST/PUT/DELETE (incluye detección de origen) |
@@ -150,17 +149,17 @@ Basada en el algoritmo de ventana deslizante con Redis Sorted Set, ejecución at
 | Interfaz | Límite |
 |------|------|
 | Por defecto | 60 veces/minuto/IP/ruta |
-| POST /api/auth/login | 10 veces/minuto |
-| POST /api/auth/register | 5 veces/minuto |
+| POST /api/v1/auth/login | 10 veces/minuto |
+| POST /api/v1/auth/register | 5 veces/minuto |
 
 Al superar el límite se devuelve 429 + cabeceras de respuesta `X-RateLimit-Limit/Remaining/Reset/Retry-After`.
 
 ## 9. Política de versiones de API
 
-- La versión se controla mediante el encabezado de solicitud `API-Version` (por defecto `v1`), no aparece en la URL
-- Una versión no soportada devuelve 400
+- La versión va en la propia ruta de la API (p. ej. `/api/v1/*`, `/service/v1/*`), no en una cabecera de solicitud
+- Las rutas con versión inexistente devuelven 404 directamente del router (sin middleware)
 - Los controladores se organizan por versión: `app/api/{version}/controller/`
-- Añadir una versión nueva solo requiere crear el directorio y registrarlo en el middleware `ApiVersion`
+- Añadir una versión significa registrar un nuevo grupo de rutas `/{namespace}/v{version}` (controladores bajo `app/api/v1/controller/`); las rutas de versión inexistentes devuelven 404 por FastRoute
 
 ## 10. Arquitectura de despliegue
 

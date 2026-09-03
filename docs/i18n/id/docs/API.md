@@ -8,7 +8,7 @@
 - API portal pemilik berjalan di `http://localhost:8788`
 - Format respons terpadu: `{"code": 0, "message": "success", "data": {...}}`
 - Semua field ID menggunakan encoding hashids untuk transfer
-- Versi API dikontrol melalui header request `API-Version` (default `v1`)
+- Versi API diekspresikan di dalam route (saat ini `/api/v1/*`), bukan lewat header request
 - Bahasa dikontrol melalui header request `Accept-Language`（`zh-CN` / `en-US`，default `zh-CN`）
 
 ### Dokumentasi API Online
@@ -26,7 +26,7 @@ Setelah layanan berjalan akses dokumentasi interaktif yang dibuat otomatis `hg/a
 
 ### Endpoint Publik — tanpa autentikasi
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Mendapatkan captcha klik.
 
 Parameter request: tidak ada
@@ -43,7 +43,7 @@ Respons:
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Memvalidasi captcha klik.
 
 Parameter request:
@@ -62,7 +62,7 @@ Respons:
 
 Saat validasi gagal `code` adalah 422, `data.valid` adalah `false`.
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Login admin.
 
 Parameter request:
@@ -85,7 +85,7 @@ Respons:
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Menyegarkan Token.
 
 Parameter request:
@@ -480,13 +480,13 @@ Mendapatkan data statistik dashboard.
 
 ### Endpoint Publik — tanpa autentikasi
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Mendapatkan captcha klik。（sama dengan panel admin）
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Memvalidasi captcha klik。（request/respons sama dengan panel admin）
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Login pemilik.
 
 Parameter request:
@@ -509,7 +509,7 @@ Respons:
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 Registrasi pemilik.
 
 Parameter request:
@@ -523,7 +523,7 @@ Parameter request:
 | room_id | string | （opsional）hashid properti yang di-bind |
 | id_card_last4 | string | （opsional）4 digit terakhir KTP |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Menyegarkan Token.
 
 ---
@@ -534,7 +534,7 @@ Semua endpoint berprefiks `/service`, perlu membawa `Authorization: Bearer {acce
 
 #### Beranda
 
-**GET /service/home**
+**GET /service/v1/home**
 
 Respons:
 ```json
@@ -554,79 +554,79 @@ Respons:
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/rooms | Daftar properti saya |
-| GET | /service/room/{hashid} | Detail properti (termasuk luas、orientasi、kepemilikan、informasi komunitas) |
+| GET | /service/v1/rooms | Daftar properti saya |
+| GET | /service/v1/room/{hashid} | Detail properti (termasuk luas、orientasi、kepemilikan、informasi komunitas) |
 
 #### Manajemen Biaya
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/fees/bills | Daftar tagihan (?status=0 belum bayar/1 sebagian/2 sudah bayar/3 terlambat) |
-| GET | /service/fees/bill/{hashid} | Detail tagihan (termasuk tipe biaya、rekaman pembayaran) |
-| GET | /service/fees/payments | Rekaman pembayaran |
-| POST | /service/fees/pay | Bayar online（{ bill_id, payment_method, password }） |
-| GET | /service/fees/statistics | Statistik biaya (?year=2026) |
+| GET | /service/v1/fees/bills | Daftar tagihan (?status=0 belum bayar/1 sebagian/2 sudah bayar/3 terlambat) |
+| GET | /service/v1/fees/bill/{hashid} | Detail tagihan (termasuk tipe biaya、rekaman pembayaran) |
+| GET | /service/v1/fees/payments | Rekaman pembayaran |
+| POST | /service/v1/fees/pay | Bayar online（{ bill_id, payment_method, password }） |
+| GET | /service/v1/fees/statistics | Statistik biaya (?year=2026) |
 
 #### Perbaikan
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/repairs | Daftar perbaikan (?status=) |
-| GET | /service/repair/{hashid} | Detail perbaikan (termasuk timeline progres) |
-| POST | /service/repair | Submit perbaikan（{ room_id, category, urgency, description, images[], scheduled_at }） |
-| DELETE | /service/repair/{hashid} | Batalkan (perlu kata sandi, { password }) |
-| POST | /service/repair/{hashid}/rate | Penilaian（{ rating: 1-5, feedback }） |
+| GET | /service/v1/repairs | Daftar perbaikan (?status=) |
+| GET | /service/v1/repair/{hashid} | Detail perbaikan (termasuk timeline progres) |
+| POST | /service/v1/repair | Submit perbaikan（{ room_id, category, urgency, description, images[], scheduled_at }） |
+| DELETE | /service/v1/repair/{hashid} | Batalkan (perlu kata sandi, { password }) |
+| POST | /service/v1/repair/{hashid}/rate | Penilaian（{ rating: 1-5, feedback }） |
 
 #### Keluhan dan Saran
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/complaints | Daftar keluhan |
-| GET | /service/complaint/{hashid} | Detail keluhan (termasuk progres penanganan) |
-| POST | /service/complaint | Submit keluhan（{ type, category, title, content, is_anonymous, images[] }） |
-| POST | /service/complaint/{hashid}/satisfaction | Penilaian kepuasan（{ satisfaction: 1-5 }） |
+| GET | /service/v1/complaints | Daftar keluhan |
+| GET | /service/v1/complaint/{hashid} | Detail keluhan (termasuk progres penanganan) |
+| POST | /service/v1/complaint | Submit keluhan（{ type, category, title, content, is_anonymous, images[] }） |
+| POST | /service/v1/complaint/{hashid}/satisfaction | Penilaian kepuasan（{ satisfaction: 1-5 }） |
 
 #### Pengumuman
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/announcements | Daftar pengumuman (?category=) |
-| GET | /service/announcement/{hashid} | Detail pengumuman |
+| GET | /service/v1/announcements | Daftar pengumuman (?category=) |
+| GET | /service/v1/announcement/{hashid} | Detail pengumuman |
 
 #### Parkir
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/parking/vehicles | Kendaraan saya |
-| GET | /service/parking/spaces | Tempat parkir saya |
-| GET | /service/parking/records | Rekaman parkir |
+| GET | /service/v1/parking/vehicles | Kendaraan saya |
+| GET | /service/v1/parking/spaces | Tempat parkir saya |
+| GET | /service/v1/parking/records | Rekaman parkir |
 
 #### Tamu
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/visitors | Reservasi tamu saya |
-| POST | /service/visitor | Buat reservasi (generate kode akses) |
-| PUT | /service/visitor/{hashid} | Ubah reservasi |
-| DELETE | /service/visitor/{hashid} | Batalkan reservasi |
+| GET | /service/v1/visitors | Reservasi tamu saya |
+| POST | /service/v1/visitor | Buat reservasi (generate kode akses) |
+| PUT | /service/v1/visitor/{hashid} | Ubah reservasi |
+| DELETE | /service/v1/visitor/{hashid} | Batalkan reservasi |
 
 #### Aktivitas Komunitas
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/activities | Daftar aktivitas (?status=) |
-| GET | /service/activity/{hashid} | Detail aktivitas |
-| POST | /service/activity/{hashid}/signup | Daftar ikut |
-| POST | /service/activity/{hashid}/cancel | Batalkan pendaftaran |
+| GET | /service/v1/activities | Daftar aktivitas (?status=) |
+| GET | /service/v1/activity/{hashid} | Detail aktivitas |
+| POST | /service/v1/activity/{hashid}/signup | Daftar ikut |
+| POST | /service/v1/activity/{hashid}/cancel | Batalkan pendaftaran |
 
 #### Informasi Pribadi
 
 | Metode | Path | Deskripsi |
 |------|------|------|
-| GET | /service/profile | Informasi pribadi |
-| PUT | /service/profile | Ubah（{ name, email, gender, birthday }） |
-| PUT | /service/profile/password | Ubah kata sandi（{ old_password, new_password }） |
-| POST | /service/profile/logout | Logout |
+| GET | /service/v1/profile | Informasi pribadi |
+| PUT | /service/v1/profile | Ubah（{ name, email, gender, birthday }） |
+| PUT | /service/v1/profile/password | Ubah kata sandi（{ old_password, new_password }） |
+| POST | /service/v1/profile/logout | Logout |
 
 ---
 
@@ -639,7 +639,7 @@ Endpoint read-only inbound eksternal, untuk dipanggil sistem pihak ketiga (integ
 Setiap request perlu membawa header `X-API-Key`, nilainya Key yang dibuat `scripts/gen_api_key.php` (hex 64 bit, database hanya menyimpan digest SHA-256):
 
 ```bash
-curl -H "X-API-Key: <KeyAnda>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <KeyAnda>" http://localhost:8788/open/v1/announcements
 ```
 
 - Key hilang atau salah mengembalikan `401`（`{"code":401,"message":"无效的API Key","data":[]}`）
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <KeyAnda>" http://localhost:8788/open/announcements
 
 ### Endpoint
 
-#### GET /open/announcements — Daftar pengumuman
+#### GET /open/v1/announcements — Daftar pengumuman
 
-Parameter：`page`（default 1）、`category`（opsional）. Struktur respons konsisten dengan `/service/announcements`.
+Parameter：`page`（default 1）、`category`（opsional）. Struktur respons konsisten dengan `/service/v1/announcements`.
 
 ```bash
-curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — Cek tagihan
+#### GET /open/v1/bills — Cek tagihan
 
 Parameter：`bill_number`（wajib, nomor tagihan）. Mengembalikan detail satu tagihan (termasuk tipe biaya、nomor kamar、jumlah tunggakan). Tidak ada mengembalikan 404.
 
 ```bash
-curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — Cek status perbaikan
+#### GET /open/v1/repairs — Cek status perbaikan
 
 Parameter：`order_number`（wajib, nomor tiket perbaikan）. Mengembalikan status saat ini tiket perbaikan dan timeline progres（array `progress`）. Tidak ada mengembalikan 404.
 
 ```bash
-curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <KeyAnda>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

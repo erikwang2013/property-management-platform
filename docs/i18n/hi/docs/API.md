@@ -8,7 +8,7 @@
 - व्यवसाय पोर्टल API `http://localhost:8788` पर चलता है
 - एकीकृत प्रतिक्रिया प्रारूप: `{"code": 0, "message": "success", "data": {...}}`
 - सभी ID फ़ील्ड hashids एन्कोडिंग से प्रसारित होती हैं
-- API संस्करण अनुरोध हेडर `API-Version` से नियंत्रित होता है (डिफ़ॉल्ट `v1`)
+- API संस्करण रूट में ही होता है (वर्तमान `/api/v1/*`), रिक्वेस्ट हेडर में नहीं
 - भाषा अनुरोध हेडर `Accept-Language` से नियंत्रित होती है (`zh-CN` / `en-US`, डिफ़ॉल्ट `zh-CN`)
 
 ### ऑनलाइन API दस्तावेज़
@@ -26,7 +26,7 @@
 
 ### सार्वजनिक इंटरफ़ेस — प्रमाणीकरण आवश्यक नहीं
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 क्लिक कैप्चा प्राप्त करें।
 
 अनुरोध पैरामीटर: कोई नहीं
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 क्लिक कैप्चा सत्यापित करें।
 
 अनुरोध पैरामीटर:
@@ -62,7 +62,7 @@
 
 सत्यापन विफल होने पर `code` 422 और `data.valid` `false` होता है।
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 एडमिन लॉगिन।
 
 अनुरोध पैरामीटर:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token रीफ्रेश करें।
 
 अनुरोध पैरामीटर:
@@ -480,13 +480,13 @@ OpenAPI दस्तावेज़।
 
 ### सार्वजनिक इंटरफ़ेस — प्रमाणीकरण आवश्यक नहीं
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 क्लिक कैप्चा प्राप्त करें। (एडमिन पैनल के समान)
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 क्लिक कैप्चा सत्यापित करें। (अनुरोध/प्रतिक्रिया एडमिन पैनल के समान)
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 मालिक लॉगिन।
 
 अनुरोध पैरामीटर:
@@ -509,7 +509,7 @@ OpenAPI दस्तावेज़।
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 मालिक पंजीकरण।
 
 अनुरोध पैरामीटर:
@@ -523,7 +523,7 @@ OpenAPI दस्तावेज़।
 | room_id | string | (वैकल्पिक) बंधा हुआ रूम नंबर hashid |
 | id_card_last4 | string | (वैकल्पिक) आईडी कार्ड अंतिम 4 अंक |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token रीफ्रेश करें।
 
 ---
@@ -534,7 +534,7 @@ Token रीफ्रेश करें।
 
 #### होम
 
-**GET /service/home**
+**GET /service/v1/home**
 
 प्रतिक्रिया:
 ```json
@@ -554,79 +554,79 @@ Token रीफ्रेश करें।
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/rooms | मेरी संपत्ति सूची |
-| GET | /service/room/{hashid} | संपत्ति विवरण (क्षेत्रफल, दिशा, स्वामित्व, समुदाय जानकारी सहित) |
+| GET | /service/v1/rooms | मेरी संपत्ति सूची |
+| GET | /service/v1/room/{hashid} | संपत्ति विवरण (क्षेत्रफल, दिशा, स्वामित्व, समुदाय जानकारी सहित) |
 
 #### शुल्क प्रबंधन
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/fees/bills | बिल सूची (?status=0अवैतनिक/1आंशिक भुगतान/2भुगतान किया/3अतिदेय) |
-| GET | /service/fees/bill/{hashid} | बिल विवरण (शुल्क प्रकार, भुगतान रिकॉर्ड सहित) |
-| GET | /service/fees/payments | भुगतान रिकॉर्ड |
-| POST | /service/fees/pay | ऑनलाइन भुगतान ({ bill_id, payment_method, password }) |
-| GET | /service/fees/statistics | शुल्क सांख्यिकी (?year=2026) |
+| GET | /service/v1/fees/bills | बिल सूची (?status=0अवैतनिक/1आंशिक भुगतान/2भुगतान किया/3अतिदेय) |
+| GET | /service/v1/fees/bill/{hashid} | बिल विवरण (शुल्क प्रकार, भुगतान रिकॉर्ड सहित) |
+| GET | /service/v1/fees/payments | भुगतान रिकॉर्ड |
+| POST | /service/v1/fees/pay | ऑनलाइन भुगतान ({ bill_id, payment_method, password }) |
+| GET | /service/v1/fees/statistics | शुल्क सांख्यिकी (?year=2026) |
 
 #### मरम्मत
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/repairs | मरम्मत सूची (?status=) |
-| GET | /service/repair/{hashid} | मरम्मत विवरण (प्रगति टाइमलाइन सहित) |
-| POST | /service/repair | मरम्मत सबमिट करें ({ room_id, category, urgency, description, images[], scheduled_at }) |
-| DELETE | /service/repair/{hashid} | रद्द करें (पासवर्ड आवश्यक, { password }) |
-| POST | /service/repair/{hashid}/rate | रेटिंग ({ rating: 1-5, feedback }) |
+| GET | /service/v1/repairs | मरम्मत सूची (?status=) |
+| GET | /service/v1/repair/{hashid} | मरम्मत विवरण (प्रगति टाइमलाइन सहित) |
+| POST | /service/v1/repair | मरम्मत सबमिट करें ({ room_id, category, urgency, description, images[], scheduled_at }) |
+| DELETE | /service/v1/repair/{hashid} | रद्द करें (पासवर्ड आवश्यक, { password }) |
+| POST | /service/v1/repair/{hashid}/rate | रेटिंग ({ rating: 1-5, feedback }) |
 
 #### शिकायत सुझाव
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/complaints | शिकायत सूची |
-| GET | /service/complaint/{hashid} | शिकायत विवरण (प्रसंस्करण प्रगति सहित) |
-| POST | /service/complaint | शिकायत सबमिट करें ({ type, category, title, content, is_anonymous, images[] }) |
-| POST | /service/complaint/{hashid}/satisfaction | संतुष्टि मूल्यांकन ({ satisfaction: 1-5 }) |
+| GET | /service/v1/complaints | शिकायत सूची |
+| GET | /service/v1/complaint/{hashid} | शिकायत विवरण (प्रसंस्करण प्रगति सहित) |
+| POST | /service/v1/complaint | शिकायत सबमिट करें ({ type, category, title, content, is_anonymous, images[] }) |
+| POST | /service/v1/complaint/{hashid}/satisfaction | संतुष्टि मूल्यांकन ({ satisfaction: 1-5 }) |
 
 #### घोषणा
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/announcements | घोषणा सूची (?category=) |
-| GET | /service/announcement/{hashid} | घोषणा विवरण |
+| GET | /service/v1/announcements | घोषणा सूची (?category=) |
+| GET | /service/v1/announcement/{hashid} | घोषणा विवरण |
 
 #### पार्किंग
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/parking/vehicles | मेरे वाहन |
-| GET | /service/parking/spaces | मेरी पार्किंग |
-| GET | /service/parking/records | पार्किंग रिकॉर्ड |
+| GET | /service/v1/parking/vehicles | मेरे वाहन |
+| GET | /service/v1/parking/spaces | मेरी पार्किंग |
+| GET | /service/v1/parking/records | पार्किंग रिकॉर्ड |
 
 #### अतिथि
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/visitors | मेरे अतिथि आरक्षण |
-| POST | /service/visitor | आरक्षण बनाएं (पास कोड जनरेट करें) |
-| PUT | /service/visitor/{hashid} | आरक्षण संशोधित करें |
-| DELETE | /service/visitor/{hashid} | आरक्षण रद्द करें |
+| GET | /service/v1/visitors | मेरे अतिथि आरक्षण |
+| POST | /service/v1/visitor | आरक्षण बनाएं (पास कोड जनरेट करें) |
+| PUT | /service/v1/visitor/{hashid} | आरक्षण संशोधित करें |
+| DELETE | /service/v1/visitor/{hashid} | आरक्षण रद्द करें |
 
 #### सामुदायिक गतिविधि
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/activities | गतिविधि सूची (?status=) |
-| GET | /service/activity/{hashid} | गतिविधि विवरण |
-| POST | /service/activity/{hashid}/signup | पंजीकरण |
-| POST | /service/activity/{hashid}/cancel | पंजीकरण रद्द करें |
+| GET | /service/v1/activities | गतिविधि सूची (?status=) |
+| GET | /service/v1/activity/{hashid} | गतिविधि विवरण |
+| POST | /service/v1/activity/{hashid}/signup | पंजीकरण |
+| POST | /service/v1/activity/{hashid}/cancel | पंजीकरण रद्द करें |
 
 #### व्यक्तिगत जानकारी
 
 | विधि | पथ | विवरण |
 |------|------|------|
-| GET | /service/profile | व्यक्तिगत जानकारी |
-| PUT | /service/profile | संशोधित करें ({ name, email, gender, birthday }) |
-| PUT | /service/profile/password | पासवर्ड बदलें ({ old_password, new_password }) |
-| POST | /service/profile/logout | लॉगआउट |
+| GET | /service/v1/profile | व्यक्तिगत जानकारी |
+| PUT | /service/v1/profile | संशोधित करें ({ name, email, gender, birthday }) |
+| PUT | /service/v1/profile/password | पासवर्ड बदलें ({ old_password, new_password }) |
+| POST | /service/v1/profile/logout | लॉगआउट |
 
 ---
 
@@ -639,7 +639,7 @@ Token रीफ्रेश करें।
 प्रत्येक अनुरोध में हेडर `X-API-Key` ले जाना आवश्यक है, मान `scripts/gen_api_key.php` द्वारा जनरेटेड Key (64 बिट hex, डेटाबेस में केवल SHA-256 डाइजेस्ट संग्रहीत):
 
 ```bash
-curl -H "X-API-Key: <आपका Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <आपका Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - अनुपलब्ध या गलत Key पर `401` लौटता है (`{"code":401,"message":"无效的API Key","data":[]}`)
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <आपका Key>" http://localhost:8788/open/announcements
 
 ### एंडपॉइंट
 
-#### GET /open/announcements — घोषणा सूची
+#### GET /open/v1/announcements — घोषणा सूची
 
-पैरामीटर: `page` (डिफ़ॉल्ट 1)、`category` (वैकल्पिक)। प्रतिक्रिया संरचना `/service/announcements` के अनुरूप।
+पैरामीटर: `page` (डिफ़ॉल्ट 1)、`category` (वैकल्पिक)। प्रतिक्रिया संरचना `/service/v1/announcements` के अनुरूप।
 
 ```bash
-curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — बिल क्वेरी
+#### GET /open/v1/bills — बिल क्वेरी
 
 पैरामीटर: `bill_number` (आवश्यक, बिल नंबर)। एकल बिल विवरण लौटाता है (शुल्क प्रकार, रूम नंबर, बकाया राशि सहित)। मौजूद न होने पर 404 लौटता है।
 
 ```bash
-curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — मरम्मत स्थिति क्वेरी
+#### GET /open/v1/repairs — मरम्मत स्थिति क्वेरी
 
 पैरामीटर: `order_number` (आवश्यक, मरम्मत ऑर्डर नंबर)। मरम्मत ऑर्डर की वर्तमान स्थिति और प्रगति टाइमलाइन लौटाता है (`progress` ऐरे)। मौजूद न होने पर 404 लौटता है।
 
 ```bash
-curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <आपका Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

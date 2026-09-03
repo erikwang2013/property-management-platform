@@ -8,7 +8,7 @@
 - API портала жильцов работает на `http://localhost:8788`
 - Единый формат ответа: `{"code": 0, "message": "success", "data": {...}}`
 - Все ID-поля передаются в кодировке hashids
-- Версия API управляется заголовком `API-Version` (по умолчанию `v1`)
+- Версия API заложена в путь (сейчас `/api/v1/*`), а не в заголовок запроса
 - Язык управляется заголовком `Accept-Language` (`zh-CN` / `en-US`, по умолчанию `zh-CN`)
 
 ### Онлайн-документация API
@@ -26,7 +26,7 @@
 
 ### Публичные интерфейсы — без аутентификации
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Получение кликовой капчи.
 
 Параметры запроса: нет
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Проверка кликовой капчи.
 
 Параметры запроса:
@@ -62,7 +62,7 @@
 
 При неудачной проверке `code` равен 422, `data.valid` — `false`.
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Вход администратора.
 
 Параметры запроса:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Обновление Token.
 
 Параметры запроса:
@@ -480,13 +480,13 @@
 
 ### Публичные интерфейсы — без аутентификации
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 Получение кликовой капчи. (Как в админ-панели)
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 Проверка кликовой капчи. (Запрос/ответ как в админ-панели)
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 Вход владельца.
 
 Параметры запроса:
@@ -509,7 +509,7 @@
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 Регистрация владельца.
 
 Параметры запроса:
@@ -523,7 +523,7 @@
 | room_id | string | (опционально) hashid привязываемого помещения |
 | id_card_last4 | string | (опционально) последние 4 цифры удостоверения |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Обновление Token.
 
 ---
@@ -534,7 +534,7 @@
 
 #### Главная
 
-**GET /service/home**
+**GET /service/v1/home**
 
 Ответ:
 ```json
@@ -554,79 +554,79 @@
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/rooms | список моих объектов |
-| GET | /service/room/{hashid} | детали объекта (площадь, ориентация, права собственности, информация о комплексе) |
+| GET | /service/v1/rooms | список моих объектов |
+| GET | /service/v1/room/{hashid} | детали объекта (площадь, ориентация, права собственности, информация о комплексе) |
 
 #### Управление платежами
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/fees/bills | список счетов (?status=0 не оплачен/1 частично оплачен/2 оплачен/3 просрочен) |
-| GET | /service/fees/bill/{hashid} | детали счёта (тип платежа, записи оплаты) |
-| GET | /service/fees/payments | записи платежей |
-| POST | /service/fees/pay | онлайн-оплата ({ bill_id, payment_method, password }) |
-| GET | /service/fees/statistics | статистика платежей (?year=2026) |
+| GET | /service/v1/fees/bills | список счетов (?status=0 не оплачен/1 частично оплачен/2 оплачен/3 просрочен) |
+| GET | /service/v1/fees/bill/{hashid} | детали счёта (тип платежа, записи оплаты) |
+| GET | /service/v1/fees/payments | записи платежей |
+| POST | /service/v1/fees/pay | онлайн-оплата ({ bill_id, payment_method, password }) |
+| GET | /service/v1/fees/statistics | статистика платежей (?year=2026) |
 
 #### Заявки на ремонт
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/repairs | список заявок (?status=) |
-| GET | /service/repair/{hashid} | детали заявки (включая таймлайн прогресса) |
-| POST | /service/repair | подача заявки ({ room_id, category, urgency, description, images[], scheduled_at }) |
-| DELETE | /service/repair/{hashid} | отмена (требуется пароль, { password }) |
-| POST | /service/repair/{hashid}/rate | оценка ({ rating: 1-5, feedback }) |
+| GET | /service/v1/repairs | список заявок (?status=) |
+| GET | /service/v1/repair/{hashid} | детали заявки (включая таймлайн прогресса) |
+| POST | /service/v1/repair | подача заявки ({ room_id, category, urgency, description, images[], scheduled_at }) |
+| DELETE | /service/v1/repair/{hashid} | отмена (требуется пароль, { password }) |
+| POST | /service/v1/repair/{hashid}/rate | оценка ({ rating: 1-5, feedback }) |
 
 #### Жалобы и предложения
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/complaints | список жалоб |
-| GET | /service/complaint/{hashid} | детали жалобы (включая ход обработки) |
-| POST | /service/complaint | подача жалобы ({ type, category, title, content, is_anonymous, images[] }) |
-| POST | /service/complaint/{hashid}/satisfaction | оценка удовлетворённости ({ satisfaction: 1-5 }) |
+| GET | /service/v1/complaints | список жалоб |
+| GET | /service/v1/complaint/{hashid} | детали жалобы (включая ход обработки) |
+| POST | /service/v1/complaint | подача жалобы ({ type, category, title, content, is_anonymous, images[] }) |
+| POST | /service/v1/complaint/{hashid}/satisfaction | оценка удовлетворённости ({ satisfaction: 1-5 }) |
 
 #### Объявления
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/announcements | список объявлений (?category=) |
-| GET | /service/announcement/{hashid} | детали объявления |
+| GET | /service/v1/announcements | список объявлений (?category=) |
+| GET | /service/v1/announcement/{hashid} | детали объявления |
 
 #### Парковка
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/parking/vehicles | мои автомобили |
-| GET | /service/parking/spaces | мои парковочные места |
-| GET | /service/parking/records | записи парковки |
+| GET | /service/v1/parking/vehicles | мои автомобили |
+| GET | /service/v1/parking/spaces | мои парковочные места |
+| GET | /service/v1/parking/records | записи парковки |
 
 #### Посетители
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/visitors | мои заявки на визит |
-| POST | /service/visitor | создание заявки (генерация кода пропуска) |
-| PUT | /service/visitor/{hashid} | изменение заявки |
-| DELETE | /service/visitor/{hashid} | отмена заявки |
+| GET | /service/v1/visitors | мои заявки на визит |
+| POST | /service/v1/visitor | создание заявки (генерация кода пропуска) |
+| PUT | /service/v1/visitor/{hashid} | изменение заявки |
+| DELETE | /service/v1/visitor/{hashid} | отмена заявки |
 
 #### Мероприятия сообщества
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/activities | список мероприятий (?status=) |
-| GET | /service/activity/{hashid} | детали мероприятия |
-| POST | /service/activity/{hashid}/signup | запись на участие |
-| POST | /service/activity/{hashid}/cancel | отмена записи |
+| GET | /service/v1/activities | список мероприятий (?status=) |
+| GET | /service/v1/activity/{hashid} | детали мероприятия |
+| POST | /service/v1/activity/{hashid}/signup | запись на участие |
+| POST | /service/v1/activity/{hashid}/cancel | отмена записи |
 
 #### Личная информация
 
 | Метод | Путь | Описание |
 |------|------|------|
-| GET | /service/profile | личная информация |
-| PUT | /service/profile | изменение ({ name, email, gender, birthday }) |
-| PUT | /service/profile/password | смена пароля ({ old_password, new_password }) |
-| POST | /service/profile/logout | выход из системы |
+| GET | /service/v1/profile | личная информация |
+| PUT | /service/v1/profile | изменение ({ name, email, gender, birthday }) |
+| PUT | /service/v1/profile/password | смена пароля ({ old_password, new_password }) |
+| POST | /service/v1/profile/logout | выход из системы |
 
 ---
 
@@ -639,7 +639,7 @@
 Каждый запрос должен содержать заголовок `X-API-Key` со значением Key, сгенерированным `scripts/gen_api_key.php` (64-значный hex, в БД хранится только SHA-256-дайджест):
 
 ```bash
-curl -H "X-API-Key: <ваш Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <ваш Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - Отсутствующий или неверный Key возвращает `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <ваш Key>" http://localhost:8788/open/announcements
 
 ### Эндпоинты
 
-#### GET /open/announcements — список объявлений
+#### GET /open/v1/announcements — список объявлений
 
-Параметры: `page` (по умолчанию 1), `category` (опционально). Структура ответа совпадает с `/service/announcements`.
+Параметры: `page` (по умолчанию 1), `category` (опционально). Структура ответа совпадает с `/service/v1/announcements`.
 
 ```bash
-curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — запрос счёта
+#### GET /open/v1/bills — запрос счёта
 
 Параметры: `bill_number` (обязательно, номер счёта). Возвращает детали одного счёта (тип платежа, номер помещения, сумма задолженности). При отсутствии возвращает 404.
 
 ```bash
-curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — запрос статуса заявки на ремонт
+#### GET /open/v1/repairs — запрос статуса заявки на ремонт
 
 Параметры: `order_number` (обязательно, номер заявки). Возвращает текущий статус и таймлайн прогресса (`progress` — массив). При отсутствии возвращает 404.
 
 ```bash
-curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <ваш Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

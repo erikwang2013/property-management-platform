@@ -107,7 +107,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/announcements', null);
+        $result = $this->httpGet('/open/v1/announcements', null);
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }
@@ -120,7 +120,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/announcements', 'wrong_key_0000000000000000');
+        $result = $this->httpGet('/open/v1/announcements', 'wrong_key_0000000000000000');
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }
@@ -133,7 +133,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/announcements', self::TEST_KEY);
+        $result = $this->httpGet('/open/v1/announcements', self::TEST_KEY);
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }
@@ -147,7 +147,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/bills', self::TEST_KEY);
+        $result = $this->httpGet('/open/v1/bills', self::TEST_KEY);
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }
@@ -159,7 +159,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/repairs', self::TEST_KEY);
+        $result = $this->httpGet('/open/v1/repairs', self::TEST_KEY);
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }
@@ -171,7 +171,7 @@ class OpenApiTest extends TestCase
         if (self::$key === null) {
             $this->markTestSkipped('DB 不可用');
         }
-        $result = $this->httpGet('/open/bills?bill_number=NONEXISTENT-0001', self::TEST_KEY);
+        $result = $this->httpGet('/open/v1/bills?bill_number=NONEXISTENT-0001', self::TEST_KEY);
         if ($result === null) {
             $this->markTestSkipped('Service not running on port 8788');
         }

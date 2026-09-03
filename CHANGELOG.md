@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.3.0 (2026-09-04)
+
+### 变更
+- **API 版本迁入接口路由**：版本号从请求头 `API-Version` 移入 URL（管理端 `/api/v1/*`；业主端 `/api/v1/*`、`/service/v1/*`、`/open/v1/*`），不再读取版本头
+- 删除 admin / service 两端 `ApiVersion` 中间件（`config/route.php` 路由组直接绑定版本化控制器）
+- 未知版本路径（如 `/api/v9/*`）由 FastRoute 直接返回 404（原版本头方案返回 400）
+- CORS 允许头移除 `API-Version`；Redis 限流敏感路径键同步为 `/api/v1/auth/login|register`
+- `hg/apidoc` 全局参数与 OpenAPI 文档（DocsController）移除 `API-Version` 安全方案与参数
+
+### 客户端适配
+- HarmonyOS `ApiService` 统一在路径首段后插入版本段（`versioned()` 助手，15+ 页面零改动）
+- loadtest 脚本（login/smoke）路径与请求头同步更新
+
+### 文档
+- 根 docs（API/ARCHITECTURE/ARCHITECTURE_DESIGN/INSTALL/MOBILE_GAPS）+ 12 语言 i18n 镜像 + admin CLAUDE/README（中英）+ admin/docs 全量同步 URL 版本方案
+
+### 测试
+- admin 258 / service 198 用例全绿；修复限流测试残留 Redis key（`_api_v1_auth_login`）与遗留 ApiVersion 断言
+
 ## v1.2.0 (2026-08-31)
 
 ### 新增功能

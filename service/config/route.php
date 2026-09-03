@@ -17,9 +17,14 @@ function edition_supports(string $minEdition): bool
  * 物业管理系统-业务端 API 路由配置
  *
  * 路由分组说明:
- * - /service/*  业主端接口，需要 JWT 认证
- * - /api/*      公开接口（验证码、登录注册）
- * - /health     健康检查
+ * - /service/v1/*  业主端接口 v1，需要 JWT 认证
+ * - /api/v1/*      公开接口 v1（验证码、登录注册）
+ * - /open/v1/*     开放 API v1（X-API-Key 鉴权）
+ * - /health        健康检查
+ *
+ * API 版本策略: 版本号体现在接口路由中（/api/v1/*、/service/v1/*、/open/v1/*），
+ * 不使用请求头；新增版本注册新的 /{namespace}/v{version} 路由组即可，
+ * 不存在的版本路径由 FastRoute 直接返回 404。
  */
 
 // 健康检查
@@ -30,19 +35,17 @@ Route::get('/health', function () {
 // Prometheus 指标
 Route::get('/metrics', [app\api\v1\controller\MetricsController::class, 'index']);
 
-// 公开接口
-Route::group('/api', function () {
+// 公开接口 v1
+Route::group('/api/v1', function () {
     Route::post('/captcha/generate', [app\api\v1\controller\CaptchaController::class, 'generate']);
     Route::post('/captcha/verify', [app\api\v1\controller\CaptchaController::class, 'verify']);
     Route::post('/auth/login', [app\api\v1\controller\AuthController::class, 'login']);
     Route::post('/auth/register', [app\api\v1\controller\AuthController::class, 'register']);
     Route::post('/auth/refresh', [app\api\v1\controller\AuthController::class, 'refresh']);
-})->middleware([
-    app\middleware\ApiVersion::class,
-]);
+});
 
-// 业主端认证接口
-Route::group('/service', function () {
+// 业主端接口 v1
+Route::group('/service/v1', function () {
     // 首页
     Route::get('/home', [app\api\v1\controller\HomeController::class, 'index']);
 
@@ -126,18 +129,16 @@ if (edition_supports('full')) {
     }
 })->middleware([
     app\middleware\ServiceAuth::class,
-    app\middleware\ApiVersion::class,
     app\middleware\OperationLog::class,
 ]);
 
-// 开放 API（入站对外只读接口，X-API-Key 鉴权）
-Route::group('/open', function () {
+// 开放 API v1（入站对外只读接口，X-API-Key 鉴权）
+Route::group('/open/v1', function () {
     Route::get('/announcements', [app\api\v1\controller\OpenApiController::class, 'announcements']);
     Route::get('/bills', [app\api\v1\controller\OpenApiController::class, 'bills']);
     Route::get('/repairs', [app\api\v1\controller\OpenApiController::class, 'repairs']);
 })->middleware([
     app\middleware\ApiKeyAuth::class,
-    app\middleware\ApiVersion::class,
 ]);
 
 Route::disableDefaultRoute();

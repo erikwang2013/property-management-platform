@@ -8,7 +8,7 @@
 - ব্যবসা পাশ API চলে `http://localhost:8788`-এ
 - ইউনিফাইড রেসপন্স ফরম্যাট: `{"code": 0, "message": "success", "data": {...}}`
 - সব ID ফিল্ড hashids এনকোডিংয়ে ট্রান্সমিট হয়
-- API ভার্সন রিকোয়েস্ট হেডার `API-Version` দিয়ে নিয়ন্ত্রিত (ডিফল্ট `v1`)
+- API ভার্সন রুটেই থাকে (বর্তমানে `/api/v1/*`), রিকোয়েস্ট হেডারে নয়
 - ভাষা রিকোয়েস্ট হেডার `Accept-Language` দিয়ে নিয়ন্ত্রিত (`zh-CN` / `en-US`, ডিফল্ট `zh-CN`)
 
 ### অনলাইন API ডকুমেন্ট
@@ -26,7 +26,7 @@
 
 ### পাবলিক ইন্টারফেস — অথেনটিকেশন লাগবে না
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 ক্লিক ক্যাপচা পাওয়া।
 
 রিকোয়েস্ট প্যারামিটার: নেই
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 ক্লিক ক্যাপচা যাচাই।
 
 রিকোয়েস্ট প্যারামিটার:
@@ -62,7 +62,7 @@
 
 যাচাই ব্যর্থ হলে `code` হবে 422, `data.valid` হবে `false`।
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 অ্যাডমিন লগইন।
 
 রিকোয়েস্ট প্যারামিটার:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token রিফ্রেশ।
 
 রিকোয়েস্ট প্যারামিটার:
@@ -480,13 +480,13 @@ OpenAPI ডকুমেন্ট।
 
 ### পাবলিক ইন্টারফেস — অথেনটিকেশন লাগবে না
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 ক্লিক ক্যাপচা পাওয়া। (অ্যাডমিন প্যানেলের সাথে একই)
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 ক্লিক ক্যাপচা যাচাই। (রিকোয়েস্ট/রেসপন্স অ্যাডমিন প্যানেলের সাথে একই)
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 মালিক লগইন।
 
 রিকোয়েস্ট প্যারামিটার:
@@ -509,7 +509,7 @@ OpenAPI ডকুমেন্ট।
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 মালিক রেজিস্ট্রেশন।
 
 রিকোয়েস্ট প্যারামিটার:
@@ -523,7 +523,7 @@ OpenAPI ডকুমেন্ট।
 | room_id | string | (ঐচ্ছিক) বাঁধাই করার বাড়ির hashid |
 | id_card_last4 | string | (ঐচ্ছিক) আইডি কার্ডের শেষ ৪ সংখ্যা |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token রিফ্রেশ।
 
 ---
@@ -534,7 +534,7 @@ Token রিফ্রেশ।
 
 #### হোমপেজ
 
-**GET /service/home**
+**GET /service/v1/home**
 
 রেসপন্স:
 ```json
@@ -554,79 +554,79 @@ Token রিফ্রেশ।
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/rooms | আমার সম্পত্তির তালিকা |
-| GET | /service/room/{hashid} | সম্পত্তি বিস্তারিত (এলাকা, অভিমুখ, সম্পত্তি অধিকার, কমিউনিটি তথ্যসহ) |
+| GET | /service/v1/rooms | আমার সম্পত্তির তালিকা |
+| GET | /service/v1/room/{hashid} | সম্পত্তি বিস্তারিত (এলাকা, অভিমুখ, সম্পত্তি অধিকার, কমিউনিটি তথ্যসহ) |
 
 #### ফি ব্যবস্থাপনা
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/fees/bills | বিল তালিকা (?status=0 অবৈতনিক/1 আংশিক/2 পরিশোধিত/3 বিলম্বিত) |
-| GET | /service/fees/bill/{hashid} | বিল বিস্তারিত (ফি ধরন, পরিশোধ রেকর্ডসহ) |
-| GET | /service/fees/payments | পরিশোধ রেকর্ড |
-| POST | /service/fees/pay | অনলাইন ফি পরিশোধ ({ bill_id, payment_method, password }) |
-| GET | /service/fees/statistics | ফি পরিসংখ্যান (?year=2026) |
+| GET | /service/v1/fees/bills | বিল তালিকা (?status=0 অবৈতনিক/1 আংশিক/2 পরিশোধিত/3 বিলম্বিত) |
+| GET | /service/v1/fees/bill/{hashid} | বিল বিস্তারিত (ফি ধরন, পরিশোধ রেকর্ডসহ) |
+| GET | /service/v1/fees/payments | পরিশোধ রেকর্ড |
+| POST | /service/v1/fees/pay | অনলাইন ফি পরিশোধ ({ bill_id, payment_method, password }) |
+| GET | /service/v1/fees/statistics | ফি পরিসংখ্যান (?year=2026) |
 
 #### মেরামতের অনুরোধ
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/repairs | মেরামত তালিকা (?status=) |
-| GET | /service/repair/{hashid} | মেরামত বিস্তারিত (অগ্রগতি টাইমলাইনসহ) |
-| POST | /service/repair | মেরামত জমা ({ room_id, category, urgency, description, images[], scheduled_at }) |
-| DELETE | /service/repair/{hashid} | বাতিল (পাসওয়ার্ড লাগবে, { password }) |
-| POST | /service/repair/{hashid}/rate | রেটিং ({ rating: 1-5, feedback }) |
+| GET | /service/v1/repairs | মেরামত তালিকা (?status=) |
+| GET | /service/v1/repair/{hashid} | মেরামত বিস্তারিত (অগ্রগতি টাইমলাইনসহ) |
+| POST | /service/v1/repair | মেরামত জমা ({ room_id, category, urgency, description, images[], scheduled_at }) |
+| DELETE | /service/v1/repair/{hashid} | বাতিল (পাসওয়ার্ড লাগবে, { password }) |
+| POST | /service/v1/repair/{hashid}/rate | রেটিং ({ rating: 1-5, feedback }) |
 
 #### অভিযোগ ও পরামর্শ
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/complaints | অভিযোগ তালিকা |
-| GET | /service/complaint/{hashid} | অভিযোগ বিস্তারিত (প্রসেসিং অগ্রগতিসহ) |
-| POST | /service/complaint | অভিযোগ জমা ({ type, category, title, content, is_anonymous, images[] }) |
-| POST | /service/complaint/{hashid}/satisfaction | সন্তুষ্টি রেটিং ({ satisfaction: 1-5 }) |
+| GET | /service/v1/complaints | অভিযোগ তালিকা |
+| GET | /service/v1/complaint/{hashid} | অভিযোগ বিস্তারিত (প্রসেসিং অগ্রগতিসহ) |
+| POST | /service/v1/complaint | অভিযোগ জমা ({ type, category, title, content, is_anonymous, images[] }) |
+| POST | /service/v1/complaint/{hashid}/satisfaction | সন্তুষ্টি রেটিং ({ satisfaction: 1-5 }) |
 
 #### ঘোষণা
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/announcements | ঘোষণা তালিকা (?category=) |
-| GET | /service/announcement/{hashid} | ঘোষণা বিস্তারিত |
+| GET | /service/v1/announcements | ঘোষণা তালিকা (?category=) |
+| GET | /service/v1/announcement/{hashid} | ঘোষণা বিস্তারিত |
 
 #### পার্কিং
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/parking/vehicles | আমার যানবাহন |
-| GET | /service/parking/spaces | আমার পার্কিং স্পট |
-| GET | /service/parking/records | পার্কিং রেকর্ড |
+| GET | /service/v1/parking/vehicles | আমার যানবাহন |
+| GET | /service/v1/parking/spaces | আমার পার্কিং স্পট |
+| GET | /service/v1/parking/records | পার্কিং রেকর্ড |
 
 #### দর্শনার্থী
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/visitors | আমার দর্শনার্থী অ্যাপয়েন্টমেন্ট |
-| POST | /service/visitor | অ্যাপয়েন্টমেন্ট তৈরি (প্রবেশ কোড জেনারেট) |
-| PUT | /service/visitor/{hashid} | অ্যাপয়েন্টমেন্ট পরিবর্তন |
-| DELETE | /service/visitor/{hashid} | অ্যাপয়েন্টমেন্ট বাতিল |
+| GET | /service/v1/visitors | আমার দর্শনার্থী অ্যাপয়েন্টমেন্ট |
+| POST | /service/v1/visitor | অ্যাপয়েন্টমেন্ট তৈরি (প্রবেশ কোড জেনারেট) |
+| PUT | /service/v1/visitor/{hashid} | অ্যাপয়েন্টমেন্ট পরিবর্তন |
+| DELETE | /service/v1/visitor/{hashid} | অ্যাপয়েন্টমেন্ট বাতিল |
 
 #### কমিউনিটি কার্যক্রম
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/activities | কার্যক্রম তালিকা (?status=) |
-| GET | /service/activity/{hashid} | কার্যক্রম বিস্তারিত |
-| POST | /service/activity/{hashid}/signup | নিবন্ধন |
-| POST | /service/activity/{hashid}/cancel | নিবন্ধন বাতিল |
+| GET | /service/v1/activities | কার্যক্রম তালিকা (?status=) |
+| GET | /service/v1/activity/{hashid} | কার্যক্রম বিস্তারিত |
+| POST | /service/v1/activity/{hashid}/signup | নিবন্ধন |
+| POST | /service/v1/activity/{hashid}/cancel | নিবন্ধন বাতিল |
 
 #### ব্যক্তিগত তথ্য
 
 | মেথড | পাথ | ব্যাখ্যা |
 |------|------|------|
-| GET | /service/profile | ব্যক্তিগত তথ্য |
-| PUT | /service/profile | পরিবর্তন ({ name, email, gender, birthday }) |
-| PUT | /service/profile/password | পাসওয়ার্ড পরিবর্তন ({ old_password, new_password }) |
-| POST | /service/profile/logout | লগআউট |
+| GET | /service/v1/profile | ব্যক্তিগত তথ্য |
+| PUT | /service/v1/profile | পরিবর্তন ({ name, email, gender, birthday }) |
+| PUT | /service/v1/profile/password | পাসওয়ার্ড পরিবর্তন ({ old_password, new_password }) |
+| POST | /service/v1/profile/logout | লগআউট |
 
 ---
 
@@ -639,7 +639,7 @@ Token রিফ্রেশ।
 প্রতিটি রিকোয়েস্টে রিকোয়েস্ট হেডার `X-API-Key` বহন করতে হবে, মান `scripts/gen_api_key.php` দিয়ে তৈরি Key (৬৪ অক্ষর hex, ডেটাবেসে শুধু SHA-256 ডাইজেস্ট সংরক্ষিত):
 
 ```bash
-curl -H "X-API-Key: <আপনারKey>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <আপনারKey>" http://localhost:8788/open/v1/announcements
 ```
 
 - অনুপস্থিত বা ভুল Key-তে `401` ফেরে (`{"code":401,"message":"无效的API Key","data":[]}`)
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <আপনারKey>" http://localhost:8788/open/announcemen
 
 ### এন্ডপয়েন্ট
 
-#### GET /open/announcements — ঘোষণা তালিকা
+#### GET /open/v1/announcements — ঘোষণা তালিকা
 
-প্যারামিটার: `page` (ডিফল্ট 1) `category` (ঐচ্ছিক)। রেসপন্স কাঠামো `/service/announcements`-এর সাথে একই।
+প্যারামিটার: `page` (ডিফল্ট 1) `category` (ঐচ্ছিক)। রেসপন্স কাঠামো `/service/v1/announcements`-এর সাথে একই।
 
 ```bash
-curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — বিল কোয়েরি
+#### GET /open/v1/bills — বিল কোয়েরি
 
 প্যারামিটার: `bill_number` (বাধ্যতামূলক, বিল নম্বর)। একক বিল বিস্তারিত ফেরে (ফি ধরন, বাড়ির নম্বর, বকেয়া পরিমাণসহ)। অস্তিত্ব না থাকলে 404।
 
 ```bash
-curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — মেরামত অবস্থা কোয়েরি
+#### GET /open/v1/repairs — মেরামত অবস্থা কোয়েরি
 
 প্যারামিটার: `order_number` (বাধ্যতামূলক, মেরামত অর্ডার নম্বর)। মেরামত অর্ডারের বর্তমান অবস্থা ও অগ্রগতি টাইমলাইন (`progress` অ্যারে) ফেরে। অস্তিত্ব না থাকলে 404।
 
 ```bash
-curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <আপনারKey>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

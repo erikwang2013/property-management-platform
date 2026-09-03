@@ -8,12 +8,12 @@
 | ページ | ルート（main_pages.json 登録済み） | 呼び出し API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | ログイン（AuthService） |
-| HomePage | pages/HomePage | GET /service/home（ダッシュボード：未払い/工単/不動産数 + お知らせ一覧） |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home（ダッシュボード：未払い/工単/不動産数 + お知らせ一覧） |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **ナビゲーション現状**（全アプリで遷移は 4 つだけ）：Login→Home、Home→Login（ログアウト）、Profile→Login、RepairList→RepairSubmit。HomePage は統計カード + お知らせ一覧のみで、機能エントリグリッドなし；FeeBills/Announcement/Profile ページは存在するが**エントリがなく、到達不可**。
 

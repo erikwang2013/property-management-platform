@@ -8,12 +8,12 @@
 | Page | Route (registered in main_pages.json) | API Called |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | Login (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (dashboard: pending payments/repair tickets/property count + announcement list) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile, POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (dashboard: pending payments/repair tickets/property count + announcement list) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile, POST /service/v1/profile/logout |
 
 **Current navigation** (only 4 transitions in the entire app): Login→Home, Home→Login (logout), Profile→Login, RepairList→RepairSubmit. HomePage only has stat cards + announcement list, no function entry grid; FeeBills/Announcement/Profile pages exist but have **no entry point and are unreachable**.
 

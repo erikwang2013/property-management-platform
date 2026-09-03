@@ -8,7 +8,7 @@
 - واجهات بوابة الأعمال تعمل على `http://localhost:8788`
 - تنسيق الاستجابة الموحد: `{"code": 0, "message": "success", "data": {...}}`
 - كل حقول ID تُنقل مشفرة بتشفير hashids
-- إصدار API يتحكم به ترويسة الطلب `API-Version` (افتراضيًا `v1`)
+- يُعبَّر عن إصدار API في المسار نفسه (حاليًا `/api/v1/*`)، وليس عبر ترويسة الطلب
 - اللغة تتحكم بها ترويسة الطلب `Accept-Language` (`zh-CN` / `en-US`، افتراضيًا `zh-CN`)
 
 ### توثيق API عبر الإنترنت
@@ -26,7 +26,7 @@
 
 ### الواجهات العامة — بلا مصادقة
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 الحصول على رمز تحقق بالنقر.
 
 معاملات الطلب: لا شيء
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 التحقق من رمز التحقق بالنقر.
 
 معاملات الطلب:
@@ -62,7 +62,7 @@
 
 عند فشل التحقق يكون `code` هو 422 و `data.valid` هو `false`.
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 تسجيل دخول المسؤول.
 
 معاملات الطلب:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 تحديث Token.
 
 معاملات الطلب:
@@ -480,13 +480,13 @@
 
 ### الواجهات العامة — بلا مصادقة
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 الحصول على رمز تحقق بالنقر. (نفس لوحة الإدارة)
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 التحقق من رمز التحقق بالنقر. (الطلب/الاستجابة نفس لوحة الإدارة)
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 تسجيل دخول المالك.
 
 معاملات الطلب:
@@ -509,7 +509,7 @@
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 تسجيل المالك.
 
 معاملات الطلب:
@@ -523,7 +523,7 @@
 | room_id | string | (اختياري) hashid العقار المرتبط |
 | id_card_last4 | string | (اختياري) آخر 4 أرقام من الهوية |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 تحديث Token.
 
 ---
@@ -534,7 +534,7 @@
 
 #### الصفحة الرئيسية
 
-**GET /service/home**
+**GET /service/v1/home**
 
 الاستجابة:
 ```json
@@ -554,79 +554,79 @@
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/rooms | قائمة عقاراتي |
-| GET | /service/room/{hashid} | تفاصيل العقار (شاملة المساحة والاتجاه والملكية ومعلومات المجمع) |
+| GET | /service/v1/rooms | قائمة عقاراتي |
+| GET | /service/v1/room/{hashid} | تفاصيل العقار (شاملة المساحة والاتجاه والملكية ومعلومات المجمع) |
 
 #### إدارة الرسوم
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/fees/bills | قائمة الفواتير (?status=0未缴/1部分缴/2已缴/3逾期) |
-| GET | /service/fees/bill/{hashid} | تفاصيل الفاتورة (شاملة نوع الرسوم وسجلات الدفع) |
-| GET | /service/fees/payments | سجلات الدفع |
-| POST | /service/fees/pay | دفع عبر الإنترنت ({ bill_id, payment_method, password }) |
-| GET | /service/fees/statistics | إحصاءات الرسوم (?year=2026) |
+| GET | /service/v1/fees/bills | قائمة الفواتير (?status=0未缴/1部分缴/2已缴/3逾期) |
+| GET | /service/v1/fees/bill/{hashid} | تفاصيل الفاتورة (شاملة نوع الرسوم وسجلات الدفع) |
+| GET | /service/v1/fees/payments | سجلات الدفع |
+| POST | /service/v1/fees/pay | دفع عبر الإنترنت ({ bill_id, payment_method, password }) |
+| GET | /service/v1/fees/statistics | إحصاءات الرسوم (?year=2026) |
 
 #### الإصلاح
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/repairs | قائمة طلبات الإصلاح (?status=) |
-| GET | /service/repair/{hashid} | تفاصيل طلب الإصلاح (شاملة الخط الزمني للتقدم) |
-| POST | /service/repair | تقديم طلب إصلاح ({ room_id, category, urgency, description, images[], scheduled_at }) |
-| DELETE | /service/repair/{hashid} | إلغاء (يتطلب كلمة المرور، { password }) |
-| POST | /service/repair/{hashid}/rate | تقييم ({ rating: 1-5, feedback }) |
+| GET | /service/v1/repairs | قائمة طلبات الإصلاح (?status=) |
+| GET | /service/v1/repair/{hashid} | تفاصيل طلب الإصلاح (شاملة الخط الزمني للتقدم) |
+| POST | /service/v1/repair | تقديم طلب إصلاح ({ room_id, category, urgency, description, images[], scheduled_at }) |
+| DELETE | /service/v1/repair/{hashid} | إلغاء (يتطلب كلمة المرور، { password }) |
+| POST | /service/v1/repair/{hashid}/rate | تقييم ({ rating: 1-5, feedback }) |
 
 #### الشكاوى والاقتراحات
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/complaints | قائمة الشكاوى |
-| GET | /service/complaint/{hashid} | تفاصيل الشكوى (شاملة تقدم المعالجة) |
-| POST | /service/complaint | تقديم شكوى ({ type, category, title, content, is_anonymous, images[] }) |
-| POST | /service/complaint/{hashid}/satisfaction | تقييم الرضا ({ satisfaction: 1-5 }) |
+| GET | /service/v1/complaints | قائمة الشكاوى |
+| GET | /service/v1/complaint/{hashid} | تفاصيل الشكوى (شاملة تقدم المعالجة) |
+| POST | /service/v1/complaint | تقديم شكوى ({ type, category, title, content, is_anonymous, images[] }) |
+| POST | /service/v1/complaint/{hashid}/satisfaction | تقييم الرضا ({ satisfaction: 1-5 }) |
 
 #### الإعلانات
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/announcements | قائمة الإعلانات (?category=) |
-| GET | /service/announcement/{hashid} | تفاصيل الإعلان |
+| GET | /service/v1/announcements | قائمة الإعلانات (?category=) |
+| GET | /service/v1/announcement/{hashid} | تفاصيل الإعلان |
 
 #### المواقف
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/parking/vehicles | مركباتي |
-| GET | /service/parking/spaces | مواقفي |
-| GET | /service/parking/records | سجلات المواقف |
+| GET | /service/v1/parking/vehicles | مركباتي |
+| GET | /service/v1/parking/spaces | مواقفي |
+| GET | /service/v1/parking/records | سجلات المواقف |
 
 #### الزوار
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/visitors | حجوزات زواري |
-| POST | /service/visitor | إنشاء حجز (توليد رمز المرور) |
-| PUT | /service/visitor/{hashid} | تعديل الحجز |
-| DELETE | /service/visitor/{hashid} | إلغاء الحجز |
+| GET | /service/v1/visitors | حجوزات زواري |
+| POST | /service/v1/visitor | إنشاء حجز (توليد رمز المرور) |
+| PUT | /service/v1/visitor/{hashid} | تعديل الحجز |
+| DELETE | /service/v1/visitor/{hashid} | إلغاء الحجز |
 
 #### أنشطة المجتمع
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/activities | قائمة الأنشطة (?status=) |
-| GET | /service/activity/{hashid} | تفاصيل النشاط |
-| POST | /service/activity/{hashid}/signup | التسجيل للمشاركة |
-| POST | /service/activity/{hashid}/cancel | إلغاء التسجيل |
+| GET | /service/v1/activities | قائمة الأنشطة (?status=) |
+| GET | /service/v1/activity/{hashid} | تفاصيل النشاط |
+| POST | /service/v1/activity/{hashid}/signup | التسجيل للمشاركة |
+| POST | /service/v1/activity/{hashid}/cancel | إلغاء التسجيل |
 
 #### المعلومات الشخصية
 
 | الطريقة | المسار | الوصف |
 |------|------|------|
-| GET | /service/profile | المعلومات الشخصية |
-| PUT | /service/profile | التعديل ({ name, email, gender, birthday }) |
-| PUT | /service/profile/password | تغيير كلمة المرور ({ old_password, new_password }) |
-| POST | /service/profile/logout | تسجيل الخروج |
+| GET | /service/v1/profile | المعلومات الشخصية |
+| PUT | /service/v1/profile | التعديل ({ name, email, gender, birthday }) |
+| PUT | /service/v1/profile/password | تغيير كلمة المرور ({ old_password, new_password }) |
+| POST | /service/v1/profile/logout | تسجيل الخروج |
 
 ---
 
@@ -639,7 +639,7 @@
 كل طلب يتطلب حمل ترويسة `X-API-Key`، والقيمة هي مفتاح يولده `scripts/gen_api_key.php` (64 بت hex، والقاعدة تخزن ملخص SHA-256 فقط):
 
 ```bash
-curl -H "X-API-Key: <مفتاحك>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <مفتاحك>" http://localhost:8788/open/v1/announcements
 ```
 
 - المفتاح الناقص أو الخاطئ يُرجع `401` (`{"code":401,"message":"无效的API Key","data":[]}`)
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <مفتاحك>" http://localhost:8788/open/announcements
 
 ### النقاط
 
-#### GET /open/announcements — قائمة الإعلانات
+#### GET /open/v1/announcements — قائمة الإعلانات
 
-المعاملات: `page` (افتراضيًا 1)、`category` (اختياري). بنية الاستجابة مطابقة لـ `/service/announcements`.
+المعاملات: `page` (افتراضيًا 1)、`category` (اختياري). بنية الاستجابة مطابقة لـ `/service/v1/announcements`.
 
 ```bash
-curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — استعلام الفواتير
+#### GET /open/v1/bills — استعلام الفواتير
 
 المعاملات: `bill_number` (إلزامي، رقم الفاتورة). يُرجع تفاصيل فاتورة واحدة (شاملة نوع الرسوم ورقم العقار ومبلغ المتأخرات). غير موجود يُرجع 404.
 
 ```bash
-curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — استعلام حالة طلب الإصلاح
+#### GET /open/v1/repairs — استعلام حالة طلب الإصلاح
 
 المعاملات: `order_number` (إلزامي، رقم طلب الإصلاح). يُرجع الحالة الحالية لطلب الإصلاح والخط الزمني للتقدم (مصفوفة `progress`). غير موجود يُرجع 404.
 
 ```bash
-curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <مفتاحك>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

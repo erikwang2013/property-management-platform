@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### व्यवसाय पोर्टल (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### वैश्विक मिडलवेयर विवरण
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | वैश्विक प्रथम | क्रॉस-ओरिजिन संसाधन साझाकरण हेडर प्रसंस्करण |
 | SecurityFilter | वैश्विक | HTTP विधि श्वेतसूची, XSS/SQL इंजेक्शन/पाथ ट्रैवर्सल/कमांड इंजेक्शन/CSRF हमला अवरोधन, IP ब्लैकलिस्ट |
 | RateLimit | वैश्विक | Redis स्लाइडिंग विंडो रेट लिमिट (Lua परमाणु), डिफ़ॉल्ट 60 बार/मिनट |
-| ApiVersion | /api रूट | अनुरोध हेडर API-Version सत्यापन, संस्करण संख्या इंजेक्ट |
 | AdminAuth | /admin रूट | JWT Token सत्यापन, adminId इंजेक्ट |
 | AdminPermission | /admin रूट | RBAC method.path अनुमति सत्यापन (Redis 60s कैश) |
 | OperationLog | /admin रूट | POST/PUT/DELETE ऑपरेशन स्वतः रिकॉर्ड (स्रोत एंड पहचान सहित) |
@@ -150,17 +149,17 @@ Redis Sorted Set स्लाइडिंग विंडो एल्गोर�
 | इंटरफ़ेस | सीमा |
 |------|------|
 | डिफ़ॉल्ट | 60 बार/मिनट/IP/रूट |
-| POST /api/auth/login | 10 बार/मिनट |
-| POST /api/auth/register | 5 बार/मिनट |
+| POST /api/v1/auth/login | 10 बार/मिनट |
+| POST /api/v1/auth/register | 5 बार/मिनट |
 
 सीमा से अधिक होने पर 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` प्रतिक्रिया हेडर लौटता है।
 
 ## 9. API संस्करण रणनीति
 
-- संस्करण अनुरोध हेडर `API-Version` से नियंत्रित (डिफ़ॉल्ट `v1`), URL में नहीं दिखता
-- असमर्थित संस्करण पर 400 लौटता है
+- संस्करण API रूट में ही होता है (जैसे `/api/v1/*`, `/service/v1/*`), रिक्वेस्ट हेडर में नहीं
+- अज्ञात संस्करण पथ राउटर से सीधे 404 लौटाते हैं (कोई मिडलवेयर नहीं)
 - कंट्रोलर संस्करण के अनुसार संगठित: `app/api/{version}/controller/`
-- नया संस्करण जोड़ने के लिए केवल डायरेक्टरी बनाकर `ApiVersion` मिडलवेयर में पंजीकृत करें
+- नया संस्करण जोड़ने का अर्थ है नया `/{namespace}/v{version}` रूट ग्रुप पंजीकृत करना (कंट्रोलर `app/api/v1/controller/` में); अज्ञात संस्करण पथ FastRoute से 404 लौटाते हैं
 
 ## 10. तैनाती आर्किटेक्चर
 

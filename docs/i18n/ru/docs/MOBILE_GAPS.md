@@ -8,12 +8,12 @@
 | Страница | Маршрут (зарегистрирован в main_pages.json) | Вызываемый API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | вход (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (дашборд: к оплате/заявки/число объектов + список объявлений) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (дашборд: к оплате/заявки/число объектов + список объявлений) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **Текущая навигация** (во всём приложении всего 4 перехода): Login→Home、Home→Login (выход)、Profile→Login、RepairList→RepairSubmit. На HomePage только карточки статистики + список объявлений, сетки входов в функции нет; страницы FeeBills/Announcement/Profile существуют, но **входов на них нет — они недостижимы**.
 

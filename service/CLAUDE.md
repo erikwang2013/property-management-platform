@@ -25,8 +25,9 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ```
 全局: Cors → SecurityFilter → RateLimit → {路由中间件}
-/api: Cors → SecurityFilter → RateLimit → ApiVersion → Controller
-认证: Cors → SecurityFilter → RateLimit → ServiceAuth → OperationLog → Controller
+/api/v1: Cors → SecurityFilter → RateLimit → Controller
+/service/v1: Cors → SecurityFilter → RateLimit → ServiceAuth → OperationLog → Controller
+/open/v1: Cors → SecurityFilter → RateLimit → ApiKeyAuth → Controller
 ```
 
 ## 安全增强

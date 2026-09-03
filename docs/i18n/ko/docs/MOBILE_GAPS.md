@@ -8,12 +8,12 @@
 | 페이지 | 라우트（main_pages.json 등록 완료） | 호출 API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | 로그인（AuthService） |
-| HomePage | pages/HomePage | GET /service/home（대시보드: 미납/작업/부동산 수 + 공지 목록） |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home（대시보드: 미납/작업/부동산 수 + 공지 목록） |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **네비게이션 현황**（전체 앱에 4개 점프만 존재）: Login→Home、Home→Login（로그아웃）、Profile→Login、RepairList→RepairSubmit. HomePage는 통계 카드 + 공지 목록만 있고 기능 진입 그리드 없음; FeeBills/Announcement/Profile 페이지는 존재하지만 **진입 경로 없음, 도달 불가**.
 

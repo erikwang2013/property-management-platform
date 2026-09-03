@@ -245,7 +245,7 @@ Todos los endpoints de API y descripciones de parámetros se encuentran en el do
 ### 3. Prueba de inicio de sesión
 
 ```bash
-curl -X POST http://localhost:8787/api/auth/login \
+curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```

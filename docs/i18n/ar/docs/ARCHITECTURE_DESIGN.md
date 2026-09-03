@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### بوابة الأعمال (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### شرح الوسطيات العامة
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | أول موضع عام | معالجة ترويسات مشاركة الموارد عبر النطاقات |
 | SecurityFilter | عام | القائمة البيضاء لطرق HTTP، اعتراض XSS/حقن SQL/اجتياز المسار/حقن الأوامر/هجمات CSRF، القائمة السوداء IP |
 | RateLimit | عام | تحديد معدل نافذة منزلقة في Redis (ذرّي عبر Lua)، افتراضيًا 60 مرة/دقيقة |
-| ApiVersion | مسارات /api | التحقق من ترويسة API-Version، حقن رقم الإصدار |
 | AdminAuth | مسارات /admin | التحقق من JWT Token، حقن adminId |
 | AdminPermission | مسارات /admin | التحقق من صلاحيات RBAC method.path (ذاكرة Redis 60s) |
 | OperationLog | مسارات /admin | تسجيل تلقائي لعمليات POST/PUT/DELETE (شامل كشف الطرف المصدر) |
@@ -149,17 +148,17 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | الواجهة | التحديد |
 |------|------|
 | الافتراضي | 60 مرة/دقيقة/IP/مسار |
-| POST /api/auth/login | 10 مرات/دقيقة |
-| POST /api/auth/register | 5 مرات/دقيقة |
+| POST /api/v1/auth/login | 10 مرات/دقيقة |
+| POST /api/v1/auth/register | 5 مرات/دقيقة |
 
 التجاوز يُرجع 429 + ترويسات `X-RateLimit-Limit/Remaining/Reset/Retry-After`.
 
 ## 9. سياسة إصدارات API
 
-- الإصدار يتحكم به ترويسة الطلب `API-Version` (افتراضيًا `v1`)، لا يظهر في URL
-- الإصدار غير المدعوم يُرجع 400
+- يُعبَّر عن الإصدار في مسار الواجهة نفسه (مثل `/api/v1/*` و`/service/v1/*`)، وليس عبر ترويسة الطلب
+- مسارات الإصدارات غير الموجودة تُرجع 404 مباشرة من الموجّه (بدون وسيطة)
 - المتحكمات منظمة حسب الإصدار: `app/api/{version}/controller/`
-- إضافة إصدار جديد تحتاج فقط إنشاء الدليل وتسجيله في وسيطة `ApiVersion`
+- إضافة إصدار جديد تعني تسجيل مجموعة مسارات `/{namespace}/v{version}` جديدة (التحكمات تحت `app/api/v1/controller/`)؛ مسارات الإصدارات غير الموجودة تُرجع 404 من FastRoute
 
 ## 10. بنية النشر
 

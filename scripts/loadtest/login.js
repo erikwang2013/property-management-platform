@@ -25,14 +25,14 @@ export const options = {
 
 export default function () {
   const res = http.post(
-    `${BASE}/api/auth/login`,
+    `${BASE}/api/v1/auth/login`,
     JSON.stringify({
       username: 'erik',
       password: 'LoadTest123!',
       captcha_key: 'loadtest-invalid',
       clicks: [[1, 1], [2, 2]],
     }),
-    { headers: { 'Content-Type': 'application/json', 'API-Version': 'v1' } }
+    { headers: { 'Content-Type': 'application/json' } }
   );
   // 200=成功(需有效验证码) 422=验证码错误 429=限流，均属预期
   check(res, { 'expected status': (r) => [200, 422, 429].includes(r.status) });

@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller 映射 + 中间件绑定       │
 ├─────────────────────────────────────────────────────────────┤
 │                       中间件层 (Middleware Layer)              │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                      控制器层 (Controller Layer)               │
 │   BaseController → 请求验证 → ID编解码 → 业务逻辑 → 响应格式化  │
@@ -49,8 +49,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### ব্যবসা পাশ (service)
 ```
 Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
-  → ApiVersion(版本校验) → Controller           # /api/* 公开接口
-  → ServiceAuth(JWT业主认证) → Controller       # /service/* 认证接口
+  → Controller（URL 版本路由）           # /api/v1/* 公开接口
+  → ServiceAuth(JWT业主认证) → Controller       # /service/v1/* 认证接口
 ```
 
 ### গ্লোবাল মিডলওয়্যার ব্যাখ্যা
@@ -60,7 +60,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | Cors | গ্লোবাল প্রথম | ক্রস-অরিজিন রিসোর্স শেয়ারিং হেডার প্রসেসিং |
 | SecurityFilter | গ্লোবাল | HTTP মেথড হোয়াইটলিস্ট, XSS/SQL ইনজেকশন/পাথ ট্রাভার্সাল/কমান্ড ইনজেকশন/CSRF অ্যাটাক ইন্টারসেপ্ট, IP ব্ল্যাকলিস্ট |
 | RateLimit | গ্লোবাল | Redis স্লাইডিং উইন্ডো রেট লিমিট (Lua অ্যাটমিক), ডিফল্ট ৬০ বার/মিনিট |
-| ApiVersion | /api রুট | রিকোয়েস্ট হেডার API-Version যাচাই, ভার্সন নম্বর ইনজেক্ট |
 | AdminAuth | /admin রুট | JWT Token যাচাই, adminId ইনজেক্ট |
 | AdminPermission | /admin রুট | RBAC method.path পারমিশন যাচাই (Redis 60s ক্যাশে) |
 | OperationLog | /admin রুট | POST/PUT/DELETE অপারেশন স্বয়ংক্রিয় রেকর্ড (উৎস পাশ সনাক্তসহ) |
@@ -150,17 +149,17 @@ Redis Sorted Set স্লাইডিং উইন্ডো অ্যালগ�
 | ইন্টারফেস | সীমা |
 |------|------|
 | ডিফল্ট | ৬০ বার/মিনিট/IP/রুট |
-| POST /api/auth/login | ১০ বার/মিনিট |
-| POST /api/auth/register | ৫ বার/মিনিট |
+| POST /api/v1/auth/login | ১০ বার/মিনিট |
+| POST /api/v1/auth/register | ৫ বার/মিনিট |
 
 সীমা অতিক্রমে 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` রেসপন্স হেডার।
 
 ## 9. API ভার্সন কৌশল
 
-- ভার্সন রিকোয়েস্ট হেডার `API-Version` দিয়ে নিয়ন্ত্রিত (ডিফল্ট `v1`), URL-তে প্রকাশ পায় না
-- অসমর্থিত ভার্সনে 400 ফেরে
+- ভার্সন API রুটেই থাকে (যেমন `/api/v1/*`, `/service/v1/*`), রিকোয়েস্ট হেডারে নয়
+- অজানা ভার্সন পাথ রাউটার থেকে সরাসরি 404 ফেরত দেয় (কোনো মিডলওয়্যার নেই)
 - কন্ট্রোলার ভার্সন অনুযায়ী সংগঠিত: `app/api/{version}/controller/`
-- নতুন ভার্সন যোগ করতে শুধু ডিরেক্টরি তৈরি করে `ApiVersion` মিডলওয়্যারে রেজিস্টার করুন
+- নতুন ভার্সন যোগ করতে `/{namespace}/v{version}` রুট গ্রুপ নিবন্ধন করুন (কন্ট্রোলার `app/api/v1/controller/`-এ); অজানা ভার্সন পাথ FastRoute থেকে 404 ফেরত দেয়
 
 ## 10. ডিপ্লয়মেন্ট আর্কিটেকচার
 

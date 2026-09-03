@@ -8,7 +8,7 @@
 - 입주민 포털 API는 `http://localhost:8788`에서 실행
 - 통일 응답 형식: `{"code": 0, "message": "success", "data": {...}}`
 - 모든 ID 필드는 hashids 인코딩으로 전송
-- API 버전은 요청 헤더 `API-Version`으로 제어（기본 `v1`）
+- API 버전은 라우트 자체에 포함（현재 `/api/v1/*`）, 요청 헤더가 아님
 - 언어는 요청 헤더 `Accept-Language`로 제어（`zh-CN` / `en-US`, 기본 `zh-CN`）
 
 ### 온라인 API 문서
@@ -26,7 +26,7 @@
 
 ### 공개 인터페이스 — 인증 불필요
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 클릭형 캡차 획득.
 
 요청 파라미터: 없음
@@ -43,7 +43,7 @@
 }
 ```
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 클릭형 캡차 검증.
 
 요청 파라미터:
@@ -62,7 +62,7 @@
 
 검증 실패 시 `code`는 422, `data.valid`는 `false`.
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 관리자 로그인.
 
 요청 파라미터:
@@ -85,7 +85,7 @@
 }
 ```
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token 갱신.
 
 요청 파라미터:
@@ -480,13 +480,13 @@ OpenAPI 문서.
 
 ### 공개 인터페이스 — 인증 불필요
 
-#### POST /api/captcha/generate
+#### POST /api/v1/captcha/generate
 클릭형 캡차 획득.（관리자와 동일）
 
-#### POST /api/captcha/verify
+#### POST /api/v1/captcha/verify
 클릭형 캡차 검증.（요청/응답이 관리자와 동일）
 
-#### POST /api/auth/login
+#### POST /api/v1/auth/login
 입주민 로그인.
 
 요청 파라미터:
@@ -509,7 +509,7 @@ OpenAPI 문서.
 }
 ```
 
-#### POST /api/auth/register
+#### POST /api/v1/auth/register
 입주민 회원가입.
 
 요청 파라미터:
@@ -523,7 +523,7 @@ OpenAPI 문서.
 | room_id | string | （선택）연결할 세대 hashid |
 | id_card_last4 | string | （선택）주민등록번호 뒤 4자리 |
 
-#### POST /api/auth/refresh
+#### POST /api/v1/auth/refresh
 Token 갱신.
 
 ---
@@ -534,7 +534,7 @@ Token 갱신.
 
 #### 홈
 
-**GET /service/home**
+**GET /service/v1/home**
 
 응답:
 ```json
@@ -554,79 +554,79 @@ Token 갱신.
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/rooms | 내 부동산 목록 |
-| GET | /service/room/{hashid} | 부동산 상세（면적, 방향, 권리, 단지 정보 포함） |
+| GET | /service/v1/rooms | 내 부동산 목록 |
+| GET | /service/v1/room/{hashid} | 부동산 상세（면적, 방향, 권리, 단지 정보 포함） |
 
 #### 요금 관리
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/fees/bills | 청구서 목록 (?status=0미납/1부분 납부/2납부 완료/3연체) |
-| GET | /service/fees/bill/{hashid} | 청구서 상세（요금 유형, 결제 기록 포함） |
-| GET | /service/fees/payments | 납부 기록 |
-| POST | /service/fees/pay | 온라인 납부（{ bill_id, payment_method, password }） |
-| GET | /service/fees/statistics | 요금 통계 (?year=2026) |
+| GET | /service/v1/fees/bills | 청구서 목록 (?status=0미납/1부분 납부/2납부 완료/3연체) |
+| GET | /service/v1/fees/bill/{hashid} | 청구서 상세（요금 유형, 결제 기록 포함） |
+| GET | /service/v1/fees/payments | 납부 기록 |
+| POST | /service/v1/fees/pay | 온라인 납부（{ bill_id, payment_method, password }） |
+| GET | /service/v1/fees/statistics | 요금 통계 (?year=2026) |
 
 #### 수리 접수
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/repairs | 수리 접수 목록 (?status=) |
-| GET | /service/repair/{hashid} | 수리 접수 상세（진행 타임라인 포함） |
-| POST | /service/repair | 수리 접수 제출（{ room_id, category, urgency, description, images[], scheduled_at }） |
-| DELETE | /service/repair/{hashid} | 취소（비밀번호 필요, { password }） |
-| POST | /service/repair/{hashid}/rate | 평가（{ rating: 1-5, feedback }） |
+| GET | /service/v1/repairs | 수리 접수 목록 (?status=) |
+| GET | /service/v1/repair/{hashid} | 수리 접수 상세（진행 타임라인 포함） |
+| POST | /service/v1/repair | 수리 접수 제출（{ room_id, category, urgency, description, images[], scheduled_at }） |
+| DELETE | /service/v1/repair/{hashid} | 취소（비밀번호 필요, { password }） |
+| POST | /service/v1/repair/{hashid}/rate | 평가（{ rating: 1-5, feedback }） |
 
 #### 민원·제안
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/complaints | 민원 목록 |
-| GET | /service/complaint/{hashid} | 민원 상세（처리 진행 포함） |
-| POST | /service/complaint | 민원 제출（{ type, category, title, content, is_anonymous, images[] }） |
-| POST | /service/complaint/{hashid}/satisfaction | 만족도 평가（{ satisfaction: 1-5 }） |
+| GET | /service/v1/complaints | 민원 목록 |
+| GET | /service/v1/complaint/{hashid} | 민원 상세（처리 진행 포함） |
+| POST | /service/v1/complaint | 민원 제출（{ type, category, title, content, is_anonymous, images[] }） |
+| POST | /service/v1/complaint/{hashid}/satisfaction | 만족도 평가（{ satisfaction: 1-5 }） |
 
 #### 공지
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/announcements | 공지 목록 (?category=) |
-| GET | /service/announcement/{hashid} | 공지 상세 |
+| GET | /service/v1/announcements | 공지 목록 (?category=) |
+| GET | /service/v1/announcement/{hashid} | 공지 상세 |
 
 #### 주차
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/parking/vehicles | 내 차량 |
-| GET | /service/parking/spaces | 내 주차 공간 |
-| GET | /service/parking/records | 주차 기록 |
+| GET | /service/v1/parking/vehicles | 내 차량 |
+| GET | /service/v1/parking/spaces | 내 주차 공간 |
+| GET | /service/v1/parking/records | 주차 기록 |
 
 #### 방문객
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/visitors | 내 방문객 예약 |
-| POST | /service/visitor | 예약 생성（출입 코드 생성） |
-| PUT | /service/visitor/{hashid} | 예약 수정 |
-| DELETE | /service/visitor/{hashid} | 예약 취소 |
+| GET | /service/v1/visitors | 내 방문객 예약 |
+| POST | /service/v1/visitor | 예약 생성（출입 코드 생성） |
+| PUT | /service/v1/visitor/{hashid} | 예약 수정 |
+| DELETE | /service/v1/visitor/{hashid} | 예약 취소 |
 
 #### 커뮤니티 활동
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/activities | 활동 목록 (?status=) |
-| GET | /service/activity/{hashid} | 활동 상세 |
-| POST | /service/activity/{hashid}/signup | 신청하기 |
-| POST | /service/activity/{hashid}/cancel | 신청 취소 |
+| GET | /service/v1/activities | 활동 목록 (?status=) |
+| GET | /service/v1/activity/{hashid} | 활동 상세 |
+| POST | /service/v1/activity/{hashid}/signup | 신청하기 |
+| POST | /service/v1/activity/{hashid}/cancel | 신청 취소 |
 
 #### 개인 정보
 
 | 메서드 | 경로 | 설명 |
 |------|------|------|
-| GET | /service/profile | 개인 정보 |
-| PUT | /service/profile | 수정（{ name, email, gender, birthday }） |
-| PUT | /service/profile/password | 비밀번호 변경（{ old_password, new_password }） |
-| POST | /service/profile/logout | 로그아웃 |
+| GET | /service/v1/profile | 개인 정보 |
+| PUT | /service/v1/profile | 수정（{ name, email, gender, birthday }） |
+| PUT | /service/v1/profile/password | 비밀번호 변경（{ old_password, new_password }） |
+| POST | /service/v1/profile/logout | 로그아웃 |
 
 ---
 
@@ -639,7 +639,7 @@ Token 갱신.
 모든 요청은 `X-API-Key` 요청 헤더를 포함해야 하며, 값은 `scripts/gen_api_key.php`로 생성된 Key（64자리 hex, DB에는 SHA-256 다이제스트만 저장）입니다:
 
 ```bash
-curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
+curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/v1/announcements
 ```
 
 - 누락 또는 잘못된 Key는 `401` 반환（`{"code":401,"message":"无效的API Key","data":[]}`）
@@ -647,28 +647,28 @@ curl -H "X-API-Key: <你的Key>" http://localhost:8788/open/announcements
 
 ### 엔드포인트
 
-#### GET /open/announcements — 공지 목록
+#### GET /open/v1/announcements — 공지 목록
 
-파라미터: `page`（기본 1）, `category`（선택）. 응답 구조는 `/service/announcements`와 동일.
+파라미터: `page`（기본 1）, `category`（선택）. 응답 구조는 `/service/v1/announcements`와 동일.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/announcements?page=1"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/announcements?page=1"
 ```
 
-#### GET /open/bills — 청구서 조회
+#### GET /open/v1/bills — 청구서 조회
 
 파라미터: `bill_number`（필수, 청구서 번호）. 단일 청구서 상세 반환（요금 유형, 방 번호, 미납 금액 포함）. 없으면 404 반환.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/bills?bill_number=B202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
 ```
 
-#### GET /open/repairs — 수리 접수 상태 조회
+#### GET /open/v1/repairs — 수리 접수 상태 조회
 
 파라미터: `order_number`（필수, 수리 접수 번호）. 수리 접수 건의 현재 상태 및 진행 타임라인（`progress` 배열）반환. 없으면 404 반환.
 
 ```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/repairs?order_number=R202608160001"
+curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---

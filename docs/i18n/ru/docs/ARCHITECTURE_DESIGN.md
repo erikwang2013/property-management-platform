@@ -21,7 +21,7 @@
 │   config/route.php — URL → Controller + привязка middleware  │
 ├─────────────────────────────────────────────────────────────┤
 │                 Слой middleware (Middleware Layer)            │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                Слой контроллеров (Controller Layer)           │
 │   BaseController → проверка запроса → кодирование ID → бизнес-│
@@ -50,8 +50,8 @@ Cors → SecurityFilter(проверка метода→405) → RateLimit(ог�
 ### Портал жильцов (service)
 ```
 Cors → SecurityFilter(проверка метода→405) → RateLimit(ограничение)
-  → ApiVersion(проверка версии) → Controller       # /api/* публичные
-  → ServiceAuth(аутентификация JWT владельца) → Controller  # /service/* защищённые
+  → Controller (версия в URL-пути)                # /api/v1/* публичные
+  → ServiceAuth(аутентификация JWT владельца) → Controller  # /service/v1/* защищённые
 ```
 
 ### Описание глобальных middleware
@@ -61,7 +61,6 @@ Cors → SecurityFilter(проверка метода→405) → RateLimit(ог�
 | Cors | глобальный, первый | обработка заголовков кросс-доменного доступа |
 | SecurityFilter | глобальный | белый список HTTP-методов, блокировка XSS/SQL-инъекций/обхода путей/инъекций команд/CSRF, IP-чёрный список |
 | RateLimit | глобальный | скользящее окно Redis (Lua атомарно), по умолчанию 60 раз/мин |
-| ApiVersion | маршруты /api | проверка заголовка API-Version, внедрение номера версии |
 | AdminAuth | маршруты /admin | проверка JWT Token, внедрение adminId |
 | AdminPermission | маршруты /admin | проверка прав RBAC method.path (кэш Redis 60s) |
 | OperationLog | маршруты /admin | автоматическая запись операций POST/PUT/DELETE (с определением источника) |
@@ -150,17 +149,17 @@ Cors → SecurityFilter(проверка метода→405) → RateLimit(ог�
 | Интерфейс | Ограничение |
 |------|------|
 | По умолчанию | 60 раз/мин/IP/маршрут |
-| POST /api/auth/login | 10 раз/мин |
-| POST /api/auth/register | 5 раз/мин |
+| POST /api/v1/auth/login | 10 раз/мин |
+| POST /api/v1/auth/register | 5 раз/мин |
 
 При превышении возвращается 429 + заголовки `X-RateLimit-Limit/Remaining/Reset/Retry-After`.
 
 ## 9. Политика версий API
 
-- Версия управляется заголовком `API-Version` (по умолчанию `v1`), в URL не отражается
-- Неподдерживаемая версия возвращает 400
+- Версия заложена в сам путь API (например `/api/v1/*`, `/service/v1/*`), а не в заголовок запроса
+- Неизвестные пути версий возвращают 404 напрямую от роутера (без middleware)
 - Контроллеры организованы по версиям: `app/api/{version}/controller/`
-- Для новой версии достаточно создать каталог и зарегистрировать его в middleware `ApiVersion`
+- Новая версия добавляется регистрацией группы маршрутов `/{namespace}/v{version}` (контроллеры в `app/api/v1/controller/`); неизвестные пути версий возвращают 404 от FastRoute
 
 ## 10. Архитектура развёртывания
 

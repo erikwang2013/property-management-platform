@@ -8,12 +8,12 @@
 | पेज | रूट (main_pages.json में पंजीकृत) | कॉल किया गया API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | लॉगिन (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (डैशबोर्ड: बकाया/कार्य आदेश/संपत्ति संख्या + घोषणा सूची) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (डैशबोर्ड: बकाया/कार्य आदेश/संपत्ति संख्या + घोषणा सूची) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **नेविगेशन वर्तमान स्थिति** (पूरे ऐप में केवल 4 जंप): Login→Home、Home→Login (लॉगआउट)、Profile→Login、RepairList→RepairSubmit। HomePage में केवल स्टैटिस्टिक्स कार्ड + घोषणा सूची है, कोई फ़ंक्शन प्रवेश ग्रिड नहीं; FeeBills/Announcement/Profile पेज मौजूद हैं लेकिन **कोई प्रवेश नहीं, पहुंच योग्य नहीं**।
 

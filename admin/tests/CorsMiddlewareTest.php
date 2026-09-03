@@ -33,7 +33,7 @@ class CorsMiddlewareTest extends TestCase
         $this->assertSame(204, $response->getStatusCode());
         $this->assertSame(self::ORIGINAL_ORIGIN, $response->getHeader('Access-Control-Allow-Origin'));
         $this->assertSame('GET,POST,PUT,DELETE,OPTIONS', $response->getHeader('Access-Control-Allow-Methods'));
-        $this->assertSame('Authorization,Content-Type,API-Version', $response->getHeader('Access-Control-Allow-Headers'));
+        $this->assertSame('Authorization,Content-Type', $response->getHeader('Access-Control-Allow-Headers'));
     }
 
     public function test_normal_response_gets_security_headers(): void

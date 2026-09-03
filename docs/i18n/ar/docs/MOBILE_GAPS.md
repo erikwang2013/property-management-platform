@@ -8,12 +8,12 @@
 | الصفحة | المسار (مسجل في main_pages.json) | واجهة API المستدعاة |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | تسجيل الدخول (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (لوحة القيادة: المبالغ المستحقة/الطلبات/عدد العقارات + قائمة الإعلانات) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (لوحة القيادة: المبالغ المستحقة/الطلبات/عدد العقارات + قائمة الإعلانات) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **وضع التنقل الحالي** (4 انتقالات فقط في التطبيق كله): Login←Home、Home←Login (خروج)、Profile←Login、RepairList←RepairSubmit. تحتوي HomePage على بطاقات إحصائية + قائمة إعلانات فقط، دون شبكة مداخل وظيفية؛ صفحات FeeBills/Announcement/Profile موجودة لكن **بلا مدخل وغير قابلة للوصول**.
 

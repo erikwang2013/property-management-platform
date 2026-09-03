@@ -21,7 +21,7 @@ Das Immobilienverwaltungssystem verwendet eine Schichtenarchitektur mit „zwei 
 │   config/route.php — URL → Controller-Zuordnung + Middleware  │
 ├─────────────────────────────────────────────────────────────┤
 │                 Middleware-Ebene (Middleware Layer)           │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                 Controller-Ebene (Controller Layer)           │
 │   BaseController → Anfragevalidierung → ID-Kodierung →        │
@@ -51,7 +51,7 @@ Cors → SecurityFilter(Methodenprüfung→405) → RateLimit(Ratenlimit)
 ### Geschäftssystem (service)
 ```
 Cors → SecurityFilter(Methodenprüfung→405) → RateLimit(Ratenlimit)
-  → ApiVersion(Versionsprüfung) → Controller      # /api/* öffentliche Schnittstellen
+  → Controller (Version im URL-Pfad)          # /api/v1/* öffentliche Schnittstellen
   → ServiceAuth(JWT-Eigentümerauthentifizierung) → Controller  # /service/* geschützte Schnittstellen
 ```
 
@@ -62,7 +62,6 @@ Cors → SecurityFilter(Methodenprüfung→405) → RateLimit(Ratenlimit)
 | Cors | Global an erster Stelle | CORS-Header-Verarbeitung |
 | SecurityFilter | Global | HTTP-Methoden-Whitelist, Blockierung von XSS/SQL-Injection/Pfadtraversal/Befehlsinjektion/CSRF, IP-Blacklist |
 | RateLimit | Global | Redis-Sliding-Window-Ratenbegrenzung (Lua atomar), Standard 60 Anfragen/Minute |
-| ApiVersion | /api-Routen | Prüfung des Anfrageheaders API-Version, Injektion der Versionsnummer |
 | AdminAuth | /admin-Routen | JWT-Token-Validierung, Injektion von adminId |
 | AdminPermission | /admin-Routen | RBAC-method.path-Berechtigungsprüfung (Redis 60s Cache) |
 | OperationLog | /admin-Routen | Automatische Protokollierung von POST/PUT/DELETE-Aktionen (inkl. Quellenerkennung) |
@@ -151,17 +150,17 @@ Basiert auf dem Redis-Sorted-Set-Sliding-Window-Algorithmus, atomar per Lua-Skri
 | Schnittstelle | Limit |
 |------|------|
 | Standard | 60 Anfragen/Minute/IP/Route |
-| POST /api/auth/login | 10 Anfragen/Minute |
-| POST /api/auth/register | 5 Anfragen/Minute |
+| POST /api/v1/auth/login | 10 Anfragen/Minute |
+| POST /api/v1/auth/register | 5 Anfragen/Minute |
 
 Bei Überschreitung wird 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` zurückgegeben.
 
 ## 9. API-Versionsstrategie
 
-- Die Version wird über den Anfrageheader `API-Version` gesteuert (Standard `v1`), nicht über die URL
-- Nicht unterstützte Versionen führen zu 400
+- Die Version steckt im API-Pfad selbst (z. B. `/api/v1/*`, `/service/v1/*`), nicht in einem Request-Header
+- Nicht existierende Versionspfade liefern direkt 404 vom Router (ohne Middleware)
 - Controller sind nach Version organisiert: `app/api/{version}/controller/`
-- Eine neue Version erfordert nur das Anlegen des Verzeichnisses und die Registrierung in der `ApiVersion`-Middleware
+- Eine neue Version wird als neue Route-Gruppe `/{namespace}/v{version}` registriert (Controller unter `app/api/v1/controller/`); unbekannte Versionspfade liefern 404 von FastRoute
 
 ## 10. Bereitstellungsarchitektur
 

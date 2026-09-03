@@ -21,7 +21,7 @@ O Sistema de Gestão de Propriedades adota uma arquitetura em camadas de "dois b
 │   config/route.php — mapeamento URL → Controller + middlewares│
 ├─────────────────────────────────────────────────────────────┤
 │                  Camada de middlewares (Middleware Layer)     │
-│   SecurityFilter → RateLimit → ApiVersion → Auth → Permission │
+│   SecurityFilter → RateLimit → Auth → Permission               │
 ├─────────────────────────────────────────────────────────────┤
 │                Camada de controladores (Controller Layer)     │
 │   BaseController → validação da requisição → codificação de ID│
@@ -51,8 +51,8 @@ Cors → SecurityFilter(verificação de método→405) → RateLimit(limite de 
 ### Portal de proprietários (service)
 ```
 Cors → SecurityFilter(verificação de método→405) → RateLimit(limite de taxa)
-  → ApiVersion(validação de versão) → Controller       # APIs públicas /api/*
-  → ServiceAuth(auth JWT do proprietário) → Controller # APIs autenticadas /service/*
+  → Controller (versão no URL)                     # APIs públicas /api/v1/*
+  → ServiceAuth(auth JWT do proprietário) → Controller # APIs autenticadas /service/v1/*
 ```
 
 ### Descrição dos middlewares globais
@@ -62,7 +62,6 @@ Cors → SecurityFilter(verificação de método→405) → RateLimit(limite de 
 | Cors | Primeiro global | Tratamento de cabeçalhos CORS |
 | SecurityFilter | Global | Whitelist de métodos HTTP, bloqueio de XSS/injeção de SQL/path traversal/injeção de comandos/CSRF, blacklist de IPs |
 | RateLimit | Global | Limite de taxa por janela deslizante no Redis (Lua atômico), padrão 60 vezes/minuto |
-| ApiVersion | Rotas /api | Validação do cabeçalho API-Version, injeção do número de versão |
 | AdminAuth | Rotas /admin | Validação do Token JWT, injeção do adminId |
 | AdminPermission | Rotas /admin | Verificação de permissões RBAC method.path (cache Redis 60s) |
 | OperationLog | Rotas /admin | Registro automático de operações POST/PUT/DELETE (com detecção de plataforma de origem) |
@@ -151,17 +150,17 @@ Baseada no algoritmo de janela deslizante com Redis Sorted Set, executada atomic
 | Interface | Limite |
 |------|------|
 | Padrão | 60 vezes/minuto/IP/rota |
-| POST /api/auth/login | 10 vezes/minuto |
-| POST /api/auth/register | 5 vezes/minuto |
+| POST /api/v1/auth/login | 10 vezes/minuto |
+| POST /api/v1/auth/register | 5 vezes/minuto |
 
 Ao exceder o limite, retorna 429 + cabeçalhos `X-RateLimit-Limit/Remaining/Reset/Retry-After`.
 
 ## 9. Política de versão da API
 
-- A versão é controlada pelo cabeçalho `API-Version` (padrão `v1`), não aparece na URL
-- Versão não suportada retorna 400
+- A versão vai no próprio caminho da API (ex.: `/api/v1/*`, `/service/v1/*`), não em um cabeçalho
+- Caminhos de versão inexistentes retornam 404 diretamente do roteador (sem middleware)
 - Controladores organizados por versão: `app/api/{version}/controller/`
-- Para adicionar uma versão, basta criar o diretório e registrá-la no middleware `ApiVersion`
+- Adicionar versão = registrar um novo grupo de rotas `/{namespace}/v{version}` (controladores em `app/api/v1/controller/`); caminhos de versão inexistentes retornam 404 via FastRoute
 
 ## 10. Arquitetura de implantação
 

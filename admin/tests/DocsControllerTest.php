@@ -52,15 +52,24 @@ class DocsControllerTest extends TestCase
         $this->assertNotEmpty($spec['paths']);
     }
 
-    public function test_spec_security_schemes_cover_jwt_and_version(): void
+    public function test_spec_security_schemes_only_bearer(): void
     {
         $spec = self::buildSpec();
         $schemes = $spec['components']['securitySchemes'] ?? [];
         $this->assertSame('http', $schemes['bearerAuth']['type']);
         $this->assertSame('bearer', $schemes['bearerAuth']['scheme']);
-        $this->assertSame('apiKey', $schemes['apiVersion']['type']);
-        $this->assertSame('API-Version', $schemes['apiVersion']['name']);
+        // 版本在路由中体现，不应再有 API-Version 头安全方案
+        $this->assertArrayNotHasKey('apiVersion', $schemes);
         $this->assertSame([['bearerAuth' => []]], $spec['security']);
+    }
+
+    public function test_spec_paths_carry_url_version(): void
+    {
+        $spec = self::buildSpec();
+        $paths = array_keys($spec['paths'] ?? []);
+        $this->assertContains('/api/v1/auth/login', $paths);
+        $this->assertContains('/api/v1/captcha/generate', $paths);
+        $this->assertNotContains('/api/auth/login', $paths);
     }
 
     public function test_spec_servers_use_configured_base_url(): void

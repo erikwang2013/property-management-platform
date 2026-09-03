@@ -17,13 +17,13 @@ class BackendEnhancementTest extends TestCase
     // 1. v() 辅助函数 — 逐源码验证（避免触发 webman 运行时）
     // ============================================================
 
-    public function test_v_helper_function_exists_in_route_file(): void
+    public function test_route_file_uses_url_versioning(): void
     {
         $source = file_get_contents(__DIR__ . '/../config/route.php');
-        $this->assertStringContainsString('function v(', $source, 'route.php 应定义 v() 函数');
-        $this->assertStringContainsString('$request->apiVersion', $source, 'v() 应读取 apiVersion');
-        $this->assertStringContainsString('apiVersion ??', $source, 'v() 应有 apiVersion 默认值回退');
-        $this->assertStringContainsString('return (new $class)->', $source, 'v() 应实例化并调用控制器');
+        $this->assertStringContainsString("Route::group('/api/v1'", $source, 'route.php 应注册 /api/v1 路由组');
+        $this->assertStringContainsString('app\api\v1\controller\AuthController::class', $source, 'v1 控制器应静态绑定');
+        $this->assertStringNotContainsString('API-Version', $source, '不应再从请求头读取 API-Version');
+        $this->assertStringNotContainsString('apiVersion', $source, '不应再依赖 apiVersion 请求属性');
     }
 
     // ============================================================
@@ -109,10 +109,10 @@ class BackendEnhancementTest extends TestCase
 
         $refSensitive = $reflection->getProperty('sensitive');
         $sensitive = $refSensitive->getDefaultValue();
-        $this->assertArrayHasKey('/api/auth/login', $sensitive);
-        $this->assertEquals(10, $sensitive['/api/auth/login']['limit']);
-        $this->assertArrayHasKey('/api/auth/register', $sensitive);
-        $this->assertEquals(5, $sensitive['/api/auth/register']['limit']);
+        $this->assertArrayHasKey('/api/v1/auth/login', $sensitive);
+        $this->assertEquals(10, $sensitive['/api/v1/auth/login']['limit']);
+        $this->assertArrayHasKey('/api/v1/auth/register', $sensitive);
+        $this->assertEquals(5, $sensitive['/api/v1/auth/register']['limit']);
     }
 
     public function test_rate_limit_has_lua_script_for_atomicity(): void
@@ -182,10 +182,10 @@ class BackendEnhancementTest extends TestCase
         }
     }
 
-    public function test_route_file_has_api_version_middleware(): void
+    public function test_route_file_has_no_api_version_middleware(): void
     {
         $content = file_get_contents(__DIR__ . '/../config/route.php');
-        $this->assertStringContainsString('ApiVersion::class', $content);
+        $this->assertStringNotContainsString('ApiVersion', $content, '版本由路由承载，不应再注册 ApiVersion 中间件');
     }
 
     public function test_route_file_has_sensitive_batch_routes_after_resource(): void

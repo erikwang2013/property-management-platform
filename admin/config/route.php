@@ -4,7 +4,6 @@
  */
 
 use Webman\Route;
-use support\Request;
 
 /**
  * API 路由配置
@@ -15,22 +14,10 @@ use support\Request;
  * - /health   健康检查（无需认证）
  *
  * API 版本策略:
- * - 版本号通过请求头 API-Version 携带（如 "v1"、"v2"），不在 URL 中体现
- * - 缺失时默认使用 v1
- * - 由 ApiVersion 中间件校验，路由闭包按版本解析对应控制器
+ * - 版本号体现在接口路由中（如 /api/v1/*），不使用请求头
+ * - 新增版本只需注册新的 /api/{version} 路由组，控制器按 app/api/{version}/controller/ 目录组织
+ * - 不存在的版本路径由 FastRoute 直接返回 404
  */
-
-/**
- * 创建版本化 API 路由闭包
- */
-function v(string $controller, string $action): \Closure
-{
-    return function (Request $request) use ($controller, $action) {
-        $version = $request->apiVersion ?? 'v1';
-        $class = "\\app\\api\\{$version}\\controller\\{$controller}";
-        return (new $class)->{$action}($request);
-    };
-}
 
 // 商业版本开关（config/edition.php，env EDITIONS: lite/standard/full，逐级累进）
 function edition_supports(string $minEdition): bool
@@ -303,27 +290,25 @@ if (edition_supports('full')) {
 ]);
 
 // ============================================================
-// 公开接口（通过 API-Version 头路由到版本化控制器）
+// 公开接口 v1（版本体现在路由 /api/v1/*）
 // ============================================================
-Route::group('/api', function () {
+Route::group('/api/v1', function () {
     // 点击验证码
-    Route::post('/captcha/generate', v('CaptchaController', 'generate'));
-    Route::post('/captcha/verify', v('CaptchaController', 'verify'));
+    Route::post('/captcha/generate', [app\api\v1\controller\CaptchaController::class, 'generate']);
+    Route::post('/captcha/verify', [app\api\v1\controller\CaptchaController::class, 'verify']);
 
     // 认证
-    Route::post('/auth/login', v('AuthController', 'login'));
-    Route::post('/auth/register', v('AuthController', 'register'));
-    Route::post('/auth/refresh', v('AuthController', 'refresh'));
-})->middleware([
-    app\middleware\ApiVersion::class,
-]);
+    Route::post('/auth/login', [app\api\v1\controller\AuthController::class, 'login']);
+    Route::post('/auth/register', [app\api\v1\controller\AuthController::class, 'register']);
+    Route::post('/auth/refresh', [app\api\v1\controller\AuthController::class, 'refresh']);
+});
 
 // 安装向导（.installed 锁定前可访问）
 Route::get('/install', [app\admin\controller\InstallController::class, 'index']);
 Route::post('/install', [app\admin\controller\InstallController::class, 'store']);
 
 // ============================================================
-// 支付回调（第三方服务器调用，无需 JWT / ApiVersion 中间件，
+// 支付回调（第三方服务器调用，无需 JWT 认证，
 // 签名验证由 PaymentController 回调方法内部自行处理）
 // ============================================================
 Route::post('/payment/wechat/callback', [app\admin\controller\PaymentController::class, 'callbackWechat']);

@@ -8,12 +8,12 @@
 | Página | Rota (main_pages.json registrado) | API chamada |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | Login (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (painel: a pagar/ordens/nº de propriedades + lista de anúncios) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile、POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (painel: a pagar/ordens/nº de propriedades + lista de anúncios) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile、POST /service/v1/profile/logout |
 
 **Navegação atual** (apenas 4 transições em todo o app): Login→Home, Home→Login (sair), Profile→Login, RepairList→RepairSubmit. A HomePage tem apenas cartões de estatística + lista de anúncios, sem grade de entradas de funcionalidades; as páginas FeeBills/Announcement/Profile existem mas **sem entrada, inacessíveis**.
 

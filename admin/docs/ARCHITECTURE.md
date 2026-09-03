@@ -20,7 +20,7 @@ flowchart TB
     end
 
     subgraph "应用层 (webman v2)"
-        C0["ApiVersion 中间件<br/>API-Version 头校验"]
+        C0["路由分发<br/>版本段在 URL（/api/v1/*）"]
         C1["AdminAuth 中间件<br/>JWT 验证"]
         C2["AdminPermission 中间件<br/>RBAC 权限校验"]
         C3["管理端 Controller<br/>Dashboard / User / Role / Permission"]
@@ -81,7 +81,7 @@ flowchart TD
     subgraph "中间件层 Middleware Layer"
         M_RL["RateLimit<br/>Redis 滑动窗口限流<br/>X-RateLimit 响应头"]
         M_SF["SecurityFilter<br/>攻击检测拦截<br/>XSS/SQL注入/路径遍历/CSRF"]
-        M0["ApiVersion<br/>API 版本校验<br/>注入 apiVersion"]
+        M0["版本路由<br/>/api/v1/* 直接绑定控制器<br/>无版本中间件"]
         M1["AdminAuth<br/>JWT Token 校验<br/>注入 adminId"]
         M2["AdminPermission<br/>RBAC 鉴权<br/>method.path 匹配<br/>Redis 60s 缓存权限"]
     end
@@ -148,7 +148,6 @@ sequenceDiagram
     participant N as Nginx
     participant MW_SF as SecurityFilter
     participant MW_RL as RateLimit
-    participant MW0 as ApiVersion
     participant MW1 as AdminAuth
     participant MW2 as AdminPermission
     participant CTL as Controller
@@ -157,7 +156,7 @@ sequenceDiagram
     participant DB as MySQL
     participant OPLOG as OperationLog
 
-    C->>N: HTTPS 请求<br/>Header: API-Version: v1
+    C->>N: HTTPS 请求<br/>POST /api/v1/auth/login
     N->>MW_SF: 转发
 
     alt 非标准 HTTP 方法 (TRACE/CONNECT/PATCH...)
@@ -176,12 +175,10 @@ sequenceDiagram
         MW_RL-->>C: 429 + Retry-After
     end
 
-    MW_RL->>MW0: 通过
-
-    alt 不支持的版本
-        MW0-->>C: 400 不支持的API版本
-    else 版本有效
-        MW0->>MW0: $request->apiVersion = v1
+    alt 公开接口 /api/v1/*（版本在 URL，无需认证）
+        MW_RL->>CTL: 直达控制器
+    else 管理端 /admin/*
+        MW_RL->>MW1: 通过（JWT 认证）
     end
 
     alt Token 缺失或无效
@@ -234,7 +231,7 @@ sequenceDiagram
     participant CAP as Captcha Service
 
     Note over U,CAP: === 第一步: 获取验证码 ===
-    CL->>SV: POST /api/captcha/generate
+    CL->>SV: POST /api/v1/captcha/generate
     SV->>CAP: captcha_create('click')
     CAP->>CAP: 生成 300×200 背景图
     CAP->>CAP: 随机放置 N 个中文目标
@@ -249,7 +246,7 @@ sequenceDiagram
     CL->>CL: 收集 clicks: [{x,y}, {x,y}, {x,y}]
 
     Note over U,CAP: === 第三步: 登录 ===
-    CL->>SV: POST /api/auth/login { username, password, captcha_key, clicks }
+    CL->>SV: POST /api/v1/auth/login { username, password, captcha_key, clicks }
     SV->>CAP: captcha_verify(key, 'click', clicks)
     alt 验证码错误
         CAP-->>SV: false

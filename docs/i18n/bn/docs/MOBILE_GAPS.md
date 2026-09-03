@@ -8,12 +8,12 @@
 | পেজ | রুট (main_pages.json-এ নিবন্ধিত) | কল করা API |
 |------|------------------------------|---------|
 | LoginPage | pages/LoginPage | লগইন (AuthService) |
-| HomePage | pages/HomePage | GET /service/home (ড্যাশবোর্ড: বকেয়া/ওয়ার্ক অর্ডার/সম্পত্তির সংখ্যা + ঘোষণা তালিকা) |
-| FeeBillsPage | pages/FeeBillsPage | GET /service/fees/bills?page=1&per_page=50 |
-| RepairListPage | pages/RepairListPage | GET /service/repairs |
-| RepairSubmitPage | pages/RepairSubmitPage | POST /service/repair |
-| AnnouncementPage | pages/AnnouncementPage | GET /service/announcements?page=1&per_page=50 |
-| ProfilePage | pages/ProfilePage | GET /service/profile, POST /service/profile/logout |
+| HomePage | pages/HomePage | GET /service/v1/home (ড্যাশবোর্ড: বকেয়া/ওয়ার্ক অর্ডার/সম্পত্তির সংখ্যা + ঘোষণা তালিকা) |
+| FeeBillsPage | pages/FeeBillsPage | GET /service/v1/fees/bills?page=1&per_page=50 |
+| RepairListPage | pages/RepairListPage | GET /service/v1/repairs |
+| RepairSubmitPage | pages/RepairSubmitPage | POST /service/v1/repair |
+| AnnouncementPage | pages/AnnouncementPage | GET /service/v1/announcements?page=1&per_page=50 |
+| ProfilePage | pages/ProfilePage | GET /service/v1/profile, POST /service/v1/profile/logout |
 
 **নেভিগেশনের বর্তমান অবস্থা** (পুরো অ্যাপে মাত্র ৪টি জাম্প): Login→Home, Home→Login (লগআউট), Profile→Login, RepairList→RepairSubmit। HomePage-এ শুধু পরিসংখ্যান কার্ড + ঘোষণা তালিকা আছে, ফাংশন এন্ট্রি গ্রিড নেই; FeeBills/Announcement/Profile পেজ আছে কিন্তু **কোনো এন্ট্রি নেই, অ্যাক্সেসযোগ্য নয়**।
 
