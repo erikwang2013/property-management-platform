@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 সম্পূর্ণ-স্ট্যাক সম্পত্তি ব্যবস্থাপনা সিস্টেম, ২২টি বিজনেস মডিউল + ১২টি এক্সটেনশন ফিচার (বার্তা বিজ্ঞপ্তি/অনুমোদন ওয়ার্কফ্লো/পেমেন্ট/ভোট/SLA/ডেটা ড্যাশবোর্ড/আদায়/পরিদর্শন/মল/ফেসিয়াল/গ্রুপ/স্মার্ট Q&A) কভার করে। অ্যাডমিন প্যানেল (admin) এবং মালিক পোর্টাল (service) আলাদাভাবে ডিপ্লয় করা হয়; ফ্রন্টএন্ড Flutter Web (PC অ্যাডমিন প্যানেল স্টাইল) এবং HarmonyOS মোবাইল কভার করে।
+
+**শিয়াওঝু** (小筑) এই প্রকল্পের মাসকট — জ্বলন্ত জানালার একটি মূর্ত বিল্ডিং ম্যানেজার, যা ইনস্টল উইজার্ড, ত্রুটি পাতা, লগইন পাতা ও আর্কিটেকচার ডায়াগ্রামে দেখা যায়।
 
 ## প্রকল্পের কাঠামো
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## প্রকল্পের আকার
 
 | স্তর | সংখ্যা | বিবরণ |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### সিস্টেম প্যানোরামা আর্কিটেকচার
 
-<img src="docs/images/readme_architecture.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="460">
+<img src="../../images/design_architecture_en.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="1000">
+
+### ফাংশন মডিউল ওভারভিউ
+
+<img src="../../images/design_function_en.svg" alt="ফাংশন মডিউল ওভারভিউ" width="1000">
+
+### ডেটা এনটিটি লাইফসাইকেল
+
+<img src="../../images/design_lifecycle_en.svg" alt="ডেটা এনটিটি লাইফসাইকেল" width="1000">
 
 ### কোর বিজনেস প্রক্রিয়া
 
 <img src="docs/images/readme_business_flow.svg" alt="কোর বিজনেস প্রক্রিয়া" width="860">
-
-### ফাংশন মডিউল ওভারভিউ
-
-<img src="docs/images/readme_modules.svg" alt="ফাংশন মডিউল ওভারভিউ" width="860">
-
-### ডেটা এনটিটি লাইফসাইকেল
-
-<img src="docs/images/readme_lifecycle.svg" alt="ডেটা এনটিটি লাইফসাইকেল" width="460">
 
 ### ১৮ স্তরের গভীর নিরাপত্তা প্রতিরক্ষা
 

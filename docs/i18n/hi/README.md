@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 फुल-स्टैक संपत्ति प्रबंधन प्रणाली, जिसमें 22 व्यावसायिक मॉड्यूल + 12 विस्तारित सुविधाएँ शामिल हैं (संदेश सूचना/अनुमोदन वर्कफ़्लो/भुगतान/मतदान/SLA/डेटा स्क्रीन/वसूली/निरीक्षण/मॉल/चेहरा पहचान/समूह/स्मार्ट प्रश्नोत्तर)। एडमिन पैनल (admin) और मालिक पोर्टल (service) अलग-अलग तैनात किए जाते हैं; फ्रंटएंड में Flutter Web (PC प्रबंधन बैकएंड शैली) और HarmonyOS मोबाइल एप्लिकेशन शामिल हैं।
+
+**Xiaozhu** (小筑) इस परियोजना का शुभंकर है — रोशन खिड़कियों वाला एक मानवरूपी बिल्डिंग प्रबंधक, जो इंस्टॉल विज़ार्ड, त्रुटि पृष्ठों, लॉगिन पृष्ठ और आर्किटेक्चर आरेख में दिखता है।
 
 ## परियोजना संरचना
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## परियोजना आकार
 
 | परत | मात्रा | विवरण |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### सिस्टम पैनोरमा आर्किटेक्चर
 
-<img src="docs/images/readme_architecture.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="460">
+<img src="../../images/design_architecture_en.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="1000">
+
+### फ़ंक्शन मॉड्यूल अवलोकन
+
+<img src="../../images/design_function_en.svg" alt="फ़ंक्शन मॉड्यूल अवलोकन" width="1000">
+
+### डेटा इकाई जीवनचक्र
+
+<img src="../../images/design_lifecycle_en.svg" alt="डेटा इकाई जीवनचक्र" width="1000">
 
 ### मुख्य व्यावसायिक प्रवाह
 
 <img src="docs/images/readme_business_flow.svg" alt="मुख्य व्यावसायिक प्रवाह" width="860">
-
-### फ़ंक्शन मॉड्यूल अवलोकन
-
-<img src="docs/images/readme_modules.svg" alt="फ़ंक्शन मॉड्यूल अवलोकन" width="860">
-
-### डेटा इकाई जीवनचक्र
-
-<img src="docs/images/readme_lifecycle.svg" alt="डेटा इकाई जीवनचक्र" width="460">
 
 ### 18-परत सुरक्षा गहराई रक्षा
 

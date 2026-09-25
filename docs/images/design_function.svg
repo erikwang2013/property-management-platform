@@ -1,0 +1,147 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 800" width="1040" height="800" role="img">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C7D2FE"/></marker><marker id="arroww" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#FFFFFF"/></marker></defs>
+<rect width="1040" height="800" fill="#FFFFFF"/>
+<rect x="24" y="20" width="992" height="30" rx="9" fill="#4F46E5"/>
+<text x="38" y="40" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" fill="#FFFFFF" text-anchor="start" font-weight="700">管理端 admin · 22 个物业模块 + 12 个扩展功能 + 平台功能</text>
+<rect x="24" y="62" width="321.3333333333333" height="238" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="62" width="321.3333333333333" height="41" rx="11" fill="#4F46E5"/>
+<rect x="24" y="91" width="321.3333333333333" height="12" rx="0" fill="#4F46E5"/>
+<text x="36" y="83" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">基础档案</text>
+<rect x="34" y="102" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="118" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">小区</text>
+<rect x="34" y="130" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="146" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">楼栋</text>
+<rect x="34" y="158" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="174" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">单元</text>
+<rect x="34" y="186" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="202" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">户型</text>
+<rect x="34" y="214" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="230" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">房产</text>
+<rect x="34" y="242" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="258" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">业主</text>
+<rect x="34" y="270" width="301.3333333333333" height="24" rx="7" fill="#E0E7FF"/>
+<text x="184.66666666666666" y="286" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#4F46E5" text-anchor="middle" font-weight="600">租户</text>
+<rect x="359.3333333333333" y="62" width="321.3333333333333" height="238" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="359.3333333333333" y="62" width="321.3333333333333" height="41" rx="11" fill="#0891B2"/>
+<rect x="359.3333333333333" y="91" width="321.3333333333333" height="12" rx="0" fill="#0891B2"/>
+<text x="371.3333333333333" y="83" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">费用与财务</text>
+<rect x="369.3333333333333" y="102" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="118" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">费用类型</text>
+<rect x="369.3333333333333" y="130" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="146" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">账单管理</text>
+<rect x="369.3333333333333" y="158" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="174" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">缴费记录</text>
+<rect x="369.3333333333333" y="186" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="202" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">财务管理</text>
+<rect x="369.3333333333333" y="214" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="230" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">智能催缴</text>
+<rect x="369.3333333333333" y="242" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="258" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">报表中心</text>
+<rect x="369.3333333333333" y="270" width="301.3333333333333" height="24" rx="7" fill="#CFFAFE"/>
+<text x="520.0" y="286" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">账单批量生成</text>
+<rect x="694.6666666666666" y="62" width="321.3333333333333" height="238" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="694.6666666666666" y="62" width="321.3333333333333" height="41" rx="11" fill="#D97706"/>
+<rect x="694.6666666666666" y="91" width="321.3333333333333" height="12" rx="0" fill="#D97706"/>
+<text x="706.6666666666666" y="83" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">服务与工单</text>
+<rect x="704.6666666666666" y="102" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="118" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">报修管理</text>
+<rect x="704.6666666666666" y="130" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="146" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">投诉建议</text>
+<rect x="704.6666666666666" y="158" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="174" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">巡检管理</text>
+<rect x="704.6666666666666" y="186" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="202" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">保洁管理</text>
+<rect x="704.6666666666666" y="214" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="230" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">绿化管理</text>
+<rect x="704.6666666666666" y="242" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="258" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">安保巡逻</text>
+<rect x="704.6666666666666" y="270" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
+<text x="855.3333333333333" y="286" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">工单派单</text>
+<rect x="24" y="316" width="489.0" height="210" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="316" width="489.0" height="41" rx="11" fill="#059669"/>
+<rect x="24" y="345" width="489.0" height="12" rx="0" fill="#059669"/>
+<text x="36" y="337" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">资产与运营</text>
+<rect x="34" y="356" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="372" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">停车管理</text>
+<rect x="34" y="384" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="400" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">设备管理</text>
+<rect x="34" y="412" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="428" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">合同管理</text>
+<rect x="34" y="440" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="456" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">能耗管理</text>
+<rect x="34" y="468" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="484" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">社区活动</text>
+<rect x="34" y="496" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
+<text x="268.5" y="512" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">社区商城</text>
+<rect x="527.0" y="316" width="489.0" height="210" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="527.0" y="316" width="489.0" height="41" rx="11" fill="#7C3AED"/>
+<rect x="527.0" y="345" width="489.0" height="12" rx="0" fill="#7C3AED"/>
+<text x="539.0" y="337" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">组织与权限</text>
+<rect x="537.0" y="356" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="372" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">员工管理</text>
+<rect x="537.0" y="384" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="400" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">用户管理</text>
+<rect x="537.0" y="412" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="428" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">角色权限</text>
+<rect x="537.0" y="440" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="456" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">系统配置</text>
+<rect x="537.0" y="468" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="484" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">操作日志</text>
+<rect x="537.0" y="496" width="469.0" height="24" rx="7" fill="#EDE9FE"/>
+<text x="771.5" y="512" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#7C3AED" text-anchor="middle" font-weight="600">多小区集团</text>
+<rect x="24" y="572" width="992" height="114" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="572" width="992" height="41" rx="11" fill="#E11D48"/>
+<rect x="24" y="601" width="992" height="12" rx="0" fill="#E11D48"/>
+<text x="36" y="593" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#FFFFFF" text-anchor="start" font-weight="700">扩展能力</text>
+<rect x="36.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="112.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">消息通知</text>
+<rect x="199.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="275.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">审批工作流</text>
+<rect x="362.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="438.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">支付集成</text>
+<rect x="525.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="601.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">业主投票</text>
+<rect x="688.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="764.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">SLA 自动升级</text>
+<rect x="851.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="927.5" y="631.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">数据大屏</text>
+<rect x="36.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="112.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">智能催缴</text>
+<rect x="199.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="275.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">巡检移动端</text>
+<rect x="362.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="438.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">人脸识别</text>
+<rect x="525.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="601.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">智能问答</text>
+<rect x="688.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="764.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">集团管理</text>
+<rect x="851.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
+<text x="927.5" y="667.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">报表导出</text>
+<rect x="24" y="702" width="992" height="28" rx="9" fill="#0E7490"/>
+<text x="38" y="721" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11.5" fill="#FFFFFF" text-anchor="start" font-weight="700">业主端 service · 自助服务</text>
+<rect x="24.0" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="62.583333333333336" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">我的房产</text>
+<rect x="107.16666666666667" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="145.75" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">费用账单</text>
+<rect x="190.33333333333334" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="228.91666666666669" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">在线缴费</text>
+<rect x="273.5" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="312.0833333333333" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">提交报修</text>
+<rect x="356.6666666666667" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="395.25" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">访客预约</text>
+<rect x="439.83333333333337" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="478.4166666666667" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">停车查询</text>
+<rect x="523.0" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="561.5833333333334" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">公告通知</text>
+<rect x="606.1666666666667" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="644.7500000000001" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">投诉建议</text>
+<rect x="689.3333333333334" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="727.9166666666667" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">社区活动</text>
+<rect x="772.5" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="811.0833333333334" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">业主投票</text>
+<rect x="855.6666666666667" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="894.2500000000001" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">社区商城</text>
+<rect x="938.8333333333334" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
+<text x="977.4166666666667" y="761" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">智能问答</text>
+</svg>

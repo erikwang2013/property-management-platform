@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="Project Structure" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="System Overview Architecture" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. System Architecture Overview
 
 The property management system uses a "dual backend + multi frontend" layered architecture. The admin portal (admin) and owner business service (service) are two independent webman v2 projects that work together over a shared MySQL database. Frontends cover Flutter Web (PC admin style) and HarmonyOS mobile.

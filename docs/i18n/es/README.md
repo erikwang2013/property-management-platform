@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 Sistema de gestión de propiedades full-stack que cubre 22 módulos de negocio + 12 funciones extendidas (notificaciones de mensajes / flujo de aprobación / pagos / votaciones / SLA / pantalla de datos / cobros / inspecciones / tienda / reconocimiento facial / grupo / Q&A inteligente). El panel de administración (admin) y el portal de propietarios (service) se despliegan por separado; el frontend cubre Flutter Web (estilo escritorio de panel de administración de PC) y la app móvil HarmonyOS.
+
+**Xiaozhu** (小筑) es la mascota del proyecto: un administrador de edificio personificado con las ventanas encendidas, presente en el asistente de instalación, las páginas de error, la página de inicio de sesión y el diagrama de arquitectura.
 
 ## Estructura del proyecto
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Tamaño del proyecto
 
 | Capa | Cantidad | Detalles |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### Arquitectura panorámica del sistema
 
-<img src="docs/images/readme_architecture.svg" alt="Arquitectura panorámica del sistema" width="460">
+<img src="../../images/design_architecture_en.svg" alt="Arquitectura panorámica del sistema" width="1000">
+
+### Resumen de módulos funcionales
+
+<img src="../../images/design_function_en.svg" alt="Resumen de módulos funcionales" width="1000">
+
+### Ciclo de vida de entidades de datos
+
+<img src="../../images/design_lifecycle_en.svg" alt="Ciclo de vida de entidades de datos" width="1000">
 
 ### Flujo de negocio principal
 
 <img src="docs/images/readme_business_flow.svg" alt="Flujo de negocio principal" width="860">
-
-### Resumen de módulos funcionales
-
-<img src="docs/images/readme_modules.svg" alt="Resumen de módulos funcionales" width="860">
-
-### Ciclo de vida de entidades de datos
-
-<img src="docs/images/readme_lifecycle.svg" alt="Ciclo de vida de entidades de datos" width="460">
 
 ### Defensa en profundidad de 18 capas
 

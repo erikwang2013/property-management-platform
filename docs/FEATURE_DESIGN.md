@@ -2,6 +2,14 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="110" align="right">
+
+## 功能设计总图
+
+<img src="images/design_function.svg" alt="功能设计图" width="1000">
+
+> 英文版：`images/design_function_en.svg` · 更细的模块依赖与功能树见 [功能模块图](FUNCTION_DIAGRAM.md)
+
 ## 概述
 
 物业管理系统分为**管理员端**（物业公司内部使用）和**业主端**（小区业主/租户使用），覆盖15个业务模块，分3批交付。

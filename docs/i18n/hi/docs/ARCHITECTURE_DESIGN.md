@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="परियोजना संरचना" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="सिस्टम पैनोरमा आर्किटेक्चर" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. सिस्टम आर्किटेक्चर अवलोकन
 
 संपत्ति प्रबंधन प्रणाली «दो बैकएंड + मल्टी-फ्रंटएंड» लेयर्ड आर्किटेक्चर अपनाती है। एडमिन पैनल (admin) और मालिक व्यवसाय पोर्टल (service) दो स्वतंत्र webman v2 प्रोजेक्ट हैं, जो साझा MySQL डेटाबेस के माध्यम से समन्वित रूप से काम करते हैं। फ्रंटएंड Flutter Web (PC एडमिन कंसोल शैली) और HarmonyOS मोबाइल एंड को कवर करता है।

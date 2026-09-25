@@ -2,7 +2,16 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="110" align="right">
+
 ---
+
+## 0. 生命周期总图
+
+<img src="images/design_lifecycle.svg" alt="生命周期图" width="1000">
+
+> 英文版：`images/design_lifecycle_en.svg` · 请求/实体/Token 细分见下文
+
 
 ## 1. 请求生命周期
 

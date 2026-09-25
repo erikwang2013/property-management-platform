@@ -4,7 +4,23 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="docs/images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="120" align="right">
+
 全栈物业管理系统，覆盖22个业务模块 + 12个扩展功能（消息通知/审批工作流/支付/投票/SLA/数据大屏/催缴/巡检/商城/人脸/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端覆盖 Flutter Web（PC 管理后台风格）与 HarmonyOS 移动端。
+
+**小筑** 是本项目的宠物 —— 一位楼宇管家：一栋亮着灯的公寓楼，戴管家帽、拿工单板，胸前工牌打勾。它出现在安装向导、错误页、登录页与架构图中，代表「在管的每一栋楼都有人照看」。
+
+## 项目宠物 · 小筑
+
+<img src="docs/images/pet_xiaozhu.svg" alt="小筑" width="160">
+
+| 项 | 说明 |
+|----|------|
+| 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
+| 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
+| 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/` |
+| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页 · Flutter Web 登录页与浏览器标签图标 · 架构图横切栏 |
 
 ## 项目结构
 
@@ -56,6 +72,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="docs/images/design_structure.svg" alt="项目结构图" width="1000">
+
 ## 项目规模
 
 | 层 | 数量 | 详情 |
@@ -72,23 +90,23 @@ property-management-platform/
 
 ## 系统架构与设计图
 
-> 以下为概要图，详细图表见 [架构图](docs/ARCHITECTURE_DIAGRAM.md) · [流程图](docs/FLOWCHART.md) · [功能图](docs/FUNCTION_DIAGRAM.md) · [生命周期图](docs/LIFECYCLE_DIAGRAM.md) · [安全架构图](docs/SECURITY_ARCHITECTURE.md)
+> 以下四张为手绘 SVG（中英双版，英文版 `*_en.svg`）；更细的 Mermaid 图表见 [架构图](docs/ARCHITECTURE_DIAGRAM.md) · [流程图](docs/FLOWCHART.md) · [功能图](docs/FUNCTION_DIAGRAM.md) · [生命周期图](docs/LIFECYCLE_DIAGRAM.md) · [安全架构图](docs/SECURITY_ARCHITECTURE.md)
 
-### 系统全景架构
+### 架构设计
 
-<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="460">
+<img src="docs/images/design_architecture.svg" alt="架构设计图" width="1000">
+
+### 功能设计
+
+<img src="docs/images/design_function.svg" alt="功能设计图" width="1000">
+
+### 生命周期
+
+<img src="docs/images/design_lifecycle.svg" alt="生命周期图" width="1000">
 
 ### 核心业务流程
 
 <img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="860">
-
-### 功能模块总览
-
-<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="860">
-
-### 数据实体生命周期
-
-<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="460">
 
 ### 19层安全纵深防御
 
@@ -130,7 +148,7 @@ property-management-platform/
 | `hg/apidoc` | API 接口文档自动生成 |
 
 ### 前端
-- **Flutter 3.x** + GetX（含 i18n） + Dio + fl_chart — PC 风格 Web 管理后台
+- **Flutter 3.x** + GetX（含 i18n） + Dio + fl_chart + flutter_svg（宠物矢量图） — PC 风格 Web 管理后台
 - **HarmonyOS ArkTS** + @ohos.net.http — 移动端 App
 
 ### API 文档

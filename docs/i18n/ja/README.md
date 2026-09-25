@@ -6,7 +6,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 フルスタックの不動産管理システム。22の業務モジュール + 12の拡張機能（メッセージ通知/承認ワークフロー/決済/投票/SLA/データ大画面/督促/巡回点検/モール/顔認証/グループ管理/スマートQ&A）をカバーします。管理者端（admin）と所有者端（service）を分離してデプロイし、フロントエンドは Flutter Web（PC 管理画面スタイル）と HarmonyOS モバイル端に対応しています。
+
+**小筑**（シャオジュー）は本プロジェクトのマスコットです — 灯りのついたマンションを擬人化したビル管理人で、インストールウィザード・エラーページ・ログインページ・アーキテクチャ図に登場します。
 
 ## プロジェクト構成
 
@@ -58,6 +62,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## プロジェクト規模
 
 | 層 | 数量 | 詳細 |
@@ -78,19 +84,19 @@ property-management-platform/
 
 ### システム全景アーキテクチャ
 
-<img src="docs/images/readme_architecture.svg" alt="システム全景アーキテクチャ" width="460">
+<img src="../../images/design_architecture_en.svg" alt="システム全景アーキテクチャ" width="1000">
+
+### 機能モジュール総覧
+
+<img src="../../images/design_function_en.svg" alt="機能モジュール総覧" width="1000">
+
+### データエンティティライフサイクル
+
+<img src="../../images/design_lifecycle_en.svg" alt="データエンティティライフサイクル" width="1000">
 
 ### コア業務フロー
 
 <img src="docs/images/readme_business_flow.svg" alt="コア業務フロー" width="860">
-
-### 機能モジュール総覧
-
-<img src="docs/images/readme_modules.svg" alt="機能モジュール総覧" width="860">
-
-### データエンティティライフサイクル
-
-<img src="docs/images/readme_lifecycle.svg" alt="データエンティティライフサイクル" width="460">
 
 ### 18層セキュリティ多層防御
 

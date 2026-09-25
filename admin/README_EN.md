@@ -1,8 +1,12 @@
 # Open Admin (open-admin)
 
+<img src="../docs/images/pet_xiaozhu.svg" alt="Xiaozhu · project mascot" width="100" align="right">
+
 A full-stack admin dashboard built with webman v2 + Flutter.
 
 > [中文文档](README.md) | [Architecture Diagrams](docs/ARCHITECTURE.md) | [Design Doc](docs/DESIGN.md) | [Security](docs/SECURITY.md) | [API Reference](docs/API.md)
+
+> The project mascot **Xiaozhu** ([docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)) is wired into this app: the 3-step install wizard and installed page, `public/favicon.svg`, and the `public/404.html` / `public/504.html` error pages.
 
 ## Features
 

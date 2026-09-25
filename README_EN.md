@@ -4,7 +4,23 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="docs/images/pet_xiaozhu.svg" alt="Xiaozhu · project mascot" width="120" align="right">
+
 A full-stack property management system covering 22 business modules + 12 extension features (notifications, approval workflow, payments, voting, SLA, data dashboard, collections, inspections, marketplace, face recognition, group management, AI Q&A). The admin panel and owner service are independently deployed, with Flutter Web (PC-style dashboard) and HarmonyOS mobile clients.
+
+**Xiaozhu** (小筑) is the project mascot — a building steward: an apartment block with its lights on, wearing a steward's cap and carrying a work-order clipboard. It appears in the install wizard, error pages, the login page and the architecture diagram, standing for "every building under management has someone looking after it".
+
+## Project Mascot · Xiaozhu
+
+<img src="docs/images/pet_xiaozhu.svg" alt="Xiaozhu" width="160">
+
+| Item | Description |
+|------|-------------|
+| Concept | An anthropomorphic building steward — lit windows are the units under management, the clipboard is the work-order loop |
+| Palette | Indigo `#4F46E5` + amber `#F59E0B`, matching the front-end theme |
+| Vector file | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg) (language-neutral, shared by all 13 languages) |
+| Icon mark | [docs/images/favicon.svg](docs/images/favicon.svg), deployed to `admin/public/`, `service/public/` and `apps/flutter/web/` |
+| Wired into | 3-step install wizard + installed page · 404 / 504 error pages · Flutter Web login page and browser tab icon · architecture cross-cutting rail |
 
 ## Project Structure
 
@@ -56,6 +72,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="docs/images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Project Scale
 
 | Layer | Count | Details |
@@ -74,23 +92,23 @@ property-management-platform/
 
 ## System Architecture & Design Diagrams
 
-> Overview diagrams below. See detailed charts: [Architecture](docs/ARCHITECTURE_DIAGRAM.md) · [Flowchart](docs/FLOWCHART.md) · [Functions](docs/FUNCTION_DIAGRAM.md) · [Lifecycle](docs/LIFECYCLE_DIAGRAM.md) · [Security](docs/SECURITY_ARCHITECTURE.md)
+> The four diagrams below are hand-drawn SVG (English edition, `*_en.svg`; Chinese: `design_*.svg`). For finer Mermaid charts see [Architecture](docs/ARCHITECTURE_DIAGRAM.md) · [Flowchart](docs/FLOWCHART.md) · [Functions](docs/FUNCTION_DIAGRAM.md) · [Lifecycle](docs/LIFECYCLE_DIAGRAM.md) · [Security](docs/SECURITY_ARCHITECTURE.md)
 
-### System Architecture Overview
+### Architecture Design
 
-<img src="docs/images/readme_en_architecture.svg" alt="System Architecture Overview" width="460">
+<img src="docs/images/design_architecture_en.svg" alt="Architecture Design" width="1000">
+
+### Function Design
+
+<img src="docs/images/design_function_en.svg" alt="Function Design" width="1000">
+
+### Lifecycles
+
+<img src="docs/images/design_lifecycle_en.svg" alt="Lifecycles" width="1000">
 
 ### Core Business Flow
 
 <img src="docs/images/readme_en_business_flow.svg" alt="Core Business Flow" width="860">
-
-### Function Module Overview
-
-<img src="docs/images/readme_en_modules.svg" alt="Function Module Overview" width="860">
-
-### Entity Lifecycle
-
-<img src="docs/images/readme_en_lifecycle.svg" alt="Entity Lifecycle" width="460">
 
 ### 19-Layer Defense-in-Depth Security
 
@@ -133,7 +151,7 @@ property-management-platform/
 | `hg/apidoc` | API documentation auto-generation |
 
 ### Frontend
-- **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart — PC-style web dashboard
+- **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart + flutter_svg (mascot vector art) — PC-style web dashboard
 - **HarmonyOS ArkTS** + @ohos.net.http — Mobile client
 
 ### API Documentation

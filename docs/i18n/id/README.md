@@ -6,7 +6,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 Sistem manajemen properti full-stack yang mencakup 22 modul bisnis + 12 fitur ekstensi (notifikasi pesan/alur persetujuan/pembayaran/voting/SLA/data besar/penagihan/pemeliharaan/toko/face/group/tanya jawab cerdas). Panel admin dan portal pemilik di-deploy terpisah, frontend mencakup Flutter Web (gaya backoffice PC) dan aplikasi mobile HarmonyOS.
+
+**Xiaozhu** (小筑) adalah maskot proyek — pengelola gedung yang dipersonifikasikan dengan jendela menyala, muncul di wizard instalasi, halaman error, halaman login, dan diagram arsitektur.
 
 ## Struktur Proyek
 
@@ -58,6 +62,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Skala Proyek
 
 | Lapisan | Jumlah | Detail |
@@ -78,19 +84,19 @@ property-management-platform/
 
 ### Arsitektur Panorama Sistem
 
-<img src="docs/images/readme_architecture.svg" alt="Arsitektur panorama sistem" width="460">
+<img src="../../images/design_architecture_en.svg" alt="Arsitektur Panorama Sistem" width="1000">
+
+### Ikhtisar Modul Fungsi
+
+<img src="../../images/design_function_en.svg" alt="Ikhtisar Modul Fungsi" width="1000">
+
+### Siklus Hidup Entitas Data
+
+<img src="../../images/design_lifecycle_en.svg" alt="Siklus Hidup Entitas Data" width="1000">
 
 ### Alur Bisnis Inti
 
 <img src="docs/images/readme_business_flow.svg" alt="Alur bisnis inti" width="860">
-
-### Ikhtisar Modul Fungsi
-
-<img src="docs/images/readme_modules.svg" alt="Ikhtisar modul fungsi" width="860">
-
-### Siklus Hidup Entitas Data
-
-<img src="docs/images/readme_lifecycle.svg" alt="Siklus hidup entitas data" width="460">
 
 ### Pertahanan Berlapis Keamanan 18 Lapis
 

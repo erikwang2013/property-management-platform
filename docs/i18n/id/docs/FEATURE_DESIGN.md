@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="Panorama Modul Fungsi" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## Ikhtisar
 
 Sistem Manajemen Properti dibagi menjadi **panel admin** (digunakan internal perusahaan properti) dan **portal pemilik** (pemilik/penyewa komunitas), mencakup 15 modul bisnis, diserahkan dalam 3 batch.

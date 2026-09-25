@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 Vollständiges Immobilienverwaltungssystem mit 22 Geschäftsmodulen + 12 Erweiterungsfunktionen (Benachrichtigungen/Genehmigungsworkflow/Zahlung/Abstimmung/SLA/Daten-Dashboard/Zahlungserinnerung/Inspektion/Shop/Gesichtserkennung/Konzern/Intelligente Fragen & Antworten). Admin-Panel (admin) und Eigentümer-Portal (service) sind getrennt bereitgestellt; das Frontend umfasst Flutter Web (PC-Admin-Stil) und HarmonyOS-Mobilanwendungen.
+
+**Xiaozhu** (小筑) ist das Maskottchen des Projekts — ein vermenschlichter Hausverwalter mit leuchtenden Fenstern, der im Installationsassistenten, auf den Fehlerseiten, der Anmeldeseite und im Architekturdiagramm auftaucht.
 
 ## Projektstruktur
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Projektumfang
 
 | Ebene | Anzahl | Details |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### Gesamtarchitektur des Systems
 
-<img src="docs/images/readme_architecture.svg" alt="Gesamtarchitektur des Systems" width="460">
+<img src="../../images/design_architecture_en.svg" alt="Gesamtarchitektur des Systems" width="1000">
+
+### Funktionsmodulübersicht
+
+<img src="../../images/design_function_en.svg" alt="Funktionsmodulübersicht" width="1000">
+
+### Datenentitäts-Lebenszyklus
+
+<img src="../../images/design_lifecycle_en.svg" alt="Datenentitäts-Lebenszyklus" width="1000">
 
 ### Kern-Geschäftsprozesse
 
 <img src="docs/images/readme_business_flow.svg" alt="Kern-Geschäftsprozesse" width="860">
-
-### Funktionsmodulübersicht
-
-<img src="docs/images/readme_modules.svg" alt="Funktionsmodulübersicht" width="860">
-
-### Datenentitäts-Lebenszyklus
-
-<img src="docs/images/readme_lifecycle.svg" alt="Datenentitäts-Lebenszyklus" width="460">
 
 ### 18 Schichten Verteidigung in der Tiefe
 

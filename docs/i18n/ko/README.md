@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 풀스택 부동산 관리 시스템으로, 22개 업무 모듈 + 12개 확장 기능(메시지 알림/승인 워크플로/결제/투표/SLA/데이터 스크린/납부 독촉/순찰/몰/얼굴 인식/그룹/스마트 Q&A)을 포함합니다. 관리자(admin)와 입주민(service) 포털이 분리 배포되며, 프런트엔드는 Flutter Web(PC 관리자 콘솔 스타일)과 HarmonyOS 모바일을 지원합니다.
+
+**샤오주**(小筑)는 이 프로젝트의 마스코트입니다 — 불이 켜진 아파트를 의인화한 건물 관리인으로, 설치 마법사·오류 페이지·로그인 페이지·아키텍처 다이어그램에 등장합니다.
 
 ## 프로젝트 구조
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## 프로젝트 규모
 
 | 레이어 | 수량 | 상세 |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### 시스템 전체 아키텍처
 
-<img src="docs/images/readme_architecture.svg" alt="시스템 전체 아키텍처" width="460">
+<img src="../../images/design_architecture_en.svg" alt="시스템 전체 아키텍처" width="1000">
+
+### 기능 모듈 총괄
+
+<img src="../../images/design_function_en.svg" alt="기능 모듈 총괄" width="1000">
+
+### 데이터 엔티티 라이프사이클
+
+<img src="../../images/design_lifecycle_en.svg" alt="데이터 엔티티 라이프사이클" width="1000">
 
 ### 핵심 비즈니스 흐름
 
 <img src="docs/images/readme_business_flow.svg" alt="핵심 비즈니스 흐름" width="860">
-
-### 기능 모듈 총괄
-
-<img src="docs/images/readme_modules.svg" alt="기능 모듈 총괄" width="860">
-
-### 데이터 엔티티 라이프사이클
-
-<img src="docs/images/readme_lifecycle.svg" alt="데이터 엔티티 라이프사이클" width="460">
 
 ### 18단계 보안 심층 방어
 

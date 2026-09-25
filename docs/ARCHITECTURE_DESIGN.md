@@ -2,6 +2,22 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="110" align="right">
+
+## 0. 设计总图
+
+### 0.1 项目结构
+
+<img src="images/design_structure.svg" alt="项目结构图" width="1000">
+
+> 英文版：`images/design_structure_en.svg`
+
+### 0.2 架构设计
+
+<img src="images/design_architecture.svg" alt="架构设计图" width="1000">
+
+> 英文版：`images/design_architecture_en.svg` · 可交互的细粒度图表见 [系统架构图](ARCHITECTURE_DIAGRAM.md)
+
 ## 1. 系统架构概述
 
 物业管理系统采用「双后端 + 多前端」分层架构。管理员端（admin）和业主业务端（service）为两个独立的 webman v2 项目，通过共享 MySQL 数据库协同工作。前端覆盖 Flutter Web（PC 管理后台风格）和 HarmonyOS 移动端。

@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="Panorama de módulos funcionales" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## Resumen
 
 El sistema de gestión de propiedades se divide en **panel de administración** (uso interno de la empresa de propiedades) y **portal de propietarios** (propietarios/inquilinos de la comunidad), cubriendo 15 módulos de negocio, entregados en 3 lotes.

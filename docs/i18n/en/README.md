@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 A full-stack property management system covering 22 business modules + 12 extension features (message notifications / approval workflow / payments / voting / SLA / data dashboard / payment reminders / inspection / mall / face recognition / group management / intelligent Q&A). The admin panel (admin) and owner portal (service) are deployed separately, with frontends covering Flutter Web (PC admin style) and HarmonyOS mobile.
+
+**Xiaozhu** (小筑) is the project mascot — an anthropomorphic building steward with its lights on, appearing in the install wizard, the error pages, the login page and the architecture diagram.
 
 ## Project Structure
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Project Scale
 
 | Layer | Count | Details |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### System Overview Architecture
 
-<img src="docs/images/readme_architecture.svg" alt="System overview architecture" width="460">
+<img src="../../images/design_architecture_en.svg" alt="System Overview Architecture" width="1000">
+
+### Function Module Overview
+
+<img src="../../images/design_function_en.svg" alt="Function Module Overview" width="1000">
+
+### Data Entity Lifecycle
+
+<img src="../../images/design_lifecycle_en.svg" alt="Data Entity Lifecycle" width="1000">
 
 ### Core Business Flow
 
 <img src="docs/images/readme_business_flow.svg" alt="Core business flow" width="860">
-
-### Function Module Overview
-
-<img src="docs/images/readme_modules.svg" alt="Function module overview" width="860">
-
-### Data Entity Lifecycle
-
-<img src="docs/images/readme_lifecycle.svg" alt="Data entity lifecycle" width="460">
 
 ### 19-Layer Security Defense in Depth
 

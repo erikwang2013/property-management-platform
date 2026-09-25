@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="প্রকল্পের কাঠামো" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="সিস্টেম প্যানোরামা আর্কিটেকচার" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. সিস্টেম আর্কিটেকচার ওভারভিউ
 
 সম্পত্তি ব্যবস্থাপনা সিস্টেম "ডুয়াল ব্যাকএন্ড + মাল্টি ফ্রন্টএন্ড" লেয়ার্ড আর্কিটেকচার গ্রহণ করে। অ্যাডমিন প্যানেল (admin) ও মালিক ব্যবসা পাশ (service) দুটি আলাদা webman v2 প্রজেক্ট, শেয়ার্ড MySQL ডেটাবেস দিয়ে সমন্বিতভাবে কাজ করে। ফ্রন্টএন্ড Flutter Web (PC ম্যানেজমেন্ট ব্যাকএন্ড স্টাইল) ও HarmonyOS মোবাইল পাশ কভার করে।

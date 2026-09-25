@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="Struktur Proyek" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="Arsitektur Panorama Sistem" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. Ikhtisar Arsitektur Sistem
 
 Sistem Manajemen Properti menggunakan arsitektur berlapis «dua backend + multi frontend». Panel admin dan portal pemilik service adalah dua proyek webman v2 independen, bekerja sama melalui berbagi database MySQL. Frontend mencakup Flutter Web (gaya backoffice PC) dan aplikasi mobile HarmonyOS.

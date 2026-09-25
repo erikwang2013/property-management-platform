@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 نظام إدارة عقارات متكامل، يغطي 22 وحدة أعمال + 12 وظيفة موسعة (إشعارات الرسائل/سير عمل الموافقات/الدفع/التصويت/SLA/شاشة البيانات الكبيرة/التحصيل/التفتيش/المتجر/الوجوه/المجموعة/الأسئلة الذكية). لوحة الإدارة (admin) وبوابة الملاك (service) منشورتان بشكل منفصل، وتغطي الواجهات Flutter Web (بنمط لوحة إدارة PC) وطرف HarmonyOS للجوال.
+
+**شياو تشو** (小筑) هو تميمة المشروع — مدير مبنى مجسّد بنوافذ مضاءة، يظهر في معالج التثبيت وصفحات الخطأ وصفحة تسجيل الدخول ومخطط البنية.
 
 ## بنية المشروع
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## حجم المشروع
 
 | الطبقة | العدد | التفاصيل |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### البنية الشاملة للنظام
 
-<img src="../../../docs/images/readme_architecture.svg" alt="البنية الشاملة للنظام" width="460">
+<img src="../../images/design_architecture_en.svg" alt="البنية الشاملة للنظام" width="1000">
+
+### نظرة شاملة على الوحدات الوظيفية
+
+<img src="../../images/design_function_en.svg" alt="نظرة شاملة على الوحدات الوظيفية" width="1000">
+
+### دورة حياة كيانات البيانات
+
+<img src="../../images/design_lifecycle_en.svg" alt="دورة حياة كيانات البيانات" width="1000">
 
 ### العمليات التجارية الأساسية
 
 <img src="../../../docs/images/readme_business_flow.svg" alt="العمليات التجارية الأساسية" width="860">
-
-### نظرة شاملة على الوحدات الوظيفية
-
-<img src="../../../docs/images/readme_modules.svg" alt="نظرة شاملة على الوحدات الوظيفية" width="860">
-
-### دورة حياة كيانات البيانات
-
-<img src="../../../docs/images/readme_lifecycle.svg" alt="دورة حياة كيانات البيانات" width="460">
 
 ### الدفاع الأمني المتعمق من 18 طبقة
 

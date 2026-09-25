@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>安装向导 — 物业管理系统</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -27,12 +28,24 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
 .btn-primary { background:#4f46e5; color:#fff; }
 .btn-primary:hover { background:#4338ca; }
 .footer { margin-top:24px; text-align:center; font-size:12px; color:#aaa; }
+.brand { display:flex; align-items:center; gap:14px; }
+.brand .subtitle { margin-bottom:0; }
+.pet { width:52px; height:52px; flex:0 0 52px; }
+.bubble { position:relative; margin:16px 0 22px 0; padding:9px 14px; background:#eef2ff; border-radius:10px; font-size:13px; color:#4338ca; line-height:1.5; }
+.bubble::before { content:''; position:absolute; left:22px; top:-6px; width:12px; height:12px; background:#eef2ff; transform:rotate(45deg); }
+.bubble b { font-weight:700; }
 </style>
 </head>
 <body>
 <div class="card">
-  <h1>安装向导</h1>
-  <p class="subtitle">物业管理系统 · 步骤 1/3 · 数据库配置</p>
+  <div class="brand">
+    <svg class="pet" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="petg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6366F1"/><stop offset="1" stop-color="#4338CA"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#petg)"/><rect x="17" y="7" width="30" height="15" rx="6" fill="#FBBF24"/><rect x="13" y="19" width="38" height="6" rx="3" fill="#3730A3"/><ellipse cx="32" cy="29" rx="20" ry="4.5" fill="#D97706"/><circle cx="24" cy="42" r="5.5" fill="#FFFFFF"/><circle cx="40" cy="42" r="5.5" fill="#FFFFFF"/><path d="M24 51q8 8 16 0" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/></svg>
+    <div>
+      <h1>安装向导</h1>
+      <p class="subtitle">物业管理系统 · 步骤 1/3 · 数据库配置</p>
+    </div>
+  </div>
+  <p class="bubble"><b>小筑</b>：先连上数据库，我来帮你把家底建起来。</p>
   <div class="progress">
     <div class="step active">1</div><div class="line"></div>
     <div class="step">2</div><div class="line"></div>

@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 Sistema full-stack de gestão de propriedades, cobrindo 22 módulos de negócio + 12 funcionalidades estendidas (notificações/fluxo de aprovação/pagamento/votação/SLA/painel de dados/cobrança de inadimplência/inspeção/loja/reconhecimento facial/grupo/P&R inteligente). O painel de administração (admin) e o portal de proprietários (service) são implantados separadamente; o front-end cobre Flutter Web (estilo de painel de administração para PC) e o app móvel HarmonyOS.
+
+**Xiaozhu** (小筑) é o mascote do projeto — um administrador de edifício personificado com as janelas acesas, presente no assistente de instalação, nas páginas de erro, na página de login e no diagrama de arquitetura.
 
 ## Estrutura do projeto
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Tamanho do projeto
 
 | Camada | Quantidade | Detalhes |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### Arquitetura geral do sistema
 
-<img src="docs/images/readme_architecture.svg" alt="Arquitetura geral do sistema" width="460">
+<img src="../../images/design_architecture_en.svg" alt="Arquitetura geral do sistema" width="1000">
+
+### Visão geral dos módulos funcionais
+
+<img src="../../images/design_function_en.svg" alt="Visão geral dos módulos funcionais" width="1000">
+
+### Ciclo de vida das entidades de dados
+
+<img src="../../images/design_lifecycle_en.svg" alt="Ciclo de vida das entidades de dados" width="1000">
 
 ### Fluxo de negócio principal
 
 <img src="docs/images/readme_business_flow.svg" alt="Fluxo de negócio principal" width="860">
-
-### Visão geral dos módulos funcionais
-
-<img src="docs/images/readme_modules.svg" alt="Visão geral dos módulos funcionais" width="860">
-
-### Ciclo de vida das entidades de dados
-
-<img src="docs/images/readme_lifecycle.svg" alt="Ciclo de vida das entidades de dados" width="460">
 
 ### Defesa em profundidade com 18 camadas de segurança
 

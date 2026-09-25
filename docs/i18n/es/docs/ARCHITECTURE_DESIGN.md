@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="Estructura del proyecto" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="Arquitectura panorámica del sistema" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. Resumen de la arquitectura del sistema
 
 El sistema de gestión de propiedades adopta una arquitectura por capas de «doble backend + múltiples frontends». El panel de administración (admin) y el portal de propietarios (service) son dos proyectos independientes de webman v2 que trabajan en conjunto compartiendo la base de datos MySQL. El frontend cubre Flutter Web (estilo de panel de administración de PC) y la app móvil HarmonyOS.

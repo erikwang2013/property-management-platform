@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="Function Module Overview" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## Overview
 
 The property management system is divided into an **admin portal** (used internally by the property company) and an **owner portal** (used by community owners/tenants), covering 15 business modules delivered in 3 batches.

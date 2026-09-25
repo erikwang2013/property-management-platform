@@ -39,7 +39,9 @@ php start.php start -d
 
 ### 5. 打开安装向导
 
-浏览器访问 **`http://localhost:8787/install`**，按提示完成三步配置：
+<img src="images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="90" align="right">
+
+浏览器访问 **`http://localhost:8787/install`**，按提示完成三步配置（安装向导由项目宠物「小筑」逐步引导）：
 
 | 步骤 | 内容 | 说明 |
 |------|------|------|
@@ -309,6 +311,15 @@ mysql -u root -p management < docs/install.sql
 ### Q: 如何配置 HTTPS
 
 生产环境建议使用 Nginx 反向代理终止 TLS。参考配置见 `admin/docs/nginx-security.conf`。
+
+参考配置已包含品牌错误页接线（错误页由项目宠物「小筑」出镜，全部资源内联，后端宕机时同样可显示）：
+
+```nginx
+error_page 404 /404.html;
+error_page 500 502 503 504 /504.html;
+```
+
+对应静态文件位于 `admin/public/{404,504}.html` 与 `service/public/{404,504}.html`，由 webman 静态进程直接从 `public/` 提供。后端整体宕机时上面两条会因代理失败回落到 Nginx 默认页；如需此时也显示品牌错误页，把 `public/` 挂到本机磁盘后改用 `location = /404.html { alias …; internal; }`（参考配置中已注释给出）。
 
 ---
 

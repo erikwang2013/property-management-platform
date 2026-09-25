@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="ফাংশন মডিউল প্যানোরামা" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## ওভারভিউ
 
 সম্পত্তি ব্যবস্থাপনা সিস্টেম **অ্যাডমিন প্যানেল** (সম্পত্তি কোম্পানির অভ্যন্তরীণ ব্যবহার) ও **মালিক পোর্টাল** (কমিউনিটির মালিক/ভাড়াটে ব্যবহার)-এ বিভক্ত, ১৫টি বিজনেস মডিউল কভার করে, ৩ ব্যাচে ডেলিভারি।

@@ -1,0 +1,151 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 830" width="1040" height="830" role="img">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C7D2FE"/></marker><marker id="arroww" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#FFFFFF"/></marker></defs>
+<rect width="1040" height="830" fill="#FFFFFF"/>
+<rect x="24" y="24" width="700" height="92" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="42" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Clients</text>
+<rect x="38" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
+<text x="116" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Flutter Web</text>
+<text x="116" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Admin panel</text>
+<rect x="206" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
+<text x="284" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Flutter Web</text>
+<text x="284" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Owner portal</text>
+<rect x="374" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
+<text x="452" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">HarmonyOS</text>
+<text x="452" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">ArkTS app</text>
+<rect x="542" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
+<text x="620" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Browser / HTTP</text>
+<text x="620" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">API clients</text>
+<path d="M374.0 116L374.0 138" fill="none" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="384.0" y="132" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">request ①</text>
+<rect x="24" y="142" width="700" height="82" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="160" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Gateway</text>
+<rect x="38" y="164" width="672" height="48" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
+<text x="50" y="193" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="12" fill="#3730A3" text-anchor="start" font-weight="700">Nginx</text>
+<rect x="120" y="174" width="112" height="28" rx="8" fill="#EEF2FF"/>
+<text x="176" y="192" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">TLS 1.2 / 1.3</text>
+<rect x="240" y="174" width="112" height="28" rx="8" fill="#EEF2FF"/>
+<text x="296" y="192" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">CSP · HSTS headers</text>
+<rect x="360" y="174" width="112" height="28" rx="8" fill="#EEF2FF"/>
+<text x="416" y="192" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Rate limit 30 r/s</text>
+<rect x="480" y="174" width="112" height="28" rx="8" fill="#EEF2FF"/>
+<text x="536" y="192" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Gzip</text>
+<rect x="600" y="174" width="112" height="28" rx="8" fill="#EEF2FF"/>
+<text x="656" y="192" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Static assets</text>
+<path d="M374.0 224L374.0 246" fill="none" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="384.0" y="240" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">② reverse proxy</text>
+<rect x="24" y="250" width="700" height="118" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="268" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Application</text>
+<rect x="38" y="272" width="332" height="84" rx="10" fill="#FFFFFF" stroke="#4F46E5" stroke-width="1.6"/>
+<text x="54" y="296" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="12.5" fill="#3730A3" text-anchor="start" font-weight="700">admin — webman v2</text>
+<text x="54" y="314" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">:8787 · 58 controllers · 125 routes</text>
+<text x="54" y="336" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#475569" text-anchor="start" font-weight="400">Middleware → Controller → Model</text>
+<rect x="54" y="342" width="44" height="4" rx="2" fill="#C7D2FE"/>
+<rect x="382" y="272" width="332" height="84" rx="10" fill="#FFFFFF" stroke="#4F46E5" stroke-width="1.6"/>
+<text x="398" y="296" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="12.5" fill="#3730A3" text-anchor="start" font-weight="700">service — webman v2</text>
+<text x="398" y="314" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">:8788 · 17 controllers · 53 routes</text>
+<text x="398" y="336" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#475569" text-anchor="start" font-weight="400">Middleware → Controller → Model</text>
+<rect x="398" y="342" width="44" height="4" rx="2" fill="#C7D2FE"/>
+<path d="M374.0 368L374.0 392" fill="none" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="24" y="396" width="700" height="88" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="414" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Middleware chain</text>
+<text x="710" y="414" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="end" font-weight="400">19 defence layers</text>
+<rect x="38.0" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="90.66666666666666" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">JWT auth</text>
+<text x="90.66666666666666" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">1</text>
+<rect x="151.33333333333331" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="203.99999999999997" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">RBAC</text>
+<text x="203.99999999999997" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">2</text>
+<rect x="264.66666666666663" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="317.3333333333333" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Sliding-window limit</text>
+<text x="317.3333333333333" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">3</text>
+<rect x="378.0" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="430.6666666666667" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Security filter</text>
+<text x="430.6666666666667" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">4</text>
+<rect x="491.3333333333333" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="544.0" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Transport crypto</text>
+<text x="544.0" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">5</text>
+<rect x="604.6666666666666" y="418" width="105.33333333333333" height="52" rx="9" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.3"/>
+<text x="657.3333333333333" y="441" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#3730A3" text-anchor="middle" font-weight="600">Audit log</text>
+<text x="657.3333333333333" y="458" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#4F46E5" text-anchor="middle" font-weight="700" opacity="0.55">6</text>
+<path d="M374.0 484L374.0 506" fill="none" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="384.0" y="500" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">③ dispatch</text>
+<rect x="24" y="510" width="700" height="152" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="528" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Domain</text>
+<rect x="38" y="532" width="672" height="36" rx="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="54" cy="550" r="4" fill="#4F46E5"/>
+<text x="66" y="547" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#0F172A" text-anchor="start" font-weight="700">22 property modules</text>
+<text x="66" y="560" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.4" fill="#94A3B8" text-anchor="start" font-weight="400">Community/Building/Unit/Layout/Property/Owner/Tenant/Fee/Repair/Notice/Parking/Equipment/Complaint/Visitor/Contract/Finance/Security/Cleaning/Landscape/Activity/Energy/Staff</text>
+<rect x="38" y="574" width="672" height="36" rx="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="54" cy="592" r="4" fill="#F59E0B"/>
+<text x="66" y="589" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#0F172A" text-anchor="start" font-weight="700">12 extension features</text>
+<text x="66" y="602" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.4" fill="#94A3B8" text-anchor="start" font-weight="400">Notifications/Approvals/Payments/Voting/SLA escalation/Dashboard/Collections/Inspections/Marketplace/Face ID/Group management/AI Q&amp;A</text>
+<rect x="38" y="616" width="672" height="36" rx="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="54" cy="634" r="4" fill="#10B981"/>
+<text x="66" y="631" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#0F172A" text-anchor="start" font-weight="700">Platform features</text>
+<text x="66" y="644" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.4" fill="#94A3B8" text-anchor="start" font-weight="400">Report centre (trends · collection rate · arrears · PDF export) · Owner start-page stats</text>
+<path d="M374.0 662L374.0 684" fill="none" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="384.0" y="678" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.5" fill="#94A3B8" text-anchor="start" font-weight="400">④ data access</text>
+<rect x="24" y="688" width="700" height="118" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<text x="38" y="706" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="700" letter-spacing=".6">Data</text>
+<rect x="38.0" y="710" width="217.33333333333334" height="84" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="58.0" cy="730" r="5" fill="#4F46E5"/>
+<text x="70.0" y="734" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="11" fill="#0F172A" text-anchor="start" font-weight="700">MySQL 8.0</text>
+<text x="54.0" y="756" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">65 tables · management_ prefix</text>
+<text x="54.0" y="768" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">BIGINT snowflake keys</text>
+<rect x="265.33333333333337" y="710" width="217.33333333333334" height="84" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="285.33333333333337" cy="730" r="5" fill="#F59E0B"/>
+<text x="297.33333333333337" y="734" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="11" fill="#0F172A" text-anchor="start" font-weight="700">Redis 7.x</text>
+<text x="281.33333333333337" y="756" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">Cache / session / rate limit</text>
+<text x="281.33333333333337" y="768" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">Circuit breaker / queue</text>
+<rect x="492.6666666666667" y="710" width="217.33333333333334" height="84" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="512.6666666666667" cy="730" r="5" fill="#0E7490"/>
+<text x="524.6666666666667" y="734" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="11" fill="#0F172A" text-anchor="start" font-weight="700">Elasticsearch 8.x</text>
+<text x="508.6666666666667" y="756" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">Full-text search</text>
+<text x="508.6666666666667" y="768" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">scout sync</text>
+<rect x="748" y="24" width="268" height="782" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="748" y="24" width="268" height="52" rx="12" fill="#3730A3"/>
+<rect x="748" y="63" width="268" height="13" rx="0" fill="#3730A3"/>
+<text x="762" y="49" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="start" font-weight="700">Cross-cutting</text>
+<rect x="760" y="76" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="96" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="100" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">19 defence layers</text>
+<rect x="760" y="123" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="143" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="147" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Full operation audit log</text>
+<rect x="760" y="170" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="190" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="194" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Prometheus metrics</text>
+<rect x="760" y="217" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="237" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="241" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Queues and workers</text>
+<rect x="760" y="264" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="284" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="288" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">13 languages</text>
+<rect x="760" y="311" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="331" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="335" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Snowflake ID + Hashids</text>
+<rect x="760" y="358" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="378" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="382" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Field-level encryption</text>
+<rect x="760" y="405" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="425" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="429" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Presentation-layer masking</text>
+<rect x="760" y="452" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="472" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="476" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">PDF copyright watermark</text>
+<rect x="760" y="499" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="519" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="523" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Redis circuit breaker</text>
+<rect x="760" y="546" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="566" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="570" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Max 3 concurrent sessions</text>
+<rect x="760" y="593" width="244" height="40" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+<circle cx="773" cy="613" r="3.4" fill="#4F46E5" opacity="0.7"/>
+<text x="784" y="617" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#94A3B8" text-anchor="start" font-weight="400">Account lockout policy</text>
+<rect x="760" y="648" width="244" height="146" rx="12" fill="#EEF2FF"/>
+<text x="774" y="674" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="12" fill="#3730A3" text-anchor="start" font-weight="700">Xiaozhu</text>
+<text x="774" y="694.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#3730A3" text-anchor="start" font-weight="400">Project mascot</text>
+<text x="774" y="706.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#3730A3" text-anchor="start" font-weight="400">building steward</text>
+<g transform="translate(920 692) scale(.6)"><rect x="0" y="0" width="108" height="130" rx="26" fill="#4F46E5"/><rect x="30" y="12" width="48" height="26" rx="10" fill="#FBBF24"/><rect x="22" y="34" width="64" height="11" rx="5.5" fill="#3730A3"/><ellipse cx="54" cy="52" rx="34" ry="8" fill="#D97706"/><circle cx="40" cy="82" r="9" fill="#FFFFFF"/><circle cx="68" cy="82" r="9" fill="#FFFFFF"/><circle cx="41.5" cy="84" r="4.4" fill="#1E1B4B"/><circle cx="69.5" cy="84" r="4.4" fill="#1E1B4B"/><path d="M40 100q14 13 28 0" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/></g>
+</svg>

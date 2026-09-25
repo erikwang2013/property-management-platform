@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="기능 모듈 전체" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## 개요
 
 부동산 관리 시스템은 **관리자측**（부동산 회사 내부 사용）과 **입주민 포털**（단지 입주민/임차인 사용）으로 나뉘며, 15개 비즈니스 모듈을 3개 배치로 인도합니다.

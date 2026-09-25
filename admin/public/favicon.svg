@@ -1,0 +1,21 @@
+<!--
+  Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+  小筑 图标标记 / favicon mark — 由 docs/images/pet_xiaozhu.svg 提炼的头部特写，
+  在 16×16 下仍可辨识（靛蓝底 + 琥珀帽 + 双点眼）。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"
+     role="img" aria-label="小筑 · 物业管理系统">
+  <defs>
+    <linearGradient id="fvTile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#fvTile)"/>
+  <rect x="17" y="7" width="30" height="15" rx="6" fill="#FBBF24"/>
+  <rect x="13" y="19" width="38" height="6" rx="3" fill="#3730A3"/>
+  <ellipse cx="32" cy="29" rx="20" ry="4.5" fill="#D97706"/>
+  <circle cx="24" cy="42" r="5.5" fill="#FFFFFF"/>
+  <circle cx="40" cy="42" r="5.5" fill="#FFFFFF"/>
+  <path d="M24 51q8 8 16 0" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+</svg>

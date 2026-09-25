@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="機能モジュール全景" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## 概要
 
 不動産管理システムは**管理画面**（不動産会社社内向け）と**所有者ポータル**（コミュニティの所有者/テナント向け）に分かれ、15 の業務モジュールを 3 バッチで納品します。

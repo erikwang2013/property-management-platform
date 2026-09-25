@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.4.0 (2026-09-26)
+
+### 新增
+- **项目宠物「小筑」**：手绘 SVG 楼宇管家（靛蓝 `#4F46E5` + 暖橙 `#F59E0B`），含全身像与 16px 可辨识的图标标记，语言无关可被 13 种语言共用
+- **四类手绘 SVG 设计图（中英双版）**：项目结构 / 架构设计 / 功能设计 / 生命周期，统一视觉体系（`docs/images/design_*.svg` 与 `design_*_en.svg`）
+
+### 宠物接入
+- `admin/public/favicon.svg` + `service/public/favicon.svg`（新增）+ 安装向导 `<link rel="icon">`
+- 安装向导 step1~3 + 已安装页：宠物头像 + 分步引导气泡
+- 404 / 504 错误页：新增 `admin/public/{404,504}.html` 与 service 同名副本，全部资源内联（后端宕机仍可显示）
+- Flutter Web 登录页：`flutter_svg` + `assets/pet_xiaozhu.svg` 替换原 `Icons.apartment`
+- 架构图「横切关注点」栏内嵌宠物形象
+
+### 运维
+- `admin/docs/nginx-security.conf` + `service/docs/nginx-security.conf` 增加 `error_page 404 / 500 502 503 504`，并注明后端宕机时改用磁盘 alias 的做法
+
+### 文档
+- 根 README / README_EN：新增「项目宠物 · 小筑」章节 + 简介接入宠物说明；原有 Mermaid 缩略图（架构/功能/生命周期）替换为手绘 SVG 图组
+- 12 语言 i18n README：接入宠物图 + 本地化简介句，图表替换为共享英文版图（复用各语言既有标题，未新增翻译）
+- docs/ARCHITECTURE_DESIGN / FEATURE_DESIGN / ARCHITECTURE_DIAGRAM / FUNCTION_DIAGRAM / LIFECYCLE_DIAGRAM 五篇接入总图与宠物插图
+- 12 语言 i18n 文档镜像（`docs/i18n/*/docs/`）同步：ARCHITECTURE_DESIGN / ARCHITECTURE_DIAGRAM / FEATURE_DESIGN / FUNCTION_DIAGRAM / LIFECYCLE_DIAGRAM 五篇 × 12 语言 = 60 篇接入宠物与新图；标题沿用各语言既有译文，图片走共享的 `docs/images/`（无新增翻译、无图片副本）
+- admin README（中英）：接入宠物图并说明本端已接入位置
+- docs/INSTALL.md：安装向导章节接入宠物；新增品牌错误页 Nginx 接线说明
+- apps/flutter/README.md：补充资产说明与「两处副本需同步」提示
+
+### 测试
+- Flutter `flutter analyze` 无问题；`flutter test` 9/9 通过（登录页宠物尺寸调至 96px 高以适配 600px 测试视口，修复 22px 溢出）
+
 ## v1.3.0 (2026-09-04)
 
 ### 变更

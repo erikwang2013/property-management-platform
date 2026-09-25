@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="Обзор функциональных модулей" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## Обзор
 
 Система управления недвижимостью делится на **админ-панель** (внутреннее использование управляющей компанией) и **портал жильцов** (использование владельцами/арендаторами), охватывает 15 бизнес-модулей, поставляется в 3 партиях.

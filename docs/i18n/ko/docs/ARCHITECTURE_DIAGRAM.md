@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_architecture.svg" alt="시스템 전체 아키텍처" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ---
 
 ## 1. 시스템 전체 아키텍처

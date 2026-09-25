@@ -4,7 +4,11 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+
 Système de gestion immobilière full-stack couvrant 22 modules métier + 12 fonctions étendues (notifications/approbation/paiement/vote/SLA/écran de données/relance/inspection/boutique/visage/groupe/Q&A intelligent). Le panneau d'administration (admin) et le portail des propriétaires (service) sont déployés séparément ; le front-end couvre Flutter Web (style panneau d'administration PC) et le client mobile HarmonyOS.
+
+**Xiaozhu** (小筑) est la mascotte du projet — un gestionnaire d'immeuble personnifié aux fenêtres éclairées, présent dans l'assistant d'installation, les pages d'erreur, la page de connexion et le schéma d'architecture.
 
 ## Structure du projet
 
@@ -56,6 +60,8 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
+<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+
 ## Taille du projet
 
 | Couche | Quantité | Détails |
@@ -76,19 +82,19 @@ property-management-platform/
 
 ### Architecture panoramique du système
 
-<img src="docs/images/readme_architecture.svg" alt="系统全景架构" width="460">
+<img src="../../images/design_architecture_en.svg" alt="Architecture panoramique du système" width="1000">
+
+### Vue d'ensemble des modules fonctionnels
+
+<img src="../../images/design_function_en.svg" alt="Vue d'ensemble des modules fonctionnels" width="1000">
+
+### Cycle de vie des entités de données
+
+<img src="../../images/design_lifecycle_en.svg" alt="Cycle de vie des entités de données" width="1000">
 
 ### Processus métier principaux
 
 <img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="860">
-
-### Vue d'ensemble des modules fonctionnels
-
-<img src="docs/images/readme_modules.svg" alt="功能模块总览" width="860">
-
-### Cycle de vie des entités de données
-
-<img src="docs/images/readme_lifecycle.svg" alt="数据实体生命周期" width="460">
 
 ### Défense en profondeur sur 19 couches
 

@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="بنية المشروع" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="البنية الشاملة للنظام" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. نظرة عامة على بنية النظام
 
 يعتمد نظام إدارة العقارات بنية طبقية من «خلفيتين + واجهات متعددة». لوحة الإدارة (admin) وبوابة أعمال الملاك (service) مشروعان webman v2 مستقلان، يتعاونان عبر مشاركة قاعدة بيانات MySQL. تغطي الواجهات Flutter Web (بنمط لوحة إدارة PC) وطرف HarmonyOS للجوال.

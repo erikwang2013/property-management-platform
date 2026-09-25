@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="Structure du projet" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="Architecture globale du système" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. Vue d'ensemble de l'architecture système
 
 Le système de gestion immobilière adopte une architecture en couches « double backend + multi-frontend ». Le panneau d'administration (admin) et le portail des propriétaires (service) sont deux projets webman v2 indépendants, qui coopèrent via une base de données MySQL partagée. Le front-end couvre Flutter Web (style panneau d'administration PC) et le client mobile HarmonyOS.

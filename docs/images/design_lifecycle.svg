@@ -1,0 +1,139 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 478" width="1040" height="478" role="img">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C7D2FE"/></marker><marker id="arroww" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#FFFFFF"/></marker></defs>
+<rect width="1040" height="478" fill="#FFFFFF"/>
+<rect x="24" y="24" width="992" height="112" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="24" width="6" height="112" rx="3" fill="#4F46E5"/>
+<text x="42" y="46" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" fill="#4F46E5" text-anchor="start" font-weight="700">请求生命周期</text>
+<path d="M48 91.0L1000.0 91.0" fill="none" stroke="#4F46E5" stroke-width="1.5" opacity=".28"/>
+<rect x="40.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="89.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">客户端发起</text>
+<text x="89.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Flutter / ArkTS</text>
+<text x="89.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">HTTPS 请求</text>
+<circle cx="151.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="151.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">1</text>
+<rect x="163.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="212.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">接入层</text>
+<text x="212.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Nginx TLS 终止</text>
+<text x="212.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">限流 + 安全头</text>
+<circle cx="274.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="274.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">2</text>
+<rect x="286.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="335.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">webman Worker</text>
+<text x="335.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">常驻进程</text>
+<text x="335.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">接收并解析</text>
+<circle cx="397.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="397.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">3</text>
+<rect x="409.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="458.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">中间件链</text>
+<text x="458.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">认证 → 鉴权</text>
+<text x="458.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">限流 → 安全</text>
+<circle cx="520.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="520.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">4</text>
+<rect x="532.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="581.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">控制器</text>
+<text x="581.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">参数校验</text>
+<text x="581.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">业务编排</text>
+<circle cx="643.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="643.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">5</text>
+<rect x="655.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="704.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">服务 / 模型</text>
+<text x="704.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Eloquent + 加密</text>
+<text x="704.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Hashids 解 ID</text>
+<circle cx="766.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="766.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">6</text>
+<rect x="778.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="827.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">数据层</text>
+<text x="827.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">MySQL / Redis</text>
+<text x="827.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Elasticsearch</text>
+<circle cx="889.0" cy="91.0" r="9" fill="#4F46E5"/>
+<text x="889.0" y="94.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">7</text>
+<rect x="901.0" y="58" width="99.0" height="66" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+<text x="950.5" y="82" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#4F46E5" text-anchor="middle" font-weight="700">响应</text>
+<text x="950.5" y="99.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">脱敏 + 水印</text>
+<text x="950.5" y="110.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">统一 JSON 结构</text>
+<rect x="24" y="152" width="992" height="112" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="152" width="6" height="112" rx="3" fill="#10B981"/>
+<text x="42" y="174" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" fill="#10B981" text-anchor="start" font-weight="700">数据实体生命周期</text>
+<path d="M48 219.0L1000.0 219.0" fill="none" stroke="#10B981" stroke-width="1.5" opacity=".28"/>
+<rect x="40.0" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="98.28571428571428" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">创建</text>
+<text x="98.28571428571428" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">snowflake 生成</text>
+<text x="98.28571428571428" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">BIGINT 主键</text>
+<circle cx="168.57142857142856" cy="219.0" r="9" fill="#10B981"/>
+<text x="168.57142857142856" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">1</text>
+<rect x="180.57142857142856" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="238.85714285714283" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">校验</text>
+<text x="238.85714285714283" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">Validator 规则</text>
+<text x="238.85714285714283" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">边界输入拦截</text>
+<circle cx="309.1428571428571" cy="219.0" r="9" fill="#10B981"/>
+<text x="309.1428571428571" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">2</text>
+<rect x="321.1428571428571" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="379.4285714285714" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">加密落库</text>
+<text x="379.4285714285714" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">encryptable 字段</text>
+<text x="379.4285714285714" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">AES 加密存储</text>
+<circle cx="449.71428571428567" cy="219.0" r="9" fill="#10B981"/>
+<text x="449.71428571428567" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">3</text>
+<rect x="461.71428571428567" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="520.0" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">索引同步</text>
+<text x="520.0" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">scout 写入 ES</text>
+<text x="520.0" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">全文检索可见</text>
+<circle cx="590.2857142857142" cy="219.0" r="9" fill="#10B981"/>
+<text x="590.2857142857142" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">4</text>
+<rect x="602.2857142857142" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="660.5714285714286" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">读写更新</text>
+<text x="660.5714285714286" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">查看自动解密</text>
+<text x="660.5714285714286" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">审计日志留痕</text>
+<circle cx="730.8571428571428" cy="219.0" r="9" fill="#10B981"/>
+<text x="730.8571428571428" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">5</text>
+<rect x="742.8571428571428" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="801.1428571428571" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">状态流转</text>
+<text x="801.1428571428571" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">业务状态机</text>
+<text x="801.1428571428571" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">（账单/工单）</text>
+<circle cx="871.4285714285713" cy="219.0" r="9" fill="#10B981"/>
+<text x="871.4285714285713" y="222.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">6</text>
+<rect x="883.4285714285713" y="186" width="116.57142857142857" height="66" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="1.4"/>
+<text x="941.7142857142857" y="210" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">归档</text>
+<text x="941.7142857142857" y="227.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">软删除 / 归档</text>
+<text x="941.7142857142857" y="238.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">备份保留</text>
+<rect x="24" y="280" width="992" height="112" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+<rect x="24" y="280" width="6" height="112" rx="3" fill="#B45309"/>
+<text x="42" y="302" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" fill="#B45309" text-anchor="start" font-weight="700">会话与 JWT 生命周期</text>
+<path d="M48 347.0L1000.0 347.0" fill="none" stroke="#B45309" stroke-width="1.5" opacity=".28"/>
+<rect x="40.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="110.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">登录</text>
+<text x="110.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">点击验证码</text>
+<text x="110.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">+ 密码二次确认</text>
+<circle cx="192.0" cy="347.0" r="9" fill="#B45309"/>
+<text x="192.0" y="350.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">1</text>
+<rect x="204.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="274.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">签发 Token</text>
+<text x="274.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">JWT HS256</text>
+<text x="274.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">有效期签发</text>
+<circle cx="356.0" cy="347.0" r="9" fill="#B45309"/>
+<text x="356.0" y="350.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">2</text>
+<rect x="368.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="438.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">并发会话</text>
+<text x="438.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">最多 3 个</text>
+<text x="438.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">超出踢出最早</text>
+<circle cx="520.0" cy="347.0" r="9" fill="#B45309"/>
+<text x="520.0" y="350.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">3</text>
+<rect x="532.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="602.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">请求校验</text>
+<text x="602.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">签名 + 过期校验</text>
+<text x="602.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">RBAC 鉴权</text>
+<circle cx="684.0" cy="347.0" r="9" fill="#B45309"/>
+<text x="684.0" y="350.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">4</text>
+<rect x="696.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="766.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">续期 / 刷新</text>
+<text x="766.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">有效期内续签</text>
+<text x="766.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">失败次数计数</text>
+<circle cx="848.0" cy="347.0" r="9" fill="#B45309"/>
+<text x="848.0" y="350.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">5</text>
+<rect x="860.0" y="314" width="140.0" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.4"/>
+<text x="930.0" y="338" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="11" fill="#B45309" text-anchor="middle" font-weight="700">吊销</text>
+<text x="930.0" y="355.0" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">登出 / 过期</text>
+<text x="930.0" y="366.5" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9" fill="#475569" text-anchor="middle" font-weight="400">锁定 15 分钟</text>
+<rect x="24" y="404" width="992" height="26" rx="8" fill="#EEF2FF"/>
+<text x="520.0" y="421" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.5" fill="#3730A3" text-anchor="middle" font-weight="400">①②③ 表示执行顺序 · 箭头为流转方向 · 与 docs/LIFECYCLE_DIAGRAM.md 互为详略</text>
+</svg>

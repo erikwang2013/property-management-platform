@@ -2,7 +2,16 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="110" align="right">
+
 ---
+
+## 0. 架构设计总图
+
+<img src="images/design_architecture.svg" alt="架构设计图" width="1000">
+
+> 英文版：`images/design_architecture_en.svg` · 分层与部署细节见下文
+
 
 ## 1. 系统全景架构
 

@@ -2,6 +2,13 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_function.svg" alt="Panorama dos módulos funcionais" width="1000">
+
+> English edition: `../../../images/design_function_en.svg`
+
+
 ## Visão geral
 
 O Sistema de Gestão de Propriedades é dividido em **painel de administração** (uso interno da administradora de propriedades) e **portal de proprietários** (uso dos proprietários/inquilinos do condomínio), cobrindo 15 módulos de negócio, entregues em 3 fases.

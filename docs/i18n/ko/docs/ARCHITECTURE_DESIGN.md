@@ -2,6 +2,17 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
+<img src="../../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="110" align="right">
+
+<img src="../../../images/design_structure.svg" alt="프로젝트 구조" width="1000">
+
+> English edition: `../../../images/design_structure_en.svg`
+
+<img src="../../../images/design_architecture.svg" alt="시스템 전체 아키텍처" width="1000">
+
+> English edition: `../../../images/design_architecture_en.svg`
+
+
 ## 1. 시스템 아키텍처 개요
 
 부동산 관리 시스템은 「이중 백엔드 + 다중 프론트엔드」 계층 아키텍처를 채택합니다. 관리자측（admin）과 입주민 포털（service）은 독립된 두 개의 webman v2 프로젝트로, 공유 MySQL 데이터베이스를 통해 협력합니다. 프론트엔드는 Flutter Web（PC 관리 콘솔 스타일）과 HarmonyOS 모바일을 포함합니다.
