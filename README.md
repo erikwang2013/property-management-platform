@@ -19,8 +19,8 @@
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
 | 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
-| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/` |
-| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页 · Flutter Web 登录页与浏览器标签图标 · 架构图横切栏 |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/`、`admin/apps/flutter/web/` |
+| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 四个 Web 入口的浏览器标签图标 · 架构图横切栏 |
 
 ## 项目结构
 

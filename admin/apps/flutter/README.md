@@ -1,6 +1,18 @@
 # admin_app
 
-A new Flutter project.
+物业管理系统 · 管理端 Flutter Web 客户端（PC 管理后台风格）。
+
+## 资产 (Assets)
+
+| 文件 | 用途 |
+|------|------|
+| `assets/pet_xiaozhu.svg` | 项目宠物「小筑」— 登录页主视觉 |
+| `web/favicon.svg` | 浏览器标签图标（PNG 作为后备） |
+
+> `admin/apps/flutter/assets/pet_xiaozhu.svg` 是 `docs/images/pet_xiaozhu.svg` 的**副本**：
+> Flutter 资源必须位于包目录内，无法引用仓库外的路径。改动源文件时请同步三处：
+> `admin/apps/flutter/assets/`、`apps/flutter/assets/` 与各 `web/favicon.svg`。
+> 加载依赖 `flutter_svg`，见 `pubspec.yaml` 中 `flutter_svg: ^2.3.0`。
 
 ## Getting Started
 

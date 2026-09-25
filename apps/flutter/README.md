@@ -10,7 +10,8 @@
 | `web/favicon.svg` | 浏览器标签图标（PNG 作为后备） |
 
 > `apps/flutter/assets/pet_xiaozhu.svg` 是 `docs/images/pet_xiaozhu.svg` 的**副本**：
-> Flutter 资源必须位于包目录内，无法引用仓库外的路径。改动源文件时请同步两处。
+> Flutter 资源必须位于包目录内，无法引用仓库外的路径。改动源文件时请同步三处：
+> `apps/flutter/assets/`、`admin/apps/flutter/assets/` 与各 `web/favicon.svg`。
 > 加载依赖 `flutter_svg`，见 `pubspec.yaml` 中 `flutter_svg: ^2.3.0`。
 
 ## Getting Started

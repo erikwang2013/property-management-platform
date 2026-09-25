@@ -7,11 +7,12 @@
 - **四类手绘 SVG 设计图（中英双版）**：项目结构 / 架构设计 / 功能设计 / 生命周期，统一视觉体系（`docs/images/design_*.svg` 与 `design_*_en.svg`）
 
 ### 宠物接入
-- `admin/public/favicon.svg` + `service/public/favicon.svg`（新增）+ 安装向导 `<link rel="icon">`
+- `admin/public/favicon.svg` + `service/public/favicon.svg` + `apps/flutter/web/favicon.svg` + `admin/apps/flutter/web/favicon.svg`（新增，四处同源）+ 安装向导 `<link rel="icon">`
 - 安装向导 step1~3 + 已安装页：宠物头像 + 分步引导气泡
 - 404 / 504 错误页：新增 `admin/public/{404,504}.html` 与 service 同名副本，全部资源内联（后端宕机仍可显示）
-- Flutter Web 登录页：`flutter_svg` + `assets/pet_xiaozhu.svg` 替换原 `Icons.apartment`
+- Flutter Web 登录页（业主端 + 管理端）：`flutter_svg` + `assets/pet_xiaozhu.svg` 替换原 `Icons.apartment` / `Icons.admin_panel_settings`
 - 架构图「横切关注点」栏内嵌宠物形象
+- 图标标记补全瞳孔：原 `favicon.svg` 只有白色眼球，在 32px 下呈空白眼；补齐深色瞳孔并收小双眼，与架构图内嵌标记一致
 
 ### 运维
 - `admin/docs/nginx-security.conf` + `service/docs/nginx-security.conf` 增加 `error_page 404 / 500 502 503 504`，并注明后端宕机时改用磁盘 alias 的做法
@@ -23,10 +24,13 @@
 - 12 语言 i18n 文档镜像（`docs/i18n/*/docs/`）同步：ARCHITECTURE_DESIGN / ARCHITECTURE_DIAGRAM / FEATURE_DESIGN / FUNCTION_DIAGRAM / LIFECYCLE_DIAGRAM 五篇 × 12 语言 = 60 篇接入宠物与新图；标题沿用各语言既有译文，图片走共享的 `docs/images/`（无新增翻译、无图片副本）
 - admin README（中英）：接入宠物图并说明本端已接入位置
 - docs/INSTALL.md：安装向导章节接入宠物；新增品牌错误页 Nginx 接线说明
-- apps/flutter/README.md：补充资产说明与「两处副本需同步」提示
+- apps/flutter/README.md：补充资产说明与「三处副本需同步」提示
+- admin/apps/flutter/README.md：新增资产章节（原先仅为脚手架默认内容）
 
 ### 测试
-- Flutter `flutter analyze` 无问题；`flutter test` 9/9 通过（登录页宠物尺寸调至 96px 高以适配 600px 测试视口，修复 22px 溢出）
+- 业主端 Flutter `flutter analyze` 无问题；`flutter test` 9/9 通过（登录页宠物尺寸调至 96px 高以适配 600px 测试视口，修复 22px 溢出）
+- 管理端 Flutter `flutter analyze` 无问题；`flutter test` 通过
+- 错误页与安装向导经无头浏览器截图核对；全部 SVG 通过 XML 合法性校验，无失效图片引用
 
 ## v1.3.0 (2026-09-04)
 

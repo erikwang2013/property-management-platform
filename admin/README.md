@@ -6,7 +6,7 @@
 
 > [English version](README_EN.md) | [架构设计图](docs/ARCHITECTURE.md) | [设计文档](docs/DESIGN.md) | [安全架构](docs/SECURITY.md) | [API 参考](docs/API.md)
 
-> 项目宠物 **小筑**（[docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)）已接入本端：安装向导 3 步 + 已安装页、`public/favicon.svg`、`public/404.html`、`public/504.html` 错误页。
+> 项目宠物 **小筑**（[docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)）已接入本端：安装向导 3 步 + 已安装页、`public/favicon.svg`、`public/404.html`、`public/504.html` 错误页、管理端 Flutter 登录页（`apps/flutter/assets/pet_xiaozhu.svg`）与 `apps/flutter/web/favicon.svg`。
 
 ## 功能清单
 

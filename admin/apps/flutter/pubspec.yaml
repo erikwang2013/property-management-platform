@@ -51,6 +51,8 @@ dependencies:
   shared_preferences: ^2.2.0
   # 响应式布局
   responsive_framework: ^1.4.0
+  # 矢量图（项目宠物「小筑」）
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # 项目宠物「小筑」矢量图。docs/images/pet_xiaozhu.svg 为源文件，此处为副本
+  # （Flutter 资源必须位于包目录内），改动时请同步两处。
+  assets:
+    - assets/pet_xiaozhu.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dio/dio.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
@@ -135,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.admin_panel_settings, size: 64, color: Color(0xFF1677FF)),
+                // 项目宠物「小筑」— 楼宇管家（矢量图，源自 docs/images/pet_xiaozhu.svg）
+                SvgPicture.asset('assets/pet_xiaozhu.svg', width: 76, height: 96),
                 const SizedBox(height: 12),
                 const Text('开放管理后台', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1677FF))),
                 const SizedBox(height: 32),

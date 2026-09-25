@@ -19,8 +19,8 @@ A full-stack property management system covering 22 business modules + 12 extens
 | Concept | An anthropomorphic building steward — lit windows are the units under management, the clipboard is the work-order loop |
 | Palette | Indigo `#4F46E5` + amber `#F59E0B`, matching the front-end theme |
 | Vector file | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg) (language-neutral, shared by all 13 languages) |
-| Icon mark | [docs/images/favicon.svg](docs/images/favicon.svg), deployed to `admin/public/`, `service/public/` and `apps/flutter/web/` |
-| Wired into | 3-step install wizard + installed page · 404 / 504 error pages · Flutter Web login page and browser tab icon · architecture cross-cutting rail |
+| Icon mark | [docs/images/favicon.svg](docs/images/favicon.svg), deployed to `admin/public/`, `service/public/`, `apps/flutter/web/` and `admin/apps/flutter/web/` |
+| Wired into | 3-step install wizard + installed page · 404 / 504 error pages (inlined vector) · owner-side and admin-side Flutter login pages · browser tab icon of all four web entry points · architecture cross-cutting rail |
 
 ## Project Structure
 
