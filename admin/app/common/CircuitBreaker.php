@@ -5,8 +5,8 @@
 
 namespace app\common;
 
+use support\Log;
 use support\Redis;
-use Webman\Log;
 
 /**
  * Redis 分布式熔断器：closed → open → half_open → closed
