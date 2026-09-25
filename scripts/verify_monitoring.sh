@@ -25,8 +25,12 @@ fail() { say FAIL "$1"; FAIL=1; }
 yaml_check() {
     local file="$1"
     if command -v yamllint >/dev/null 2>&1; then
-        # 注意：yamllint 没有 -q 参数（旧脚本误用导致 CI 恒失败），校验通过时本就不输出
-        if yamllint "$file"; then say PASS "YAML $file"; else fail "YAML $file"; fi
+        # 本步骤只校验「语法」（见文件头说明），故用 relaxed 预设：
+        #   - 去掉 line-length（默认 80 列）与 document-start（缺 --- 开头）等纯样式规则
+        #   - 否则告警规则里稍长的 Prometheus 表达式会被判为失败
+        # 另外 yamllint 没有 -q 参数（旧脚本误用导致 CI 恒失败）
+        # relaxed 与下面的 python3+yaml 分支行为一致：都只做语法解析
+        if yamllint -d relaxed "$file"; then say PASS "YAML $file"; else fail "YAML $file"; fi
     elif command -v python3 >/dev/null 2>&1 && python3 -c 'import yaml' >/dev/null 2>&1; then
         if python3 - "$file" <<'PY'
 import sys, yaml

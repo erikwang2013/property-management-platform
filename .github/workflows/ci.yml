@@ -78,8 +78,11 @@ jobs:
       - name: Install dependencies
         run: cd admin && composer install --prefer-dist --no-progress --no-interaction
 
+      # --abandoned=report：仍对安全漏洞告警失败，但「已废弃且无替代品」的传递依赖不再判失败。
+      # 目前唯一命中为 doctrine/annotations（hg/apidoc 的传递依赖，composer 标注 Suggested Replacement: none），
+      # 无法通过换包解决；composer audit 默认对它退出 2，会让安全审计步骤恒失败。
       - name: Audit dependencies
-        run: cd admin && composer audit
+        run: cd admin && composer audit --abandoned=report
 
       - name: Setup environment
         run: cp admin/.env.example admin/.env
@@ -144,8 +147,9 @@ jobs:
       - name: Install dependencies
         run: cd service && composer install --prefer-dist --no-progress --no-interaction
 
+      # 同 admin：--abandoned=report，理由见 admin 任务上的注释
       - name: Audit dependencies
-        run: cd service && composer audit
+        run: cd service && composer audit --abandoned=report
 
       - name: Setup environment
         run: cp service/.env.example service/.env
