@@ -505,12 +505,6 @@ parameters:
 			path: app/common/Validator.php
 
 		-
-			message: '#^Access to an undefined property support\\Request\:\:\$apiVersion\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/middleware/ApiVersion.php
-
-		-
 			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$action\.$#'
 			identifier: property.notFound
 			count: 1

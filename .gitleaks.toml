@@ -5,8 +5,12 @@
 [extend]
 useDefault = true
 
-[[allowlist]]
-files = [
+# 注意两处历史坑（原配置让 gitleaks 直接 "Failed to load config" 退出 2 = 从未真正扫描过）：
+#   1. 必须是单表 [allowlist]（map），写成数组 [[allowlist]] 会报 "expected a map, got 'slice'"
+#      —— CI 使用 gitleaks 8.24.3；复数 [[allowlists]] 要 8.25+ 才是正解，8.21~8.24 上会静默忽略 paths
+#   2. 文件路径字段自 8.19 起由 files 更名为 paths
+[allowlist]
+paths = [
     '''\.env\.example$''',
     '''\.env\.docker$''',
 ]

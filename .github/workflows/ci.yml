@@ -69,8 +69,11 @@ jobs:
           extensions: pdo, pdo_mysql, redis, gd, mbstring
           coverage: xdebug
 
+      # 不加 --strict：webman 要求 autoload.psr-4 含空前缀 ""（框架从项目根解析类），
+      # composer 对此固定告警「empty namespace prefix is a bad idea for performance」，
+      # --strict 会把该告警升级为失败，导致校验恒不可通过。schema 校验仍然生效。
       - name: Validate composer.json
-        run: cd admin && composer validate --strict
+        run: cd admin && composer validate
 
       - name: Install dependencies
         run: cd admin && composer install --prefer-dist --no-progress --no-interaction
@@ -134,8 +137,9 @@ jobs:
           extensions: pdo, pdo_mysql, redis, gd, mbstring
           coverage: xdebug
 
+      # 同 admin：去掉 --strict，理由见 admin 任务上的注释
       - name: Validate composer.json
-        run: cd service && composer validate --strict
+        run: cd service && composer validate
 
       - name: Install dependencies
         run: cd service && composer install --prefer-dist --no-progress --no-interaction

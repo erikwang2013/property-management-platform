@@ -7,7 +7,8 @@ parameters:
     - app/
   excludePaths:
     - vendor/
-    - runtime/
+    # runtime/ 被 .gitignore 忽略，全新 CI 检出时不存在；(?) 标记为可选路径
+    - runtime (?)
     - tests/
     # webman/redis-queue 未安装，队列消费者为预留代码，暂不纳入分析
     - app/queue/

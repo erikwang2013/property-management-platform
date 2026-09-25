@@ -25,7 +25,8 @@ fail() { say FAIL "$1"; FAIL=1; }
 yaml_check() {
     local file="$1"
     if command -v yamllint >/dev/null 2>&1; then
-        if yamllint -q "$file"; then say PASS "YAML $file"; else fail "YAML $file"; fi
+        # 注意：yamllint 没有 -q 参数（旧脚本误用导致 CI 恒失败），校验通过时本就不输出
+        if yamllint "$file"; then say PASS "YAML $file"; else fail "YAML $file"; fi
     elif command -v python3 >/dev/null 2>&1 && python3 -c 'import yaml' >/dev/null 2>&1; then
         if python3 - "$file" <<'PY'
 import sys, yaml
