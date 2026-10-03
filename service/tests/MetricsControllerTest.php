@@ -9,6 +9,7 @@ namespace tests;
 
 use app\api\v1\controller\MetricsController;
 use PHPUnit\Framework\TestCase;
+use support\Db;
 use support\Request;
 
 class MetricsControllerTest extends TestCase
@@ -29,7 +30,16 @@ class MetricsControllerTest extends TestCase
     public function test_index_reports_db_and_redis_up(): void
     {
         $body = (new MetricsController())->index(new Request("GET /metrics HTTP/1.1\r\nHost: localhost\r\n\r\n"))->rawBody();
-        $this->assertMatchesRegularExpression('/property_service_db_up 1/', $body);
+
+        // db_up 必须与实际可达性一致：可连 => 1、不可连 => 0。
+        // 两条路径都钉死才防得住「恒 1 / 恒 0」的指标僵死；本机与 CI 均无可用 DB 连接，故取 0。
+        $dbUp = 0;
+        try {
+            Db::select('select 1');
+            $dbUp = 1;
+        } catch (\Throwable) {
+        }
+        $this->assertMatchesRegularExpression("/property_service_db_up {$dbUp}/", $body);
         $this->assertMatchesRegularExpression('/property_service_redis_up 1/', $body);
     }
 

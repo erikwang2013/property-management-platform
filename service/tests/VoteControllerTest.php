@@ -9,10 +9,30 @@ namespace tests;
 
 use app\api\v1\controller\VoteController;
 use PHPUnit\Framework\TestCase;
+use support\Db;
 use support\Request;
 
 class VoteControllerTest extends TestCase
 {
+    private static bool $db = false;
+
+    public static function setUpBeforeClass(): void
+    {
+        try {
+            Db::select('select 1');
+            self::$db = true;
+        } catch (\Throwable) {
+            self::$db = false;
+        }
+    }
+
+    protected function requireDb(): void
+    {
+        if (!self::$db) {
+            $this->markTestSkipped('DB 不可用');
+        }
+    }
+
     private static function makeRequest(int $ownerId = 1): Request
     {
         return new class($ownerId) extends Request {
@@ -43,6 +63,7 @@ class VoteControllerTest extends TestCase
 
     public function test_index_owner_without_rooms_returns_empty(): void
     {
+        $this->requireDb();
         $response = (new VoteController())->index(self::makeRequest(999999999));
         $body = json_decode($response->rawBody(), true);
         $this->assertSame(0, $body['code']);

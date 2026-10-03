@@ -139,7 +139,7 @@ parameters:
 			path: app/admin/controller/ApprovalController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Approval\:\:findOrFail\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Approval\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/ApprovalController.php
@@ -165,13 +165,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\ApprovalType\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/ApprovalController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\ApprovalType\:\:findOrFail\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 3
+			count: 4
 			path: app/admin/controller/ApprovalController.php
 
 		-
@@ -247,18 +241,6 @@ parameters:
 			path: app/admin/controller/CollectionController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\CollectionRecord\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/CollectionController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\CollectionRecord\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/CollectionController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\CollectionStrategy\:\:create\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -273,17 +255,11 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\CollectionStrategy\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 1
 			path: app/admin/controller/CollectionController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/admin/controller/CollectionController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Notification\:\:create\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/CollectionController.php
@@ -421,15 +397,21 @@ parameters:
 			path: app/admin/controller/DashboardController.php
 
 		-
-			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Room\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/DashboardController.php
 
 		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/admin/controller/DashboardController.php
+
+		-
 			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
+			count: 2
 			path: app/admin/controller/DashboardController.php
 
 		-
@@ -758,6 +740,18 @@ parameters:
 
 		-
 			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/FeePaymentController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:lockForUpdate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/FeePaymentController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/FeePaymentController.php
@@ -1357,6 +1351,12 @@ parameters:
 			path: app/admin/controller/MetricsController.php
 
 		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/admin/controller/MetricsController.php
+
+		-
 			message: '#^Call to an undefined static method support\\Redis\:\:ping\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -1659,7 +1659,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\AdminUser\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 3
 			path: app/admin/controller/ProfileController.php
 
 		-
@@ -1667,6 +1667,96 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/ProfileController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$completed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$contact_phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$feedback\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$images\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$order_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$owner_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$rating\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$room_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$scheduled_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$staff_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$urgency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/admin/controller/RepairController.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\RepairProgress\:\:\$id\.$#'
@@ -1725,7 +1815,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 5
+			count: 4
 			path: app/admin/controller/RepairController.php
 
 		-
@@ -1739,6 +1829,120 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/RepairController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Complaint\:\:whereBetween\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:whereBetween\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeePayment\:\:when\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FinanceExpense\:\:selectRaw\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FinanceIncome\:\:selectRaw\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ParkingRecord\:\:whereNull\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:whereBetween\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:when\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Visitor\:\:when\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Visitor\:\:whereBetween\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$community_id$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$end_date$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$start_date$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\AdminRole\:\:\$description\.$#'
@@ -1789,7 +1993,7 @@ parameters:
 			path: app/admin/controller/RoomController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Building\:\:where\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Building\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/RoomController.php
@@ -1807,7 +2011,7 @@ parameters:
 			path: app/admin/controller/RoomController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Room\:\:where\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/RoomController.php
@@ -1819,7 +2023,7 @@ parameters:
 			path: app/admin/controller/RoomController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Unit\:\:where\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Unit\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/RoomController.php
@@ -1891,7 +2095,7 @@ parameters:
 			path: app/admin/controller/SlaController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\SlaRecord\:\:where\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\SlaRecord\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/SlaController.php
@@ -2209,6 +2413,18 @@ parameters:
 			path: app/api/v1/controller/AuthController.php
 
 		-
+			message: '#^Call to an undefined static method support\\Redis\:\:del\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/CircuitBreaker.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:eval\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/common/CircuitBreaker.php
+
+		-
 			message: '#^Call to an undefined method Erikwang2013\\Hashids\\HashidsManager\:\:decode\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2219,6 +2435,36 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/common/HashidsService.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:eval\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/LockService.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/LockService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$paid_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$paid_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/common/PaymentService.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$amount\.$#'
@@ -2247,7 +2493,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$order_number\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 3
 			path: app/common/PaymentService.php
 
 		-
@@ -2283,13 +2529,19 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 4
+			count: 6
 			path: app/common/PaymentService.php
 
 		-
 			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 2
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Offset ''order_number'' on non\-empty\-array on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
 			path: app/common/PaymentService.php
 
 		-
@@ -2303,6 +2555,12 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 2
 			path: app/common/Validator.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\SystemConfig\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/WebhookService.php
 
 		-
 			message: '#^Access to an undefined property support\\Request\:\:\$adminId\.$#'
@@ -2345,6 +2603,12 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/middleware/AdminPermission.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:incr\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/middleware/MetricsCollector.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$action\.$#'

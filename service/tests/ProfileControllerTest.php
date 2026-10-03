@@ -87,6 +87,7 @@ class ProfileControllerTest extends TestCase
 
     public function test_index_unknown_owner_returns_404(): void
     {
+        $this->requireDb();
         $body = self::call('index', [], 999999999);
         $this->assertSame(404, $body['code']);
         $this->assertSame('用户不存在', $body['message']);

@@ -9,10 +9,30 @@ namespace tests;
 
 use app\api\v1\controller\HomeController;
 use PHPUnit\Framework\TestCase;
+use support\Db;
 use support\Request;
 
 class HomeControllerTest extends TestCase
 {
+    private static bool $db = false;
+
+    public static function setUpBeforeClass(): void
+    {
+        try {
+            Db::select('select 1');
+            self::$db = true;
+        } catch (\Throwable) {
+            self::$db = false;
+        }
+    }
+
+    protected function requireDb(): void
+    {
+        if (!self::$db) {
+            $this->markTestSkipped('DB 不可用');
+        }
+    }
+
     private static function makeRequest(int $ownerId = 0): Request
     {
         return new class($ownerId) extends Request {
@@ -27,6 +47,7 @@ class HomeControllerTest extends TestCase
 
     public function test_index_returns_dashboard_structure(): void
     {
+        $this->requireDb();
         $response = (new HomeController())->index(self::makeRequest(999999999));
         $body = json_decode($response->rawBody(), true);
 
@@ -40,6 +61,7 @@ class HomeControllerTest extends TestCase
 
     public function test_index_announcements_have_expected_keys(): void
     {
+        $this->requireDb();
         $response = (new HomeController())->index(self::makeRequest(999999999));
         $body = json_decode($response->rawBody(), true);
 

@@ -157,7 +157,25 @@ parameters:
 			path: app/api/v1/controller/HomeController.php
 
 		-
+			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Complaint\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
 			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Notification\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/HomeController.php
@@ -170,6 +188,12 @@ parameters:
 
 		-
 			message: '#^Call to an undefined static method app\\model\\Room\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/HomeController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Vote\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/HomeController.php
@@ -285,14 +309,140 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\MallProduct\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
+			count: 3
+			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
+			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/MallController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Db\:\:select\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MetricsController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/api/v1/controller/MetricsController.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:ping\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/MetricsController.php
 
 		-
 			message: '#^Call to an undefined static method app\\model\\Notification\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 3
 			path: app/api/v1/controller/NotificationController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$bill_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$due_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$late_fee\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$paid_amount\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$order_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$progress\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$urgency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Announcement\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/OpenApiController.php
 
 		-
 			message: '#^Call to an undefined static method app\\model\\ParkingRecord\:\:whereIn\(\)\.$#'
@@ -477,7 +627,13 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 3
+			count: 2
+			path: app/api/v1/controller/VoteController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
 			path: app/api/v1/controller/VoteController.php
 
 		-
@@ -499,10 +655,34 @@ parameters:
 			path: app/common/HashidsService.php
 
 		-
+			message: '#^Call to an undefined static method support\\Redis\:\:eval\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/LockService.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/LockService.php
+
+		-
 			message: '#^Strict comparison using \!\=\= between mixed and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 2
 			path: app/common/Validator.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\ApiKey\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/ApiKeyAuth.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:incr\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/middleware/MetricsCollector.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\OperationLog\:\:\$action\.$#'
@@ -601,24 +781,6 @@ parameters:
 			path: app/middleware/SecurityFilter.php
 
 		-
-			message: '#^Access to an undefined property support\\Request\:\:\$ownerId\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/middleware/ServiceAuth.php
-
-		-
-			message: '#^Access to an undefined property support\\Request\:\:\$ownerPhone\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/middleware/ServiceAuth.php
-
-		-
-			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/middleware/ServiceAuth.php
-
-		-
 			message: '#^Call to function is_array\(\) with Webman\\Http\\UploadFile will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -635,3 +797,21 @@ parameters:
 			identifier: isset.offset
 			count: 1
 			path: app/middleware/SecurityFilter.php
+
+		-
+			message: '#^Access to an undefined property support\\Request\:\:\$ownerId\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php
+
+		-
+			message: '#^Access to an undefined property support\\Request\:\:\$ownerPhone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/ServiceAuth.php

@@ -77,6 +77,7 @@ class MiddlewareAuthTest extends TestCase
 
     public function test_api_key_auth_wrong_key_returns_401(): void
     {
+        $this->requireDb();
         $response = (new ApiKeyAuth())->process(
             self::request('GET', '/open/v1/announcements', ['X-API-Key' => 'wrong-key-1234567890']),
             self::next()

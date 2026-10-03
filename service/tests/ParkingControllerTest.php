@@ -77,6 +77,7 @@ class ParkingControllerTest extends TestCase
 
     public function test_vehicles_empty_for_unknown_owner(): void
     {
+        $this->requireDb();
         $body = self::call('vehicles', [], 999999999);
         $this->assertSame(0, $body['code']);
         $this->assertArrayHasKey('data', $body['data']);
@@ -85,6 +86,7 @@ class ParkingControllerTest extends TestCase
 
     public function test_records_without_vehicles_returns_empty(): void
     {
+        $this->requireDb();
         $body = self::call('records', [], 999999999);
         $this->assertSame(0, $body['code']);
         $this->assertSame([], $body['data']['data']);
@@ -93,6 +95,7 @@ class ParkingControllerTest extends TestCase
 
     public function test_spaces_empty_for_unknown_owner(): void
     {
+        $this->requireDb();
         $body = self::call('spaces', [], 999999999);
         $this->assertSame(0, $body['code']);
         $this->assertSame(0, $body['data']['total']);

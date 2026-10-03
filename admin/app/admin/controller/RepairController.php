@@ -68,7 +68,7 @@ class RepairController extends BaseController
                     'status'       => $item->status,
                     // 维修人员：对外一律 hashid（与全站约定一致），并带上姓名供列表直显
                     'staff_id'     => $item->staff_id ? $this->encodeId($item->staff_id) : '',
-                    'staff_name'   => $item->staff?->name ?? '',
+                    'staff_name'   => $item->staff->name ?? '',
                     'completed_at' => $item->completed_at ? $item->completed_at->format('Y-m-d H:i') : '',
                     'created_at'   => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
                 ];
@@ -122,7 +122,7 @@ class RepairController extends BaseController
             'scheduled_at'  => $item->scheduled_at ? $item->scheduled_at->format('Y-m-d H:i') : '',
             'status'        => $item->status,
             'staff_id'      => $item->staff_id ? $this->encodeId($item->staff_id) : '',
-            'staff_name'    => $item->staff?->name ?? '',
+            'staff_name'    => $item->staff->name ?? '',
             'completed_at'  => $item->completed_at ? $item->completed_at->format('Y-m-d H:i') : '',
             'rating'        => $item->rating,
             'feedback'      => $item->feedback,

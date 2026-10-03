@@ -67,6 +67,7 @@ class ExportController extends BaseController
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         ];
 
+        /** @var string $colIndex Excel 列名按 A→B→…→Z→AA 递增（++ 对 literal-string 非法，需标注为 string） */
         $colIndex = 'A';
         foreach ($columns as $col) {
             $label = $exportColumns[$col] ?? $col;
@@ -80,6 +81,7 @@ class ExportController extends BaseController
         // 填充数据
         $row = 2;
         foreach ($data as $item) {
+            /** @var string $colIndex */
             $colIndex = 'A';
             foreach ($columns as $col) {
                 $value = $item[$col] ?? '';

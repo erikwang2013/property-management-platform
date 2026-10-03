@@ -35,9 +35,9 @@ class ReportController extends BaseController
      * 报表总览（汇总卡片 + 收支趋势 + 业务分布 + 欠费排行）
      * @Apidoc\Method("GET")
      * @Apidoc\Url("/admin/report")
-     * @param string start_date 开始日期 Y-m-d（默认近 30 天）
-     * @param string end_date 结束日期 Y-m-d
-     * @param string community_id 小区 ID（hashid，可选）
+     * @param string $start_date 开始日期 Y-m-d（默认近 30 天）
+     * @param string $end_date 结束日期 Y-m-d
+     * @param string $community_id 小区 ID（hashid，可选）
      */
     public function index(Request $request): Response
     {
