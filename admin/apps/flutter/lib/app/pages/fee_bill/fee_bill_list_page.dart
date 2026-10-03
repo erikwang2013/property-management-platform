@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
+import '../../widgets/pet_mark.dart';
 import 'fee_bill_controller.dart';
 
 class FeeBillListPage extends GetView<FeeBillController> {
@@ -24,7 +25,7 @@ class FeeBillListPage extends GetView<FeeBillController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.bills.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.bills.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('费项')), DataColumn(label: Text('金额')), DataColumn(label: Text('已缴')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('截止日期')), DataColumn(label: Text('操作')),

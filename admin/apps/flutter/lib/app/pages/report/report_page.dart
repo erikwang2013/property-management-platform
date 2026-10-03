@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'report_controller.dart';
+import '../../widgets/pet_mark.dart';
 
 /// 报表中心：汇总卡片 + 收支趋势 + 缴费方式 + 业务分布 + 欠费排行
 class ReportPage extends GetView<ReportController> {
@@ -144,7 +145,7 @@ class ReportPage extends GetView<ReportController> {
             const Text('收支趋势', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             if (months.isEmpty)
-              const SizedBox(height: 200, child: Center(child: Text('暂无数据')))
+              const SizedBox(height: 200, child: PetEmpty())
             else
               SizedBox(
                 height: 240,
@@ -222,7 +223,7 @@ class ReportPage extends GetView<ReportController> {
             const Text('缴费方式分布', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             if (methods.isEmpty)
-              const SizedBox(height: 160, child: Center(child: Text('暂无数据')))
+              const SizedBox(height: 160, child: PetEmpty())
             else ...[
               SizedBox(
                 height: 120,
@@ -273,7 +274,7 @@ class ReportPage extends GetView<ReportController> {
             Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             if (rows.isEmpty)
-              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: Center(child: Text('暂无数据')))
+              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: PetEmpty())
             else
               for (final e in rows)
                 Padding(
@@ -312,7 +313,7 @@ class ReportPage extends GetView<ReportController> {
             const Text('欠费排行 TOP 10', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             if (rows.isEmpty)
-              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: Center(child: Text('暂无欠费数据')))
+              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: PetEmpty(message: '暂无欠费数据'))
             else
               DataTable(
                 columns: const [

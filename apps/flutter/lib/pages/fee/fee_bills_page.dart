@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 import '../../config/theme.dart';
+import '../../widgets/pet_mark.dart';
 
 class FeeBillsPage extends StatefulWidget {
   const FeeBillsPage({super.key});
@@ -110,16 +111,7 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _bills.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.receipt_long, size: 64, color: Colors.grey.shade300),
-                            const SizedBox(height: 16),
-                            Text('no_data'.tr, style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
-                          ],
-                        ),
-                      )
+                    ? const PetEmpty()
                     : RefreshIndicator(
                         onRefresh: _loadBills,
                         child: ListView.builder(

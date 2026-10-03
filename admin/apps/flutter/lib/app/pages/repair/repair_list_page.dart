@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
+import '../../widgets/pet_mark.dart';
 import 'repair_controller.dart';
 
 class RepairListPage extends GetView<RepairController> {
@@ -28,7 +29,7 @@ class RepairListPage extends GetView<RepairController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.repairs.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.repairs.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('报修编号')), DataColumn(label: Text('类型')), DataColumn(label: Text('紧急度')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('时间')), DataColumn(label: Text('操作')),

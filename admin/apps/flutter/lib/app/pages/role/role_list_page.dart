@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'role_controller.dart';
+import '../../widgets/pet_mark.dart';
 
 class RoleListPage extends GetView<RoleController> {
   const RoleListPage({super.key});
@@ -31,7 +32,7 @@ class RoleListPage extends GetView<RoleController> {
         const SizedBox(height: 12),
         Expanded(child: Obx(() {
           if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-          if (ctrl.roles.isEmpty) return const Center(child: Text('暂无角色'));
+          if (ctrl.roles.isEmpty) return const PetEmpty(message: '暂无角色');
 
           return ListView.builder(
             itemCount: ctrl.roles.length,

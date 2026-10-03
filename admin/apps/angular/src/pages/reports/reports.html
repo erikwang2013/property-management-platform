@@ -74,7 +74,7 @@
         @if (d.income_trend.length || d.expense_trend.length) {
           <xz-chart [option]="trendOption()" [height]="320" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有收支流水'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有收支流水'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -83,7 +83,7 @@
         @if (d.payment_methods.length) {
           <xz-chart [option]="paymentOption()" [height]="320" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有缴费记录'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有缴费记录'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -92,7 +92,7 @@
         @if (d.repair_status.length) {
           <xz-chart [option]="repairStatusOption()" [height]="280" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -101,7 +101,7 @@
         @if (d.complaint_status.length) {
           <xz-chart [option]="complaintOption()" [height]="280" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有投诉'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有投诉'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -110,7 +110,7 @@
         @if (d.visitor_status.length) {
           <xz-chart [option]="visitorOption()" [height]="280" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有访客记录'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有访客记录'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -119,7 +119,7 @@
         @if (d.repair_category.length) {
           <xz-chart [option]="repairCategoryOption()" [height]="280" />
         } @else {
-          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" />
+          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" [nzNotFoundImage]="petTpl" />
         }
       </nz-card>
     </div>
@@ -135,6 +135,7 @@
             [nzData]="d.arrears_ranking"
             [nzShowPagination]="false"
             [nzScroll]="{ y: '220px' }"
+            [nzNoResult]="petTpl"
             nzSize="small"
             class="compact"
           >

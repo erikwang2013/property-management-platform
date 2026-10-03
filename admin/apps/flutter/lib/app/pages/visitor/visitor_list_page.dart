@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
+import '../../widgets/pet_mark.dart';
 import 'visitor_controller.dart';
 
 class VisitorListPage extends GetView<VisitorController> {
@@ -18,7 +19,7 @@ class VisitorListPage extends GetView<VisitorController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.visitors.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.visitors.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('访客姓名')), DataColumn(label: Text('手机号')), DataColumn(label: Text('被访人')),
           DataColumn(label: Text('访问时间')), DataColumn(label: Text('状态')), DataColumn(label: Text('操作')),

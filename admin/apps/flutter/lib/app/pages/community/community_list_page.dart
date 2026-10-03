@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'community_controller.dart';
 import 'community_form_page.dart';
 
@@ -66,7 +67,7 @@ class CommunityListPage extends GetView<CommunityController> {
         Expanded(
           child: Obx(() {
             if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-            if (ctrl.communities.isEmpty) return const Center(child: Text('暂无数据'));
+            if (ctrl.communities.isEmpty) return const PetEmpty();
 
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,

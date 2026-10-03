@@ -8,6 +8,7 @@ import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 import '../../config/theme.dart';
 import 'fee_pay_dialog.dart';
+import '../../widgets/pet_mark.dart';
 
 class FeeBillDetailPage extends StatefulWidget {
   const FeeBillDetailPage({super.key});
@@ -128,9 +129,9 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
                           Text('fee_payment'.tr, style: Theme.of(context).textTheme.titleMedium),
                           const Divider(height: 24),
                           if (_payments.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Center(child: Text('no_data'.tr, style: TextStyle(color: Colors.grey))),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: PetEmpty(),
                             )
                           else
                             ..._payments.map((p) => ListTile(

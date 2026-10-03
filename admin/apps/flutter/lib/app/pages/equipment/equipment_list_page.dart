@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'equipment_controller.dart';
 import '../../config/api_config.dart';
 
@@ -24,7 +25,7 @@ class EquipmentListPage extends GetView<EquipmentController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.equipment.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.equipment.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('设备名称')), DataColumn(label: Text('编号')), DataColumn(label: Text('位置')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('操作')),

@@ -83,3 +83,7 @@ apps/flutter/# Android Studio will place build artifacts here
 apps/flutter//android/app/debug
 apps/flutter//android/app/profile
 apps/flutter//android/app/release
+
+# HarmonyOS 构建产物（hvigor/DevEco 生成，不入库；2026-10-03 清理误入库的缓存后新增守卫）
+apps/harmonyos/entry/build/
+admin/apps/harmonyos/entry/build/

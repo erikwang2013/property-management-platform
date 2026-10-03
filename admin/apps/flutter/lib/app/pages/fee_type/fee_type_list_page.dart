@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'fee_type_controller.dart';
 
 class FeeTypeListPage extends GetView<FeeTypeController> {
@@ -22,7 +23,7 @@ class FeeTypeListPage extends GetView<FeeTypeController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.feeTypes.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.feeTypes.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('费项名称')), DataColumn(label: Text('单价')), DataColumn(label: Text('计费周期')), DataColumn(label: Text('科目')), DataColumn(label: Text('操作')),
         ], rows: ctrl.feeTypes.map((f) {

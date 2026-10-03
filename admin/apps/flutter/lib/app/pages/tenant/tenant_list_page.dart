@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'tenant_controller.dart';
 
 class TenantListPage extends GetView<TenantController> {
@@ -33,7 +34,7 @@ class TenantListPage extends GetView<TenantController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.tenants.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.tenants.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('姓名')), DataColumn(label: Text('手机号')),
           DataColumn(label: Text('租期开始')), DataColumn(label: Text('租期结束')), DataColumn(label: Text('状态')), DataColumn(label: Text('操作')),

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'room_controller.dart';
 
 class RoomListPage extends GetView<RoomController> {
@@ -26,7 +27,7 @@ class RoomListPage extends GetView<RoomController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.rooms.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.rooms.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('房号')), DataColumn(label: Text('面积(m²)')),
           DataColumn(label: Text('户型')), DataColumn(label: Text('状态')), DataColumn(label: Text('操作')),

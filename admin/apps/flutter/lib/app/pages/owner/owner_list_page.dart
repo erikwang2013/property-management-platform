@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'owner_controller.dart';
 
 class OwnerListPage extends GetView<OwnerController> {
@@ -40,7 +41,7 @@ class OwnerListPage extends GetView<OwnerController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.owners.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.owners.isEmpty) return const PetEmpty();
         return DataTable(columns: [
           DataColumn(label: Checkbox(value: ctrl.selectedIds.length == ctrl.owners.length && ctrl.owners.isNotEmpty, onChanged: (_) => ctrl.toggleSelectAll())),
           const DataColumn(label: Text('姓名')), const DataColumn(label: Text('手机号')),

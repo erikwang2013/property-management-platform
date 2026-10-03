@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'user_controller.dart';
 import 'user_form_page.dart';
+import '../../widgets/pet_mark.dart';
 
 class UserListPage extends GetView<UserController> {
   const UserListPage({super.key});
@@ -76,7 +77,7 @@ class UserListPage extends GetView<UserController> {
         Expanded(
           child: Obx(() {
             if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-            if (ctrl.users.isEmpty) return const Center(child: Text('暂无数据'));
+            if (ctrl.users.isEmpty) return const PetEmpty();
 
             return SingleChildScrollView(
               child: DataTable(

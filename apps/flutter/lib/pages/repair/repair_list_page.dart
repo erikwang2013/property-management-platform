@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 import '../../config/theme.dart';
+import '../../widgets/pet_mark.dart';
 
 class RepairListPage extends StatefulWidget {
   const RepairListPage({super.key});
@@ -149,16 +150,7 @@ class _RepairListPageState extends State<RepairListPage> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _repairs.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.build_outlined, size: 64, color: Colors.grey.shade300),
-                            const SizedBox(height: 16),
-                            Text('no_data'.tr, style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
-                          ],
-                        ),
-                      )
+                    ? const PetEmpty()
                     : RefreshIndicator(
                         onRefresh: _loadRepairs,
                         child: ListView.builder(

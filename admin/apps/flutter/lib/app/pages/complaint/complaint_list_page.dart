@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
+import '../../widgets/pet_mark.dart';
 import 'complaint_controller.dart';
 
 class ComplaintListPage extends GetView<ComplaintController> {
@@ -25,7 +26,7 @@ class ComplaintListPage extends GetView<ComplaintController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.complaints.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.complaints.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('投诉人')), DataColumn(label: Text('类型')), DataColumn(label: Text('内容')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('时间')), DataColumn(label: Text('操作')),

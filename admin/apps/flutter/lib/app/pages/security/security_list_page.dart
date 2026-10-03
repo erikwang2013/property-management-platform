@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'security_controller.dart';
 import '../../config/api_config.dart';
 
@@ -38,7 +39,7 @@ Widget _buildList(BuildContext ctx, dynamic c, String title, RxList items, List<
     const SizedBox(height:12),
     Expanded(child: Obx(() {
       if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-      if (items.isEmpty) return const Center(child: Text('暂无数据'));
+      if (items.isEmpty) return const PetEmpty();
       return DataTable(columns: [...cols.map((h)=>DataColumn(label:Text(h))), const DataColumn(label: Text('操作'))],
         rows: items.map((item) => DataRow(cells: [...cells(item).map((w) => DataCell(w)), DataCell(Row(mainAxisSize: MainAxisSize.min, children: [
           IconButton(icon: Icon(Icons.edit,size:18), onPressed: ()=>_patrolForm(ctx,c,data:item)),
@@ -58,7 +59,7 @@ Widget _buildRecordList(BuildContext ctx, dynamic c, String title, RxList items,
     const SizedBox(height:12),
     Expanded(child: Obx(() {
       if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-      if (items.isEmpty) return const Center(child: Text('暂无数据'));
+      if (items.isEmpty) return const PetEmpty();
       return DataTable(columns: cols.map((h)=>DataColumn(label:Text(h))).toList(),
         rows: items.map((r) => DataRow(cells: [DataCell(Text(r['route_name']??'-')),DataCell(Text(r['guard_name']??'-')),DataCell(Text(r['start_time']??'-')),DataCell(Text(r['end_time']??'-')),DataCell(Text(r['status']==1?'完成':'进行中'))])).toList());
     })),

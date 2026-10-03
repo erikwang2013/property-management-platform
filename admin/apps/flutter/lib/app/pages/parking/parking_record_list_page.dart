@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
+import '../../widgets/pet_mark.dart';
 import 'parking_controller.dart';
 
 class ParkingRecordListPage extends GetView<ParkingRecordController> {
@@ -17,7 +18,7 @@ class ParkingRecordListPage extends GetView<ParkingRecordController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.records.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.records.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('车牌号')), DataColumn(label: Text('进入时间')), DataColumn(label: Text('离开时间')), DataColumn(label: Text('类型')),
         ], rows: c.records.map((r) => DataRow(cells: [

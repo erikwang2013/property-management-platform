@@ -15,6 +15,12 @@ struct LoginPage {
 
   build() {
     Column() {
+      // 顶部品牌区：小筑标记（对齐管理端 LoginPage 的 Image($rawfile('logo.png')) 写法）
+      Image($rawfile('logo.png'))
+        .width(64)
+        .height(64)
+        .margin({ bottom: 8 })
+
       Text('物业管理平台')
         .fontSize(24).fontWeight(FontWeight.Bold).margin({ bottom: 8 })
       Text('业主登录')

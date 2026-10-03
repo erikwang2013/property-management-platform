@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'unit_controller.dart';
 
 class UnitListPage extends GetView<UnitController> {
@@ -21,7 +22,7 @@ class UnitListPage extends GetView<UnitController> {
       _buildHeader(context, ctrl),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.units.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.units.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('单元号')), DataColumn(label: Text('楼层数')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('创建时间')), DataColumn(label: Text('操作')),

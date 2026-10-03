@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/stat_card.dart';
+import '../../widgets/pet_mark.dart';
 import '../../config/theme.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
@@ -88,7 +89,11 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('home'.tr),
+        title: Row(mainAxisSize: MainAxisSize.min, children: [
+          const PetMark(size: 24),
+          const SizedBox(width: 8),
+          Text('home'.tr),
+        ]),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
           IconButton(icon: const Icon(Icons.person_outline), onPressed: () => Get.toNamed('/profile')),
@@ -241,9 +246,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 8),
                           if (_announcements.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(32),
-                              child: Center(child: Text('no_data'.tr, style: TextStyle(color: Colors.grey))),
+                            const Padding(
+                              padding: EdgeInsets.all(32),
+                              child: PetEmpty(),
                             )
                           else
                             ..._announcements.map((a) => ListTile(

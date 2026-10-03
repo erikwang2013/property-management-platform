@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../services/auth_service.dart';
+import '../widgets/pet_mark.dart';
 import '../pages/user/user_list_page.dart';
 import '../pages/role/role_list_page.dart';
 import '../pages/config/config_page.dart';
@@ -189,7 +190,7 @@ class _AdminLayoutState extends State<AdminLayout> {
               alignment: Alignment.centerLeft,
               child: const Row(
                 children: [
-                  Icon(Icons.admin_panel_settings, size: 24),
+                  PetMark(size: 24),
                   SizedBox(width: 8),
                   Text('管理后台',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -257,7 +258,7 @@ class _AdminLayoutState extends State<AdminLayout> {
           alignment: Alignment.centerLeft,
           child: const Row(
             children: [
-              Icon(Icons.admin_panel_settings, size: 24),
+              PetMark(size: 24),
               SizedBox(width: 8),
               Text('管理后台',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -296,7 +297,7 @@ class _AdminLayoutState extends State<AdminLayout> {
         Container(
           height: headerHeight,
           alignment: Alignment.center,
-          child: const Icon(Icons.admin_panel_settings, size: 28),
+          child: const PetMark(size: 28),
         ),
         const Divider(),
         for (final item in _menuGroups.expand((g) => g.items).take(5))

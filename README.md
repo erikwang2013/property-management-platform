@@ -19,8 +19,8 @@
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
 | 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
-| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/`、`admin/apps/flutter/web/`、`admin/apps/react/public/`、`admin/apps/angular/public/` |
-| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 管理端 React / Angular 重设计（登录页 + 值班台 + 空态 + 404）· 六个 Web 入口的浏览器标签图标 · 架构图横切栏 |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 8 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`、React / Angular 的 `public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等 57 件）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
+| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 管理端 React / Angular 重设计（登录页 + 值班台 + 空态 + 404）· 两端 Flutter 与两端 HarmonyOS 的壳层图标与启动图（launcher / 应用图标 / splash）· 四端空态插图（React / Angular / Flutter / HarmonyOS）· 六个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
 
 ## 项目结构
 

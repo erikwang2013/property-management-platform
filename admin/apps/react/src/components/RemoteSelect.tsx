@@ -5,6 +5,7 @@ import { Select } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api/client'
 import { readPage } from '../api/paging'
+import { EmptyState } from './PetMark'
 
 export interface RemoteSelectProps {
   endpoint: string
@@ -47,6 +48,7 @@ export default function RemoteSelect({
       value={value}
       loading={isFetching}
       filterOption={false}
+      notFoundContent={<EmptyState />}
       onSearch={setTerm}
       onChange={(v) => onChange?.(v as string | undefined)}
       options={(data?.rows ?? []).map(toOption)}

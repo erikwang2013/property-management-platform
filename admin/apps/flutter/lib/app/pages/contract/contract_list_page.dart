@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'contract_controller.dart';
 
 class ContractListPage extends GetView<ContractController> {
@@ -23,7 +24,7 @@ class ContractListPage extends GetView<ContractController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.contracts.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.contracts.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('合同编号')), DataColumn(label: Text('类型')), DataColumn(label: Text('签署方')),
           DataColumn(label: Text('金额')), DataColumn(label: Text('状态')), DataColumn(label: Text('到期日')), DataColumn(label: Text('操作')),

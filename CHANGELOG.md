@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.6.0 (2026-10-03)
+
+### 新增
+- **`scripts/gen-pet-icons.sh` 派生图标生成器**：从唯一真源 `docs/images/favicon.svg`（内置 md5 守卫）生成全仓 57 件派生位图（PNG + ico），三个变体自动适配平台——`tile`（原样圆角瓦片：浏览器 / 桌面 / 启动图 / HarmonyOS rawfile）、`full`（裁到瓦片 + 满铺去 alpha：iOS / Android / HarmonyOS 应用图标）、`maskable`（80% 安全区 + 靛蓝实底：web maskable）。幂等且**逐字节可复现**（独立复跑两遍 md5 清单全等；已显式剔除 ImageMagick 默认写入的 `date:*` 元数据块）
+
+### 宠物接入
+- **两端 Flutter（admin + owner）**：新增共享组件 `PetMark` / `PetEmpty`（`lib/*/widgets/pet_mark.dart`，文案可空 + build 内兜底以保 `const`）；29 + 4 处纯文字空态换小筑标记插图（56px，口径对齐 React）；admin 侧栏/抽屉头部 3 处 `Icons.admin_panel_settings` → `PetMark`；owner 首页标题加标记；两端壳层图标全套替换（Android 5 档 / iOS 15 件 / macOS 7 件 / Windows 多帧 ico / web 5 件 ×2 端）；启动图放标记（Android `launch_background` + 5 档 `launch_image`、iOS `LaunchImage` 168/336/504）
+- **两端 HarmonyOS（此前零宠物）**：`app_icon` 216² 满铺（AppScope + entry ×4）、`start_icon` 128 tile（admin 被 module.json5 引用，owner 侧同换求一致）、admin `rawfile/logo.png`（登录页品牌位）与 `empty.png`（`EmptyView` 为全端空态公共出口，240² = 120dp 的 2×）；owner 端新建 `rawfile/` 并在登录页加 logo 位（`LoginPage.ets`）
+- **React / Angular 补点**：React 下拉无数据空态复用 `EmptyState`；Angular 报表页 6 处 `nz-empty` + 欠费排行表统一挂页内既有宠物模板
+- **两个后端**：`admin/public/favicon.ico` 由 2026-05 的旧橙色插画换为多尺寸小筑 ico（16/32/48 三帧），`service/public/` 补齐同款（此前只有 svg）
+- **壳层元数据清理**：两端 Flutter web `manifest.json` / `index.html`、admin 的 `AndroidManifest.xml` / iOS `Info.plist` / macOS `PRODUCT_NAME` / Windows 窗口名与 `Runner.rc` / Linux GTK 标题——应用名统一「物业管理平台」，主题色由 Flutter 模板蓝 `#0175C2` 改为靛蓝 `#4F46E5`，描述不再出现 "A new Flutter project."
+
+### 变更
+- `.gitignore` 新增 HarmonyOS `entry/build/` 忽略；删除误入库的 admin 端构建缓存 146 文件（DevEco 重新构建时生成）
+
+### 测试
+- Flutter 两端 `flutter analyze` 0 issue；`flutter test` admin 1 例、owner 9 例（含空态 `find.text('暂无数据')` 断言）全过；入口 `main.dart.js` md5：admin `dbd9b3c4…`、owner `67690b08…`
+- React `pnpm test` 7 文件 47 例、Angular `ng test` 38 例全过；重建锚点（独立复跑逐字节复现）：React `index-D3OBXg3z.js` md5 `ca9f5617…` / 整树 `e8cfe7ee…`（5 文件）；Angular `main-GVCZUKER.js` md5 `9edc1521…` / 整树 `3fd1ac5a…`（58 文件）
+- 生成器独立复核：连跑两遍 md5 清单全等；iOS / Android / HarmonyOS 应用图标无 alpha 通道；Windows ico 7 帧、favicon.ico 3 帧且两端逐字节相同；8 处 `favicon.svg` 副本与真源逐字节一致；拼版目检（16px 格帽 + 双点眼可辨）
+- **锚点口径修正**：Flutter web 整树 sha256 **天然不可复现**——`build/web/flutter_bootstrap.js` 每次构建写入随机 `serviceWorkerVersion`（admin 连构三次逐字节 diff 仅此一行），Flutter 端一律以入口 `main.dart.js` md5 为主锚点（已同步「字节互认」团队协议）
+- 边界（如实）：HarmonyOS 真机构建、iOS / macOS / Windows 打包、App Store 图标校验在本机均不可行——HarmonyOS `app_icon` 取平台规范 216² 但未在 DevEco 验证；macOS `PRODUCT_NAME` 用裸中文、Windows 资源串按工程现状取转义写法（该工程无 `/utf-8` MSVC 开关），均未做构建验证；Android 未做 adaptive icon（8+ 会套白底圆角并缩至 ~72%，标记显小一圈，另开项）；web maskable 的 80% 边缘与瓦片渐变有极淡接缝（记录不判定）；身份头像位（顶栏人像 / HarmonyOS `avatar.png`）与加载态转圈按既定口径不动
+
 ## v1.5.1 (2026-10-03)
 
 ### 修复

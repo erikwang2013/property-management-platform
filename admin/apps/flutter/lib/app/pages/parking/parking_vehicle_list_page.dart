@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'parking_controller.dart';
 import '../../config/api_config.dart';
 
@@ -24,7 +25,7 @@ class ParkingVehicleListPage extends GetView<ParkingVehicleController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.vehicles.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.vehicles.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('车牌号')), DataColumn(label: Text('车主')), DataColumn(label: Text('车位')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('操作')),

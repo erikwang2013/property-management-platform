@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
+import '../../widgets/pet_mark.dart';
 import 'finance_controller.dart';
 
 class FinanceStatisticsPage extends GetView<FinanceController> {
@@ -43,7 +44,7 @@ class FinanceIncomeListPage extends GetView<FinanceIncomeController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.incomes.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.incomes.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('科目')), DataColumn(label: Text('金额')), DataColumn(label: Text('来源')), DataColumn(label: Text('日期')),
         ], rows: c.incomes.map((x) => DataRow(cells: [
@@ -67,7 +68,7 @@ class FinanceExpenseListPage extends GetView<FinanceExpenseController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (c.expenses.isEmpty) return const Center(child: Text('暂无数据'));
+        if (c.expenses.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('科目')), DataColumn(label: Text('金额')), DataColumn(label: Text('用途')), DataColumn(label: Text('日期')),
         ], rows: c.expenses.map((x) => DataRow(cells: [

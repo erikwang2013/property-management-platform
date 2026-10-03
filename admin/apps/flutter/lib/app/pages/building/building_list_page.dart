@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'building_controller.dart';
 
 class BuildingListPage extends GetView<BuildingController> {
@@ -49,7 +50,7 @@ class BuildingListPage extends GetView<BuildingController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.buildings.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.buildings.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('楼栋名称')), DataColumn(label: Text('编号')),
           DataColumn(label: Text('状态')), DataColumn(label: Text('创建时间')), DataColumn(label: Text('操作')),

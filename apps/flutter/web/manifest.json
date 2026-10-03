@@ -1,11 +1,11 @@
 {
-    "name": "property_portal",
-    "short_name": "property_portal",
+    "name": "物业管理平台",
+    "short_name": "物业管理平台",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#4F46E5",
+    "description": "物业管理平台业主端",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
+import '../../widgets/pet_mark.dart';
 import 'announcement_controller.dart';
 
 class AnnouncementListPage extends GetView<AnnouncementController> {
@@ -23,7 +24,7 @@ class AnnouncementListPage extends GetView<AnnouncementController> {
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
         if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
-        if (ctrl.announcements.isEmpty) return const Center(child: Text('暂无数据'));
+        if (ctrl.announcements.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('标题')), DataColumn(label: Text('状态')),
           DataColumn(label: Text('发布时间')), DataColumn(label: Text('操作')),

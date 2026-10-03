@@ -71,6 +71,7 @@ flutter:
   # （Flutter 资源必须位于包目录内），改动时请同步两处。
   assets:
     - assets/pet_xiaozhu.svg
+    - assets/favicon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
