@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.1 (2026-10-03)
+
+### 修复
+- **CI 两个恒失败作业修复（Service Tests / PHPStan Level 5）**：`Service Tests` —— ① 8 个触库用例补齐 `requireDb()` 跳过守卫（Home / MiddlewareAuth / Parking / Profile / Vote 五文件，沿用各文件既有惯例；无可用 DB 连接时跳过而非报 `connection() on null`）；② `MetricsControllerTest` 的 `db_up` 断言改为随实际可达性（可连=1 / 不可连=0，两条路径都钉死，防指标恒 1/恒 0 僵死）；③ `SecurityFeatureTest` 改为直接 `require` 真实配置文件（`config/plugin/erikwang2013/jwt/jwt.php` 与 `config/encryption.php`，含两者自带的 fail-fast 语义）——原 `config('jwt.secret')` 在 phpunit 引导下恒为空（引导不加载 webman 配置树）。`PHPStan` —— 两端 `phpstan-baseline.neon` 按 composer.lock 锁定版本（2.2.16）同环境重生成：清 10 条死条目、修正计数漂移、补齐 Eloquent 魔术静态方法/动态属性类噪音；两端 `analyse` 均为 No errors。验证：CI run 37101769614 全绿（前端两个作业按路径过滤正确跳过）
+- 静态分析暴露的 3 处真问题（未入基线、直接修）：`ExportController` 两处 literal-string `++` 补 `@var string` 标注；`ReportController` 三个 `@param` 补缺失的 `$`（docblock 语法错误）；`RepairController` 两处 `?->name` 改 `->name`（`??` 已含 isset 语义，运行行为不变）
+
 ## v1.5.0 (2026-10-03)
 
 ### 新增
