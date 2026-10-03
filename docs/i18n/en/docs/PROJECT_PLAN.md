@@ -31,7 +31,7 @@
 
 ## 3. Strategic Positioning
 
-**Feature-complete phase → engineering/commercialization phase.** Business feature development has concluded (recent commits are documentation/audit/test completion). Next-phase investment: **CI/CD and quality gates, payment productionization, monitoring & alerting and backup/restore, multi-tenant SaaS, mobile completion**. Commercial packaging has a foundation (EDITIONS three editions + install wizard + copyright watermark); what's missing is the engineering credibility that makes customers willing to pay.
+**Feature-complete phase → engineering/commercialization phase.** Business feature development has concluded (recent commits are documentation/audit/test completion). Next-phase investment: **CI/CD and quality gates, payment productionization, monitoring & alerting and backup/restore, multi-tenant SaaS, mobile completion**. Commercial packaging has a foundation (install wizard + copyright watermark); what's missing is the engineering credibility that makes customers willing to pay.
 
 ## 4. Phased Roadmap
 
@@ -47,9 +47,9 @@
 
 | Goal | Key Tasks | Acceptance Criteria |
 |------|---------|---------|
-| Payment loop closed, monitorable, deliverable | ① Payment productionization: WeChat/Alipay sandbox full flow (order → idempotent callback → refund → reconciliation), credentials centralized in config/payment.php + env ② Monitoring & alerting: Prometheus+Grafana orchestration + alert rules (5xx, ES/Redis connectivity, queue backlog) + log rotation ③ Commercial edition control: EDITIONS-based version switch (Lite/Standard/Full route group activation) + Demo data ④ Install wizard covers payment/ES config | Sandbox payment full flow passes (including duplicate-callback idempotency); alerts verified by real triggers; three-edition switch demoable; new environment installs in 10 minutes |
+| Payment loop closed, monitorable, deliverable | ① Payment productionization: WeChat/Alipay sandbox full flow (order → idempotent callback → refund → reconciliation), credentials centralized in config/payment.php + env ② Monitoring & alerting: Prometheus+Grafana orchestration + alert rules (5xx, ES/Redis connectivity, queue backlog) + log rotation ③ Install wizard covers payment/ES config | Sandbox payment full flow passes (including duplicate-callback idempotency); alerts verified by real triggers; new environment installs in 10 minutes |
 
-**P2 current status**: ✅ Offline portion fully complete (2026-08-16/17): full payment chain code (PaymentService order/callback idempotency/refund/reconciliation + config/payment.php credential centralization + PaymentServiceTest pure-function coverage), monitoring orchestration (dual Prometheus stacks + 6 alert rules + dual-end Grafana dashboard provisioning), edition switch (EDITIONS three editions + fail-fast validation), install wizard (payment config auto-enable + template path bug fixed). Remaining external dependencies: **sandbox integration awaits credentials** (run `scripts/payment_sandbox_smoke.php` after obtaining WECHAT_PAY_* / ALIPAY_* sandbox credentials), **alert real-trigger verification awaits deployment** (`scripts/verify_monitoring.sh` validates locally; real trigger verification after deployment).
+**P2 current status**: ✅ Offline portion fully complete (2026-08-16/17): full payment chain code (PaymentService order/callback idempotency/refund/reconciliation + config/payment.php credential centralization + PaymentServiceTest pure-function coverage), monitoring orchestration (dual Prometheus stacks + 6 alert rules + dual-end Grafana dashboard provisioning), install wizard (payment config auto-enable + template path bug fixed). Remaining external dependencies: **sandbox integration awaits credentials** (run `scripts/payment_sandbox_smoke.php` after obtaining WECHAT_PAY_* / ALIPAY_* sandbox credentials), **alert real-trigger verification awaits deployment** (`scripts/verify_monitoring.sh` validates locally; real trigger verification after deployment).
 
 ### P3 Scaling (8-12 weeks) — Make the system "sellable at scale"
 
@@ -85,7 +85,7 @@
 | 7 | SQL migration management (full merge back into single install.sql entry) | Medium (upgradability) | Low | Low | ✅ Complete (merged 2026-08-16) |
 | 8 | Multi-tenant plan review + tenant_id isolation | High (ceiling) | High | High (affects all queries) | ✅ Complete (delivered in P3, bypass tests pass) |
 | 9 | Load testing + slow query governance | Medium (performance) | Medium | Low | ✅ Complete (P3 real runs meet P95; P7 smoke version in CI) |
-| 10 | Commercial edition license switch + Demo data | Medium (pre-sales) | Medium | Low | ✅ Complete (EDITIONS + demo_data.php + demo walkthrough doc) |
+| 10 | Demo data | Medium (pre-sales) | Medium | Low | ✅ Complete (demo_data.php + demo walkthrough doc) |
 
 ## 6. Risks & Dependencies
 
@@ -105,11 +105,11 @@
 |------|---------|
 | Architecture | Multi-tenant plan review and tenant_id isolation design (P3), ES degradation architecture, monitoring architecture (P2), payment callback idempotency design review |
 | Backend | Key generation/rotation scripts, ES degradation implementation, payment config centralization + sandbox integration, migration script split, load testing and slow query governance |
-| Flutter frontend | CI-integrated flutter analyze, owner mobile adaptation (P3), edition switch UI support |
+| Flutter frontend | CI-integrated flutter analyze, owner mobile adaptation (P3) |
 | HarmonyOS | Core-path completion: payments/repairs/announcements/visitors/parking (P3) |
 | Testing | Coverage gates, payment sandbox cases (duplicate callback/refund/reconciliation), load test scripts, backup/restore drill execution |
 | Review | Payment and security critical-path review, gitleaks into CI, multi-tenant bypass test review |
-| Documentation | Deployment/ops manuals (incl. restore drill), multi-tenant plan doc, monitoring config manual, commercial edition delivery manual |
+| Documentation | Deployment/ops manuals (incl. restore drill), multi-tenant plan doc, monitoring config manual |
 
 ## 8. Immediate Action Recommendations
 

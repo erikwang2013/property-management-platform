@@ -27,7 +27,7 @@
 | 방문객 | 페이지 없음 | 신규 페이지 필요（API 준비됨: GET/POST/PUT/DELETE /visitor*） |
 | 주차 | 페이지 없음 | 신규 페이지 필요（API 준비됨: /parking/vehicles、/parking/spaces、/parking/records） |
 
-백엔드 갭 없음: 5개 핵심 경로의 service API가 모두 준비됨（fees/repairs/announcements 상주 라우트; parking/visitors는 standard 버전 게이트 안）. ApiService.ets에 공용 get/post/put/delete가 이미 있으며, 신규 페이지에서 바로 재사용 가능.
+백엔드 갭 없음: 5개 핵심 경로의 service API가 모두 준비됨（fees/repairs/announcements 상주 라우트）. ApiService.ets에 공용 get/post/put/delete가 이미 있으며, 신규 페이지에서 바로 재사용 가능.
 
 ## 3. Flutter 입주민 포털 현황（apps/flutter, 13모듈）
 

@@ -27,7 +27,7 @@
 | अतिथि | पेज अनुपलब्ध | नया पेज बनाना आवश्यक (API पहले से मौजूद: GET/POST/PUT/DELETE /visitor*) |
 | पार्किंग | पेज अनुपलब्ध | नया पेज बनाना आवश्यक (API पहले से मौजूद: /parking/vehicles、/parking/spaces、/parking/records) |
 
-बैकएंड में कोई अंतराल नहीं: 5 मुख्य पथों के service API सभी तैयार हैं (fees/repairs/announcements स्थायी रूट; parking/visitors standard संस्करण के गेट के भीतर)। ApiService.ets में पहले से सामान्य get/post/put/delete है, नए पेज सीधे पुनः उपयोग कर सकते हैं।
+बैकएंड में कोई अंतराल नहीं: 5 मुख्य पथों के service API सभी तैयार हैं (fees/repairs/announcements स्थायी रूट)। ApiService.ets में पहले से सामान्य get/post/put/delete है, नए पेज सीधे पुनः उपयोग कर सकते हैं।
 
 ## 3. Flutter मालिक पोर्टल वर्तमान स्थिति (apps/flutter, 13 मॉड्यूल)
 

@@ -31,7 +31,7 @@
 
 ## III. Strategische Positionierung
 
-**Phase „Funktionen fertig" → Phase „Engineering/Kommerzialisierung".** Die Geschäftsfunktionsentwicklung ist abgeschlossen (jüngste Commits sind Dokumentation/Audit/Test-Ergänzungen). Die nächste Investitionsrichtung: **CI/CD und Qualitätsgates、Zahlung produktionsreif、Monitoring/Alarme und Backup-Wiederherstellung、Multi-Tenant-SaaS、Mobile-Lückenschluss**. Kommerzielle Verpackung hat eine Basis (EDITIONS drei Versionen + Installationsassistent + Urheberrechtswasserzeichen); es fehlt die Engineering-Glaubwürdigkeit, die Kunden zum Zahlen bewegt.
+**Phase „Funktionen fertig" → Phase „Engineering/Kommerzialisierung".** Die Geschäftsfunktionsentwicklung ist abgeschlossen (jüngste Commits sind Dokumentation/Audit/Test-Ergänzungen). Die nächste Investitionsrichtung: **CI/CD und Qualitätsgates、Zahlung produktionsreif、Monitoring/Alarme und Backup-Wiederherstellung、Multi-Tenant-SaaS、Mobile-Lückenschluss**. Kommerzielle Verpackung hat eine Basis (Installationsassistent + Urheberrechtswasserzeichen); es fehlt die Engineering-Glaubwürdigkeit, die Kunden zum Zahlen bewegt.
 
 ## IV. Phasen-Fahrplan
 
@@ -47,9 +47,9 @@
 
 | Ziel | Schlüsselaufgaben | Abnahmekriterien |
 |------|---------|---------|
-| Zahlungs-Closed-Loop、überwachbar、lieferbar | ① Zahlung produktionsreif: WeChat/Alipay-Sandbox-Komplettablauf (Bestellung→Callback-Idempotenz→Rückerstattung→Abstimmung), Zugangsdaten zentral in config/payment.php + env ② Monitoring/Alarme: Prometheus+Grafana-Orchestrierung + Alarmregeln (5xx、ES/Redis-Verbindung、Queue-Stau) + Protokollrotation ③ Kommerzielle Versionssteuerung: Editions-Schalter basierend auf EDITIONS (Lite/Standard/Full-Routengruppen aktiviert) + Demo-Daten ④ Installationsassistent deckt Zahlungs-/ES-Konfiguration ab | Sandbox-Zahlungskomplettablauf bestanden (inkl. doppelter Callback-Idempotenz); Alarme real ausgelöst getestet; Drei-Versionen-Schalter demonstrierbar; neue Umgebung in 10 Minuten installiert |
+| Zahlungs-Closed-Loop、überwachbar、lieferbar | ① Zahlung produktionsreif: WeChat/Alipay-Sandbox-Komplettablauf (Bestellung→Callback-Idempotenz→Rückerstattung→Abstimmung), Zugangsdaten zentral in config/payment.php + env ② Monitoring/Alarme: Prometheus+Grafana-Orchestrierung + Alarmregeln (5xx、ES/Redis-Verbindung、Queue-Stau) + Protokollrotation ③ Installationsassistent deckt Zahlungs-/ES-Konfiguration ab | Sandbox-Zahlungskomplettablauf bestanden (inkl. doppelter Callback-Idempotenz); Alarme real ausgelöst getestet; neue Umgebung in 10 Minuten installiert |
 
-**P2-Aktueller Status**: ✅ Offline-Teile alle abgeschlossen (2026-08-16/17): Zahlungs-Gesamtkette-Code (PaymentService Bestellung/Callback-Idempotenz/Rückerstattung/Abstimmung + config/payment.php Zugangsdaten-Zentralisierung + PaymentServiceTest mit reiner Funktionsabdeckung)、Monitoring-Orchestrierung (doppelter Prometheus-Stack + 6 Alarmregeln + Grafana-Dashboard-Provisioning beider Enden)、Editions-Schalter (EDITIONS drei Versionen + fail-fast-Validierung)、Installationsassistent (inkl. automatischer Zahlungskonfiguration + Template-Pfad-Bug behoben). Verbleibende externe Abhängigkeiten: **Sandbox-Abstimmung wartet auf Zugangsdaten** (nach Erhalt der WECHAT_PAY_* / ALIPAY_*-Sandbox-Zugangsdaten `scripts/payment_sandbox_smoke.php` ausführen)、**Alarm-Real-Test wartet auf Deployment** (`scripts/verify_monitoring.sh` kann lokal validieren; echte Auslösung nach dem Deployment).
+**P2-Aktueller Status**: ✅ Offline-Teile alle abgeschlossen (2026-08-16/17): Zahlungs-Gesamtkette-Code (PaymentService Bestellung/Callback-Idempotenz/Rückerstattung/Abstimmung + config/payment.php Zugangsdaten-Zentralisierung + PaymentServiceTest mit reiner Funktionsabdeckung)、Monitoring-Orchestrierung (doppelter Prometheus-Stack + 6 Alarmregeln + Grafana-Dashboard-Provisioning beider Enden)、Installationsassistent (inkl. automatischer Zahlungskonfiguration + Template-Pfad-Bug behoben). Verbleibende externe Abhängigkeiten: **Sandbox-Abstimmung wartet auf Zugangsdaten** (nach Erhalt der WECHAT_PAY_* / ALIPAY_*-Sandbox-Zugangsdaten `scripts/payment_sandbox_smoke.php` ausführen)、**Alarm-Real-Test wartet auf Deployment** (`scripts/verify_monitoring.sh` kann lokal validieren; echte Auslösung nach dem Deployment).
 
 ### P3 Skalierung (8-12 Wochen) — das System „mehr verkaufbar" machen
 
@@ -85,7 +85,7 @@
 | 7 | SQL-Migrationsverwaltung (vollständig in install.sql als einzigen Einstiegspunkt zusammengeführt) | Mittel (upgradefähig) | Niedrig | Niedrig | ✅ Abgeschlossen (2026-08-16 zusammengeführt) |
 | 8 | Multi-Tenant-Lösungsbewertung + tenant_id-Isolierung | Hoch (Decke) | Hoch | Hoch (wirkt auf alle Abfragen) | ✅ Abgeschlossen (P3 geliefert, Zugriffsschutztests bestanden) |
 | 9 | Lasttests + Slow-Query-Bewirtschaftung | Mittel (Leistung) | Mittel | Niedrig | ✅ Abgeschlossen (P3 real mit P95-Ziel; P7 Smoke-Version in CI) |
-| 10 | Kommerzielle Editions-Schalter + Demo-Daten | Mittel (Pre-Sales) | Mittel | Niedrig | ✅ Abgeschlossen (EDITIONS + demo_data.php + Demovorgangs-Dokumentation) |
+| 10 | Demo-Daten | Mittel (Pre-Sales) | Mittel | Niedrig | ✅ Abgeschlossen (demo_data.php + Demovorgangs-Dokumentation) |
 
 ## VI. Risiken und Abhängigkeiten
 
@@ -105,11 +105,11 @@
 |------|---------|
 | Architektur | Multi-Tenant-Lösungsbewertung und tenant_id-Isolierungsdesign (P3)、ES-Degradierungsarchitektur、Monitoring-Architektur (P2)、Zahlungs-Callback-Idempotenz-Designbewertung |
 | Backend | Schlüsselgenerierungs-/Rotationsskripte、ES-Degradierungsimplementierung、Zahlungskonfigurationszentralisierung + Sandbox-Abstimmung、Migrationsskript-Trennung、Lasttests und Slow-Query-Bewirtschaftung |
-| Flutter-Frontend | CI-Integration flutter analyze、Mobile-Anpassung des Eigentümer-Portals (P3)、Editions-Schalter-UI-Unterstützung |
+| Flutter-Frontend | CI-Integration flutter analyze、Mobile-Anpassung des Eigentümer-Portals (P3) |
 | HarmonyOS | Kernpfade ergänzen: Zahlung/Reparatur/Ankündigung/Besucher/Parken (P3) |
 | Test | Coverage-Gate、Zahlungs-Sandbox-Testfälle (doppelter Callback/Rückerstattung/Abstimmung)、Lasttestskripte、Durchführung der Backup-Wiederherstellungsübung |
 | Review | Review der Zahlungs- und Sicherheits-Kernpfade、gitleaks in CI、Review der Multi-Tenant-Zugriffsschutztests |
-| Dokumentation | Bereitstellungs-/Betriebshandbuch (inkl. Wiederherstellungsübung)、Multi-Tenant-Dokument、Monitoring-Konfigurationshandbuch、Kommerzielle-Lieferung-Handbuch |
+| Dokumentation | Bereitstellungs-/Betriebshandbuch (inkl. Wiederherstellungsübung)、Multi-Tenant-Dokument、Monitoring-Konfigurationshandbuch |
 
 ## VIII. Sofortmaßnahmen-Empfehlungen
 

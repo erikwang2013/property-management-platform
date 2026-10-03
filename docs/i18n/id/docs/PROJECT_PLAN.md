@@ -31,7 +31,7 @@
 
 ## 三、Posisi Strategis
 
-**Fase fitur lengkap → fase engineering/komersialisasi.** Pengembangan fungsi bisnis sudah selesai (commit terakhir semuanya pelengkapan dokumen/audit/tes). Arah investasi fase berikutnya: **CI/CD dan gerbang kualitas、produksi pembayaran、monitoring alert dan backup pemulihan、SaaS multi-tenant、pelengkapan mobile**. Fondasi kemasan komersial sudah ada (EDITIONS tiga versi + wizard instalasi + watermark hak cipta), yang kurang adalah kredibilitas engineering yang membuat pelanggan berani bayar.
+**Fase fitur lengkap → fase engineering/komersialisasi.** Pengembangan fungsi bisnis sudah selesai (commit terakhir semuanya pelengkapan dokumen/audit/tes). Arah investasi fase berikutnya: **CI/CD dan gerbang kualitas、produksi pembayaran、monitoring alert dan backup pemulihan、SaaS multi-tenant、pelengkapan mobile**. Fondasi kemasan komersial sudah ada (wizard instalasi + watermark hak cipta), yang kurang adalah kredibilitas engineering yang membuat pelanggan berani bayar.
 
 ## 四、Roadmap Bertahap
 
@@ -47,9 +47,9 @@
 
 | Tujuan | Tugas kunci | Standar penerimaan |
 |------|---------|---------|
-| Closed loop pembayaran、bisa dimonitor、bisa diserahkan | ① Produksi pembayaran: alur lengkap sandbox WeChat/Alipay (order→callback idempoten→refund→rekonsiliasi), kredensial terpusat ke config/payment.php + env ② Monitoring alert: orkestrasi Prometheus+Grafana + aturan alert (5xx、koneksi ES/Redis、penumpukan antrian) + rotasi log ③ Kontrol versi komersial: saklar versi berbasis EDITIONS (aktivasi grup route Lite/Standard/Full) + data Demo ④ Wizard instalasi mencakup konfigurasi payment/ES | Alur pembayaran sandbox lulus penuh (termasuk idempotensi callback berulang); alert terpicu terverifikasi; saklar tiga versi dapat didemokan; lingkungan baru terinstal dalam 10 menit |
+| Closed loop pembayaran、bisa dimonitor、bisa diserahkan | ① Produksi pembayaran: alur lengkap sandbox WeChat/Alipay (order→callback idempoten→refund→rekonsiliasi), kredensial terpusat ke config/payment.php + env ② Monitoring alert: orkestrasi Prometheus+Grafana + aturan alert (5xx、koneksi ES/Redis、penumpukan antrian) + rotasi log ③ Wizard instalasi mencakup konfigurasi payment/ES | Alur pembayaran sandbox lulus penuh (termasuk idempotensi callback berulang); alert terpicu terverifikasi; lingkungan baru terinstal dalam 10 menit |
 
-**Status P2 saat ini**: ✅ Bagian offline semua selesai (2026-08-16/17): kode rantai penuh pembayaran (PaymentService order/callback idempoten/refund/rekonsiliasi + config/payment.php sentralisasi kredensial + cakupan fungsi murni PaymentServiceTest)、orkestrasi monitoring (tumpukan Prometheus ganda + 6 aturan alert + provisioning dashboard Grafana dua sisi)、saklar versi (EDITIONS tiga versi + validasi fail-fast)、wizard instalasi (termasuk auto-aktif konfigurasi payment + bug path template sudah diperbaiki). Dependensi eksternal tersisa: **integrasi sandbox menunggu kredensial** (setelah mendapat kredensial WECHAT_PAY_* / ALIPAY_* jalankan `scripts/payment_sandbox_smoke.php`)、**uji nyata alert menunggu deployment** (`scripts/verify_monitoring.sh` dapat verifikasi lokal, verifikasi pemicuan nyata menunggu setelah deployment).
+**Status P2 saat ini**: ✅ Bagian offline semua selesai (2026-08-16/17): kode rantai penuh pembayaran (PaymentService order/callback idempoten/refund/rekonsiliasi + config/payment.php sentralisasi kredensial + cakupan fungsi murni PaymentServiceTest)、orkestrasi monitoring (tumpukan Prometheus ganda + 6 aturan alert + provisioning dashboard Grafana dua sisi)、wizard instalasi (termasuk auto-aktif konfigurasi payment + bug path template sudah diperbaiki). Dependensi eksternal tersisa: **integrasi sandbox menunggu kredensial** (setelah mendapat kredensial WECHAT_PAY_* / ALIPAY_* jalankan `scripts/payment_sandbox_smoke.php`)、**uji nyata alert menunggu deployment** (`scripts/verify_monitoring.sh` dapat verifikasi lokal, verifikasi pemicuan nyata menunggu setelah deployment).
 
 ### P3 Penskalaan (8-12 minggu) — membuat sistem "bisa dijual lebih banyak"
 
@@ -85,7 +85,7 @@
 | 7 | Manajemen migrasi SQL (gabung penuh kembali ke entry tunggal install.sql) | Sedang (dapat di-upgrade) | Rendah | Rendah | ✅ Selesai (digabung 2026-08-16) |
 | 8 | Review solusi multi-tenant + isolasi tenant_id | Tinggi (plafon) | Tinggi | Tinggi (memengaruhi semua query) | ✅ Selesai (serahan P3, tes otorisasi berlebih lulus) |
 | 9 | Uji beban + penanganan slow query | Sedang (performa) | Sedang | Rendah | ✅ Selesai (P3 uji nyata P95 tercapai; P7 versi smoke masuk CI) |
-| 10 | Saklar lisensi versi komersial + data Demo | Sedang (pra-penjualan) | Sedang | Rendah | ✅ Selesai (EDITIONS + demo_data.php + dokumen alur demo) |
+| 10 | data Demo | Sedang (pra-penjualan) | Sedang | Rendah | ✅ Selesai (demo_data.php + dokumen alur demo) |
 
 ## 六、Risiko dan Dependensi
 
@@ -105,11 +105,11 @@
 |------|---------|
 | Arsitektur | Review solusi multi-tenant dan desain isolasi tenant_id (P3)、arsitektur degradasi ES、arsitektur monitoring (P2)、review desain idempotensi callback pembayaran |
 | Backend | Skrip generate/rotasi kunci、implementasi degradasi ES、sentralisasi konfigurasi pembayaran + integrasi sandbox、pemecahan skrip migrasi、uji beban dan penanganan slow query |
-| Frontend Flutter | Integrasi CI flutter analyze、adaptasi mobile portal pemilik (P3)、dukungan UI saklar versi |
+| Frontend Flutter | Integrasi CI flutter analyze、adaptasi mobile portal pemilik (P3) |
 | HarmonyOS | Pelengkapan jalur inti: pembayaran/perbaikan/pengumuman/tamu/parkir (P3) |
 | Pengujian | Gerbang cakupan、kasus sandbox pembayaran (callback berulang/refund/rekonsiliasi)、skrip uji beban、eksekusi latihan backup pemulihan |
 | Review | Review jalur kunci pembayaran dan keamanan、gitleaks masuk CI、review tes otorisasi berlebih multi-tenant |
-| Dokumentasi | Manual deployment/operasional (termasuk latihan pemulihan)、dokumen solusi multi-tenant、manual konfigurasi monitoring、manual serahan versi komersial |
+| Dokumentasi | Manual deployment/operasional (termasuk latihan pemulihan)、dokumen solusi multi-tenant、manual konfigurasi monitoring |
 
 ## 八、Saran Tindakan Segera
 

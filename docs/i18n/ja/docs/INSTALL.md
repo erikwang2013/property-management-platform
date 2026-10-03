@@ -309,4 +309,3 @@ mysql -u root -p management < docs/install.sql
 - [アーキテクチャ設計ドキュメント](ARCHITECTURE_DESIGN.md) — システムの階層アーキテクチャとミドルウェア実行チェーン
 - [API ドキュメント](API.md) — 完全なインターフェースリファレンス
 - [機能設計ドキュメント](FEATURE_DESIGN.md) — 34 モジュールの機能仕様
-- [バージョン比較](EDITIONS.md) — Lite / Standard / Full バージョンの差異

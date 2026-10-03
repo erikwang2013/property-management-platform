@@ -1,0 +1,69 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+// 设计 token：小筑（靛蓝 + 琥珀）—— 与 apps/README.md §1 数值一一对应，
+// 必须与 React 版保持同一组值。
+
+:root {
+  // 色板
+  --xz-primary: #4f46e5;
+  --xz-primary-dark: #4338ca;
+  --xz-primary-light: #6366f1;
+  --xz-accent: #f59e0b;
+  --xz-success: #10b981;
+  --xz-warning: #f59e0b;
+  --xz-error: #f43f5e;
+
+  --xz-bg-layout: #f5f6fa;
+  --xz-bg-card: #ffffff;
+  --xz-sider: #1e1b4b;
+  --xz-sider-text: rgba(255, 255, 255, 0.72);
+  --xz-sider-active: #fbbf24;
+
+  --xz-text: #1f2937;
+  --xz-text-secondary: #6b7280;
+  --xz-border: #e8e9f2;
+
+  // 形状
+  --xz-radius-card: 12px;
+  --xz-radius-input: 8px;
+  --xz-radius-tag: 6px;
+  --xz-shadow-card: 0 1px 2px rgba(30, 27, 75, 0.06), 0 8px 24px rgba(30, 27, 75, 0.06);
+
+  // 骨架尺寸（跨端一致，勿改）
+  --xz-sider-width: 240px;
+  --xz-sider-collapsed: 64px;
+  --xz-header-height: 56px;
+  --xz-content-padding: 24px;
+  --xz-row-height: 48px;
+
+  --xz-font: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
+}
+
+// NG-ZORRO CSS 变量版：**只变量化了颜色**。
+// 实测 ng-zorro-antd.variable.min.css（669,184 字节）：--ant-primary-color 出现 293 次，
+// 而 --ant-border-radius* / --ant-text-color / --ant-font-family / --ant-box-shadow 均出现 **0 次**，
+// 该文件里 border-radius:var( 是 0 次、字面 border-radius:2px 是 140 次。
+// 即：圆角/字体/文字色/阴影写在这里是**死代码**，必须走 styles.scss 的真实 CSS 覆盖（见该文件「NG-ZORRO 覆盖」段）。
+:root {
+  --ant-primary-color: var(--xz-primary);
+  --ant-primary-color-hover: var(--xz-primary-light);
+  --ant-primary-color-active: var(--xz-primary-dark);
+  --ant-primary-color-outline: rgba(79, 70, 229, 0.2);
+
+  --ant-success-color: var(--xz-success);
+  --ant-warning-color: var(--xz-warning);
+  --ant-error-color: var(--xz-error);
+
+  // 徽标（.ant-tag-<预设名>）的浅底与描边。ng-zorro 的预设徽标取 antd 的 -deprecated-bg/-border，
+  // 默认值来自 antd 原始色板（浅绿 #f6ffed、antd 蓝 #1890ff…），不覆盖的话文字是我们的色板、
+  // 底色却是 antd 的绿，同一个徽标里两种色相；描边默认是可见的 1px 中间色，而 React/antd 的
+  // filled 徽标是**无描边**（实测 bd=rgba(0,0,0,0)）。bg 取 React 端实测值，描边统一透明。
+  --ant-info-color: var(--xz-primary);
+  --ant-success-color-deprecated-bg: #e1faed;
+  --ant-warning-color-deprecated-bg: #fffae6;
+  --ant-error-color-deprecated-bg: #fff0f0;
+  --ant-info-color-deprecated-bg: #f3f0ff;
+  --ant-success-color-deprecated-border: transparent;
+  --ant-warning-color-deprecated-border: transparent;
+  --ant-error-color-deprecated-border: transparent;
+  --ant-info-color-deprecated-border: transparent;
+}

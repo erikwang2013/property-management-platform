@@ -299,7 +299,6 @@ Ouvrez `http://localhost:8788` (ou Flutter Web / HarmonyOS) : l'accueil affiche 
 |------|------|
 | [Guide d'installation](docs/INSTALL.md) | Guide de déploiement de zéro, incluant initialisation de la base, déploiement Docker, questions fréquentes |
 | [Script d'installation fusionné](docs/install.sql) | Les 65 tables + données de seeds des permissions RBAC, import en une commande |
-| [Comparaison des versions](docs/EDITIONS.md) | Comparaison fonctionnelle et technique des versions Basique(Lite)/Standard/Complète(Full) |
 | [Document de conception d'architecture](docs/ARCHITECTURE_DESIGN.md) | Architecture en couches du système, chaîne d'exécution des middlewares, conception de la défense en profondeur |
 | [Document d'architecture](docs/ARCHITECTURE.md) | Schémas Mermaid (topologie système, cycle de vie des requêtes, chiffrement des données, déploiement) |
 | [Schéma d'architecture système](docs/ARCHITECTURE_DIAGRAM.md) | Architecture panoramique, schémas détaillés des couches, architecture de déploiement (visualisation Mermaid) |

@@ -309,4 +309,3 @@ En producción se recomienda usar un proxy inverso de Nginx para terminar TLS. C
 - [Documento de diseño de arquitectura](ARCHITECTURE_DESIGN.md) — Arquitectura por capas del sistema y cadena de ejecución de middleware
 - [Documentación de API](API.md) — Referencia completa de interfaces
 - [Documento de diseño de funciones](FEATURE_DESIGN.md) — Especificaciones funcionales de 34 módulos
-- [Comparación de versiones](EDITIONS.md) — Diferencias entre versiones Lite / Standard / Full

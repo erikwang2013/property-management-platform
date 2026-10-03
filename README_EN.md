@@ -19,8 +19,8 @@ A full-stack property management system covering 22 business modules + 12 extens
 | Concept | An anthropomorphic building steward — lit windows are the units under management, the clipboard is the work-order loop |
 | Palette | Indigo `#4F46E5` + amber `#F59E0B`, matching the front-end theme |
 | Vector file | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg) (language-neutral, shared by all 13 languages) |
-| Icon mark | [docs/images/favicon.svg](docs/images/favicon.svg), deployed to `admin/public/`, `service/public/`, `apps/flutter/web/` and `admin/apps/flutter/web/` |
-| Wired into | 3-step install wizard + installed page · 404 / 504 error pages (inlined vector) · owner-side and admin-side Flutter login pages · browser tab icon of all four web entry points · architecture cross-cutting rail |
+| Icon mark | [docs/images/favicon.svg](docs/images/favicon.svg), deployed to `admin/public/`, `service/public/`, `apps/flutter/web/`, `admin/apps/flutter/web/`, `admin/apps/react/public/` and `admin/apps/angular/public/` |
+| Wired into | 3-step install wizard + installed page · 404 / 504 error pages (inlined vector) · owner-side and admin-side Flutter login pages · admin-side React / Angular redesigns (login, duty desk, empty states, 404) · browser tab icon of all six web entry points · architecture cross-cutting rail |
 
 ## Project Structure
 
@@ -37,7 +37,9 @@ property-management-platform/
 │   │   └── process/               # Process management
 │   ├── apps/
 │   │   ├── flutter/               # Admin Flutter Web (PC dashboard style)
-│   │   └── harmonyos/             # Admin HarmonyOS App
+│   │   ├── harmonyos/             # Admin HarmonyOS App
+│   │   ├── react/                 # Admin React redesign (React 19 + Vite + Ant Design)
+│   │   └── angular/               # Admin Angular redesign (NG-ZORRO)
 │   ├── config/                    # Config files (with Chinese annotations)
 │   ├── database/
 │   │   └── backup/                # Database backup scripts
@@ -329,7 +331,6 @@ Static files: Flutter Web build/
 |----------|-------------|
 | [Installation Guide](docs/INSTALL.md) | Deployment guide: database init, Docker, FAQ |
 | [Install SQL](docs/install.sql) | All 65 tables + RBAC seed data, single import |
-| [Editions Comparison](docs/EDITIONS.md) | Lite / Standard / Full edition feature and spec comparison |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
 | [Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | System architecture, layered detail, deployment (Mermaid visualization) |

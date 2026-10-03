@@ -309,4 +309,3 @@ mysql -u root -p management < docs/install.sql
 - [아키텍처 설계 문서](ARCHITECTURE_DESIGN.md) — 시스템 계층 아키텍처와 미들웨어 실행 체인
 - [API 문서](API.md) — 전체 인터페이스 참조
 - [기능 설계 문서](FEATURE_DESIGN.md) — 34개 모듈 기능 사양
-- [버전 비교](EDITIONS.md) — Lite / Standard / Full 버전 차이

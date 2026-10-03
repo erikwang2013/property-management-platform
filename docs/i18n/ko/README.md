@@ -299,7 +299,6 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 |------|------|
 | [설치 가이드](docs/INSTALL.md) | 처음부터 배포하는 가이드, 데이터베이스 초기화, Docker 배포, 자주 묻는 질문 |
 | [통합 설치 스크립트](docs/install.sql) | 전체 65개 테이블 + RBAC 권한 시드 데이터, 원클릭 임포트 |
-| [버전 비교](docs/EDITIONS.md) | 라이트(Lite) / 스탠다드(Standard) / 풀(Full) 기능 및 기술 지표 비교 |
 | [아키텍처 설계 문서](docs/ARCHITECTURE_DESIGN.md) | 시스템 계층 아키텍처, 미들웨어 실행 체인, 보안 심층 방어 설계 |
 | [아키텍처 문서](docs/ARCHITECTURE.md) | Mermaid 아키텍처 다이어그램(시스템 토폴로지, 요청 라이프사이클, 데이터 암호화, 배포) |
 | [시스템 아키텍처 다이어그램](docs/ARCHITECTURE_DIAGRAM.md) | 전체 아키텍처, 계층 상세, 배포 아키텍처(Mermaid 시각화) |

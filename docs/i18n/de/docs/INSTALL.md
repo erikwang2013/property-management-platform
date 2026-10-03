@@ -309,4 +309,3 @@ In der Produktion wird empfohlen, TLS über einen Nginx-Reverse-Proxy zu termini
 - [Architekturdesign-Dokument](ARCHITECTURE_DESIGN.md) — System-Schichtenarchitektur und Middleware-Ausführungskette
 - [API-Dokument](API.md) — Vollständige Schnittstellenreferenz
 - [Funktionsdesign-Dokument](FEATURE_DESIGN.md) — Funktionsspezifikationen der 34 Module
-- [Versionsvergleich](EDITIONS.md) — Unterschiede zwischen Lite / Standard / Full

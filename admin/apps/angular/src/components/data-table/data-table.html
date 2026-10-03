@@ -1,0 +1,166 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<div class="xz-list">
+  @if (filters().length) {
+    <form class="xz-filters" nz-row [nzGutter]="16" (ngSubmit)="search()">
+      @for (f of filters(); track f.key) {
+        <div class="xz-filter" nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6">
+          @switch (f.kind) {
+            @case ('select') {
+              <nz-select
+                class="full"
+                [nzPlaceHolder]="f.label"
+                [ngModel]="draft()[f.key]"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="setDraft(f.key, $event)"
+                nzAllowClear
+              >
+                @for (o of f.options ? f.options() : []; track o.value) {
+                  <nz-option [nzValue]="o.value" [nzLabel]="o.label" />
+                }
+              </nz-select>
+            }
+            @case ('date') {
+              <nz-date-picker
+                class="full"
+                [nzPlaceHolder]="f.label"
+                [ngModel]="dateQuery(f.key)"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="setDate(f.key, $event)"
+              />
+            }
+            @default {
+              <input
+                nz-input
+                [placeholder]="f.placeholder || f.label"
+                [ngModel]="draft()[f.key]"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="setDraft(f.key, $event)"
+                (keyup.enter)="search()"
+              />
+            }
+          }
+        </div>
+      }
+      <div class="xz-filter actions" nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6">
+        <button nz-button nzType="primary" (click)="search()">
+          <nz-icon nzType="search" />
+          查询
+        </button>
+        <button nz-button type="button" (click)="reset()">重置</button>
+      </div>
+    </form>
+  }
+
+  <div class="xz-card">
+    <div class="xz-toolbar">
+      <div class="left">
+        <h3>{{ title() }}</h3>
+        @if (selected().length) {
+          <span class="picked">已选 {{ selected().length }} 项</span>
+        }
+      </div>
+      <div class="right"><ng-content /></div>
+    </div>
+
+    <nz-table
+      [nzData]="rows()"
+      [nzLoading]="loading()"
+      [nzFrontPagination]="false"
+      [nzShowPagination]="true"
+      [nzTotal]="total()"
+      [nzPageIndex]="page()"
+      [nzPageSize]="pageSize()"
+      [nzPageSizeOptions]="pageSizes"
+      nzShowSizeChanger
+      [nzShowTotal]="totalTpl"
+      [nzNoResult]="emptyTpl"
+      [nzScroll]="{ x: 'max-content' }"
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    >
+      <thead>
+        <tr>
+          @if (selectable()) {
+            <th
+              nzShowCheckbox
+              [nzChecked]="allChecked()"
+              [nzIndeterminate]="indeterminate()"
+              (nzCheckedChange)="toggleAll($event)"
+            ></th>
+          }
+          @for (col of columns(); track col.key) {
+            <th [style.width]="col.width" [style.text-align]="col.align || 'left'">{{ col.title }}</th>
+          }
+          @if (rowActions().length) {
+            <th class="ops-head">操作</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track idOf(row)) {
+          <tr>
+            @if (selectable()) {
+              <td
+                nzShowCheckbox
+                [nzChecked]="isChecked(row)"
+                (nzCheckedChange)="toggleRow(row, $event)"
+              ></td>
+            }
+            @for (col of columns(); track col.key) {
+              <td
+                [style.text-align]="col.align || 'left'"
+                [class.ellipsis]="col.ellipsis"
+                [attr.title]="col.ellipsis ? cellText(row, col) : null"
+              >
+                @switch (col.kind) {
+                  @case ('tag') {
+                    <nz-tag [nzColor]="tagOf(row, col).color">{{ tagOf(row, col).text }}</nz-tag>
+                  }
+                  @case ('money') {
+                    <span class="mono">{{ moneyOf(row, col) }}</span>
+                  }
+                  @case ('datetime') {
+                    <span class="mono">{{ datetimeOf(row, col) }}</span>
+                  }
+                  @case ('strong') {
+                    <span class="strong">{{ cellText(row, col) }}</span>
+                  }
+                  @default {
+                    {{ cellText(row, col) }}
+                  }
+                }
+              </td>
+            }
+            @if (rowActions().length) {
+              <td class="ops">
+                @for (a of visibleActions(row); track a.label) {
+                  <!-- nzSize="small" 是行高 48px 的前提：默认按钮高 32px，
+                       11.5*2+32+1=56 会把有操作按钮的行撑高（React 版同为 size="small"） -->
+                  <button
+                    nz-button
+                    nzType="link"
+                    nzSize="small"
+                    [nzDanger]="!!a.danger"
+                    (click)="runAction(a, row)"
+                  >
+                    {{ a.label }}
+                  </button>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<ng-template #totalTpl let-range="range" let-total>共 {{ total }} 条</ng-template>
+
+<!-- 空状态用宠物图标标记（规格 §2） -->
+<ng-template #emptyTpl>
+  <nz-empty [nzNotFoundContent]="emptyText()" [nzNotFoundImage]="petTpl" />
+</ng-template>
+<ng-template #petTpl>
+  <img class="xz-empty-pet" src="favicon.svg" alt="小筑" />
+</ng-template>

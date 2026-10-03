@@ -27,7 +27,7 @@
 | Visitors | Page missing | New page needed (APIs already exist: GET/POST/PUT/DELETE /visitor*) |
 | Parking | Page missing | New page needed (APIs already exist: /parking/vehicles, /parking/spaces, /parking/records) |
 
-No backend gaps: the service APIs for all 5 core paths are ready (fees/repairs/announcements are resident routes; parking/visitors are within the standard-edition gate). ApiService.ets already has generic get/post/put/delete, so new pages can reuse it directly.
+No backend gaps: the service APIs for all 5 core paths are ready (fees/repairs/announcements are resident routes). ApiService.ets already has generic get/post/put/delete, so new pages can reuse it directly.
 
 ## 3. Flutter Owner Portal Current State (apps/flutter, 13 modules)
 

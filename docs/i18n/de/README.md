@@ -299,7 +299,6 @@ Statische Dateien: Flutter Web build/
 |------|------|
 | [Installationsanleitung](docs/INSTALL.md) | Schritt-für-Schritt-Bereitstellung, inkl. Datenbankinitialisierung, Docker-Bereitstellung, FAQ |
 | [Kombiniertes Installationsskript](docs/install.sql) | Alle 65 Tabellen + RBAC-Berechtigungs-Seeddaten, ein Import |
-| [Versionsvergleich](docs/EDITIONS.md) | Vergleich von Funktionen und technischen Kennzahlen: Lite / Standard / Full |
 | [Architekturdesign-Dokument](docs/ARCHITECTURE_DESIGN.md) | Schichtenarchitektur, Middleware-Ausführungskette, Sicherheitsverteidigung in der Tiefe |
 | [Architekturdokument](docs/ARCHITECTURE.md) | Mermaid-Architekturdiagramme (Systemtopologie, Anfragelebenszyklus, Datenverschlüsselung, Bereitstellung) |
 | [Systemarchitekturdiagramm](docs/ARCHITECTURE_DIAGRAM.md) | Gesamtarchitektur, Layering-Details, Bereitstellungsarchitektur (Mermaid-Visualisierung) |

@@ -1,0 +1,179 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.xz-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(1100px 500px at 12% -10%, rgba(99, 102, 241, 0.16), transparent 60%),
+    radial-gradient(900px 460px at 100% 110%, rgba(245, 158, 11, 0.14), transparent 60%),
+    var(--xz-bg-layout);
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: 300px 380px;
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.pet {
+  background: linear-gradient(160deg, var(--xz-primary-light), var(--xz-sider));
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  img {
+    height: 160px;
+    max-width: 100%;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+  }
+
+  .bubble {
+    position: relative;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--xz-text);
+    border-radius: var(--xz-radius-card);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 2px;
+    }
+  }
+}
+
+.form-side {
+  padding: 32px 28px;
+
+  h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--xz-text);
+  }
+
+  .sub {
+    margin: 6px 0 24px;
+    color: var(--xz-text-secondary);
+    font-size: 13px;
+  }
+}
+
+.captcha-block {
+  margin-bottom: 16px;
+}
+
+.captcha-head,
+.captcha-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 26px;
+}
+
+.captcha-head .prompt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--xz-primary);
+}
+
+.captcha-foot .hint {
+  font-size: 12px;
+  color: var(--xz-text-secondary);
+}
+
+.captcha-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  nz-tag {
+    margin: 0;
+  }
+}
+
+.captcha-stage {
+  position: relative;
+  border-radius: var(--xz-radius-input);
+  overflow: hidden;
+  border: 1px solid var(--xz-border);
+  background: #fafaff;
+  line-height: 0;
+  cursor: crosshair;
+
+  img {
+    width: 100%;
+    display: block;
+    user-select: none;
+  }
+
+  .mark {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--xz-accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+  }
+
+  .mask {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  &.busy {
+    cursor: progress;
+  }
+}
+
+.err {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: var(--xz-radius-input);
+  background: rgba(244, 63, 94, 0.08);
+  color: var(--xz-error);
+  font-size: 13px;
+}
+
+.submit {
+  height: 44px;
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .pet img {
+    height: 110px;
+  }
+}

@@ -309,4 +309,3 @@ mysql -u root -p management < docs/install.sql
 - [आर्किटेक्चर डिज़ाइन दस्तावेज़](ARCHITECTURE_DESIGN.md) — सिस्टम स्तरीय आर्किटेक्चर और मिडलवेयर निष्पादन श्रृंखला
 - [API दस्तावेज़](API.md) — पूर्ण इंटरफ़ेस संदर्भ
 - [फ़ंक्शन डिज़ाइन दस्तावेज़](FEATURE_DESIGN.md) — 34 मॉड्यूल कार्यात्मक विनिर्देश
-- [संस्करण तुलना](EDITIONS.md) — Lite / Standard / Full संस्करण अंतर

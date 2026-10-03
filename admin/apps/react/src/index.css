@@ -1,0 +1,54 @@
+/* Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz */
+
+:root {
+  /* 卡片阴影（规范 §1.2）；antd 的 Card 不消费 boxShadow 类 token，只能落到 CSS */
+  --card-shadow: 0 1px 2px rgba(30, 27, 75, 0.06), 0 8px 24px rgba(30, 27, 75, 0.06);
+}
+
+.ant-card {
+  box-shadow: var(--card-shadow);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
+  color: #1f2937;
+}
+
+/* 单行省略列（ListPage 的 Column.ellipsis）。
+   表格是 auto 布局（操作列 fixed + scroll.x:max-content 让 rc-table 停在 auto），列的 width 只是提示，
+   内容更宽时列就被顶开（报修「问题描述」实测 576px）；`max-width:0` 把该列的最大内容宽度压到 0，
+   width 提示才成为硬约束（落到 220px）。antd 自带的 .ant-table-cell-ellipsis 有其余三条、独缺这一条，
+   故不复用它 —— 这四条与 Angular data-table.scss 的 .ellipsis 逐字一致，改一端要同步另一端。 */
+.cell-ellipsis {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 统计卡数值与金额列使用等宽数字，避免跳动 */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* 日志详情里的「请求参数」：格式化 JSON，超高滚动（四条声明照 Angular logs.ts 的 .params） */
+.params {
+  max-height: 280px;
+  margin: 0;
+  overflow: auto;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

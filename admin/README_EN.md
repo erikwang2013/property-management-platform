@@ -6,7 +6,7 @@ A full-stack admin dashboard built with webman v2 + Flutter.
 
 > [中文文档](README.md) | [Architecture Diagrams](docs/ARCHITECTURE.md) | [Design Doc](docs/DESIGN.md) | [Security](docs/SECURITY.md) | [API Reference](docs/API.md)
 
-> The project mascot **Xiaozhu** ([docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)) is wired into this app: the 3-step install wizard and installed page, `public/favicon.svg`, the `public/404.html` / `public/504.html` error pages, the admin-side Flutter login page (`apps/flutter/assets/pet_xiaozhu.svg`) and `apps/flutter/web/favicon.svg`.
+> The project mascot **Xiaozhu** ([docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)) is wired into this app: the 3-step install wizard and installed page, `public/favicon.svg`, the `public/404.html` / `public/504.html` error pages, the admin-side Flutter login page (`apps/flutter/assets/pet_xiaozhu.svg`) and `apps/flutter/web/favicon.svg`; the React (`apps/react/`) and Angular (`apps/angular/`) redesigns wire it into their own login pages, sidebars, duty desks, list empty states and 404 pages, each shipping its own `public/favicon.svg`.
 
 ## Features
 
@@ -43,6 +43,7 @@ This copyright notice is permanent, must not be modified, removed, or reversed. 
 | Database | MySQL 8.0+ | Table prefix `management_`, BIGINT non-auto-increment PKs |
 | Search | Elasticsearch | Synced via `webman-scout` |
 | Admin Frontend | Flutter 3.x | Web renders as desktop admin panel (`apps/flutter/`) |
+| Admin Frontend (Redesign) | React 19 / Angular 20 | `apps/react/` (Vite + Ant Design 6) and `apps/angular/` (NG-ZORRO), sharing the Xiaozhu design language |
 | Mobile | HarmonyOS ArkTS | Native HarmonyOS client (`apps/harmonyos/`), supports phone/tablet/2in1 |
 
 ## Core Packages
@@ -92,7 +93,9 @@ open-admin/
 │   └── model/                  # Eloquent models
 ├── apps/
 │   ├── flutter/                # Flutter Web admin panel
-│   └── harmonyos/              # HarmonyOS client (auto token refresh)
+│   ├── harmonyos/              # HarmonyOS client (auto token refresh)
+│   ├── react/                  # React redesign admin panel (React 19 + Vite + Ant Design)
+│   └── angular/                # Angular redesign admin panel (Angular 20 + NG-ZORRO)
 ├── config/                     # Config files
 └── docs/install.sql            # Full install SQL (66 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
@@ -166,6 +169,15 @@ cd apps/flutter
 flutter pub get
 flutter run -d chrome    # Web (desktop admin panel style)
 ```
+
+**React / Angular admin panels (redesign):**
+
+```bash
+cd apps/react   && pnpm install && pnpm dev     # port 5173
+cd apps/angular && pnpm install && pnpm start   # port 4200
+```
+
+Both dev servers proxy `/api` and `/admin` to `http://localhost:8787`.
 
 **HarmonyOS client (Mobile):**
 
@@ -384,6 +396,24 @@ Authorization: Bearer <token>
 - **Batch Ops**: Multi-select batch delete, batch enable/disable
 - **Theme**: Material 3 light/dark dual theme
 
+### React Admin Panel (Redesign)
+
+- **Stack**: React 19 + Vite + TypeScript (strict) + Ant Design 6 (`ConfigProvider` token overrides) + TanStack Query 5 + Zustand (auth state only)
+- **Layout**: Sidebar (240px / 64px collapsed, drawer below 768px) + header + content; domain-grouped navigation (Overview / Assets / Finance / Services / System)
+- **Pages**: Login, Duty Desk, Report Center, Communities, Rooms (tree), Owners, Fee Bills, Fee Payments, Repairs, Complaints, Users, Roles & Permissions, System Config / Operation Logs / Profile (13 modules / 16 routes)
+- **Shared components**: shared list page (search + table + pagination + row actions, reused by 10 pages) + self-wrapped ECharts
+- **Mascot**: login full-body image, sidebar icon mark, duty-desk welcome card, list empty state, 404 page, `public/favicon.svg`
+- **Start**: `pnpm dev` (port 5173, `/api` and `/admin` proxied to 8787)
+
+### Angular Admin Panel (Redesign)
+
+- **Stack**: Angular 20 (standalone + signals) + NG-ZORRO (CSS-variable build + `NzConfigService` primaryColor) + self-wrapped ECharts; no NgRx
+- **Layout**: same design language and domain-grouped navigation as the React panel (240px / 64px / drawer)
+- **Pages**: same module set and count as the React panel (13 modules / 16 routes); the System tab entry is `/system` (the React panel uses `/system/config`, with `/system` redirecting there)
+- **Shared components**: `components/data-table` (reused by 11 pages) + `components/form-modal` (11 pages)
+- **Mascot**: the same six wiring points as the React panel
+- **Start**: `pnpm start` (port 4200, `/api` and `/admin` proxied via `proxy.conf.json` to 8787)
+
 ### HarmonyOS Mobile Client
 
 - **Pages**: Login, Dashboard, User List/Detail, Profile
@@ -434,6 +464,7 @@ GitHub Actions CI pipeline: `.github/workflows/ci.yml`
 - PHP syntax check (`php -l`)
 - PHPUnit tests
 - Flutter static analysis (`flutter analyze`)
+- React / Angular admin builds + unit tests (Node 22 + pnpm, triggered only when their paths change)
 
 ### Database Backup
 

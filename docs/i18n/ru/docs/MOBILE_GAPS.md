@@ -27,7 +27,7 @@
 | Гости | страница отсутствует | нужна новая страница (API уже есть: GET/POST/PUT/DELETE /visitor*) |
 | Парковка | страница отсутствует | нужна новая страница (API уже есть: /parking/vehicles、/parking/spaces、/parking/records) |
 
-Пробелов в бэкенде нет: API service для всех 5 ключевых путей готовы (fees/repairs/announcements — постоянные маршруты; parking/visitors — внутри гейта стандартной версии). В ApiService.ets уже есть универсальные get/post/put/delete, новые страницы могут их переиспользовать.
+Пробелов в бэкенде нет: API service для всех 5 ключевых путей готовы (fees/repairs/announcements — постоянные маршруты). В ApiService.ets уже есть универсальные get/post/put/delete, новые страницы могут их переиспользовать.
 
 ## 3. Текущее состояние Flutter-портала жильцов (apps/flutter, 13 модулей)
 

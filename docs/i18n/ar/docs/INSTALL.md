@@ -309,4 +309,3 @@ mysql -u root -p management < docs/install.sql
 - [وثيقة تصميم البنية](ARCHITECTURE_DESIGN.md) — بنية النظام الطبقية وسلسلة تنفيذ الوسطيات
 - [توثيق API](API.md) — مرجع الواجهات الكامل
 - [وثيقة تصميم الوظائف](FEATURE_DESIGN.md) — مواصفات 34 وحدة وظيفية
-- [مقارنة الإصدارات](EDITIONS.md) — فروقات إصدارات Lite / Standard / Full

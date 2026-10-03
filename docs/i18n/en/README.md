@@ -299,7 +299,6 @@ Open `http://localhost:8788` (or Flutter Web / HarmonyOS): the home page shows r
 |------|------|
 | [Installation Guide](docs/INSTALL.md) | Step-by-step deployment guide, including database initialization, Docker deployment, and FAQ |
 | [Merged Installation Script](docs/install.sql) | All 65 tables + RBAC permission seed data, one-click import |
-| [Edition Comparison](docs/EDITIONS.md) | Feature and technical indicator comparison of Lite / Standard / Full editions |
 | [Architecture Design Document](docs/ARCHITECTURE_DESIGN.md) | System layered architecture, middleware execution chain, security defense-in-depth design |
 | [Architecture Document](docs/ARCHITECTURE.md) | Mermaid architecture diagrams (system topology, request lifecycle, data encryption, deployment) |
 | [System Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | Overview architecture, layered details, deployment architecture (Mermaid visualization) |

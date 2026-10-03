@@ -309,4 +309,3 @@ Lingkungan produksi disarankan menggunakan reverse proxy Nginx untuk TLS termina
 - [Dokumen desain arsitektur](ARCHITECTURE_DESIGN.md) — arsitektur berlapis sistem dan rantai eksekusi middleware
 - [Dokumentasi API](API.md) — referensi antarmuka lengkap
 - [Dokumen desain fitur](FEATURE_DESIGN.md) — spesifikasi fungsi 34 modul
-- [Perbandingan versi](EDITIONS.md) — perbedaan versi Lite / Standard / Full

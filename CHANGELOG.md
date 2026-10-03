@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.5.0 (2026-10-03)
+
+### 新增
+- **React 管理端（重新设计版）**：React 19 + Vite + Ant Design 6 + TanStack Query 5 + Zustand，13 模块 / 16 路由（登录、值班台、报表中心、小区、房产、业主、账单、缴费、报修、投诉、用户、角色权限、系统配置 / 操作日志 / 个人中心，含 404）
+- **Angular 管理端（重新设计版）**：Angular 20（standalone + signals）+ NG-ZORRO + 自封装 ECharts，同样的 13 模块 / 16 路由
+- 两端共用「小筑」设计语言（靛蓝 + 琥珀），为重新设计而非 Flutter 版移植；通用列表组件归一后端**三种分页形状**（Laravel 分页器 / `page`+`limit` / 无分页）后喂表格
+
+### 修复
+- **后端分页忽略 `?page=N`**：illuminate 的 `Paginator::$currentPageResolver` 全局未注册（`resolveCurrentPage()` 恒返默认 1），7 个业务模块（小区 / 房产 / 业主 / 账单 / 缴费 / 报修 / 投诉）列表恒返回第 1 页（total / 总页数正常）；service 端依赖 resolver 的 4 处同样受影响。新增 `admin/app/common/PaginationBootstrap.php` 与 `service/app/common/PaginationBootstrap.php`，并在两端 `config/bootstrap.php` 注册。验证边界：admin 端新增 `tests/PaginationBootstrapTest.php`（3 例 15 断言）通过、`php start.php restart -d` 启动无 bootstrap 告警；**service 端仅 `php -l` 通过，未做启动验证；两端均未用真实数据端到端验证翻页**
+- **`/admin/report` 路由从未注册**：`ReportController` 存在但 `config/route.php` 从未注册该路径（`git log -S` 证实历史上也不存在），Flutter 存量端与 React / Angular 三端同调此路径，报表中心自 v1.2.0 起在真后端恒 404；已在 `/admin` 路由组补注册。验证边界：重启后无 token 请求由 404 HTML 变为 `{"code":401,"message":"未登录"}`（路由与中间件链生效），**带 token 真实取数未验证（DB 不可连）**；全量核对 156 处 `@Apidoc\Url` 注解未发现其他未注册接口，属孤例
+- **报修接口员工 ID 对外统一为 hashid**：`staff_id` 编码后返回并新增 `staff_name`（一次 join），`assign` / `update` 改为接收 hashid（无效判 422）。此前该字段混用「原始数字 ID」与「员工列表的 hashid」两个不可互转的 ID 空间，前端无法显示维修人员姓名、派单也拿不到可提交的 ID。验证边界：仅 `php -l` + 重启后路由注册 + 无测试依赖旧契约；join 与编解码未经真实数据端到端验证（本机 DB 不可连）
+
+### 变更
+- **移除商业版本档位机制**：项目只保留 main 单一版本；删除 `lite` / `standard` / `full` 三个 git 分支（本地与 origin）、移除 `edition_supports()` 路由门控（admin / service 两侧路由改为无条件注册）、删除 `config/edition.php`、`EditionFeatureTest`、`EDITIONS` 环境变量与 `docs/EDITIONS.md`（含 12 语言镜像）。行为影响：`EDITIONS` 此前未设置、默认 full，故移除后路由注册范围与现状完全一致（非功能变更）
+- **双端收尾裁决落地**（2026-10-03，已写入共享规格 `admin/apps/README.md` §1.3）：汇总卡措辞两端统一为「应收合计（元）/实收合计（元）/欠费合计（元）」（React 改齐，重建后产物锚点更新）；图表系列色序写死 8 位（前 5 位语义色 + 第 6–8 位扩展色 `#8B5CF6` / `#0EA5E9` / primary-dark，**不做 5 色循环截断**）；「颜色只走五档语义 token」明确只管页面模板/组件内联，样式表字面量豁免；汇总卡单位后缀、顶栏面包屑、`/reports` DOM 节点数三处差异裁定「记录不判定」
+
+### 宠物接入
+- React / Angular 两端各六处接线：`public/favicon.svg`（与 `docs/images/favicon.svg` 同源，MD5 一致）、登录页全身像（160px）+ 问候气泡、侧栏 28px 图标标记、值班台欢迎卡、列表空态插图、404 页
+- 浏览器标签图标部署点由四个增至六个（新增 `admin/apps/react/public/`、`admin/apps/angular/public/`）
+
+### 测试
+- React：`pnpm build`（tsc -b + vite）零错误，`pnpm test` **7 文件 47/47** 通过（终版当场复跑）；无头浏览器逐页截图核对（登录页走真后端验证码），13 模块 / 16 路由全部渲染，宠物六处齐全；首轮 3 项规格偏差（卡片阴影、登录页大号控件圆角、表格行高）修复后复验通过
+- Angular：`pnpm build`（ng build）零错误，`ng test` 38/38 通过；首轮验收 9 页运行时白屏（NG0201）与 4 项样式偏差已修复，15 个页面（13 路由 + 系统三页签 + 404）全部出图；终验中另发现并修复两处独立缺陷（见下条），已修复并经交互级复验通过
+- Angular 终验修复的两处独立缺陷（两种成因、两种修法）：① **账单编辑页主线程冻结** —— 直接成因不是 locale，而是模板方法绑定在每次变更检测新建 `Date` 实例，触发 `NgModel` 身份判定变化与 `writeValue()` 内 `markForCheck()` 形成自循环，已用 `DateValueCache` 复用实例断环；② **日期本地化缺陷（NG0701，工程未 `registerLocaleData` zh）** 导致报表日期区间不可用，已注册 locale + `LOCALE_ID` 治根。复验：账单日期面板开 → 选 → 保存（PUT 带 `start_date`，主线程无卡死）、报表按日期区间出数
+- 双端验证码点击坐标映射实测通过（点渲染区换算提交与期望坐标误差：Angular 0/0，React ≤1px 容差内）
+- 双端新增页面级挂载冒烟测试（逐路由渲染，随 `pnpm test` / `ng test` 常跑）；破坏态复现（React 摘 Provider、Angular 摘 NzModalService 注册）下 `build` 仍 exit 0 —— 此类运行时崩溃 build 拦不住，冒烟测试是必要防线
+- 边界：本机 MySQL 不可连，登录后页面截图均基于请求拦截桩数据，图表数据与导出未做端到端验证；后端分页修复仅有 admin 单测级证据（见「修复」）
+
 ## v1.4.0 (2026-09-26)
 
 ### 新增

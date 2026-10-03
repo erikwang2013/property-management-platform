@@ -1,0 +1,119 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.xz-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.xz-filters {
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+  padding: 16px 16px 0;
+  margin: 0;
+
+  .xz-filter {
+    margin-bottom: 16px;
+
+    &.actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+  }
+
+  .full {
+    width: 100%;
+  }
+}
+
+.xz-card {
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+  padding: 8px 16px 16px;
+}
+
+.xz-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+
+  .left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--xz-text);
+  }
+
+  .picked {
+    font-size: 12px;
+    color: var(--xz-primary);
+    background: rgba(79, 70, 229, 0.08);
+    border-radius: var(--xz-radius-tag);
+    padding: 2px 8px;
+  }
+
+  .right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.strong {
+  font-weight: 600;
+  color: var(--xz-text);
+}
+
+// 操作列固定在最右：表格宽于容器时横向滚动，但行操作始终可见
+// （表格用 nzScroll x:max-content，宽表必然横向滚动，不粘住就会把按钮滚出视野）
+// 声明 170 是规范 §1.3 定的值（操作列含详情/派单/进度三个行内按钮，实测内容宽 React 156 / Angular 165）。
+// 声明宽在 table-layout:auto 下是下限 —— 声明 150 时反而被内容撑到 165，两端各撑一套；声明 170 才两端一致。
+.ops-head {
+  width: 170px;
+}
+
+.ops {
+  white-space: nowrap;
+}
+
+.ops-head,
+.ops {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: var(--xz-bg-card);
+  border-left: 1px solid var(--xz-border);
+}
+
+.ops-head {
+  background: #fafafa; // 表头底色，滚动时挡住下方内容
+}
+
+.xz-empty-pet {
+  width: 72px;
+  opacity: 0.75;
+}
+
+// col.ellipsis：长文本列单行省略，全文走 title 悬浮。
+// max-width:0 是表格里触发省略的必要条件（table-layout 下 td 默认按内容撑开）。
+.ellipsis {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

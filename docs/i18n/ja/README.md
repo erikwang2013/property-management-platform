@@ -301,7 +301,6 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 |------|------|
 | [インストールガイド](docs/INSTALL.md) | ゼロからのデプロイガイド、データベース初期化、Docker デプロイ、よくある問題 |
 | [統合インストールスクリプト](docs/install.sql) | 全 65 テーブル + RBAC 権限シードデータ、ワンクリックインポート |
-| [バージョン比較](docs/EDITIONS.md) | ベーシック版(Lite) / スタンダード版(Standard) / フル版(Full) の機能と技術指標の比較 |
 | [アーキテクチャ設計ドキュメント](docs/ARCHITECTURE_DESIGN.md) | システム階層アーキテクチャ、ミドルウェア実行チェーン、セキュリティ多層防御設計 |
 | [アーキテクチャドキュメント](docs/ARCHITECTURE.md) | Mermaid アーキテクチャ図（システムトポロジー、リクエストライフサイクル、データ暗号化、デプロイ） |
 | [システムアーキテクチャ図](docs/ARCHITECTURE_DIAGRAM.md) | 全景アーキテクチャ、階層詳細図、デプロイアーキテクチャ（Mermaid 可視化） |

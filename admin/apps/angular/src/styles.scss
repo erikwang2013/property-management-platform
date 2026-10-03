@@ -1,0 +1,180 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+@use './theme/tokens';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--xz-font);
+  color: var(--xz-text);
+  background: var(--xz-bg-layout);
+  -webkit-font-smoothing: antialiased;
+}
+
+// 全局数字等宽：统计卡、金额、表格数字列
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+// 页面标题条
+.xz-page-title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--xz-text);
+}
+
+.xz-muted {
+  color: var(--xz-text-secondary);
+}
+
+// 页面级白底卡片（列表页与报表页共用同一套圆角/投影）
+.xz-card {
+  padding: 16px;
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+}
+
+/* ============================================================
+ * NG-ZORRO 覆盖（规格 §1.2 / §1.3）
+ *
+ * 必须写成真实 CSS 规则：ng-zorro-antd.variable.min.css 只变量化了颜色，
+ * 圆角/文字色/字体/阴影在里面都是硬编码字面量（详见 theme/_tokens.scss 顶部注释）。
+ * 本文件在 angular.json 的 styles 里排在该样式表之后，同特异性下后者胜出。
+ * ============================================================ */
+
+// §1.2 圆角：输入/按钮 8，卡片/弹窗 12，标签/徽标 6
+// 注意：`.ant-btn-sm/-lg` 与 `.ant-btn` 同为 (0,1,0)，但本文件在后 → 一条规则即可覆盖全部尺寸变体
+.ant-btn,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-input-group-addon,
+.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-picker,
+.ant-alert,
+.ant-dropdown-menu,
+.ant-select-dropdown,
+.ant-cascader-dropdown,
+.ant-picker-dropdown .ant-picker-panel-container {
+  border-radius: var(--xz-radius-input);
+}
+
+.ant-card,
+.ant-card-head,
+.ant-modal-content,
+.ant-drawer-content,
+.ant-table,
+.ant-descriptions-view {
+  border-radius: var(--xz-radius-card);
+}
+
+.ant-tag,
+.ant-badge-count,
+.ant-checkbox-inner,
+.ant-tree-checkbox-inner {
+  border-radius: var(--xz-radius-tag);
+}
+
+/* default 档中性徽标（分类类字典全部落在这里）：React/antd 的 filled 徽标实测
+ * fg #1F2937 / bg #F6F6F7 / 无描边；ng-zorro 加了 ant-tag-default 类却没有对应规则，
+ * 会落到基础 .ant-tag（rgba(0,0,0,.85) on #fafafa + #d9d9d9 灰描边），两端看得出不同。
+ * 注：:not([class*='ant-tag-']) 那条正文色规则会把带预设类的徽标排除掉，故必须显式给值。 */
+.ant-tag-default {
+  color: var(--xz-text);
+  background: #f6f6f7;
+  border-color: transparent;
+}
+
+// §1.3 表格行高 48px：vendor 是 padding 16/16 + line-height 22 + 1px 分隔线 = 55。
+// 改成 11.5 + 24 + 1 = 48，与 React 版（cellPaddingBlock 11.5 + lineHeight 24）逐像素一致。
+// 注：不能用 height —— 那是「最小高度」语义，padding 撑开后声明根本不生效。
+.ant-table-tbody > tr > td {
+  padding: 11.5px 16px;
+  line-height: 24px;
+}
+
+/* §1.1 正文色：组件内部硬编码 rgba(0,0,0,.85)（vendor 里出现 185 次），需逐个组件根类覆盖。
+ *
+ * 两条通用约束：
+ *  1. 有配色语义的变体必须排除 —— 它们与基础类同为 (0,1,0)，一条 `.ant-btn{color:…}`
+ *     会把 `.ant-btn-primary` 的白字压成深色。故 .ant-tag 用 :not()、.ant-btn 见下方单独规则、
+ *     .ant-alert 干脆不碰。
+ *  2. 自带 color 声明的子元素，只覆盖祖先类够不着（继承永远输给直接命中）：
+ *     `.ant-card-head`、`.ant-descriptions-item-content` 都在此列 ——
+ *     但 `.ant-descriptions-item-label` 相反，它是次要色，见下方单独规则。
+ */
+.ant-tag:not([class*='ant-tag-']),
+.ant-card-head,
+.ant-descriptions-item-content,
+.ant-table,
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table-summary > tr > td,
+.ant-card,
+.ant-form,
+.ant-input,
+.ant-select,
+.ant-picker,
+.ant-pagination,
+.ant-tree,
+.ant-timeline,
+.ant-descriptions,
+.ant-modal-body,
+.ant-drawer-body,
+// 抽屉/弹窗标题同样有硬编码字色（vendor 里各有一条直接命中的 color 声明，元素级 h1..h6 规则压不住）。
+// 依据：antd 抽屉根节点取 colorText（标题继承之），弹窗标题取 colorTextHeading —— 而 antd 的 alias 里
+// `colorTextHeading: mergedToken.colorText`，React 侧 colorText 被锁成 #1F2937，故两端都是正文色。
+.ant-modal-title,
+.ant-drawer-title,
+.ant-message {
+  color: var(--xz-text);
+}
+
+// toast 圆角：vendor 里 `.ant-message-notice-content{border-radius:2px}` 是字面值
+// （变量样式表只变量化了颜色，圆角没变量化，见文件头），React 侧走 token 已是卡片档 12px ——
+// 同一次提交的提示两端必须同款。字色与图标色不用管：`.ant-message` 已在上面的正文色列表里，
+// 图标走 `--ant-success-color` 等变量，`theme/_tokens.scss` 已把它们映射到我们的语义色。
+.ant-message-notice-content {
+  border-radius: var(--xz-radius-card);
+}
+
+// 次要文字：两端同位置取的是「描述色」而非正文色，都是 §1.1 的 #6B7280。
+// 依据（React 侧 antd 6 源码 + 实测）：`.ant-empty-description` 取 colorTextDescription；
+// `.ant-descriptions-item-label` 在 **bordered** 变体下取 colorTextSecondary（非 bordered 才是更浅的 colorTextTertiary，
+// 两端用的都是 bordered）。vendor 里这两个类都没有自己的 color 声明，不写就一路继承成正文色。
+// 因此 `.ant-empty` 从正文色列表里移出：它对宿主本就无 color 声明，列着只会把子元素带偏。
+// （`.ant-descriptions` 仍留在列表里 —— 它下面的 content 是正文色。）
+.ant-empty-description,
+.ant-descriptions-item-label {
+  color: var(--xz-text-secondary);
+}
+
+// 默认按钮与文本按钮：字色同样来自硬编码 rgba(0,0,0,.85)（React 侧取 colorText）。
+// vendor 里**没有 .ant-btn-default 这个类** —— 默认态就是裸 .ant-btn，所以只能靠排除法：
+// 逐个排除自带配色语义的类型，避免同特异性规则把主/链接/危险按钮压成正文色。
+.ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous):not(.ant-btn-background-ghost),
+.ant-btn-text:not(.ant-btn-dangerous) {
+  color: var(--xz-text);
+}
+
+// 标题元素：vendor 的重置 `h1,h2,…{color:rgba(0,0,0,.85)}` 是元素选择器、直接命中，
+// **继承来的颜色会被它盖掉** —— 实测值班台问候语（本应继承 .welcome 的白字）
+// 在深靛蓝渐变上渲染成了近黑色。这里按 React 侧 antd 重置的语义（取 colorText）统一；
+// 需要非正文色的场合由组件自身规则覆盖（组件样式特异性更高）。
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--xz-text);
+}

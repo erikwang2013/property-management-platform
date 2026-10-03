@@ -1,0 +1,173 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<section class="xz-card filter-bar">
+  <div class="filter">
+    <span class="lbl">统计区间</span>
+    <nz-range-picker
+      [ngModel]="range()"
+      (ngModelChange)="onRangeChange($event)"
+      [nzDisabledDate]="disabledDate"
+    />
+    <span class="lbl">小区</span>
+    <nz-select
+      class="community"
+      [ngModel]="communityId()"
+      (ngModelChange)="communityId.set($event)"
+      nzPlaceHolder="全部小区"
+      nzAllowClear
+    >
+      @for (c of communities(); track c.value) {
+        <nz-option [nzValue]="c.value" [nzLabel]="c.label" />
+      }
+    </nz-select>
+    <button nz-button nzType="primary" (click)="reload()" [nzLoading]="loading()">
+      <nz-icon nzType="search" />
+      生成报表
+    </button>
+    <button
+      nz-button
+      (click)="exportPdf()"
+      [nzLoading]="exporting()"
+      [disabled]="!!failed() || !data()"
+    >
+      <nz-icon nzType="download" />
+      导出 PDF
+    </button>
+  </div>
+  @if (rangeTooLong()) {
+    <div class="hint xz-muted">区间超过 366 天，趋势图横轴会较密，建议缩小范围。</div>
+  }
+</section>
+
+@if (failed()) {
+  <nz-alert
+    nzType="warning"
+    nzShowIcon
+    nzMessage="报表数据获取失败"
+    [nzDescription]="failed() + '（后端 ReportController 未在 config/route.php 注册时即为此提示）'"
+  />
+} @else if (loading() && !data()) {
+  <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 6 }" />
+} @else if (data(); as d) {
+  <!-- 汇总卡 -->
+  <div nz-row [nzGutter]="16" class="stats">
+    @for (c of statCards; track c.key) {
+      <div nz-col [nzXs]="12" [nzSm]="8" [nzLg]="6" [nzXl]="3">
+        <div class="stat-card">
+          <div class="icon" [style.background]="c.color + '1A'" [style.color]="c.color">
+            <nz-icon [nzType]="c.icon" />
+          </div>
+          <div class="label">{{ c.label }}</div>
+          <div class="value tabular" [style.color]="c.color">
+            {{ c.money ? money(d.summary[c.key]) : d.summary[c.key] }}@if (c.unit) {
+              <span class="unit">{{ c.unit }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- 图表区：栅格逐行对齐 React ReportsPage —— 14+10 / 8+8+8 / 12+12（矮屏一律 24 堆叠） -->
+  <div nz-row [nzGutter]="16" class="charts">
+    <div nz-col [nzXs]="24" [nzLg]="14">
+      <nz-card nzTitle="收支趋势" [nzBordered]="false">
+        @if (d.income_trend.length || d.expense_trend.length) {
+          <xz-chart [option]="trendOption()" [height]="320" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有收支流水'" />
+        }
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzLg]="10">
+      <nz-card nzTitle="支付方式分布" [nzBordered]="false">
+        @if (d.payment_methods.length) {
+          <xz-chart [option]="paymentOption()" [height]="320" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有缴费记录'" />
+        }
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzLg]="8">
+      <nz-card nzTitle="报修状态" [nzBordered]="false">
+        @if (d.repair_status.length) {
+          <xz-chart [option]="repairStatusOption()" [height]="280" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" />
+        }
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzLg]="8">
+      <nz-card nzTitle="投诉状态" [nzBordered]="false">
+        @if (d.complaint_status.length) {
+          <xz-chart [option]="complaintOption()" [height]="280" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有投诉'" />
+        }
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzLg]="8">
+      <nz-card nzTitle="访客状态" [nzBordered]="false">
+        @if (d.visitor_status.length) {
+          <xz-chart [option]="visitorOption()" [height]="280" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有访客记录'" />
+        }
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzLg]="12">
+      <nz-card nzTitle="报修分类" [nzBordered]="false">
+        @if (d.repair_category.length) {
+          <xz-chart [option]="repairCategoryOption()" [height]="280" />
+        } @else {
+          <nz-empty [nzNotFoundContent]="'区间内没有报修单'" />
+        }
+      </nz-card>
+    </div>
+    <!-- 欠费排行：卡片内次级紧凑表，允许 40px 行高（规格 §1.3） -->
+    <div nz-col [nzXs]="24" [nzLg]="12">
+      <nz-card nzTitle="欠费排行 TOP10" [nzBordered]="false" class="rank">
+        @if (d.arrears_ranking.length) {
+          <!-- nzScroll 不是装饰：React 侧同名表带 `scroll={{y:220}}`，antd 据此把 table-layout 切成
+               fixed、列宽按声明值生效。缺了它本端是 auto 布局，声明的 60/120/140/160/120
+               会退化成「下限」被摊开到整容器（实测 110/221/258/294/221），两端对不上。 -->
+          <nz-table
+            #rankTable
+            [nzData]="d.arrears_ranking"
+            [nzShowPagination]="false"
+            [nzScroll]="{ y: '220px' }"
+            nzSize="small"
+            class="compact"
+          >
+            <thead>
+              <tr>
+                <th nzWidth="60px">排名</th>
+                @for (col of arrearsColumns; track col.title) {
+                  <th [nzWidth]="col.width">{{ col.title }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of rankTable.data; track row.room_name + row.owner_name; let i = $index) {
+                <tr>
+                  <td>
+                    <span class="rank-no" [class.top3]="i < 3">{{ i + 1 }}</span>
+                  </td>
+                  <td class="strong">{{ row.owner_name }}</td>
+                  <td class="mono xz-muted">{{ row.owner_phone }}</td>
+                  <td>{{ row.room_name }}</td>
+                  <!-- 千分位 + 两位小数、不带货币符号：表头已写「欠费金额(元)」（规范 §1.3 line 52） -->
+                  <td class="mono danger tabular">{{ money(row.arrears) }}</td>
+                </tr>
+              }
+            </tbody>
+          </nz-table>
+        } @else {
+          <nz-empty [nzNotFoundContent]="'没有欠费账单'" [nzNotFoundImage]="petTpl" />
+        }
+      </nz-card>
+    </div>
+  </div>
+}
+
+<!-- 空状态用宠物图标标记（规格 §2） -->
+<ng-template #petTpl><img class="empty-pet" src="favicon.svg" alt="小筑" /></ng-template>

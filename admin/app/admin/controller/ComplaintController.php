@@ -108,13 +108,17 @@ class ComplaintController extends BaseController
             return $this->fail('投诉不存在', 404);
         }
 
-        if ($item->status != 1) {
+        // 状态编号以 docs/install.sql 的 management_complaint.status 注释为准：
+        // 0=待处理 1=处理中 2=已处理 3=已回访 4=已关闭。
+        // 业主端建单写 0（待处理），故受理的入口守卫必须是 0；此前守卫写 1，
+        // 导致业主新建的投诉永远受理不了（0 无人迁移到 1）。
+        if ($item->status != 0) {
             return $this->fail('仅待处理状态的投诉可以受理', 422);
         }
 
         $item->handler_id     = $request->adminId;
         $item->handler_remark = $request->input('handler_remark', '');
-        $item->status         = 2; // 处理中
+        $item->status         = 1; // 处理中
         $item->handled_at     = date('Y-m-d H:i:s');
         $item->save();
 
@@ -135,7 +139,7 @@ class ComplaintController extends BaseController
             return $this->fail('投诉不存在', 404);
         }
 
-        if ($item->status != 2) {
+        if ($item->status != 1) {
             return $this->fail('仅处理中状态的投诉可以回访', 422);
         }
 

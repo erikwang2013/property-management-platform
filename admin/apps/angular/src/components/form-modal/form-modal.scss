@@ -1,0 +1,15 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.full {
+  width: 100%;
+}
+
+.xz-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--xz-text-secondary);
+  line-height: 1.5;
+}
+
+:host ::ng-deep .ant-form-item {
+  margin-bottom: 16px;
+}

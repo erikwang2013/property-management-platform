@@ -19,8 +19,8 @@
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
 | 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
-| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/`、`admin/apps/flutter/web/` |
-| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 四个 Web 入口的浏览器标签图标 · 架构图横切栏 |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 `admin/public/`、`service/public/`、`apps/flutter/web/`、`admin/apps/flutter/web/`、`admin/apps/react/public/`、`admin/apps/angular/public/` |
+| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 管理端 React / Angular 重设计（登录页 + 值班台 + 空态 + 404）· 六个 Web 入口的浏览器标签图标 · 架构图横切栏 |
 
 ## 项目结构
 
@@ -37,7 +37,9 @@ property-management-platform/
 │   │   └── process/               # 进程管理
 │   ├── apps/
 │   │   ├── flutter/               # 管理后台 Flutter Web（PC 风格）
-│   │   └── harmonyos/             # 管理后台 HarmonyOS App
+│   │   ├── harmonyos/             # 管理后台 HarmonyOS App
+│   │   ├── react/                 # 管理后台 React 重设计（React 19 + Vite + Ant Design）
+│   │   └── angular/               # 管理后台 Angular 重设计（NG-ZORRO）
 │   ├── config/                    # 配置文件（含中文注释）
 │   ├── database/
 │   │   └── backup/                # 数据库备份脚本
@@ -325,7 +327,6 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 |------|------|
 | [安装指南](docs/INSTALL.md) | 从零部署指南，含数据库初始化、Docker 部署、常见问题 |
 | [合并安装脚本](docs/install.sql) | 全部 65 张表 + RBAC 权限种子数据，一键导入 |
-| [版本对比](docs/EDITIONS.md) | 基础版(Lite) / 标准版(Standard) / 完整版(Full) 功能与技术指标对比 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |
 | [系统架构图](docs/ARCHITECTURE_DIAGRAM.md) | 全景架构、分层详图、部署架构（Mermaid 可视化） |

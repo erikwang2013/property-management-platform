@@ -179,8 +179,12 @@ class ComplaintController extends BaseController
             return $this->fail('投诉不存在或无权操作', 404);
         }
 
-        if ($complaint->status != 2) {
-            return $this->fail('仅已处理状态的投诉可以评价', 422);
+        // 状态编号以 docs/install.sql 的 management_complaint.status 注释为准：
+        // 0=待处理 1=处理中 2=已处理 3=已回访 4=已关闭。
+        // 管理端的「回访」把状态置为 3（已回访），故业主的评价入口守卫为 3；
+        // 此前守卫写 2，而 2 在整个流程里无人写入，导致评价永远不可达。
+        if ($complaint->status != 3) {
+            return $this->fail('仅已回访状态的投诉可以评价', 422);
         }
 
         $score = (int) $request->input('score', 0);

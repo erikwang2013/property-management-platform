@@ -1,0 +1,87 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<!-- 菜单本体抽成模板，桌面侧栏与移动抽屉共用 -->
+<ng-template #menuTpl>
+  <div class="xz-brand">
+    <img src="favicon.svg" alt="小筑" />
+    @if (!collapsed() || isMobile()) {
+      <span>物业管理平台</span>
+    }
+  </div>
+  <ul nz-menu nzMode="inline" nzTheme="dark" [nzInlineCollapsed]="collapsed() && !isMobile()">
+    @for (group of nav; track group.title) {
+      <li nz-menu-group [nzTitle]="group.title">
+        <ul>
+          @for (item of group.items; track item.path) {
+            <li nz-menu-item [nzSelected]="isActive(item.path)" [routerLink]="item.path">
+              <nz-icon [nzType]="item.icon" />
+              <span>{{ item.label }}</span>
+            </li>
+          }
+        </ul>
+      </li>
+    }
+  </ul>
+</ng-template>
+
+<nz-layout class="xz-shell">
+  @if (!isMobile()) {
+    <nz-sider
+      class="xz-sider"
+      nzTheme="dark"
+      [nzWidth]="240"
+      [nzCollapsedWidth]="64"
+      [nzCollapsed]="collapsed()"
+      [nzTrigger]="null"
+    >
+      <ng-container *ngTemplateOutlet="menuTpl" />
+    </nz-sider>
+  } @else {
+    <nz-drawer
+      [nzVisible]="drawerOpen()"
+      nzPlacement="left"
+      [nzClosable]="false"
+      [nzWidth]="240"
+      nzWrapClassName="xz-drawer"
+      (nzOnClose)="drawerOpen.set(false)"
+    >
+      <ng-container *nzDrawerContent>
+        <ng-container *ngTemplateOutlet="menuTpl" />
+      </ng-container>
+    </nz-drawer>
+  }
+
+  <nz-layout>
+    <nz-header class="xz-header">
+      <div class="left">
+        <button nz-button nzType="text" (click)="toggle()" aria-label="切换菜单">
+          <nz-icon [nzType]="collapsed() || isMobile() ? 'menu-unfold' : 'menu-fold'" />
+        </button>
+        <span class="crumb">{{ title() }}</span>
+      </div>
+      <div class="right">
+        <a class="who" nz-dropdown [nzDropdownMenu]="userMenu" [nzTrigger]="'click'">
+          <span class="avatar">{{ (auth.user()?.real_name || auth.user()?.username || '管')[0] }}</span>
+          <span class="name">{{ auth.user()?.real_name || auth.user()?.username }}</span>
+          <nz-icon nzType="down" />
+        </a>
+        <nz-dropdown-menu #userMenu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item routerLink="/system/profile">
+              <nz-icon nzType="idcard" />
+              个人中心
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="logout()">
+              <nz-icon nzType="logout" />
+              退出登录
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </nz-header>
+
+    <nz-content class="xz-content">
+      <router-outlet />
+    </nz-content>
+  </nz-layout>
+</nz-layout>

@@ -301,7 +301,6 @@ Buka `http://localhost:8788` (atau Flutter Web / HarmonyOS): beranda menampilkan
 |------|------|
 | [Panduan Instalasi](docs/INSTALL.md) | Panduan deploy dari nol, termasuk inisialisasi database, deployment Docker, FAQ |
 | [Skrip instalasi gabungan](docs/install.sql) | Semua 65 tabel + data seed RBAC, impor satu kali |
-| [Perbandingan versi](docs/EDITIONS.md) | Perbandingan fitur dan indikator teknis Lite / Standard / Full |
 | [Dokumen desain arsitektur](docs/ARCHITECTURE_DESIGN.md) | Arsitektur berlapis sistem, rantai eksekusi middleware, desain pertahanan berlapis keamanan |
 | [Dokumen arsitektur](docs/ARCHITECTURE.md) | Diagram arsitektur Mermaid (topologi sistem, siklus hidup request, enkripsi data, deployment) |
 | [Diagram arsitektur sistem](docs/ARCHITECTURE_DIAGRAM.md) | Arsitektur panorama, diagram berlapis detail, arsitektur deployment (visualisasi Mermaid) |

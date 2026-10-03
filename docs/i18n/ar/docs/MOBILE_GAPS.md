@@ -27,7 +27,7 @@
 | الزوار | الصفحة مفقودة | يحتاج صفحة جديدة (API موجود: GET/POST/PUT/DELETE /visitor*) |
 | المواقف | الصفحة مفقودة | يحتاج صفحة جديدة (API موجود: /parking/vehicles、/parking/spaces、/parking/records) |
 
-لا توجد فجوات في الخادم: جميع واجهات service للمسارات الأساسية الخمسة جاهزة (fees/repairs/announcements مسارات دائمة؛ parking/visitors داخل بوابة إصدار standard). يحتوي ApiService.ets بالفعل على get/post/put/delete عامة، ويمكن للصفحات الجديدة إعادة استخدامها مباشرة.
+لا توجد فجوات في الخادم: جميع واجهات service للمسارات الأساسية الخمسة جاهزة (fees/repairs/announcements مسارات دائمة). يحتوي ApiService.ets بالفعل على get/post/put/delete عامة، ويمكن للصفحات الجديدة إعادة استخدامها مباشرة.
 
 ## ثالثاً: الوضع الحالي لتطبيق Flutter للملاك (apps/flutter، 13 وحدة)
 

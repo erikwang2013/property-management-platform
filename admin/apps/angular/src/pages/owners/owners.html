@@ -1,0 +1,26 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<xz-data-table
+  title="业主列表"
+  [columns]="columns"
+  [filters]="filters"
+  [load]="loader"
+  [rowActions]="rowActions"
+  [selectable]="true"
+  [refreshToken]="refresh()"
+  [(selected)]="selected"
+>
+  <button nz-button nzType="primary" (click)="create()">
+    <nz-icon nzType="plus" />
+    新建业主
+  </button>
+  <button nz-button nzDanger (click)="batchDestroy()">批量删除</button>
+</xz-data-table>
+
+<xz-form-modal
+  [(open)]="formOpen"
+  [title]="editing() ? '编辑业主' : '新建业主'"
+  [fields]="fields()"
+  [values]="editing()"
+  [submit]="submit"
+  [onSaved]="onSaved"
+/>

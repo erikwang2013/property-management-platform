@@ -328,4 +328,3 @@ error_page 500 502 503 504 /504.html;
 - [架构设计文档](ARCHITECTURE_DESIGN.md) — 系统分层架构与中间件执行链
 - [API 文档](API.md) — 完整接口参考
 - [功能设计文档](FEATURE_DESIGN.md) — 34 模块功能规格
-- [版本对比](EDITIONS.md) — Lite / Standard / Full 版本差异

@@ -1,0 +1,68 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<xz-data-table
+  title="报修列表"
+  [columns]="columns"
+  [filters]="filters"
+  [load]="loader"
+  [rowActions]="rowActions"
+  [refreshToken]="refresh()"
+>
+  <button nz-button nzType="primary" (click)="create()">新建报修单</button>
+</xz-data-table>
+
+<xz-form-modal
+  [(open)]="actionOpen"
+  [title]="actionTitle()"
+  [fields]="actionFields()"
+  [values]="actionRow()"
+  [submit]="actionSubmit"
+  [onSaved]="onSaved"
+/>
+
+<!-- 详情：只读。问题描述在此看全文（列表里是 220px 截断），进度历史只在详情里出现 -->
+<nz-drawer
+  [nzVisible]="detailOpen()"
+  nzTitle="报修详情"
+  [nzWidth]="520"
+  (nzOnClose)="detailOpen.set(false)"
+>
+  <ng-container *nzDrawerContent>
+    @if (detail(); as d) {
+      <nz-descriptions [nzColumn]="1" nzBordered nzSize="small">
+        <nz-descriptions-item nzTitle="编号">{{ d.order_number }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="房产">{{ roomName(d.room_id) }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="联系电话">{{ d.contact_phone || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="类别">{{ categoryText(d.category) }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="紧急度">{{ urgencyText(d.urgency) }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="状态">
+          <nz-tag [nzColor]="statusTags[d.status]?.color || 'default'">
+            {{ statusTags[d.status]?.text || statusText(d.status) }}
+          </nz-tag>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修人员">{{ d.staff_name || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="问题描述">{{ d.description || '—' }}</nz-descriptions-item>
+        @if (d.images?.length) {
+          <nz-descriptions-item nzTitle="图片">
+            @for (img of d.images; track img) {
+              <a class="shot" [href]="img" target="_blank" rel="noopener">
+                <img [src]="img" alt="报修图片" />
+              </a>
+            }
+          </nz-descriptions-item>
+        }
+        <nz-descriptions-item nzTitle="预约时间">{{ d.scheduled_at || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="完成时间">{{ d.completed_at || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="评价">{{ ratingText(d) }}</nz-descriptions-item>
+      </nz-descriptions>
+
+      <!-- 时间线紧跟 Descriptions，中间不加小标题（React 抽屉同为 Descriptions → Timeline） -->
+      <nz-timeline>
+        @for (p of d.progress; track p.id) {
+          <nz-timeline-item>{{ progressText(p) }}</nz-timeline-item>
+        }
+      </nz-timeline>
+    } @else {
+      <p class="xz-muted">暂无详情</p>
+    }
+  </ng-container>
+</nz-drawer>

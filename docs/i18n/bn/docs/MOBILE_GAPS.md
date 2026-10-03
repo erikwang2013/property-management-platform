@@ -27,7 +27,7 @@
 | দর্শনার্থী | পেজ নেই | নতুন পেজ তৈরি করতে হবে (API আছে: GET/POST/PUT/DELETE /visitor*) |
 | পার্কিং | পেজ নেই | নতুন পেজ তৈরি করতে হবে (API আছে: /parking/vehicles, /parking/spaces, /parking/records) |
 
-ব্যাকএন্ডে কোনো গ্যাপ নেই: ৫টি কোর পাথের service API সব প্রস্তুত (fees/repairs/announcements স্থায়ী রুট; parking/visitors standard সংস্করণের গেটের মধ্যে)। ApiService.ets-এ সাধারণ get/post/put/delete আছে, নতুন পেজ সরাসরি পুনঃব্যবহার করতে পারে।
+ব্যাকএন্ডে কোনো গ্যাপ নেই: ৫টি কোর পাথের service API সব প্রস্তুত (fees/repairs/announcements স্থায়ী রুট)। ApiService.ets-এ সাধারণ get/post/put/delete আছে, নতুন পেজ সরাসরি পুনঃব্যবহার করতে পারে।
 
 ## ৩. Flutter মালিক পোর্টালের বর্তমান অবস্থা (apps/flutter, ১৩ মডিউল)
 

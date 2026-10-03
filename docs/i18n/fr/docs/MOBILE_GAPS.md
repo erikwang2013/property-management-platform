@@ -27,7 +27,7 @@
 | Visiteur | Page manquante | Nouvelle page à créer (API existantes : GET/POST/PUT/DELETE /visitor*) |
 | Stationnement | Page manquante | Nouvelle page à créer (API existantes : /parking/vehicles、/parking/spaces、/parking/records) |
 
-Aucune lacune côté backend : les API service des 5 parcours principaux sont toutes prêtes (fees/repairs/announcements en routes permanentes ; parking/visitors dans l'édition standard). ApiService.ets dispose déjà de get/post/put/delete génériques, les nouvelles pages peuvent les réutiliser directement.
+Aucune lacune côté backend : les API service des 5 parcours principaux sont toutes prêtes (fees/repairs/announcements en routes permanentes ). ApiService.ets dispose déjà de get/post/put/delete génériques, les nouvelles pages peuvent les réutiliser directement.
 
 ## III. État actuel du portail propriétaires Flutter (apps/flutter, 13 modules)
 

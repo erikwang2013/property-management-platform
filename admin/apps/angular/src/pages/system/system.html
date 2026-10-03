@@ -1,0 +1,23 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<xz-data-table
+  title="配置列表"
+  [columns]="columns"
+  [filters]="filters"
+  [load]="loader"
+  [rowActions]="rowActions"
+  [refreshToken]="refresh()"
+>
+  <button nz-button nzType="primary" (click)="create()">
+    <nz-icon nzType="plus" />
+    新增配置
+  </button>
+</xz-data-table>
+
+<xz-form-modal
+  [(open)]="formOpen"
+  [title]="editing() ? '编辑配置' : '新增配置'"
+  [fields]="fields()"
+  [values]="editing()"
+  [submit]="submit"
+  [onSaved]="onSaved"
+/>

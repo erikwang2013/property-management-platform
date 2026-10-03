@@ -45,4 +45,15 @@ class RepairOrder extends BaseModel
     {
         return $this->hasMany(RepairProgress::class);
     }
+
+    /**
+     * 维修人员（派单对象）
+     *
+     * 注意：`staff_id` 列存的是**原始数字 ID**（`assign` 收 hashid 后解码存入），
+     * 对外输出时由控制器编码为 hashid（见 RepairController::index/show）。
+     */
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 }

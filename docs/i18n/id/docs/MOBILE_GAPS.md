@@ -27,7 +27,7 @@
 | Tamu | halaman tidak ada | Perlu buat halaman baru (API sudah ada: GET/POST/PUT/DELETE /visitor*) |
 | Parkir | halaman tidak ada | Perlu buat halaman baru (API sudah ada: /parking/vehicles、/parking/spaces、/parking/records) |
 
-Backend tanpa kesenjangan: API service 5 jalur inti semuanya siap (fees/repairs/announcements route permanen; parking/visitors di dalam gating versi standard). ApiService.ets sudah punya get/post/put/delete umum, halaman baru bisa langsung reuse.
+Backend tanpa kesenjangan: API service 5 jalur inti semuanya siap (fees/repairs/announcements route permanen). ApiService.ets sudah punya get/post/put/delete umum, halaman baru bisa langsung reuse.
 
 ## 三、Status Saat Ini Flutter Portal Pemilik（apps/flutter，13 modul）
 

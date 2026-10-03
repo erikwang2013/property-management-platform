@@ -1,0 +1,21 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<xz-data-table
+  title="缴费记录"
+  [columns]="columns"
+  [filters]="filters"
+  [load]="loader"
+  [refreshToken]="refresh()"
+>
+  <button nz-button nzType="primary" (click)="create()">
+    <nz-icon nzType="plus" />
+    线下缴费登记
+  </button>
+</xz-data-table>
+
+<xz-form-modal
+  [(open)]="formOpen"
+  title="线下缴费登记"
+  [fields]="fields"
+  [submit]="submit"
+  [onSaved]="onSaved"
+/>

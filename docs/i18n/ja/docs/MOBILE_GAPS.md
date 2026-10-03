@@ -27,7 +27,7 @@
 | 来訪者 | ページなし | 新規ページが必要（API は既存：GET/POST/PUT/DELETE /visitor*） |
 | 駐車 | ページなし | 新規ページが必要（API は既存：/parking/vehicles、/parking/spaces、/parking/records） |
 
-バックエンドにギャップなし：5 つのコアパスの service API は全て準備完了（fees/repairs/announcements は常駐ルート；parking/visitors は standard 版のゲート内）。ApiService.ets に汎用の get/post/put/delete が既にあり、新ページはそのまま再利用可能。
+バックエンドにギャップなし：5 つのコアパスの service API は全て準備完了（fees/repairs/announcements は常駐ルート）。ApiService.ets に汎用の get/post/put/delete が既にあり、新ページはそのまま再利用可能。
 
 ## 三、Flutter 所有者端の現状（apps/flutter、13 モジュール）
 

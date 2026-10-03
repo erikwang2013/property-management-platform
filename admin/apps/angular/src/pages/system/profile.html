@@ -1,0 +1,80 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<div nz-row [nzGutter]="16">
+  <!-- 左：身份卡 -->
+  <div nz-col [nzXs]="24" [nzMd]="8" [nzLg]="7">
+    <nz-card [nzBordered]="false" class="id-card">
+      <div class="avatar">
+        @if (profile()?.avatar) {
+          <img [src]="profile()?.avatar" alt="头像" />
+        } @else {
+          <img src="favicon.svg" alt="小筑" />
+        }
+      </div>
+      <h3>{{ profile()?.real_name || profile()?.username || '—' }}</h3>
+      <div class="xz-muted mono">&#64;{{ profile()?.username }}</div>
+      <nz-tag [nzColor]="statusTags[profile()?.status ?? 0]?.color">
+        {{ statusTags[profile()?.status ?? 0]?.text }}
+      </nz-tag>
+
+      <div class="actions">
+        <button nz-button nzType="primary" (click)="openInfo()">
+          <nz-icon nzType="edit" />
+          编辑资料
+        </button>
+        <button nz-button (click)="openPwd()">
+          <nz-icon nzType="key" />
+          修改密码
+        </button>
+        <button nz-button nzDanger (click)="logout()">
+          <nz-icon nzType="logout" />
+          退出登录
+        </button>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- 右：账号明细 -->
+  <div nz-col [nzXs]="24" [nzMd]="16" [nzLg]="17">
+    <nz-card nzTitle="账号信息" [nzBordered]="false">
+      <nz-descriptions [nzColumn]="2" nzBordered>
+        <nz-descriptions-item nzTitle="用户 ID">
+          <span class="mono">{{ profile()?.id || '—' }}</span>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="用户名">{{ profile()?.username }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="真实姓名">{{ profile()?.real_name || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{ profile()?.phone || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="邮箱">{{ profile()?.email || '—' }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租户">
+          {{ profile()?.tenant_id ? profile()?.tenant_id : '平台超级管理员' }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="最后登录时间">
+          {{ profile()?.last_login_at || '—' }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="最后登录 IP">
+          {{ profile()?.last_login_ip || '—' }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="创建时间" [nzSpan]="2">
+          {{ profile()?.created_at || '—' }}
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </nz-card>
+  </div>
+</div>
+
+<xz-form-modal
+  [(open)]="infoOpen"
+  title="编辑资料"
+  [fields]="infoFields"
+  [values]="formValues()"
+  [submit]="submitInfo"
+  [onSaved]="onInfoSaved"
+/>
+
+<xz-form-modal
+  [(open)]="pwdOpen"
+  title="修改密码"
+  [fields]="pwdFields"
+  [values]="null"
+  [submit]="submitPassword"
+  [onSaved]="onPasswordSaved"
+/>

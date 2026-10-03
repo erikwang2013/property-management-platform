@@ -1,0 +1,93 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<nz-modal
+  [nzVisible]="open()"
+  [nzTitle]="title()"
+  [nzOkLoading]="saving()"
+  [nzOkDisabled]="saving()"
+  nzOkText="保存"
+  nzCancelText="取消"
+  [nzWidth]="640"
+  (nzOnCancel)="cancel()"
+  (nzOnOk)="ok()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form nzLayout="vertical" [formGroup]="form" nz-row [nzGutter]="16">
+      @for (f of fields(); track f.key) {
+        <div [nzSpan]="f.wide || f.kind === 'textarea' ? 24 : 12" nz-col>
+          <nz-form-item>
+            <nz-form-label [nzRequired]="!!f.required">{{ f.label }}</nz-form-label>
+            <nz-form-control [nzErrorTip]="'请填写' + f.label">
+              @switch (f.kind) {
+                @case ('textarea') {
+                  <textarea
+                    nz-input
+                    rows="3"
+                    [formControlName]="f.key"
+                    [placeholder]="f.placeholder || ''"
+                    [disabled]="locked(f)"
+                  ></textarea>
+                }
+                @case ('number') {
+                  <nz-input-number
+                    class="full"
+                    [formControlName]="f.key"
+                    [nzMin]="f.min ?? 0"
+                    [nzMax]="f.max ?? maxNumber"
+                    [nzStep]="f.step ?? 1"
+                    [nzDisabled]="locked(f)"
+                    [nzPlaceHolder]="f.placeholder || ''"
+                  />
+                }
+                @case ('select') {
+                  <nz-select
+                    class="full"
+                    [formControlName]="f.key"
+                    [nzPlaceHolder]="f.placeholder || f.label"
+                    [nzDisabled]="locked(f)"
+                    nzShowSearch
+                  >
+                    @for (o of f.options ? f.options() : []; track o.value) {
+                      <nz-option [nzValue]="o.value" [nzLabel]="o.label" />
+                    }
+                  </nz-select>
+                }
+                @case ('date') {
+                  <nz-date-picker
+                    class="full"
+                    [nzPlaceHolder]="f.placeholder || '选择日期'"
+                    [nzDisabled]="locked(f)"
+                    [ngModel]="dateValue(f.key)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setDate(f.key, $event)"
+                  />
+                }
+                @case ('switch') {
+                  <nz-switch [formControlName]="f.key" />
+                }
+                @case ('password') {
+                  <input
+                    nz-input
+                    type="password"
+                    [formControlName]="f.key"
+                    [placeholder]="f.placeholder || ''"
+                  />
+                }
+                @default {
+                  <input
+                    nz-input
+                    [formControlName]="f.key"
+                    [placeholder]="f.placeholder || ''"
+                    [disabled]="locked(f)"
+                  />
+                }
+              }
+              @if (f.hint) {
+                <div class="xz-hint">{{ f.hint }}</div>
+              }
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      }
+    </form>
+  </ng-container>
+</nz-modal>

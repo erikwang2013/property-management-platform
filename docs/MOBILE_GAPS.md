@@ -27,7 +27,7 @@
 | 访客 | 页面缺失 | 需新建页面（API 已有：GET/POST/PUT/DELETE /visitor*） |
 | 停车 | 页面缺失 | 需新建页面（API 已有：/parking/vehicles、/parking/spaces、/parking/records） |
 
-后端无缺口：5 条核心路径的 service API 全部就绪（fees/repairs/announcements 常驻路由；parking/visitors 在 standard 版门禁内）。ApiService.ets 已有通用 get/post/put/delete，新页面可直接复用。
+后端无缺口：5 条核心路径的 service API 全部就绪（fees/repairs/announcements 常驻路由）。ApiService.ets 已有通用 get/post/put/delete，新页面可直接复用。
 
 ## 三、Flutter 业主端现状（apps/flutter，13 模块）
 

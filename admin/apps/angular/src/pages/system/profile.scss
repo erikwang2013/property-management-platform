@@ -1,0 +1,42 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.id-card {
+  text-align: center;
+
+  .avatar {
+    margin: 8px auto 12px;
+
+    img {
+      width: 88px;
+      height: 88px;
+      object-fit: cover;
+      background: var(--xz-bg-layout);
+      border-radius: 50%;
+    }
+  }
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .mono {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+}

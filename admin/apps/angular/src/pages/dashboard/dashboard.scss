@@ -1,0 +1,152 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.welcome {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+  background: linear-gradient(120deg, var(--xz-primary-light), var(--xz-primary-dark) 70%);
+  color: #fff;
+  margin-bottom: 16px;
+
+  .pet {
+    height: 96px;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.22));
+  }
+
+  .hello {
+    flex: 1 1 240px;
+
+    h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 700;
+      // 必须显式写：vendor 的 `h1,h2,…{color:rgba(0,0,0,.85)}` 直接命中元素，
+      // 从 .welcome 继承来的白字会被它盖掉，问候语在靛蓝渐变上变成近黑色。
+      color: #fff;
+    }
+
+    p {
+      margin: 0;
+      opacity: 0.86;
+      font-size: 13px;
+    }
+  }
+
+  .todos {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .todo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 96px;
+    padding: 10px 14px;
+    border-radius: var(--xz-radius-card);
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--xz-text);
+    text-decoration: none;
+    transition: transform 0.15s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .num {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .lbl {
+      font-size: 12px;
+      color: var(--xz-text-secondary);
+    }
+  }
+}
+
+.stats {
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+  margin-bottom: 16px;
+
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--xz-radius-input);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex: 0 0 44px;
+  }
+
+  .body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .label {
+    font-size: 13px;
+    color: var(--xz-text-secondary);
+  }
+
+  .value {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+.charts {
+  margin-bottom: 16px;
+
+  nz-card {
+    border-radius: var(--xz-radius-card);
+    box-shadow: var(--xz-shadow-card);
+    margin-bottom: 16px;
+  }
+}
+
+.logs {
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+}
+
+.log-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+
+  .who {
+    font-weight: 600;
+  }
+
+  code {
+    background: var(--xz-bg-layout);
+    border-radius: var(--xz-radius-tag);
+    padding: 1px 6px;
+  }
+}
+
+.empty-pet {
+  width: 64px;
+  opacity: 0.75;
+}

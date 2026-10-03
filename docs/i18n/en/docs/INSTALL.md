@@ -309,4 +309,3 @@ For production, an Nginx reverse proxy terminating TLS is recommended. See `admi
 - [Architecture Design Document](ARCHITECTURE_DESIGN.md) — system layered architecture and middleware execution chain
 - [API Document](API.md) — complete endpoint reference
 - [Feature Design Document](FEATURE_DESIGN.md) — 34-module functional specifications
-- [Editions Comparison](EDITIONS.md) — Lite / Standard / Full differences

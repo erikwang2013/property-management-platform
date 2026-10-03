@@ -1,0 +1,38 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<xz-data-table
+  title="账单列表"
+  [columns]="columns"
+  [filters]="filters"
+  [load]="loader"
+  [rowActions]="rowActions"
+  [refreshToken]="refresh()"
+>
+  <button nz-button nzType="primary" (click)="create()">
+    <nz-icon nzType="plus" />
+    新建账单
+  </button>
+  <button nz-button (click)="openBatch()">
+    <nz-icon nzType="thunderbolt" />
+    批量生成
+  </button>
+</xz-data-table>
+
+<!-- 新建 / 编辑：字段集随 editing() 切换 -->
+<xz-form-modal
+  [(open)]="formOpen"
+  [title]="editing() ? '编辑账单' : '新建账单'"
+  [fields]="fields()"
+  [values]="editing()"
+  [submit]="submit"
+  [onSaved]="onSaved"
+/>
+
+<!-- 批量生成：独立弹窗，成功后回填「新建 N / 跳过 M」 -->
+<xz-form-modal
+  [(open)]="batchOpen"
+  title="批量生成账单"
+  [fields]="batchFields"
+  [values]="null"
+  [submit]="submitBatch"
+  [onSaved]="onBatchSaved"
+/>

@@ -299,7 +299,6 @@ Abra `http://localhost:8788` (ou Flutter Web / HarmonyOS): a página inicial mos
 |------|------|
 | [Guia de instalação](docs/INSTALL.md) | Guia de implantação do zero, incluindo inicialização do banco, implantação Docker e perguntas frequentes |
 | [Script de instalação consolidado](docs/install.sql) | Todas as 65 tabelas + dados de seed de permissões RBAC, importação em um clique |
-| [Comparação de edições](docs/EDITIONS.md) | Comparação de funcionalidades e métricas técnicas entre Lite / Standard / Full |
 | [Documento de design de arquitetura](docs/ARCHITECTURE_DESIGN.md) | Arquitetura em camadas do sistema, cadeia de execução de middlewares, design de defesa em profundidade |
 | [Documento de arquitetura](docs/ARCHITECTURE.md) | Diagramas Mermaid da arquitetura (topologia do sistema, ciclo de vida da requisição, criptografia de dados, implantação) |
 | [Diagrama de arquitetura do sistema](docs/ARCHITECTURE_DIAGRAM.md) | Arquitetura geral, diagramas detalhados por camada, arquitetura de implantação (visualização Mermaid) |

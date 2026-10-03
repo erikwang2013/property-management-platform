@@ -1,0 +1,132 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.xz-shell {
+  min-height: 100vh;
+  background: var(--xz-bg-layout);
+}
+
+.xz-sider {
+  background: var(--xz-sider) !important;
+}
+
+.xz-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--xz-header-height);
+  padding: 0 16px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+
+  img {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+  }
+}
+
+:host ::ng-deep {
+  // 侧栏：靛蓝 950 底，选中项琥珀激活条（规格 §1.1）
+  .xz-sider .ant-menu,
+  .xz-drawer .ant-menu {
+    background: var(--xz-sider);
+    border-inline-end: none;
+  }
+
+  .xz-sider .ant-menu-item-group-title,
+  .xz-drawer .ant-menu-item-group-title {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding-inline: 16px;
+    margin-top: 8px;
+  }
+
+  .xz-sider .ant-menu-item,
+  .xz-drawer .ant-menu-item {
+    color: var(--xz-sider-text);
+    border-radius: var(--xz-radius-input);
+    margin-inline: 8px;
+    width: calc(100% - 16px);
+  }
+
+  .xz-sider .ant-menu-item-selected,
+  .xz-drawer .ant-menu-item-selected {
+    background: rgba(251, 191, 36, 0.14) !important;
+    color: var(--xz-sider-active) !important;
+    font-weight: 600;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      top: 25%;
+      height: 50%;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--xz-sider-active);
+    }
+  }
+
+  .xz-drawer .ant-drawer-body {
+    padding: 0;
+    background: var(--xz-sider);
+  }
+
+  .xz-drawer .ant-drawer-header {
+    display: none;
+  }
+}
+
+.xz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--xz-header-height);
+  line-height: var(--xz-header-height);
+  padding: 0 16px 0 8px;
+  background: var(--xz-bg-card);
+  border-bottom: 1px solid var(--xz-border);
+
+  .left,
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .crumb {
+    font-weight: 600;
+    color: var(--xz-text);
+  }
+
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--xz-text);
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--xz-primary-light), var(--xz-primary-dark));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.xz-content {
+  padding: var(--xz-content-padding);
+  background: var(--xz-bg-layout);
+  min-height: calc(100vh - var(--xz-header-height));
+}

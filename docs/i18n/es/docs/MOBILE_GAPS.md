@@ -27,7 +27,7 @@
 | Visitantes | Falta la página | Necesita nueva página (API ya existe: GET/POST/PUT/DELETE /visitor*) |
 | Estacionamiento | Faltan las páginas | Necesita nuevas páginas (API ya existe: /parking/vehicles、/parking/spaces、/parking/records) |
 
-Sin brechas en backend: las API de service de las 5 rutas principales están todas listas (fees/repairs/announcements son rutas permanentes; parking/visitors dentro del control de acceso de la edición Standard). ApiService.ets ya tiene get/post/put/delete genéricos, las nuevas páginas pueden reutilizarlos directamente.
+Sin brechas en backend: las API de service de las 5 rutas principales están todas listas (fees/repairs/announcements son rutas permanentes). ApiService.ets ya tiene get/post/put/delete genéricos, las nuevas páginas pueden reutilizarlos directamente.
 
 ## 3. Estado actual del portal Flutter de propietarios (apps/flutter, 13 módulos)
 

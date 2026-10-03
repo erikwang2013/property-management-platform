@@ -309,4 +309,3 @@ mysql -u root -p management < docs/install.sql
 - [আর্কিটেকচার ডিজাইন ডকুমেন্ট](ARCHITECTURE_DESIGN.md) — সিস্টেম লেয়ার্ড আর্কিটেকচার ও মিডলওয়্যার এক্সিকিউশন চেইন
 - [API ডকুমেন্ট](API.md) — সম্পূর্ণ ইন্টারফেস রেফারেন্স
 - [ফাংশন ডিজাইন ডকুমেন্ট](FEATURE_DESIGN.md) — ৩৪ মডিউল ফাংশন স্পেক
-- [সংস্করণ তুলনা](EDITIONS.md) — Lite / Standard / Full সংস্করণ পার্থক্য

@@ -19,4 +19,6 @@
 return [
     support\bootstrap\Session::class,
     support\bootstrap\Db::class,
+    // 注册分页页码 resolver（不注册则 paginate() 忽略 ?page=N，恒返第一页）
+    app\common\PaginationBootstrap::class,
 ];

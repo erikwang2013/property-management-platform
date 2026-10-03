@@ -13,6 +13,7 @@ use app\common\WebhookService;
 use app\model\RepairOrder;
 use app\model\RepairProgress;
 use app\model\Staff;
+use InvalidArgumentException;
 use support\Request;
 
 /**
@@ -52,7 +53,7 @@ class RepairController extends BaseController
             $query->where('category', (int) $category);
         }
 
-        $list = $query->orderBy('created_at', 'desc')
+        $list = $query->with('staff')->orderBy('created_at', 'desc')
             ->paginate((int) $request->input('page_size', 20))
             ->through(function ($item) {
                 return [
@@ -65,7 +66,9 @@ class RepairController extends BaseController
                     'urgency'      => $item->urgency,
                     'description'  => $item->description,
                     'status'       => $item->status,
-                    'staff_id'     => $item->staff_id,
+                    // 维修人员：对外一律 hashid（与全站约定一致），并带上姓名供列表直显
+                    'staff_id'     => $item->staff_id ? $this->encodeId($item->staff_id) : '',
+                    'staff_name'   => $item->staff?->name ?? '',
                     'completed_at' => $item->completed_at ? $item->completed_at->format('Y-m-d H:i') : '',
                     'created_at'   => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
                 ];
@@ -86,7 +89,7 @@ class RepairController extends BaseController
     public function show(Request $request, string $hashid)
     {
         $id = $this->decodeId($hashid);
-        $item = RepairOrder::find($id);
+        $item = RepairOrder::with('staff')->find($id);
         if (!$item) {
             return $this->fail('报修单不存在', 404);
         }
@@ -95,6 +98,8 @@ class RepairController extends BaseController
         foreach ($item->progress()->orderBy('created_at', 'asc')->get() as $p) {
             $progress[] = [
                 'id'           => $this->encodeId($p->id),
+                // 注意：进度记录的 staff_id 由 addProgress() 写入的是**操作管理员 id**（$request->adminId），
+                // 不是员工 id，故不参与本轮「员工 ID 统一为 hashid」的编码，保持原值。
                 'staff_id'     => $p->staff_id,
                 'status_from'  => $p->status_from,
                 'status_to'    => $p->status_to,
@@ -116,7 +121,8 @@ class RepairController extends BaseController
             'images'        => $item->images,
             'scheduled_at'  => $item->scheduled_at ? $item->scheduled_at->format('Y-m-d H:i') : '',
             'status'        => $item->status,
-            'staff_id'      => $item->staff_id,
+            'staff_id'      => $item->staff_id ? $this->encodeId($item->staff_id) : '',
+            'staff_name'    => $item->staff?->name ?? '',
             'completed_at'  => $item->completed_at ? $item->completed_at->format('Y-m-d H:i') : '',
             'rating'        => $item->rating,
             'feedback'      => $item->feedback,
@@ -190,6 +196,21 @@ class RepairController extends BaseController
         if ($request->input('owner_id')) {
             $data['owner_id'] = $this->decodeId($request->input('owner_id'));
         }
+        // staff_id 同样收 hashid（原为原样透传，hashid 进整型列会变成垃圾值）。
+        // 注意：正式派单请走 PUT /admin/repair/{hashid}/assign —— 它会同时写状态流转与进度记录，
+        // 这里仅用于编辑表单带出的字段。
+        if (array_key_exists('staff_id', $data)) {
+            $staffHashid = (string) $data['staff_id'];
+            if ($staffHashid === '') {
+                $data['staff_id'] = 0;
+            } else {
+                try {
+                    $data['staff_id'] = $this->decodeId($staffHashid);
+                } catch (InvalidArgumentException) {
+                    return $this->fail('请选择有效的维修人员', 422);
+                }
+            }
+        }
         $item->fill($data);
         $item->save();
 
@@ -227,7 +248,7 @@ class RepairController extends BaseController
      * @Apidoc\Method("PUT")
      * @Apidoc\Url("/admin/repair/{id}/assign")
      * @Apidoc\Param("hashid", type="string", require=true, desc="报修单hashid", from="path")
-     * @Apidoc\Param("staff_id", type="int", require=true, desc="维修人员ID")
+     * @Apidoc\Param("staff_id", type="string", require=true, desc="维修人员 hashid（原为数字 ID，2026-10-03 起统一为 hashid）")
      * @Apidoc\Param("remark", type="string", require=false, desc="派单说明")
      */
     public function assign(Request $request, string $hashid)
@@ -238,8 +259,13 @@ class RepairController extends BaseController
             return $this->fail('报修单不存在', 404);
         }
 
-        $staffId = (int) $request->input('staff_id', 0);
-        if ($staffId <= 0 || !Staff::find($staffId)) {
+        // 收 hashid（与全站「业务 ID 一律 hashid」的约定一致）；解不出或人员不存在都判 422
+        try {
+            $staffId = $this->decodeId((string) $request->input('staff_id', ''));
+        } catch (InvalidArgumentException) {
+            return $this->fail('请选择有效的维修人员', 422);
+        }
+        if (!Staff::find($staffId)) {
             return $this->fail('请选择有效的维修人员', 422);
         }
         if ($order->status == 5) {

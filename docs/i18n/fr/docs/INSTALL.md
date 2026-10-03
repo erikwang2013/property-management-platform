@@ -309,4 +309,3 @@ En production, il est recommandé d'utiliser un reverse proxy Nginx pour termine
 - [Document de conception d'architecture](ARCHITECTURE_DESIGN.md) — architecture en couches et chaîne d'exécution des middlewares
 - [Documentation API](API.md) — référence complète des interfaces
 - [Document de conception fonctionnelle](FEATURE_DESIGN.md) — spécifications des 34 modules
-- [Comparaison des versions](EDITIONS.md) — différences Lite / Standard / Full

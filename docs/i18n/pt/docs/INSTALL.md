@@ -309,4 +309,3 @@ Em produção, recomenda-se usar o Nginx como proxy reverso para terminar o TLS.
 - [Documento de design de arquitetura](ARCHITECTURE_DESIGN.md) — arquitetura em camadas do sistema e cadeia de execução de middlewares
 - [Documentação da API](API.md) — referência completa da API
 - [Documento de design de funcionalidades](FEATURE_DESIGN.md) — especificações dos 34 módulos
-- [Comparação de edições](EDITIONS.md) — diferenças entre Lite / Standard / Full

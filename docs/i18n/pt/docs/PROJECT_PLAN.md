@@ -31,7 +31,7 @@
 
 ## 3. Posicionamento estratégico
 
-**Fase de funcionalidades completas → fase de engenharia/comercialização.** O desenvolvimento de funcionalidades de negócio foi concluído (commits recentes são de documentação/auditoria/complemento de testes). Direção dos próximos investimentos: **CI/CD e portões de qualidade, produção do sistema de pagamento, monitoramento com alertas e backup/restauração, SaaS multi-tenant, complemento do app móvel**. A embalagem comercial já tem base (três edições EDITIONS + assistente de instalação + marca d'água de direitos autorais); falta a credibilidade de engenharia que faça o cliente se sentir seguro para pagar.
+**Fase de funcionalidades completas → fase de engenharia/comercialização.** O desenvolvimento de funcionalidades de negócio foi concluído (commits recentes são de documentação/auditoria/complemento de testes). Direção dos próximos investimentos: **CI/CD e portões de qualidade, produção do sistema de pagamento, monitoramento com alertas e backup/restauração, SaaS multi-tenant, complemento do app móvel**. A embalagem comercial já tem base (assistente de instalação + marca d'água de direitos autorais); falta a credibilidade de engenharia que faça o cliente se sentir seguro para pagar.
 
 ## 4. Roteiro por fases
 
@@ -47,9 +47,9 @@
 
 | Objetivo | Tarefas-chave | Critérios de aceitação |
 |------|---------|---------|
-| Ciclo de pagamento fechado, monitorável, entregável | ① Produção do pagamento: fluxo completo em sandbox WeChat/Alipay (pedido→callback idempotente→reembolso→conciliação), credenciais centralizadas em config/payment.php + env ② Monitoramento com alertas: orquestração Prometheus+Grafana + regras de alerta (5xx, conexão ES/Redis, acúmulo de filas) + rotação de logs ③ Controle da versão comercial: switches de versão baseados em EDITIONS (grupos de rotas Lite/Standard/Full ativados) + dados de Demo ④ Assistente de instalação cobrindo configuração de pagamento/ES | Fluxo completo de pagamento em sandbox aprovado (incluindo idempotência de callbacks repetidos); alertas testados de fato; switches das três versões demonstráveis; novo ambiente instalado em 10 minutos |
+| Ciclo de pagamento fechado, monitorável, entregável | ① Produção do pagamento: fluxo completo em sandbox WeChat/Alipay (pedido→callback idempotente→reembolso→conciliação), credenciais centralizadas em config/payment.php + env ② Monitoramento com alertas: orquestração Prometheus+Grafana + regras de alerta (5xx, conexão ES/Redis, acúmulo de filas) + rotação de logs ③ Assistente de instalação cobrindo configuração de pagamento/ES | Fluxo completo de pagamento em sandbox aprovado (incluindo idempotência de callbacks repetidos); alertas testados de fato; novo ambiente instalado em 10 minutos |
 
-**Status atual P2**: ✅ parte offline toda concluída (2026-08-16/17): código completo do fluxo de pagamento (PaymentService pedido/callback idempotente/reembolso/conciliação + centralização de credenciais em config/payment.php + cobertura de funções puras com PaymentServiceTest), orquestração de monitoramento (pilha dupla Prometheus + 6 regras de alerta + provisioning de dashboards Grafana nos dois lados), switches de versão (três edições EDITIONS + validação fail-fast), assistente de instalação (com habilitação automática da configuração de pagamento + bug de caminho de template corrigido). Dependências externas restantes: **teste de integração em sandbox aguardando credenciais** (após obter WECHAT_PAY_* / ALIPAY_* de sandbox, executar `scripts/payment_sandbox_smoke.php`), **verificação real de alertas aguardando implantação** (`scripts/verify_monitoring.sh` valida localmente; a verificação de disparos reais fica para após a implantação).
+**Status atual P2**: ✅ parte offline toda concluída (2026-08-16/17): código completo do fluxo de pagamento (PaymentService pedido/callback idempotente/reembolso/conciliação + centralização de credenciais em config/payment.php + cobertura de funções puras com PaymentServiceTest), orquestração de monitoramento (pilha dupla Prometheus + 6 regras de alerta + provisioning de dashboards Grafana nos dois lados), assistente de instalação (com habilitação automática da configuração de pagamento + bug de caminho de template corrigido). Dependências externas restantes: **teste de integração em sandbox aguardando credenciais** (após obter WECHAT_PAY_* / ALIPAY_* de sandbox, executar `scripts/payment_sandbox_smoke.php`), **verificação real de alertas aguardando implantação** (`scripts/verify_monitoring.sh` valida localmente; a verificação de disparos reais fica para após a implantação).
 
 ### P3 Escala (8-12 semanas) — fazer o sistema "vender mais"
 
@@ -85,7 +85,7 @@
 | 7 | Gestão de migração SQL (consolidação no entry único install.sql) | Médio (atualizável) | Baixo | Baixo | ✅ Concluído (consolidado em 2026-08-16) |
 | 8 | Revisão da solução multi-tenant + isolamento por tenant_id | Alto (teto de crescimento) | Alto | Alto (afeta todas as consultas) | ✅ Concluído (entrega P3, testes de acesso entre tenants aprovados) |
 | 9 | Teste de carga + tratamento de consultas lentas | Médio (desempenho) | Médio | Baixo | ✅ Concluído (P3 com P95 real dentro do alvo; versão smoke no CI em P7) |
-| 10 | Switch de licenciamento da versão comercial + dados de Demo | Médio (pré-venda) | Médio | Baixo | ✅ Concluído (EDITIONS + demo_data.php + documento do fluxo de demonstração) |
+| 10 | dados de Demo | Médio (pré-venda) | Médio | Baixo | ✅ Concluído (demo_data.php + documento do fluxo de demonstração) |
 
 ## 6. Riscos e dependências
 
@@ -105,11 +105,11 @@
 |------|---------|
 | Arquitetura | Revisão da solução multi-tenant e design do isolamento por tenant_id (P3), arquitetura de degradação ES, arquitetura de monitoramento (P2), revisão do design de idempotência de callbacks de pagamento |
 | Back-end | Scripts de geração/rotação de chaves, implementação da degradação ES, centralização da configuração de pagamento + integração em sandbox, scripts de migração, teste de carga e tratamento de consultas lentas |
-| Front-end Flutter | Integração de flutter analyze ao CI, adaptação mobile do portal de proprietários (P3), suporte de UI aos switches de versão |
+| Front-end Flutter | Integração de flutter analyze ao CI, adaptação mobile do portal de proprietários (P3) |
 | HarmonyOS | Complemento dos caminhos principais: pagamento/reparos/anúncios/visitantes/estacionamento (P3) |
 | Testes | Portão de cobertura, casos de sandbox de pagamento (callback repetido/reembolso/conciliação), scripts de teste de carga, execução do exercício de backup/restauração |
 | Revisão | Review dos caminhos críticos de pagamento e segurança, gitleaks no CI, revisão dos testes de acesso entre tenants |
-| Documentação | Manual de implantação/operação (incluindo exercício de restauração), documento da solução multi-tenant, manual de configuração de monitoramento, manual de entrega da versão comercial |
+| Documentação | Manual de implantação/operação (incluindo exercício de restauração), documento da solução multi-tenant, manual de configuração de monitoramento |
 
 ## 8. Recomendações de ação imediata
 

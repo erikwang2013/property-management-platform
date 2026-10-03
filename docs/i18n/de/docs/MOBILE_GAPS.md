@@ -27,7 +27,7 @@
 | Besucher | Seite fehlt | Neue Seite erforderlich (API vorhanden: GET/POST/PUT/DELETE /visitor*) |
 | Parken | Seite fehlt | Neue Seite erforderlich (API vorhanden: /parking/vehicles、/parking/spaces、/parking/records) |
 
-Keine Backend-Lücken: Die service APIs der 5 Kernpfade sind alle fertig (fees/repairs/announcements als permanente Routen; parking/visitors hinter der Standard-Edition-Sperre). ApiService.ets hat bereits generische get/post/put/delete; neue Seiten können direkt darauf aufbauen.
+Keine Backend-Lücken: Die service APIs der 5 Kernpfade sind alle fertig (fees/repairs/announcements als permanente Routen). ApiService.ets hat bereits generische get/post/put/delete; neue Seiten können direkt darauf aufbauen.
 
 ## III. Ist-Zustand des Flutter-Eigentümer-Portals (apps/flutter, 13 Module)
 

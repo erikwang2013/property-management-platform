@@ -1,0 +1,120 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<div class="xz-login">
+  <div class="panel">
+    <!-- 小筑全身像 + 管家口吻问候（规格 §2） -->
+    <div class="pet">
+      <img src="pet_xiaozhu.svg" alt="小筑" />
+      <div class="bubble">你好呀，我是小筑，今天也由我替你把小区照看妥当。</div>
+    </div>
+
+    <div class="form-side">
+      <h1>物业管理平台</h1>
+      <p class="sub">请登录管理端</p>
+
+      <form nz-form nzLayout="vertical" (ngSubmit)="submit()">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group [nzPrefix]="userIcon">
+              <input
+                nz-input
+                name="username"
+                placeholder="用户名"
+                autocomplete="username"
+                [(ngModel)]="username"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group [nzPrefix]="lockIcon">
+              <input
+                nz-input
+                type="password"
+                name="password"
+                placeholder="密码"
+                autocomplete="current-password"
+                [(ngModel)]="password"
+              />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="captcha-block">
+          <div class="captcha-head">
+            <span class="prompt">{{ currentPrompt() }}</span>
+            <button type="button" nz-button nzType="link" nzSize="small" (click)="loadCaptcha()">
+              <nz-icon nzType="reload" />
+              换一张
+            </button>
+          </div>
+
+          <!-- 编号全列（跟 React）：1. 山 2. 云 3. 风 —— 已点绿 / 当前琥珀 / 未到中性 -->
+          @if (captcha(); as c) {
+            @if (c.texts.length) {
+              <div class="captcha-hints">
+                @for (t of c.texts; track t.order; let i = $index) {
+                  <nz-tag [nzColor]="hintTone(i)">{{ i + 1 }}. {{ t.text }}</nz-tag>
+                }
+              </div>
+            }
+          }
+
+          <div class="captcha-stage" [class.busy]="loadingCaptcha()">
+            @if (captcha(); as c) {
+              <img
+                #captchaImg
+                [src]="c.image"
+                alt="点击验证码"
+                (load)="onCaptchaLoad($event)"
+                (click)="onCaptchaClick($event)"
+              />
+              @for (hit of clicks(); track $index) {
+                <span
+                  class="mark"
+                  [style.left.%]="(hit.x / (canvasSize().w || 1)) * 100"
+                  [style.top.%]="(hit.y / (canvasSize().h || 1)) * 100"
+                >
+                  {{ $index + 1 }}
+                </span>
+              }
+            }
+            @if (loadingCaptcha()) {
+              <div class="mask"><nz-spin /></div>
+            }
+          </div>
+
+          <div class="captcha-foot">
+            <span class="hint">{{ clickHint() }}</span>
+            @if (clicks().length) {
+              <button type="button" nz-button nzType="link" nzSize="small" (click)="undoClick()">
+                撤销一次
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (formError()) {
+          <div class="err">{{ formError() }}</div>
+        }
+
+        <button
+          nz-button
+          nzType="primary"
+          nzBlock
+          nzSize="large"
+          class="submit"
+          [nzLoading]="submitting()"
+          [disabled]="!canSubmit()"
+          type="submit"
+        >
+          登录
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <ng-template #userIcon><nz-icon nzType="user" /></ng-template>
+  <ng-template #lockIcon><nz-icon nzType="idcard" /></ng-template>
+</div>

@@ -1,0 +1,62 @@
+<!-- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz -->
+<div nz-row [nzGutter]="16">
+  <!-- 左：小区→楼栋→单元→房产 层级树 -->
+  <div nz-col [nzXs]="24" [nzLg]="7" [nzXl]="6">
+    <nz-card nzTitle="房产结构" [nzBordered]="false" [nzExtra]="treeExtra">
+      @if (treeLoading()) {
+        <div class="tree-loading xz-muted">加载中…</div>
+      } @else if (tree().length) {
+        <nz-tree
+          [nzData]="tree()"
+          nzBlockNode
+          (nzClick)="onTreeSelect($event.keys)"
+        />
+      } @else {
+        <nz-empty [nzNotFoundContent]="'暂无房产结构'" [nzNotFoundImage]="petTpl" />
+      }
+    </nz-card>
+    <ng-template #treeExtra>
+      <button nz-button nzType="link" nzSize="small" (click)="clearScope()">
+        <nz-icon nzType="reload" />
+        重置
+      </button>
+    </ng-template>
+  </div>
+
+  <!-- 右：复用通用列表页；树的选择只改查询条件 -->
+  <div nz-col [nzXs]="24" [nzLg]="17" [nzXl]="18">
+    <div class="scope-bar xz-card">
+      <nz-icon nzType="apartment" />
+      <span class="cur">{{ scopeKey() }}</span>
+      @if (scope()) {
+        <button nz-button nzType="link" nzSize="small" (click)="clearScope()">返回全部</button>
+      }
+      <span class="xz-muted tip">点击树节点定位，点击房产节点直接编辑</span>
+    </div>
+
+    <xz-data-table
+      title="房产列表"
+      [columns]="columns"
+      [filters]="filters"
+      [load]="loader"
+      [rowActions]="rowActions"
+      [refreshToken]="refresh()"
+    >
+      <button nz-button nzType="primary" (click)="create()">
+        <nz-icon nzType="plus" />
+        新建房产
+      </button>
+    </xz-data-table>
+  </div>
+</div>
+
+<xz-form-modal
+  [(open)]="formOpen"
+  [title]="editing() ? '编辑房产' : '新建房产'"
+  [fields]="fields"
+  [values]="editing()"
+  [submit]="submit"
+  [onSaved]="onSaved"
+/>
+
+<ng-template #petTpl><img class="empty-pet" src="favicon.svg" alt="小筑" /></ng-template>

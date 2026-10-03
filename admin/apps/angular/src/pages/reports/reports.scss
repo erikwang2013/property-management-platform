@@ -1,0 +1,116 @@
+// Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+.filter-bar {
+  margin-bottom: 16px;
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  .lbl {
+    color: var(--xz-text-secondary);
+    font-size: 13px;
+  }
+
+  .community {
+    min-width: 180px;
+  }
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.stats {
+  margin-bottom: 16px;
+  row-gap: 16px;
+}
+
+.stat-card {
+  padding: 16px;
+  background: var(--xz-bg-card);
+  border-radius: var(--xz-radius-card);
+  box-shadow: var(--xz-shadow-card);
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: var(--xz-radius-input);
+  }
+
+  .label {
+    color: var(--xz-text-secondary);
+    font-size: 13px;
+  }
+
+  .value {
+    margin-top: 2px;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    .unit {
+      margin-left: 2px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+}
+
+// 行间距：nz-row 的 gutter 只管横向，纵向间距靠这里
+.charts {
+  row-gap: 16px;
+}
+
+.rank {
+  display: block;
+}
+
+.compact ::ng-deep .ant-table-tbody > tr > td {
+  height: 40px;
+  padding: 6px 12px;
+}
+
+.rank-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--xz-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--xz-bg-layout);
+  border-radius: 50%;
+
+  &.top3 {
+    color: #fff;
+    background: var(--xz-accent);
+  }
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.danger {
+  color: var(--xz-error);
+}
+
+.empty-pet {
+  width: 72px;
+  height: 72px;
+  opacity: 0.85;
+}
