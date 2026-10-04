@@ -178,7 +178,13 @@ jobs:
         run: cd service && composer audit --abandoned=report
 
       - name: Setup environment
-        run: cp service/.env.example service/.env
+        # CI 的 redis 服务未设密码，而 .env.example 的 REDIS_PASSWORD 是生产占位值；
+        # autoload 顺序修复后 config() 在 CI 真正生效，中间件/metrics 用例会真连 redis，
+        # 带密码 AUTH 会打到无密码服务（RedisException + redis_up 0）。此处对齐为空。
+        # （本机/生产按各自 .env 配置密码，不受影响。）
+        run: |
+          cp service/.env.example service/.env
+          sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=/' service/.env
 
       - name: Run tests with coverage gate (min 3%)
         # 实测基线 3.12%（pcov 本地，2026-08-16），门禁取基线向下取整，仅防"测试通过但零插桩"类回归；CI xdebug 与 pcov 语句覆盖差异 <0.5pt，留 0.12pt 缓冲
