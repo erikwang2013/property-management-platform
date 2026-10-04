@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'green_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class GreenAreaListPage extends GetView<GreenAreaController> {
   const GreenAreaListPage({super.key});
@@ -20,7 +21,7 @@ class GreenAreaListPage extends GetView<GreenAreaController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增区域')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('区域名称')),DataColumn(label:Text('植物种类')),DataColumn(label:Text('面积')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.areas.map((a){final id=a['id'].toString();return DataRow(cells:[
             DataCell(Text(a['name']??'')),DataCell(Text(a['plant_type']??'-')),DataCell(Text('${a['area']??'-'}')),DataCell(StatusChip(status:a['status']as int?)),
@@ -48,7 +49,7 @@ class GreenMaintenanceListPage extends GetView<GreenMaintenanceController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text('养护记录', style: TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('区域')),DataColumn(label:Text('养护内容')),DataColumn(label:Text('养护人')),DataColumn(label:Text('时间'))],
           rows:c.records.map((r)=>DataRow(cells:[DataCell(Text(r['area_name']??'-')),DataCell(Text(r['content']??'-')),DataCell(Text(r['maintainer']??'-')),DataCell(Text(r['maintained_at']??'-'))])).toList());
       })),

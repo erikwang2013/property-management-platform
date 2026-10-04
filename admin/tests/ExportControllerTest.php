@@ -79,7 +79,10 @@ class ExportControllerTest extends TestCase
                 ['label' => '账单数', 'value' => '56'],
             ],
         ]);
-        $this->assertStringContainsString('<div class="cards">', $html);
+        $this->assertStringContainsString('<table class="cards">', $html);
+        $this->assertStringNotContainsString('display: flex', $html); // dompdf 不支持 flex，卡片走表格横排
+        $this->assertStringContainsString('style="width:50%"', $html); // 2 张卡等宽
+        $this->assertSame(2, substr_count($html, '<div class="card">'));
         $this->assertStringContainsString('业主数', $html);
         $this->assertStringContainsString('128', $html);
     }

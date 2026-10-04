@@ -54,7 +54,7 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
         'per_page': 20,
       });
       setState(() {
-        _payments = List<Map<String, dynamic>>.from(payResponse.data['data'] ?? []);
+        _payments = List<Map<String, dynamic>>.from(payResponse.data['data']?['data'] ?? []);
       });
     } catch (e) {
       Get.snackbar('错误', '加载详情失败: $e', backgroundColor: Colors.red.shade50);
@@ -86,7 +86,7 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
     return Scaffold(
       appBar: AppBar(title: Text('bill_detail'.tr)),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? PetLoading()
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Column(

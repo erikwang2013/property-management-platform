@@ -33,6 +33,11 @@
       "erikwang2013/security-php": true
     }
   },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php scripts/fix-autoload-order.php"
+    ]
+  },
   "require-dev": {
     "phpunit/phpunit": "^12.5",
     "phpstan/phpstan": "^2.2"

@@ -35,7 +35,7 @@ class LogController extends BaseController
         $query = OperationLog::with('user');
 
         if ($userId) {
-            $query->where('user_id', $userId);
+            $query->where('user_id', $this->decodeId($userId));
         }
         if ($action) {
             $query->where('action', $action);

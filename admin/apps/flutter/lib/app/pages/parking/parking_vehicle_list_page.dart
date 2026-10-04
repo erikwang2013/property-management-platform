@@ -24,7 +24,7 @@ class ParkingVehicleListPage extends GetView<ParkingVehicleController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.vehicles.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('车牌号')), DataColumn(label: Text('车主')), DataColumn(label: Text('车位')),

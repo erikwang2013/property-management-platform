@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
+import '../../widgets/pet_mark.dart';
 
 class LogController extends GetxController {
   final api = ApiService();
@@ -57,7 +58,7 @@ class LogPage extends GetView<LogController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         return SingleChildScrollView(child: DataTable(columns: const [
           DataColumn(label: Text('操作者')),
           DataColumn(label: Text('方法')),

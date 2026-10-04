@@ -9,7 +9,7 @@ namespace app\middleware;
 
 use app\model\ApiKey;
 use support\Request;
-use support\Response;
+use Webman\Http\Response;
 
 /**
  * 开放 API Key 鉴权中间件（/open/* 只读接口）

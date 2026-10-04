@@ -154,7 +154,7 @@ class CollectionController extends BaseController
 
         $query = CollectionRecord::with('strategy');
         if (!empty($billId)) {
-            $query->where('bill_id', (int) $billId);
+            $query->where('bill_id', $this->decodeId($billId));
         }
 
         $list = $query->orderBy('created_at', 'desc')
@@ -162,11 +162,11 @@ class CollectionController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'          => $this->encodeId($item->id),
-                    'bill_id'     => $item->bill_id,
+                    'bill_id'     => $item->bill_id ? $this->encodeId($item->bill_id) : '',
                     'strategy_id' => $item->strategy_id ? $this->encodeId($item->strategy_id) : '',
                     'strategy_name' => $item->strategy->name ?? '',
                     'action'      => $item->action,
-                    'executed_by' => $item->executed_by,
+                    'executed_by' => $item->executed_by ? $this->encodeId($item->executed_by) : '',
                     'remark'      => $item->remark,
                     'executed_at' => $item->executed_at ? $item->executed_at->format('Y-m-d H:i') : '',
                     'created_at'  => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',

@@ -9,7 +9,7 @@ namespace app\middleware;
 
 use support\Redis;
 use support\Request;
-use support\Response;
+use Webman\Http\Response;
 use Throwable;
 
 /**

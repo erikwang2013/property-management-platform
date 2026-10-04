@@ -34,7 +34,7 @@ class EnergyMeterController extends BaseController
         $query = EnergyMeter::query();
 
         if (!empty($roomId)) {
-            $query->where('room_id', (int) $roomId);
+            $query->where('room_id', $this->decodeId($roomId));
         }
         if ($meterType !== null && $meterType !== '') {
             $query->where('meter_type', (int) $meterType);
@@ -107,6 +107,9 @@ class EnergyMeterController extends BaseController
             return $this->fail('仪表编号不能为空', 422);
         }
 
+        // 房产收 hashid，入库前解码（读响应用 encodeId 返回该字段，写路径必须对称）
+        $data = $this->decodeIds($data, ['room_id']);
+
         $data['id']     = SnowflakeService::generate();
         $data['status'] = $request->input('status', 1);
 
@@ -127,10 +130,10 @@ class EnergyMeterController extends BaseController
             return $this->fail('仪表不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'room_id', 'meter_type', 'meter_number', 'install_reading',
             'install_date', 'status',
-        ]));
+        ]), ['room_id']));
         $item->save();
 
         return $this->success([], '更新成功');

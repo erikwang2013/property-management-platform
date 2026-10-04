@@ -52,8 +52,9 @@ class _ProfilePageState extends State<ProfilePage> {
         await prefs.setString('phone', _phone);
         await prefs.setString('email', _email);
       }
-    } catch (_) {
+    } catch (e) {
       // 离线时使用本地缓存
+      debugPrint('[profile_page] $e');
     }
   }
 

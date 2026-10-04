@@ -291,11 +291,23 @@ class InstallController
 
         $total = count($statements);
         $failed = 0;
+        $skipped = 0;
         $lastError = '';
+        // 「已存在」类错误降级为 skip（同库二次灌时命中，不代表 SQL 坏了）：
+        //   1050 表已存在 / 1060 列已存在 / 1061 索引名已存在 / 1062 行已存在（种子 INSERT 重复）
+        // 实测二次灌 161 条语句里 55 条属此类（53×1062 + 1×1060 + 1×1061），
+        // 只跳过结构类（1050/1060/1061）的话 53 条种子 INSERT 仍报红，故 1062 一并降级。
+        // ponytail: 按错误码整体降级，不做语句级白名单；半满库上种子撞唯一键也会算 skip（汇总里计数可见）。
+        $alreadyExistsCodes = [1050, 1060, 1061, 1062];
         foreach ($statements as $stmt) {
             try {
                 $pdo->exec($stmt);
             } catch (PDOException $e) {
+                $code = (int) ($e->errorInfo[1] ?? 0);
+                if (in_array($code, $alreadyExistsCodes, true)) {
+                    $skipped++;
+                    continue;
+                }
                 $failed++;
                 $lastError = $e->getMessage();
             }
@@ -305,7 +317,11 @@ class InstallController
             return ['title' => '数据表导入', 'status' => 'error', 'message' => "{$failed}/{$total} 条语句执行失败：" . $lastError];
         }
 
-        return ['title' => '数据表导入', 'status' => 'success', 'message' => "共 {$total} 条语句，全部执行成功"];
+        $message = $skipped > 0
+            ? "共 {$total} 条语句，执行成功（{$skipped} 条已存在，已跳过）"
+            : "共 {$total} 条语句，全部执行成功";
+
+        return ['title' => '数据表导入', 'status' => 'success', 'message' => $message];
     }
 
     private function createAdminUser(PDO $pdo, array $adminConfig): array

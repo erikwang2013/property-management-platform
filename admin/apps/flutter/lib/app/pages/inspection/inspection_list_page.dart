@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import '../../widgets/base_crud_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class InspectionTaskController extends BaseCrudController {
   final tasks = <Map<String, dynamic>>[].obs;
@@ -38,7 +39,7 @@ class InspectionListPage extends GetView<InspectionTaskController> {
       Row(children:[ChoiceChip(label:const Text('全部'),selected:c.statusFilter.value==null,onSelected:(_)=>c.filterByStatus(null)),const SizedBox(width:4),ChoiceChip(label:const Text('待执行'),selected:c.statusFilter.value==0,onSelected:(_)=>c.filterByStatus(0)),const SizedBox(width:4),ChoiceChip(label:const Text('进行中'),selected:c.statusFilter.value==1,onSelected:(_)=>c.filterByStatus(1)),const SizedBox(width:4),ChoiceChip(label:const Text('已完成'),selected:c.statusFilter.value==2,onSelected:(_)=>c.filterByStatus(2))]),
       const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('任务名称')),DataColumn(label:Text('巡检人')),DataColumn(label:Text('计划日期')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.tasks.map((t){final id=t['id'].toString();return DataRow(cells:[DataCell(Text(t['name']??'')),DataCell(Text(t['inspector_name']??'-')),DataCell(Text(t['scheduled_date']??'-')),DataCell(StatusChip(status:t['status']as int?,labels:const{0:'待执行',1:'进行中',2:'已完成'})),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[
             if((t['status']as int? ?? 0)==0)IconButton(icon:const Icon(Icons.play_arrow,size:18,color:Colors.green),tooltip:'开始',onPressed:()=>c.startTask(id)),

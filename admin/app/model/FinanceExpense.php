@@ -12,7 +12,7 @@ class FinanceExpense extends BaseModel
     protected $table = 'management_finance_expense';
 
     protected $fillable = [
-        'expense_number', 'expense_type', 'amount',
+        'id', 'expense_number', 'expense_type', 'amount',
         'payee', 'expense_date', 'operator_id',
         'receipt_url', 'remark',
     ];

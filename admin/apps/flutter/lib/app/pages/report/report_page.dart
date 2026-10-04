@@ -16,7 +16,7 @@ class ReportPage extends GetView<ReportController> {
     Get.put(ReportController());
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
+        return PetLoading();
       }
       final s = controller.summary;
       return SingleChildScrollView(

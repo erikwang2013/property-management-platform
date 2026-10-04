@@ -2,8 +2,10 @@
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- 迁移: 初始化管理后台核心数据表
 -- 注意: 主键 id 使用 BIGINT 非自增，由 snowflake-php 在应用层生成
--- 注意: 本文件为全量安装入口（66 张表 + RBAC 种子数据），唯一建库入口；
---       采用 CREATE TABLE IF NOT EXISTS 确保可重复执行
+-- 注意: 本文件为全量安装入口（67 张表 + RBAC 种子数据），唯一建库入口。
+--       幂等口径: 表/列/种子幂等；索引重跑需向导或 mysql --force——
+--       建表走 IF NOT EXISTS，但 ALTER 加索引/列与种子 INSERT 重跑会分别报
+--       1061/1060/1062「已存在」（向导导入循环把这四类 [含 1050] 降级为跳过，直连 mysql 重灌需 --force）。
 -- ============================================================
 
 -- ============================================================
@@ -78,7 +80,8 @@ CREATE TABLE IF NOT EXISTS `management_admin_permission` (
     PRIMARY KEY (`id`),
     KEY `idx_parent_id` (`parent_id`),
     KEY `idx_sort` (`sort`),
-    KEY `idx_type` (`type`)
+    KEY `idx_type` (`type`),
+    UNIQUE KEY `uk_slug` (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='权限表';
 
 -- ============================================================
@@ -129,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `management_operation_log` (
     `ip` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '操作IP',
     `input` TEXT COMMENT '请求参数（敏感字段已脱敏）',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_user_id` (`user_id`),
     KEY `idx_action` (`action`),
@@ -543,6 +547,30 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010202, 0, '支付订单退款',       'post.admin/payment-order/refund',   3, '', '', 2, NOW(), NOW()),
 (2100000000010203, 0, '支付统计',           'get.admin/payment-order/statistics', 3, '', '', 3, NOW(), NOW());
 
+-- API 权限 — 报表中心
+-- GET /admin/report（ReportController::index）经 AdminPermission 中间件按「方法.路径」鉴权，
+-- 缺此种子时超级管理员也会 403（slug 必须在 permission 表中存在）
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010204, 0, '查看报表',           'get.admin/report',                  3, '', '', 1, NOW(), NOW());
+
+-- API 权限 — 物业数据导出（补种）
+-- POST /admin/export/property-excel（ExportController::propertyExcel，路由 route.php:110 与 API 文档均已存在），
+-- 同样经 AdminPermission 按「方法.路径」鉴权：slug 缺失时任何角色（含超管）一律 403。
+-- AdminPermission.php:39 的前缀回退只退到 post.admin/export，种子中也没有该级 slug，故必须精确补此条。
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010205, 0, '导出物业数据',       'post.admin/export/property-excel',  3, '', '', 3, NOW(), NOW());
+
+-- API 权限 — 动作型端点补种（无任何祖先 slug 可命中者，必须显式登记）
+-- 背景：另外 11 条动作型端点的种子写成了不带参数的逻辑路径（如 put.admin/complaint/handle），
+-- 而路由带 {hashid}；待 AdminPermission 先剥离 `{...}` 段再回退即可命中，无需在此重复登记。
+-- 以下 3 条在两种匹配方式下都没有祖先可命中，故在此补条：
+--   POST /admin/payment-order/create、POST /admin/payment-order/reconcile → PaymentController
+--   GET  /admin/profile（ProfileController::show）→ 个人中心查看
+INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
+(2100000000010206, 0, '创建支付订单',       'post.admin/payment-order/create',    3, '', '', 4, NOW(), NOW()),
+(2100000000010207, 0, '支付订单对账',       'post.admin/payment-order/reconcile', 3, '', '', 5, NOW(), NOW()),
+(2100000000010208, 0, '个人中心-查看',      'get.admin/profile',                  3, '', '', 1, NOW(), NOW());
+
 -- ============================================================
 -- 超级管理员角色 (ID=10000000000000001) 关联所有权限
 -- ============================================================
@@ -793,6 +821,7 @@ CREATE TABLE IF NOT EXISTS `management_fee_payment` (
     `receipt_url` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '收据URL',
     `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_bill_id` (`bill_id`),
     KEY `idx_owner_id` (`owner_id`),
@@ -836,6 +865,7 @@ CREATE TABLE IF NOT EXISTS `management_repair_progress` (
     `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '进度说明',
     `images` TEXT COMMENT '现场图片 (JSON数组)',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_repair_order_id` (`repair_order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修进度表';
@@ -912,6 +942,7 @@ CREATE TABLE IF NOT EXISTS `management_parking_record` (
     `duration` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '停留时长(分钟)',
     `fee` DECIMAL(8,2) NOT NULL DEFAULT 0.00 COMMENT '停车费(临停)',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_vehicle_id` (`vehicle_id`),
     KEY `idx_entry_time` (`entry_time`)
@@ -1108,6 +1139,7 @@ CREATE TABLE IF NOT EXISTS `management_patrol_record` (
     `checkpoints_done` TEXT COMMENT '已完成打卡点 (JSON)',
     `abnormal_note` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '异常备注',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`), KEY `idx_patrol_id` (`patrol_id`), KEY `idx_staff_id` (`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡逻记录表';
 
@@ -1139,6 +1171,7 @@ CREATE TABLE IF NOT EXISTS `management_cleaning_record` (
     `inspection_at` DATETIME DEFAULT NULL COMMENT '检查时间',
     `images` TEXT COMMENT '现场图片 (JSON)',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`), KEY `idx_area_id` (`area_id`), KEY `idx_cleaned_at` (`cleaned_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保洁记录表';
 
@@ -1168,6 +1201,7 @@ CREATE TABLE IF NOT EXISTS `management_green_maintenance` (
     `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '费用',
     `maintained_at` DATETIME DEFAULT NULL COMMENT '养护时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`), KEY `idx_area_id` (`area_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='绿化养护记录表';
 
@@ -1207,6 +1241,7 @@ CREATE TABLE IF NOT EXISTS `management_activity_signup` (
     `signup_at` DATETIME DEFAULT NULL COMMENT '报名时间',
     `checkin_at` DATETIME DEFAULT NULL COMMENT '签到时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`), KEY `idx_activity_id` (`activity_id`), KEY `idx_owner_id` (`owner_id`),
     UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='活动报名表';
@@ -1239,6 +1274,7 @@ CREATE TABLE IF NOT EXISTS `management_energy_record` (
     `reader_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '抄表人ID',
     `bill_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联账单ID',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`), KEY `idx_meter_id` (`meter_id`), KEY `idx_meter_date` (`meter_id`, `record_date`), KEY `idx_room_id` (`room_id`), KEY `idx_record_date` (`record_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗记录表';
 
@@ -1296,6 +1332,7 @@ CREATE TABLE IF NOT EXISTS `management_notification` (
     `ref_type` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '关联类型: bill/repair/announcement/activity',
     `ref_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联ID',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_user` (`user_id`, `user_type`),
     KEY `idx_is_read` (`is_read`),
@@ -1350,6 +1387,7 @@ CREATE TABLE IF NOT EXISTS `management_approval_record` (
     `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '审批意见',
     `acted_at` DATETIME DEFAULT NULL COMMENT '操作时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_approval_id` (`approval_id`),
     KEY `idx_approver` (`approver_id`),
@@ -1420,6 +1458,7 @@ CREATE TABLE IF NOT EXISTS `management_vote_option` (
     `vote_count` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '得票数',
     `area_weighted_count` DECIMAL(15,2) NOT NULL DEFAULT 0.00 COMMENT '面积加权得票',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_vote_id` (`vote_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票选项表';
@@ -1434,6 +1473,7 @@ CREATE TABLE IF NOT EXISTS `management_vote_record` (
     `area_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 COMMENT '面积占比(%)',
     `voted_at` DATETIME NOT NULL COMMENT '投票时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_vote_owner` (`vote_id`, `owner_id`),
     KEY `idx_vote_id` (`vote_id`),
@@ -1494,6 +1534,7 @@ CREATE TABLE IF NOT EXISTS `management_collection_strategy` (
     `sort` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '执行顺序',
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴策略表';
 
@@ -1507,6 +1548,7 @@ CREATE TABLE IF NOT EXISTS `management_collection_record` (
     `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '催缴备注',
     `executed_at` DATETIME NOT NULL COMMENT '执行时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_bill_id` (`bill_id`),
     KEY `idx_executed_at` (`executed_at`),
@@ -1551,6 +1593,7 @@ CREATE TABLE IF NOT EXISTS `management_inspection_checkpoint` (
     `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '检查备注',
     `checked_at` DATETIME DEFAULT NULL COMMENT '打卡时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_task_id` (`task_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡检打卡记录表';
@@ -1567,6 +1610,7 @@ CREATE TABLE IF NOT EXISTS `management_mall_category` (
     `sort` INT UNSIGNED NOT NULL DEFAULT 0,
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城分类表';
 
@@ -1660,6 +1704,7 @@ CREATE TABLE IF NOT EXISTS `management_group_community` (
     `group_id` BIGINT UNSIGNED NOT NULL COMMENT '集团ID',
     `community_id` BIGINT UNSIGNED NOT NULL COMMENT '小区ID',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_group_community` (`group_id`, `community_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='集团小区关联表';
@@ -1697,6 +1742,7 @@ CREATE TABLE IF NOT EXISTS `management_chat_record` (
     `matched_kb_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '匹配知识库ID',
     `is_helpful` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否解决: 0=未评价 1=已解决 2=未解决',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
     KEY `idx_user` (`user_id`, `user_type`),
     KEY `idx_created_at` (`created_at`)

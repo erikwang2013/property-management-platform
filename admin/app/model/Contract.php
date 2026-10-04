@@ -12,7 +12,7 @@ class Contract extends BaseModel
     protected $table = 'management_contract';
 
     protected $fillable = [
-        'contract_number', 'contract_type',
+        'id', 'contract_number', 'contract_type',
         'party_a_type', 'party_a_id',
         'party_b_type', 'party_b_id',
         'title', 'amount',

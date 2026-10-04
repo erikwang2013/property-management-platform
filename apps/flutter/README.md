@@ -13,7 +13,7 @@
 > 两份 `assets/` 副本是 `docs/images/` 真源的**副本**：Flutter 资源必须位于包目录内，
 > 无法引用仓库外的路径。`.svg` 副本共 8 处（两端 `assets/` + 两端 `web/` + `admin/public/`、
 > `service/public/`、`admin/apps/react/public/`、`admin/apps/angular/public/`），改动源文件需全量同步；
-> 各平台**派生位图**（launcher / 启动图 / favicon.ico 等 57 件）统一由
+> 各平台**派生位图**（launcher / 启动图 / favicon.ico 等 68 件）统一由
 > `bash scripts/gen-pet-icons.sh` 重新生成（tile / full / maskable 三变体）。
 > 加载依赖 `flutter_svg`，见 `pubspec.yaml` 中 `flutter_svg: ^2.3.0`。
 

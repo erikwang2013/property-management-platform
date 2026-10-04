@@ -23,7 +23,7 @@ class ContractListPage extends GetView<ContractController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.contracts.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('合同编号')), DataColumn(label: Text('类型')), DataColumn(label: Text('签署方')),

@@ -24,7 +24,7 @@ class RoomTypeListPage extends GetView<RoomTypeController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.roomTypes.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('户型名称')), DataColumn(label: Text('面积(m²)')),

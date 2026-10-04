@@ -12,7 +12,7 @@ class Vote extends BaseModel
     protected $table = 'management_vote';
 
     protected $fillable = [
-        'community_id', 'title', 'description', 'vote_type',
+        'id', 'community_id', 'title', 'description', 'vote_type',
         'start_time', 'end_time', 'is_anonymous', 'min_participation_rate',
         'status', 'publisher_id',
     ];

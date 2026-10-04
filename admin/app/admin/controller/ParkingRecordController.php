@@ -32,7 +32,7 @@ class ParkingRecordController extends BaseController
         $query = ParkingRecord::with('vehicle');
 
         if (!empty($vehicleId)) {
-            $query->where('vehicle_id', (int) $vehicleId);
+            $query->where('vehicle_id', $this->decodeId($vehicleId));
         }
         if (!empty($startDate)) {
             $query->where('entry_time', '>=', $startDate);

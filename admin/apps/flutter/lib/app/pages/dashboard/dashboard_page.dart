@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dashboard_controller.dart';
+import '../../widgets/pet_mark.dart';
 
 class DashboardPage extends GetView<DashboardController> {
   const DashboardPage({super.key});
@@ -12,7 +13,7 @@ class DashboardPage extends GetView<DashboardController> {
     Get.put(DashboardController());
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
+        return PetLoading();
       }
 
       return SingleChildScrollView(

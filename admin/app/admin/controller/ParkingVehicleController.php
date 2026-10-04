@@ -33,10 +33,10 @@ class ParkingVehicleController extends BaseController
         $query = ParkingVehicle::with('space');
 
         if (!empty($ownerId)) {
-            $query->where('owner_id', (int) $ownerId);
+            $query->where('owner_id', $this->decodeId($ownerId));
         }
         if (!empty($spaceId)) {
-            $query->where('space_id', (int) $spaceId);
+            $query->where('space_id', $this->decodeId($spaceId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -119,6 +119,9 @@ class ParkingVehicleController extends BaseController
             return $this->fail('车牌号不能为空', 422);
         }
 
+        // 车主/车位收 hashid，入库前解码（读响应用 encodeId 返回，写路径必须对称）
+        $data = $this->decodeIds($data, ['owner_id', 'space_id']);
+
         $data['id']     = SnowflakeService::generate();
         $data['status'] = $request->input('status', 1);
 
@@ -139,11 +142,11 @@ class ParkingVehicleController extends BaseController
             return $this->fail('车辆不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'owner_id', 'space_id', 'plate_number',
             'vehicle_brand', 'vehicle_color', 'vehicle_type',
             'start_date', 'end_date', 'status',
-        ]));
+        ]), ['owner_id', 'space_id']));
         $item->save();
 
         return $this->success([], '更新成功');

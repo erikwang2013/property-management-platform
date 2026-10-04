@@ -159,8 +159,11 @@ class RepairController extends BaseController
         }
 
         $data['room_id']  = $this->decodeId($data['room_id']);
+        // owner_id 是 NOT NULL 且无默认值（同表 staff_id 有 DEFAULT 0），未传时必须落 0，否则 1364
         if (!empty($data['owner_id'])) {
             $data['owner_id'] = $this->decodeId($data['owner_id']);
+        } else {
+            $data['owner_id'] = 0;
         }
         $data['id']          = SnowflakeService::generate();
         $data['order_number'] = 'RO' . date('YmdHis') . rand(1000, 9999);

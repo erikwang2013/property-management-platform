@@ -14,7 +14,7 @@ class Tenant extends BaseModel
     protected $table = 'management_tenant';
 
     protected $fillable = [
-        'room_id', 'owner_id', 'name', 'phone', 'id_card',
+        'id', 'room_id', 'owner_id', 'name', 'phone', 'id_card',
         'lease_start', 'lease_end', 'rent_amount', 'status',
     ];
 

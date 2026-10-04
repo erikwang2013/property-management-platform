@@ -12,7 +12,7 @@ class Approval extends BaseModel
     protected $table = 'management_approval';
 
     protected $fillable = [
-        'approval_type_id', 'title', 'applicant_id', 'applicant_type',
+        'id', 'approval_type_id', 'title', 'applicant_id', 'applicant_type',
         'ref_type', 'ref_id', 'current_step', 'status', 'remark', 'completed_at',
     ];
 

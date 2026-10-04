@@ -18,7 +18,7 @@ class Community extends BaseModel
 
     // tenant_id 不入 fillable：禁止批量赋值伪造租户归属
     protected $fillable = [
-        'name', 'address', 'province', 'city', 'district',
+        'id', 'name', 'address', 'province', 'city', 'district',
         'area_total', 'building_count', 'room_count',
         'developer', 'property_company', 'contact_phone',
         'description', 'status',

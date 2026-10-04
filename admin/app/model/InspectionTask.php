@@ -12,7 +12,7 @@ class InspectionTask extends BaseModel
     protected $table = 'management_inspection_task';
 
     protected $fillable = [
-        'community_id', 'title', 'task_type', 'route_points', 'checkpoints',
+        'id', 'community_id', 'title', 'task_type', 'route_points', 'checkpoints',
         'assigned_to', 'scheduled_date', 'status', 'started_at', 'completed_at',
     ];
 

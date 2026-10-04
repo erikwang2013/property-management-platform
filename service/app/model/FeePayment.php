@@ -12,7 +12,7 @@ class FeePayment extends BaseModel
     protected $table = 'management_fee_payment';
 
     protected $fillable = [
-        'bill_id', 'owner_id', 'payment_number', 'amount',
+        'id', 'bill_id', 'owner_id', 'payment_number', 'amount',
         'payment_method', 'payment_channel', 'paid_at',
         'operator_id', 'receipt_url', 'remark',
     ];
@@ -20,7 +20,7 @@ class FeePayment extends BaseModel
     protected $casts = [
         'bill_id'     => 'integer',
         'owner_id'    => 'integer',
-        'amount'      => 'decimal',
+        'amount'      => 'decimal:2',
         'paid_at'     => 'datetime',
         'operator_id' => 'integer',
         'created_at'  => 'datetime',

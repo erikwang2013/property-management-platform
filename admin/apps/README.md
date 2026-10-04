@@ -71,7 +71,7 @@ React / Angular 两版是**重新设计**的实现，不是 Flutter 版的移植
 | 404 页 | 小筑全身像 + 返回首页按钮 |
 | 加载态 | 全屏 Loading 用小筑图标标记替代默认转圈（可选，不阻塞） |
 
-> 接线点现覆盖全仓（v1.6.0）：两端 Flutter（登录页全身像 / 侧栏与首页标记 / 共享空态组件 `PetEmpty` / 壳层 launcher·启动图）、两端 HarmonyOS（`app_icon` / `start_icon` / 登录 logo / `EmptyView`）、两个后端（`public/favicon.ico` 多尺寸）、React / Angular 空态补点。**派生位图 57 件统一由 `scripts/gen-pet-icons.sh` 从 `docs/images/favicon.svg` 生成**（tile / full / maskable 三变体，可重复执行、逐字节可复现），改真源后重跑脚本即可；`.svg` 副本 8 处需手工同步。
+> 接线点现覆盖全仓（v1.6.0）：两端 Flutter（登录页全身像 / 侧栏与首页标记 / 共享空态组件 `PetEmpty` / 壳层 launcher·启动图）、两端 HarmonyOS（`app_icon` / `start_icon` / 登录 logo / `EmptyView`）、两个后端（`public/favicon.ico` 多尺寸）、React / Angular 空态补点。**派生位图 68 件统一由 `scripts/gen-pet-icons.sh` 从 `docs/images/favicon.svg` 生成**（tile / full / maskable 三变体，可重复执行、逐字节可复现），改真源后重跑脚本即可；`.svg` 副本 8 处需手工同步。
 
 品牌名：**物业管理平台**（浏览器标题：`<当前页> · 物业管理平台`）。
 

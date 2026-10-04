@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>安装向导 — 物业管理系统</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="安装向导 — 物业管理系统 · 步骤 3/3 确认安装">
+<meta property="og:description" content="确认并执行安装：写入数据库结构与初始权限数据。">
+<meta property="og:image" content="/og_card.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#f0f2f5; color:#333; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -83,6 +87,9 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     <input type="hidden" name="db_password" value="<?= htmlspecialchars($dbConfig['password']) ?>">
     <input type="hidden" name="admin_username" value="<?= htmlspecialchars($adminConfig['admin_username']) ?>">
     <input type="hidden" name="admin_password" value="<?= htmlspecialchars($adminConfig['admin_password']) ?>">
+    <!-- 确认密码要随表单回传：控制器读 admin_password_confirm 做一致性校验（InstallController.php:89），
+         step2 已校验过一次，step3 提交时缺此字段会被判「两次输入的密码不一致」，安装永远走不完 -->
+    <input type="hidden" name="admin_password_confirm" value="<?= htmlspecialchars($adminConfig['admin_password']) ?>">
     <button type="submit" class="btn btn-primary">确认安装</button>
   </form>
 

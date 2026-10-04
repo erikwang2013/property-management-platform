@@ -24,7 +24,7 @@ class ParkingSpaceListPage extends GetView<ParkingSpaceController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.spaces.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('车位编号')), DataColumn(label: Text('类型')),

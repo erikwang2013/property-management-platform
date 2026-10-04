@@ -31,7 +31,7 @@ class ActivitySignupController extends BaseController
         $query = ActivitySignup::query();
 
         if (!empty($activityId)) {
-            $query->where('activity_id', (int) $activityId);
+            $query->where('activity_id', $this->decodeId($activityId));
         }
         if ($signupStatus !== null && $signupStatus !== '') {
             $query->where('signup_status', (int) $signupStatus);

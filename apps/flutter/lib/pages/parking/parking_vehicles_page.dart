@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class ParkingVehiclesPage extends StatefulWidget {
   const ParkingVehiclesPage({super.key});
@@ -22,8 +23,8 @@ class _ParkingVehiclesPageState extends State<ParkingVehiclesPage> {
     try {
       final api = Get.find<ApiService>();
       final r = await api.dio.get(ApiConfig.parkingVehicles);
-      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data'] ?? []));
-    } catch (_) {} finally { setState(() => _loading = false); }
+      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data']?['data'] ?? []));
+    } catch (e) { debugPrint('[parking_vehicles_page] $e'); } finally { setState(() => _loading = false); }
   }
 
   @override
@@ -31,7 +32,7 @@ class _ParkingVehiclesPageState extends State<ParkingVehiclesPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('我的车辆')),
       body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? PetLoading()
         : ListView(padding: const EdgeInsets.all(16), children: _items.map((v) => Card(
           child: ListTile(leading: const Icon(Icons.directions_car), title: Text(v['plate_number'] ?? ''), subtitle: Text('车位: ${v['space_number'] ?? '-'}'), trailing: const Icon(Icons.chevron_right)),
         )).toList()),

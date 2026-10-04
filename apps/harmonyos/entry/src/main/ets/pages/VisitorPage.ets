@@ -4,6 +4,7 @@
 
 import { ApiService } from '../services/ApiService';
 import { Visitor } from '../model/Models';
+import { EmptyView } from '../common/Components';
 
 @Entry
 @Component
@@ -27,10 +28,7 @@ struct VisitorPage {
   async loadVisitors(): Promise<void> {
     this.loading = true;
     try {
-      const resp = await this.api.get('/service/visitors?page=1&per_page=50') as Record<string, Object>;
-      if (resp['code'] === 0) {
-        this.visitors = (resp['data'] as Visitor[]) || [];
-      }
+      this.visitors = await this.api.getList<Visitor>('/service/visitors?page=1&per_page=50');
     } catch (e) {}
     this.loading = false;
   }
@@ -120,6 +118,8 @@ struct VisitorPage {
       if (this.loading) {
         Column() { LoadingProgress().width(40).height(40) }
         .width('100%').layoutWeight(1).justifyContent(FlexAlign.Center)
+      } else if (this.visitors.length === 0) {
+        EmptyView({ message: '暂无访客预约' })
       } else {
         List() {
           ForEach(this.visitors, (v: Visitor) => {

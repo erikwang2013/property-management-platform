@@ -8,7 +8,7 @@ namespace app\model;
 class PatrolRecord extends BaseModel
 {
     protected $table = 'management_patrol_record';
-    protected $fillable = ['patrol_id', 'staff_id', 'started_at', 'ended_at', 'duration', 'checkpoints_done', 'abnormal_note'];
+    protected $fillable = ['id', 'patrol_id', 'staff_id', 'started_at', 'ended_at', 'duration', 'checkpoints_done', 'abnormal_note'];
     protected $casts = [
         'duration' => 'integer',
         'started_at' => 'datetime', 'ended_at' => 'datetime',

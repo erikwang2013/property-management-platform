@@ -12,7 +12,7 @@ class SlaRule extends BaseModel
     protected $table = 'management_sla_rule';
 
     protected $fillable = [
-        'name', 'category', 'urgency', 'response_minutes', 'resolve_minutes',
+        'id', 'name', 'category', 'urgency', 'response_minutes', 'resolve_minutes',
         'escalate_to_role', 'escalate_minutes', 'penalty_amount', 'status',
     ];
 

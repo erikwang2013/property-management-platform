@@ -17,5 +17,7 @@
  */
 
 return [
-    '' => support\exception\Handler::class,
+    // 自定义全局处理器：仅追加「记录不存在 → 404」一处映射（见 app\exception\Handler），
+    // 其余异常（含调试态 JSON/traces 渲染）行为与默认 support\exception\Handler 完全一致。
+    '' => app\exception\Handler::class,
 ];

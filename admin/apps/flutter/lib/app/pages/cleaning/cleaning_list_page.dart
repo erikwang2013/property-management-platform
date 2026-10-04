@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'cleaning_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class CleaningAreaListPage extends GetView<CleaningAreaController> {
   const CleaningAreaListPage({super.key});
@@ -21,7 +22,7 @@ class CleaningAreaListPage extends GetView<CleaningAreaController> {
       ]),
       const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         return DataTable(columns: const [DataColumn(label:Text('区域名称')),DataColumn(label:Text('负责人')),DataColumn(label:Text('频次')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows: c.areas.map((a){final id=a['id'].toString();return DataRow(cells:[
             DataCell(Text(a['name']??'')),DataCell(Text(a['cleaner_name']??'-')),DataCell(Text(a['frequency']??'-')),DataCell(StatusChip(status:a['status']as int?)),
@@ -50,7 +51,7 @@ class CleaningRecordListPage extends GetView<CleaningRecordController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text('打扫记录', style: TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         return DataTable(columns: const [DataColumn(label:Text('区域')),DataColumn(label:Text('打扫人')),DataColumn(label:Text('时间')),DataColumn(label:Text('状态'))],
           rows: c.records.map((r)=>DataRow(cells:[DataCell(Text(r['area_name']??'-')),DataCell(Text(r['cleaner_name']??'-')),DataCell(Text(r['cleaned_at']??'-')),DataCell(Text(r['status']==1?'已完成':'未完成'))])).toList());
       })),

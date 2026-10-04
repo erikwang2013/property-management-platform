@@ -12,7 +12,7 @@ class Notification extends BaseModel
     protected $table = 'management_notification';
 
     protected $fillable = [
-        'user_id', 'user_type', 'template_id', 'title', 'content',
+        'id', 'user_id', 'user_type', 'template_id', 'title', 'content',
         'type', 'channel', 'is_read', 'read_at', 'ref_type', 'ref_id',
     ];
 

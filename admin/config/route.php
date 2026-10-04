@@ -45,26 +45,49 @@ Route::get('/api/docs', [app\admin\controller\DocsController::class, 'index']);
 // 管理端路由
 // ============================================================
 Route::group('/admin', function () {
+    // 资源路由本地包装：webman v2 的 Route::resource 把详情/更新路径写死成 {id}，
+    // 而控制器形参是 $hashid（框架按参数名注入路由变量，见 App::getRouteCallback 的
+    // array_merge($request->all(), $args)），对不上就抛 MissingInputException → 500。
+    // 这里按同样的注册顺序展开，只把 {id} 换成 {hashid}；控制器无需改动。
+    $resource = static function (string $name, string $controller): void {
+        $name = trim($name, '/'); // 与 vendor Route::resource 一致：调用方传 '/repair'，需去掉前导斜杠，否则会拼出 /admin//repair
+        if (method_exists($controller, 'index')) {
+            Route::get("/$name", [$controller, 'index']);
+        }
+        if (method_exists($controller, 'store')) {
+            Route::post("/$name", [$controller, 'store']);
+        }
+        if (method_exists($controller, 'show')) {
+            Route::get("/$name/{hashid}", [$controller, 'show']);
+        }
+        if (method_exists($controller, 'update')) {
+            Route::put("/$name/{hashid}", [$controller, 'update']);
+        }
+        if (method_exists($controller, 'destroy')) {
+            Route::delete("/$name/{hashid}", [$controller, 'destroy']);
+        }
+    };
+
     // 仪表盘
     Route::get('/dashboard', [app\admin\controller\DashboardController::class, 'index']);
     Route::get('/dashboard/property', [app\admin\controller\DashboardController::class, 'propertyStats']);
 
     // 用户管理
-    Route::resource('/user', app\admin\controller\UserController::class);
+    $resource('/user', app\admin\controller\UserController::class);
     Route::post('/user/batch/destroy', [app\admin\controller\UserController::class, 'batchDestroy']);
     Route::post('/user/batch/status', [app\admin\controller\UserController::class, 'batchStatus']);
 
     // 角色管理
-    Route::resource('/role', app\admin\controller\RoleController::class);
+    $resource('/role', app\admin\controller\RoleController::class);
 
     // 权限管理
-    Route::resource('/permission', app\admin\controller\PermissionController::class);
+    $resource('/permission', app\admin\controller\PermissionController::class);
 
     // 系统配置
     Route::get('/config', [app\admin\controller\ConfigController::class, 'index']);
     Route::post('/config', [app\admin\controller\ConfigController::class, 'store']);
-    Route::put('/config/{id}', [app\admin\controller\ConfigController::class, 'update']);
-    Route::delete('/config/{id}', [app\admin\controller\ConfigController::class, 'destroy']);
+    Route::put('/config/{hashid}', [app\admin\controller\ConfigController::class, 'update']);
+    Route::delete('/config/{hashid}', [app\admin\controller\ConfigController::class, 'destroy']);
 
     // 操作日志
     Route::get('/log', [app\admin\controller\LogController::class, 'index']);
@@ -96,81 +119,82 @@ Route::group('/admin', function () {
     // 物业管理 — 第1批核心业务
     // ============================================================
     // 小区管理
-    Route::resource('/community', app\admin\controller\CommunityController::class);
+    $resource('/community', app\admin\controller\CommunityController::class);
     // 楼栋管理
-    Route::resource('/building', app\admin\controller\BuildingController::class);
+    $resource('/building', app\admin\controller\BuildingController::class);
     // 单元管理
-    Route::resource('/unit', app\admin\controller\UnitController::class);
+    $resource('/unit', app\admin\controller\UnitController::class);
     // 户型管理
-    Route::resource('/room-type', app\admin\controller\RoomTypeController::class);
+    $resource('/room-type', app\admin\controller\RoomTypeController::class);
     // 房产管理（静态路由必须先于 resource 注册，否则被变量路由遮蔽）
     Route::get('/room/tree', [app\admin\controller\RoomController::class, 'tree']);
-    Route::resource('/room', app\admin\controller\RoomController::class);
+    $resource('/room', app\admin\controller\RoomController::class);
     // 业主管理
-    Route::resource('/owner', app\admin\controller\OwnerController::class);
+    $resource('/owner', app\admin\controller\OwnerController::class);
     Route::post('/owner/batch/import', [app\admin\controller\OwnerController::class, 'batchImport']);
     Route::post('/owner/batch/destroy', [app\admin\controller\OwnerController::class, 'batchDestroy']);
     // 租户管理
-    Route::resource('/tenant', app\admin\controller\TenantController::class);
+    $resource('/tenant', app\admin\controller\TenantController::class);
     // 费用类型
-    Route::resource('/fee-type', app\admin\controller\FeeTypeController::class);
+    $resource('/fee-type', app\admin\controller\FeeTypeController::class);
     // 账单管理
-    Route::resource('/fee-bill', app\admin\controller\FeeBillController::class);
+    $resource('/fee-bill', app\admin\controller\FeeBillController::class);
     Route::post('/fee-bill/batch/generate', [app\admin\controller\FeeBillController::class, 'batchGenerate']);
     // 缴费记录
     Route::get('/fee-payment', [app\admin\controller\FeePaymentController::class, 'index']);
     Route::post('/fee-payment/offline', [app\admin\controller\FeePaymentController::class, 'offlinePay']);
     // 报修管理
-    Route::resource('/repair', app\admin\controller\RepairController::class);
-    Route::put('/repair/{id}/assign', [app\admin\controller\RepairController::class, 'assign']);
-    Route::post('/repair/{id}/progress', [app\admin\controller\RepairController::class, 'progress']);
+    $resource('/repair', app\admin\controller\RepairController::class);
+    // 自定义动作的路由变量同样必须叫 {hashid}（与控制器形参一致，见上方 $resource 说明）
+    Route::put('/repair/{hashid}/assign', [app\admin\controller\RepairController::class, 'assign']);
+    Route::post('/repair/{hashid}/progress', [app\admin\controller\RepairController::class, 'progress']);
     // 公告管理
-    Route::resource('/announcement', app\admin\controller\AnnouncementController::class);
+    $resource('/announcement', app\admin\controller\AnnouncementController::class);
 
     // ============================================================
     // 停车/设备/投诉/访客/合同/收支
     // ============================================================
     // 停车管理
-    Route::resource('/parking-space', app\admin\controller\ParkingSpaceController::class);
-    Route::resource('/parking-vehicle', app\admin\controller\ParkingVehicleController::class);
+    $resource('/parking-space', app\admin\controller\ParkingSpaceController::class);
+    $resource('/parking-vehicle', app\admin\controller\ParkingVehicleController::class);
     Route::get('/parking-record', [app\admin\controller\ParkingRecordController::class, 'index']);
     // 设备管理
-    Route::resource('/equipment', app\admin\controller\EquipmentController::class);
-    Route::resource('/equipment-maintenance', app\admin\controller\EquipmentMaintenanceController::class);
+    $resource('/equipment', app\admin\controller\EquipmentController::class);
+    $resource('/equipment-maintenance', app\admin\controller\EquipmentMaintenanceController::class);
     // 投诉管理
     Route::get('/complaint', [app\admin\controller\ComplaintController::class, 'index']);
-    Route::get('/complaint/{id}', [app\admin\controller\ComplaintController::class, 'show']);
-    Route::put('/complaint/{id}/handle', [app\admin\controller\ComplaintController::class, 'handle']);
-    Route::post('/complaint/{id}/visit', [app\admin\controller\ComplaintController::class, 'visit']);
+    Route::get('/complaint/{hashid}', [app\admin\controller\ComplaintController::class, 'show']);
+    Route::put('/complaint/{hashid}/handle', [app\admin\controller\ComplaintController::class, 'handle']);
+    Route::post('/complaint/{hashid}/visit', [app\admin\controller\ComplaintController::class, 'visit']);
     // 访客管理
     Route::get('/visitor', [app\admin\controller\VisitorController::class, 'index']);
-    Route::put('/visitor/{id}/approve', [app\admin\controller\VisitorController::class, 'approve']);
+    Route::put('/visitor/{hashid}/approve', [app\admin\controller\VisitorController::class, 'approve']);
     // 合同管理
-    Route::resource('/contract', app\admin\controller\ContractController::class);
+    $resource('/contract', app\admin\controller\ContractController::class);
     // 财务管理
     Route::get('/finance/statistics', [app\admin\controller\FinanceController::class, 'statistics']);
-    Route::resource('/finance-income', app\admin\controller\FinanceController::class);
-    Route::resource('/finance-expense', app\admin\controller\FinanceController::class);
+    $resource('/finance-income', app\admin\controller\FinanceController::class);
+    $resource('/finance-expense', app\admin\controller\FinanceController::class);
 
     // ============================================================
     // 高级模块 + 扩展功能 + 审批/通知/投票/支付
     // ============================================================
-    Route::resource('/security-patrol', app\admin\controller\SecurityPatrolController::class);
+    $resource('/security-patrol', app\admin\controller\SecurityPatrolController::class);
     Route::get('/patrol-record', [app\admin\controller\PatrolRecordController::class, 'index']);
     Route::post('/patrol-record', [app\admin\controller\PatrolRecordController::class, 'store']);
-    Route::resource('/cleaning-area', app\admin\controller\CleaningAreaController::class);
+    $resource('/cleaning-area', app\admin\controller\CleaningAreaController::class);
     Route::get('/cleaning-record', [app\admin\controller\CleaningRecordController::class, 'index']);
     Route::post('/cleaning-record', [app\admin\controller\CleaningRecordController::class, 'store']);
-    Route::resource('/green-area', app\admin\controller\GreenAreaController::class);
+    $resource('/green-area', app\admin\controller\GreenAreaController::class);
     Route::get('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'index']);
     Route::post('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'store']);
-    Route::resource('/activity', app\admin\controller\ActivityController::class);
+    $resource('/activity', app\admin\controller\ActivityController::class);
     Route::get('/activity-signup', [app\admin\controller\ActivitySignupController::class, 'index']);
-    Route::put('/activity-signup/{id}/checkin', [app\admin\controller\ActivitySignupController::class, 'checkin']);
-    Route::resource('/energy-meter', app\admin\controller\EnergyMeterController::class);
+    Route::put('/activity-signup/{hashid}/checkin', [app\admin\controller\ActivitySignupController::class, 'checkin']);
+    $resource('/energy-meter', app\admin\controller\EnergyMeterController::class);
     Route::get('/energy-record', [app\admin\controller\EnergyRecordController::class, 'index']);
     Route::post('/energy-record', [app\admin\controller\EnergyRecordController::class, 'store']);
-    Route::resource('/staff', app\admin\controller\StaffController::class);
+    $resource('/staff', app\admin\controller\StaffController::class);
     Route::post('/staff/batch/status', [app\admin\controller\StaffController::class, 'batchStatus']);
 
     // ============================================================
@@ -190,14 +214,14 @@ Route::group('/admin', function () {
     Route::get('/collection-record', [app\admin\controller\CollectionController::class, 'records']);
     Route::post('/collection/run', [app\admin\controller\CollectionController::class, 'run']);
     // 巡检管理
-    Route::resource('/inspection-task', app\admin\controller\InspectionController::class);
-    Route::get('/inspection-task/{hashid}/checkpoints', [app\admin\controller\InspectionController::class, 'checkpoints']);
+    $resource('/inspection-task', app\admin\controller\InspectionController::class);
+    Route::get('/inspection-task/{taskHashid}/checkpoints', [app\admin\controller\InspectionController::class, 'checkpoints']);
     Route::put('/inspection-task/{hashid}/start', [app\admin\controller\InspectionController::class, 'startTask']);
     Route::put('/inspection-task/{hashid}/complete', [app\admin\controller\InspectionController::class, 'completeTask']);
-    Route::put('/inspection-checkpoint/{hashid}/checkin', [app\admin\controller\InspectionController::class, 'checkin']);
+    Route::put('/inspection-checkpoint/{checkpointHashid}/checkin', [app\admin\controller\InspectionController::class, 'checkin']);
     // 社区商城
-    Route::resource('/mall-category', app\admin\controller\MallController::class);
-    Route::resource('/mall-product', app\admin\controller\MallController::class);
+    $resource('/mall-category', app\admin\controller\MallController::class);
+    $resource('/mall-product', app\admin\controller\MallController::class);
     Route::get('/mall-order', [app\admin\controller\MallController::class, 'orders']);
     Route::get('/mall-order/{hashid}', [app\admin\controller\MallController::class, 'orderShow']);
     Route::put('/mall-order/{hashid}/ship', [app\admin\controller\MallController::class, 'ship']);
@@ -207,11 +231,11 @@ Route::group('/admin', function () {
     Route::put('/face/{hashid}/verify', [app\admin\controller\FaceController::class, 'verify']);
     Route::put('/face/{hashid}/reject', [app\admin\controller\FaceController::class, 'reject']);
     // 集团管理
-    Route::resource('/group', app\admin\controller\GroupController::class);
-    Route::get('/group/{hashid}/communities', [app\admin\controller\GroupController::class, 'communities']);
-    Route::post('/group/{hashid}/community', [app\admin\controller\GroupController::class, 'addCommunity']);
-    Route::delete('/group/{hashid}/community/{communityHashid}', [app\admin\controller\GroupController::class, 'removeCommunity']);
-    Route::get('/group/{hashid}/summary', [app\admin\controller\GroupController::class, 'summary']);
+    $resource('/group', app\admin\controller\GroupController::class);
+    Route::get('/group/{groupHashid}/communities', [app\admin\controller\GroupController::class, 'communities']);
+    Route::post('/group/{groupHashid}/community', [app\admin\controller\GroupController::class, 'addCommunity']);
+    Route::delete('/group/{groupHashid}/community/{communityHashid}', [app\admin\controller\GroupController::class, 'removeCommunity']);
+    Route::get('/group/{groupHashid}/summary', [app\admin\controller\GroupController::class, 'summary']);
     // 智能问答
     Route::get('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categories']);
     Route::post('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categoryStore']);

@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/status_chip.dart';
 import 'notification_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class NotificationListPage extends GetView<NotificationController> {
   const NotificationListPage({super.key});
@@ -19,7 +20,7 @@ class NotificationListPage extends GetView<NotificationController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('发送通知')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('标题')),DataColumn(label:Text('接收人')),DataColumn(label:Text('类型')),DataColumn(label:Text('状态')),DataColumn(label:Text('发送时间'))],
           rows:c.notifications.map((n)=>DataRow(cells:[DataCell(Text(n['title']??'')),DataCell(Text(n['recipient']??'-')),DataCell(Text(n['type']??'-')),DataCell(StatusChip(status:n['status']as int?,labels:const{0:'未发送',1:'已发送',2:'已读'})),DataCell(Text(n['sent_at']??n['created_at']??'-'))])).toList());
       })),

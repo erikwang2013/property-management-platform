@@ -4,7 +4,7 @@
 
 ## 一、现状审计结论
 
-**功能面：与声明一致。** 22 业务模块 + 12 扩展功能全部完成，68 张表 / 178 API，admin 58 控制器 / 127 路由、service 19 控制器 / 57 路由，Flutter Web 管理后台 42 页 + 业主端 13 页，HarmonyOS 5 页。docs/ 14 份文档 + 35 张 SVG 均有代码支撑，未发现"声明未实现"的功能。
+**功能面：与声明一致。** 22 业务模块 + 12 扩展功能全部完成，67 张表 / 178 API，admin 58 控制器 / 127 路由、service 19 控制器 / 57 路由，Flutter Web 管理后台 42 页 + 业主端 13 页，HarmonyOS 5 页。docs/ 14 份文档 + 35 张 SVG 均有代码支撑，未发现"声明未实现"的功能。
 
 **测试：全绿（截至 2026-08-17）。** admin 193 tests / 452 assertions、service 101 tests / 385 assertions（7 skip 为环境依赖）、Flutter widget 测试 9 例（登录/首页/账单页）。
 

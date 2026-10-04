@@ -154,7 +154,7 @@ class KnowledgeController extends BaseController
 
         $query = KnowledgeBase::where('category_id', '>', 0);
         if (!empty($categoryId)) {
-            $query->where('category_id', (int) $categoryId);
+            $query->where('category_id', $this->decodeId($categoryId));
         }
         if (!empty($keyword)) {
             $query->where(function ($q) use ($keyword) {
@@ -169,7 +169,7 @@ class KnowledgeController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'            => $this->encodeId($item->id),
-                    'category_id'   => $item->category_id,
+                    'category_id'   => $item->category_id ? $this->encodeId($item->category_id) : '',
                     'question'      => $item->question,
                     'answer'        => $item->answer,
                     'keywords'      => $item->keywords,
@@ -284,7 +284,7 @@ class KnowledgeController extends BaseController
 
         $query = ChatRecord::query();
         if (!empty($userId)) {
-            $query->where('user_id', (int) $userId);
+            $query->where('user_id', $this->decodeId($userId));
         }
         if ($userType !== null && $userType !== '') {
             $query->where('user_type', (int) $userType);
@@ -295,12 +295,12 @@ class KnowledgeController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'            => $this->encodeId($item->id),
-                    'user_id'       => $item->user_id,
+                    'user_id'       => $item->user_id ? $this->encodeId($item->user_id) : '',
                     'user_type'     => $item->user_type,
                     'question'      => $item->question,
                     'answer'        => $item->answer,
                     'match_type'    => $item->match_type,
-                    'matched_kb_id' => $item->matched_kb_id,
+                    'matched_kb_id' => $item->matched_kb_id ? $this->encodeId($item->matched_kb_id) : '',
                     'is_helpful'    => $item->is_helpful,
                     'created_at'    => $item->created_at ? $item->created_at->format('Y-m-d H:i') : '',
                 ];

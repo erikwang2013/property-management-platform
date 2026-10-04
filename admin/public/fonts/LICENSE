@@ -1,0 +1,16 @@
+pet-pdf-cjk.ttf — PDF 导出内嵌中文字体（文泉驿微米黑 子集）
+
+字体名   WenQuanYi Micro Hei / 文泉驿微米黑（Version 0.2.0-beta）
+许可     Apache License, Version 2.0
+         http://www.apache.org/licenses/LICENSE-2.0
+版权     Digitized data copyright (c) 2007, Google Corporation.
+         Copyright (c) 2008-2009 WenQuanYi Board of Trustees (http://wenq.org/)
+         and Qianqian Fang
+来源     文泉驿微米黑.ttf（上游 https://wenq.org/；本机取自
+         /home/erik/.local/share/fonts/文泉驿微米黑/文泉驿微米黑.ttf）
+子集     字符范围 = GB2312 全集（6763 汉字）+ ASCII 可打印 + 常用中文标点与业务符号
+         （（）·—￥㎡ 等）；由 pyftsubset（fontTools 4.63）生成：
+         --layout-features='' --no-hinting --name-IDs='*'
+         原字体的版权与许可记录（name 表 ID 0/13/14）随子集保留。
+
+用途     仅供本系统 PDF 导出渲染中文内嵌使用。

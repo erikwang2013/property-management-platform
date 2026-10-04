@@ -11,7 +11,7 @@ class Building extends BaseModel
 {
     protected $table = 'management_building';
     protected $fillable = [
-        'community_id', 'name', 'building_type',
+        'id', 'community_id', 'name', 'building_type',
         'floor_count', 'unit_count', 'elevator_count',
         'build_year', 'structure_type', 'sort',
     ];

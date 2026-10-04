@@ -73,26 +73,62 @@ parameters:
 			path: app/api/v1/controller/AnnouncementController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$locked_until\.$#'
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$gender\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/api/v1/controller/AuthController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$login_failures\.$#'
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 2
 			path: app/api/v1/controller/AuthController.php
 
 		-
-			message: '#^Call to an undefined method Erikwang2013\\Jwt\\JWT\:\:create\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$last_login_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$last_login_ip\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$locked_until\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$login_failures\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$password\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php
+
+		-
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$phone\.$#'
+			identifier: property.notFound
 			count: 2
 			path: app/api/v1/controller/AuthController.php
 
 		-
-			message: '#^Call to an undefined method Erikwang2013\\Jwt\\JWT\:\:createRefresh\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Access to an undefined property app\\model\\Owner\:\:\$status\.$#'
+			identifier: property.notFound
 			count: 1
 			path: app/api/v1/controller/AuthController.php
 
@@ -103,9 +139,9 @@ parameters:
 			path: app/api/v1/controller/AuthController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Owner\:\:where\(\)\.$#'
+			message: '#^Call to an undefined static method app\\model\\Owner\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 1
 			path: app/api/v1/controller/AuthController.php
 
 		-

@@ -31,7 +31,7 @@ class EquipmentMaintenanceController extends BaseController
         $query = EquipmentMaintenance::with('equipment');
 
         if (!empty($equipmentId)) {
-            $query->where('equipment_id', (int) $equipmentId);
+            $query->where('equipment_id', $this->decodeId($equipmentId));
         }
 
         $list = $query->orderBy('created_at', 'desc')
@@ -103,6 +103,9 @@ class EquipmentMaintenanceController extends BaseController
             return $this->fail('请选择设备', 422);
         }
 
+        // 设备/维修人员收 hashid，入库前解码（读响应用 encodeId 返回，写路径必须对称）
+        $data = $this->decodeIds($data, ['equipment_id', 'staff_id']);
+
         $data['id'] = SnowflakeService::generate();
 
         EquipmentMaintenance::create($data);
@@ -122,11 +125,11 @@ class EquipmentMaintenanceController extends BaseController
             return $this->fail('维保记录不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'equipment_id', 'maintenance_type', 'description',
             'staff_id', 'cost', 'company',
             'started_at', 'completed_at', 'result', 'next_at',
-        ]));
+        ]), ['equipment_id', 'staff_id']));
         $item->save();
 
         return $this->success([], '更新成功');

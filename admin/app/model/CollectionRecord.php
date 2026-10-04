@@ -12,7 +12,7 @@ class CollectionRecord extends BaseModel
     protected $table = 'management_collection_record';
 
     protected $fillable = [
-        'bill_id', 'strategy_id', 'action', 'executed_by', 'remark', 'executed_at',
+        'id', 'bill_id', 'strategy_id', 'action', 'executed_by', 'remark', 'executed_at',
     ];
 
     protected $casts = [

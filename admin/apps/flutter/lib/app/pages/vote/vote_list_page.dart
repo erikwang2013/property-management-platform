@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'vote_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class VoteListPage extends GetView<VoteController> {
   const VoteListPage({super.key});
@@ -20,7 +21,7 @@ class VoteListPage extends GetView<VoteController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('发起投票')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('投票标题')),DataColumn(label:Text('参与/总人数')),DataColumn(label:Text('状态')),DataColumn(label:Text('截止时间')),DataColumn(label:Text('操作'))],
           rows:c.votes.map((v){final id=v['id'].toString();return DataRow(cells:[DataCell(Text(v['title']??'')),DataCell(Text('${v['voted_count']??0}/${v['total_count']??0}')),DataCell(StatusChip(status:v['status']as int?,labels:const{0:'未开始',1:'进行中',2:'已结束'})),DataCell(Text(v['end_time']??'-')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:v)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:v['title']??'');if(p!=null)c.deleteItem(id,p);})]))]);
         }).toList());

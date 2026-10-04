@@ -21,10 +21,7 @@ struct FeeBillsPage {
   async loadBills(): Promise<void> {
     this.loading = true;
     try {
-      const resp = await this.api.get('/service/fees/bills?page=1&per_page=50') as Record<string, Object>;
-      if (resp['code'] === 0) {
-        this.bills = (resp['data'] as FeeBill[]) || [];
-      }
+      this.bills = await this.api.getList<FeeBill>('/service/fees/bills?page=1&per_page=50');
     } catch (e) {
       console.error('Failed to load bills:', JSON.stringify(e));
     }

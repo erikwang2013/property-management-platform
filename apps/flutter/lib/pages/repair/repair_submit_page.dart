@@ -40,10 +40,11 @@ class _RepairSubmitPageState extends State<RepairSubmitPage> {
       final api = Get.find<ApiService>();
       final response = await api.dio.get(ApiConfig.rooms);
       setState(() {
-        _rooms = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
+        _rooms = List<Map<String, dynamic>>.from(response.data['data']?['data'] ?? []);
       });
-    } catch (_) {
+    } catch (e) {
       // Use empty list
+      debugPrint('[repair_submit_page] $e');
     } finally {
       setState(() => _loadingRooms = false);
     }

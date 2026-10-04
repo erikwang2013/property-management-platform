@@ -66,7 +66,7 @@ class CommunityListPage extends GetView<CommunityController> {
         const SizedBox(height: 12),
         Expanded(
           child: Obx(() {
-            if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+            if (ctrl.isLoading.value) return PetLoading();
             if (ctrl.communities.isEmpty) return const PetEmpty();
 
             return SingleChildScrollView(

@@ -4,7 +4,7 @@
 
 ## I. Conclusion de l'audit de l'état actuel
 
-**Fonctionnalités : conformes aux déclarations.** Les 22 modules métier + 12 fonctions étendues sont tous terminés, 68 tables / 178 API, admin 58 contrôleurs / 127 routes, service 19 contrôleurs / 57 routes, panneau d'administration Flutter Web 42 pages + portail propriétaires 13 pages, HarmonyOS 5 pages. Les 14 documents de docs/ + 35 SVG sont tous étayés par le code, aucune fonctionnalité « déclarée mais non implémentée » constatée.
+**Fonctionnalités : conformes aux déclarations.** Les 22 modules métier + 12 fonctions étendues sont tous terminés, 67 tables / 178 API, admin 58 contrôleurs / 127 routes, service 19 contrôleurs / 57 routes, panneau d'administration Flutter Web 42 pages + portail propriétaires 13 pages, HarmonyOS 5 pages. Les 14 documents de docs/ + 35 SVG sont tous étayés par le code, aucune fonctionnalité « déclarée mais non implémentée » constatée.
 
 **Tests : tout au vert (au 2026-08-17).** admin 193 tests / 452 assertions, service 101 tests / 385 assertions (7 skips liés à l'environnement), tests widget Flutter 9 cas (connexion/accueil/factures).
 

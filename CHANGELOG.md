@@ -1,5 +1,47 @@
 # Changelog
 
+## v1.7.0 (2026-10-04)
+
+> **注意（行为变更）**：① admin 的 hashids 盐由「空串（可离线反解）」改为 `.env` 注入 —— **所有旧 hashid 串作废**，请从列表接口重新拉取；跨端（admin↔service）不要互传 hashid，传原始 BIGINT。② 非法 hashid 由 HTTP 500（响应体曾泄漏异常类名与栈帧绝对路径）改为 HTTP 200 + `code 422「无效的资源 ID」`；`findOrFail` 未命中由 500 改为 404。③ 权限动作端点 slug 判定改为「先剥 `{...}` 参数段再前缀回退」，非超管角色若原依赖短前缀兜底需核对其授权。
+
+### 新增
+- **宠物「小筑」扩展整合**：Android **adaptive icon**（`mipmap-anydpi-v26` + 5 档前景，圆裁出瓦片中心的小筑）；**加载态品牌化** `PetLoading`（两端 75 处页面级转圈 → 小筑标记呼吸动画，5 处按钮内与 1 处图块内转圈刻意保留）；**og 分享卡** 1200×630（`docs/images/og_card.png`，两端 `web/og_card.png` + 后端 `public/og_card.png`），两端 Flutter `web/index.html` 与安装向导四页补 og/twitter meta；`scripts/gen-pet-icons.sh` 扩到 **68 件产物**（新增 adaptive 前景、og 卡、PDF 用 `pet_mark_128.png`，连跑两遍逐字节一致）
+- **PDF 导出改造（admin）**：页头小筑品牌位（table 布局 + base64 内嵌 128px 标记，资产缺失自动降级）+ **中文子集字体** `public/fonts/pet-pdf-cjk.ttf`（文泉驿微米黑 GB2312 子集 6763 字 + ASCII + 业务符号，1,260,352 B，Apache-2.0 附 LICENSE；`@font-face` normal+bold 双注册——dompdf 对同族 bold 不做回退；fontCache 从只读 vendor 移到 `runtime/dompdf/`）；dashboard 统计卡由 flex（dompdf 不支持）改等宽表格横排
+- **权限种子补齐**：`get.admin/report`、`post.admin/export/property-excel`、`post.admin/payment-order/create`、`post.admin/payment-order/reconcile`、`get.admin/profile` 共 5 条（此前这些端点在任何角色下 403）；`permission.slug` 加唯一索引 `uk_slug`
+- **两端 `InvalidResourceIdException`**：非法/空 hashid → 干净 422（继承 `InvalidArgumentException` 保持既有 catch 语义，零回归）
+- **CI**：actions 升级 `checkout@v7` / `setup-node@v7` / `pnpm/action-setup@v6` / `gitleaks-action@v3`（17 处纯版本号，breaking 逐条核过不命中本仓库；滚动 tag 的三项实测已 Node24 未动）
+- `docs/migrations/2026-10-04-install-sql-catchup.sql`：存量库补齐迁移（19 表 updated_at + 5 权限种子 + slug 唯一索引，slug 级幂等，`mysql --force`）
+
+### 修复
+- **webman 路由参数按名注入（P0，约 90+ 端点）**：控制器形参 `$hashid` 与 `Route::resource()` 展开的 `{id}` 不匹配 → `MissingInputException` → 全部详情/更新/删除 500。admin 改本地 `$resource` 包装（路径落 `{hashid}`，31 处）+ 7 处手写 `{id}` + 6 条同型隐蔽路由；修复前后路由注册表 282 条集合恒等；service 侧零不匹配（全量脚本核过）。14 条 curl 实证 + 真写穿透
+- **500 掩盖机制（6 个中间件）**：webman 异常处理器返回 `Webman\Http\Response`，被中间件 `: support\Response` 逐个 TypeError 重演，客户端与日志只见 TypeError。修复后真异常直达（日志计数对照：改前一个请求 3-4 条 ERROR、改后恰好 1 条真异常）
+- **`findOrFail()` 未捕获（12 处）**：新增全局 `app/exception/Handler.php`（`RecordsNotFoundException` 一族 → 404「资源不存在」），一条映射覆盖 Vote 9 / Notification 2 / Payment 1 及 firstOrFail/sole 同族
+- **admin hashids 空盐（安全）**：`config/hashids.php` 硬编码 `salt=''` 短路 `.env` —— 泄漏的 hashid 无密钥可离线反解。改为 `getenv('HASHIDS_SALT')` 注入；两端 `.env.example` 占位区分（`change-me-admin-hashids-salt` / `change-me-service-hashids-salt`）
+- **加密列等值查询恒 false**：`service` 业主登录（phone 为随机 IV 加密列，明文/密文等值查询都不可命中 → 真登录必败，且 JWT 用了不存在的 `create()/createRefresh()`）改 `encode()` + `findOwnerByPhone()` 游标解密比对；admin `OwnerController` 批量导入查重同因恒 false（可静默插重复号）→ 开跑前一次游标解密比对集合（含批内去重）。两端负例/正例 e2e 实证
+- **hashid 读写对称性**：筛选用 hashid 被 `(int)` 吞掉恒空（22 + 14 处过滤/写路径）→ `decodeId`/`BaseController::decodeIds()` 统一；8 个端点读响应外键补 `encodeId`（18 字段，0 保持空串语义）；契约守卫测试白名单 9 → 1（仅 JWT 内部 adminId）
+- **权限动作端点 403（14 个）**：种子按无参数逻辑路径写，而中间件回退只从右往左砍 → `put.admin/complaint/{hashid}/handle` 落在未种的短前缀。改「剥注册路由模式里的 `{...}` 段再回退」（`$request->route->getPath()`；运行时 path 无字面花括号，是原方案的空操作坑）；超管 14 条全通、构造非超管角色「该拒仍拒」×3、短前缀回退保留
+- **服务端 autoload 顺序（隐蔽）**：`webman-scout` 的 `config()` polyfill 排在框架 helpers 前（运行时读的是 `autoload_static.php`）→ `config('bootstrap')` 全空 → **56 个 DB 用例被静默 markTestSkipped**。新增 `scripts/fix-autoload-order.php` + composer `post-autoload-dump` 钩子 + Dockerfile `COPY scripts/`；修后跳过 56 → 0
+- **decimal 裸 cast（11 字段）**：`'decimal'` 无 scale → Brick\Math `toScale(null)` / `explode` 取不到 scale。按 install.sql 列定义逐字段改 `decimal:2`（admin 端本就全显式）；`/service/v1/rooms` 由 500 转 200，历史 skip 用例转绿
+- **owner 端列表解析少解一层**：service 分页线格式 `data.data`，两端只解到 `data` → `List.from(Map)` 抛错被空 catch 吞掉 → 五条核心路径**静默空列表**。HarmonyOS 6 处（新增 `getList<T>()` 统一解包 + EmptyView 空态）、Flutter owner 14 处（含 visitor 状态枚举按 DB 0-3 与 `expected_start` 字段修正；16 处静默 catch 改 `debugPrint` 可诊断；测试 stub 改真实形状 + 2 条非空列表用例含证伪验证）
+- **安装向导**：UI 确认页缺 `admin_password_confirm` 字段 → 「两次密码不一致」→ **向导无法从界面完成安装**（交付阻断）；重灌不幂等（1061/1062 等）→ 导入循环把 1050/1060/1061/1062 降级 skip + 汇总；Monitor 监听 `.env` 导致向导中途改写触发 reload、**worker 被 SIGKILL 留下半灌库** → 从 monitorDir 剔除 `.env`
+- **PDF 中文方框**（前述字体）；**测试基建**：MetricsControllerTest 两端状态感知化、ImportControllerTest 去「假定库里有 admin」的 fresh-库必红夹具、CircuitBreakerTest half_open 时序（整数秒粒度 20% 窗口，test 改 timeout=2）、ControllerValidationTest 夹具随 hashid 契约更新、service 安全配置断言改 require 真实配置文件、两端 phpstan baseline 同环境重生成（admin 613 条基线）
+
+### 变更
+- `.gitignore` 新增 HarmonyOS `entry/build/`；文档「68 表」口径修正为 **67**（PROJECT_PLAN 中/英/法 + admin/CLAUDE.md）；`docs/MOBILE_GAPS.md` 加 2026-10-04 更新注记；`scripts/backup.sh` 容器模式固定容器内 3306（原沿用宿主映射端口连不上）
+
+### 测试
+- **admin 271 用例 / 675 断言 / 0 失败**；**service 200 用例 / 847 断言 / 0 失败**（跳过 0；较 v1.5.1 时代 service 断言 +453、跳过 -1）
+- e2e（真库真接口）：分页两页零交集（admin+service）；`/admin/report` 200 真实汇总；派单 hashid 全链（列表 hashid+姓名、无效 422、有效落进度）；**业主真登录**（加密手机号建号 → 验证码 → token → /service/v1/home）；路由 14 条 curl + 真写穿透；14 条动作端点权限；向导全链路（159/161 语句、建号授超管、`.installed`）；PDF 冒烟 `pdffonts`/`pdftotext`/`pdftoppm` 目检
+- **fresh 库总复验**（`scripts/verify-fresh-db.sh`，幂等可重跑，退出码即结论）：全绿——fresh 库 5 项不变量（67 表 / `uk_slug` / 0 缺 `updated_at` / 5 条权限种子+超管授权）、向导全链路（字段集校验 → 导入 → 建号 → 真登录 → `/admin/report` 200 → 重装幂等）、派单与分页、业主真登录、`.installed` 终态口径；**参数路由补扫 49 条：403=0 / 5xx=0**（原 12 条 5xx 全部转干净 404）
+- 环境态（不入库，供后续会话）：本机 DB/Redis 首次可用（`pmp-mysql` 容器 + `ring-r4-redis`），验证脚本可重复执行并自动还原基准库
+- Flutter：admin analyze 0 / 1 例，owner analyze 0 / **11 例**（含非空列表新用例）；入口 `main.dart.js` md5 admin `c8ab243b…`、owner `9c4c6afd…`（Flutter web 整树不可复现，只认入口 md5）
+
+### 边界（如实）
+- HarmonyOS 无 DevEco：全部改动**未经编译**（照既有可编译模式静态核对）；iOS/macOS/Windows 打包未验证
+- PDF：GB2312 外生僻字/emoji 仍方框；首次导出 ~13s（字体解析）、之后 ~4.5s/次；卡片 ≥7 张折行
+- **后续项**：16 处读端裸外键（approval/payment 等有真消费页面，需逐页核消费后再改输出——其中 Approval/Payment「写收 hashid、读吐裸值」最刺眼）；HarmonyOS 访客取消（PUT/DELETE）与列表分页；熔断器冷却 1s 粒度（设计粒度，记录不改）；跨端 hashid 约束（只传 BIGINT）
+- 本机环境（不入库）：`pmp-mysql` 容器 3307 + `ring-r4-redis` 使本地 DB/Redis 首次可用（详见仓库记忆）
+
 ## v1.6.0 (2026-10-03)
 
 ### 新增

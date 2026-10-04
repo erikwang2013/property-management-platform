@@ -11,31 +11,46 @@ import 'helpers/mock_api.dart';
 void main() {
   setUp(() {
     resetMockRoutes();
+    // 真实分页器形状：{code,message,data:{current_page,per_page,total,data:[...]}}
     mockRoutes['/service/fees/bills'] = (options) {
       final status = options.queryParameters['status'];
       if (status == 'paid') {
         return {
-          'data': [
-            {
-              'bill_number': 'B2026002',
-              'fee_type': '物业费',
-              'amount': '200.00',
-              'paid_amount': '200.00',
-              'status': 'paid',
-            },
-          ],
+          'code': 0,
+          'message': 'success',
+          'data': {
+            'current_page': 1,
+            'per_page': 20,
+            'total': 1,
+            'data': [
+              {
+                'bill_number': 'B2026002',
+                'fee_type': '物业费',
+                'amount': '200.00',
+                'paid_amount': '200.00',
+                'status': 'paid',
+              },
+            ],
+          },
         };
       }
       return {
-        'data': [
-          {
-            'bill_number': 'B2026001',
-            'fee_type': '物业费',
-            'amount': '100.00',
-            'paid_amount': '0',
-            'status': 'unpaid',
-          },
-        ],
+        'code': 0,
+        'message': 'success',
+        'data': {
+          'current_page': 1,
+          'per_page': 20,
+          'total': 1,
+          'data': [
+            {
+              'bill_number': 'B2026001',
+              'fee_type': '物业费',
+              'amount': '100.00',
+              'paid_amount': '0',
+              'status': 'unpaid',
+            },
+          ],
+        },
       };
     };
   });
@@ -67,7 +82,11 @@ void main() {
   });
 
   testWidgets('无账单时展示空状态', (tester) async {
-    mockRoutes['/service/fees/bills'] = (_) => {'data': []};
+    mockRoutes['/service/fees/bills'] = (_) => {
+          'code': 0,
+          'message': 'success',
+          'data': {'current_page': 1, 'per_page': 20, 'total': 0, 'data': []},
+        };
     await openBills(tester);
 
     expect(find.text('暂无数据'), findsOneWidget);

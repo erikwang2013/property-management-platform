@@ -12,7 +12,7 @@ class FeeType extends BaseModel
     protected $table = 'management_fee_type';
 
     protected $fillable = [
-        'name', 'category', 'unit_price', 'unit_type',
+        'id', 'name', 'category', 'unit_price', 'unit_type',
         'cycle_type', 'is_required', 'sort',
     ];
 

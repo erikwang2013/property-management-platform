@@ -112,7 +112,8 @@ class PaymentController extends BaseController
     {
         $billId = $this->decodeId((string) $request->input('bill_id', ''));
         $channel = (string) $request->input('channel', '');
-        $userId = (int) $request->input('user_id', 0);
+        // 支付人 ID 收 hashid（与列表/详情响应一致）；空值仍走下面的 422，保持原语义
+        $userId = $request->input('user_id') ? $this->decodeId((string) $request->input('user_id')) : 0;
         $userType = (int) $request->input('user_type', 1);
         $subject = (string) $request->input('subject', '物业缴费');
 

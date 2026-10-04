@@ -147,19 +147,23 @@ class ComplaintControllerTest extends TestCase
         $this->assertSame(0, $body['data']['status']);
     }
 
-    public function test_satisfaction_requires_processed_status(): void
+    public function test_satisfaction_requires_visited_status(): void
     {
         $this->requireDb();
-        $id = self::createComplaint(1, 0); // 未处理
-        $body = self::call('satisfaction', ['score' => 5], 1, HashidsService::encode($id));
-        $this->assertSame(422, $body['code']);
-        $this->assertSame('仅已处理状态的投诉可以评价', $body['message']);
+        // 契约：install.sql status 注释 3=已回访；管理端可达路径只有 handle:0→1、visit:1→3，
+        // 状态 2（已处理）无任何写入方，评价入口仅放行 3，0/2 都应被拒
+        foreach ([0, 2] as $status) {
+            $id = self::createComplaint(1, $status);
+            $body = self::call('satisfaction', ['score' => 5], 1, HashidsService::encode($id));
+            $this->assertSame(422, $body['code'], "status=$status 应被拒绝");
+            $this->assertSame('仅已回访状态的投诉可以评价', $body['message']);
+        }
     }
 
     public function test_satisfaction_score_out_of_range(): void
     {
         $this->requireDb();
-        $id = self::createComplaint(1, 2); // 已处理
+        $id = self::createComplaint(1, 3); // 已回访（唯一放行状态）
         foreach ([0, 6] as $score) {
             $body = self::call('satisfaction', ['score' => $score], 1, HashidsService::encode($id));
             $this->assertSame(422, $body['code'], "score=$score 应被拒绝");
@@ -170,7 +174,7 @@ class ComplaintControllerTest extends TestCase
     public function test_satisfaction_success(): void
     {
         $this->requireDb();
-        $id = self::createComplaint(1, 2);
+        $id = self::createComplaint(1, 3); // 已回访
         $body = self::call('satisfaction', ['score' => 4], 1, HashidsService::encode($id));
         $this->assertSame(0, $body['code']);
         $this->assertSame('评价成功', $body['message']);

@@ -21,7 +21,7 @@ class FeePaymentListPage extends GetView<FeePaymentController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.payments.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('支付编号')), DataColumn(label: Text('金额')), DataColumn(label: Text('支付方式')),

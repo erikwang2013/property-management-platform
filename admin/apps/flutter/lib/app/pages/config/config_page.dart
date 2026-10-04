@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
+import '../../widgets/pet_mark.dart';
 
 class ConfigController extends GetxController {
   final api = ApiService();
@@ -66,7 +67,7 @@ class ConfigPage extends GetView<ConfigController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         return ListView.builder(
           itemCount: ctrl.configs.length,
           itemBuilder: (_, i) {

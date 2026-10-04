@@ -12,7 +12,7 @@ class ChatRecord extends BaseModel
     protected $table = 'management_chat_record';
 
     protected $fillable = [
-        'user_id', 'user_type', 'question', 'answer',
+        'id', 'user_id', 'user_type', 'question', 'answer',
         'match_type', 'matched_kb_id', 'is_helpful',
     ];
 

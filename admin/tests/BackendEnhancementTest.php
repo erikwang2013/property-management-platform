@@ -191,8 +191,10 @@ class BackendEnhancementTest extends TestCase
     public function test_route_file_has_sensitive_batch_routes_after_resource(): void
     {
         $content = file_get_contents(__DIR__ . '/../config/route.php');
-        $resourcePos = strpos($content, "Route::resource('/user'");
+        // 资源路由走本地 $resource 包装（webman v2 的 Route::resource 写死 {id}，与控制器 $hashid 不匹配）
+        $resourcePos = strpos($content, "\$resource('/user'");
         $batchPos = strpos($content, 'batch/destroy');
+        $this->assertNotFalse($resourcePos, '用户资源路由应通过 $resource 包装注册');
         $this->assertGreaterThan(
             $resourcePos,
             $batchPos,

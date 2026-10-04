@@ -12,7 +12,7 @@ class VoteRecord extends BaseModel
     protected $table = 'management_vote_record';
 
     protected $fillable = [
-        'vote_id', 'option_id', 'owner_id', 'room_id', 'area_ratio', 'voted_at',
+        'id', 'vote_id', 'option_id', 'owner_id', 'room_id', 'area_ratio', 'voted_at',
     ];
 
     protected $casts = [

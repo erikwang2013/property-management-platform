@@ -14,9 +14,16 @@ void main() {
           'data': {'room_count': 2, 'pending_amount': 123.45, 'repairing_count': 1},
         };
     mockRoutes['/service/announcements'] = (_) => {
-          'data': [
-            {'title': '停水通知', 'published_at': '2026-08-01 10:00'},
-          ],
+          'code': 0,
+          'message': 'success',
+          'data': {
+            'current_page': 1,
+            'per_page': 20,
+            'total': 1,
+            'data': [
+              {'title': '停水通知', 'published_at': '2026-08-01 10:00'},
+            ],
+          },
         };
   });
 

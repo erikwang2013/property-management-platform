@@ -12,7 +12,7 @@ class ApprovalRecord extends BaseModel
     protected $table = 'management_approval_record';
 
     protected $fillable = [
-        'approval_id', 'step', 'approver_id', 'action', 'remark', 'acted_at',
+        'id', 'approval_id', 'step', 'approver_id', 'action', 'remark', 'acted_at',
     ];
 
     protected $casts = [

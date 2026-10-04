@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace app\common;
 
+use app\exception\InvalidResourceIdException;
 use app\model\Owner;
+use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
@@ -50,10 +52,17 @@ class BaseController
 
     /**
      * 将 hashid 字符串解码为 BIGINT ID
+     *
+     * 非法/旧盐/空串转 InvalidResourceIdException（自带 render() → 干净 422），
+     * 不再以 500 暴露异常类名与栈路径。
      */
     protected function decodeId(string $hashid): int
     {
-        return HashidsService::decode($hashid);
+        try {
+            return HashidsService::decode($hashid);
+        } catch (InvalidArgumentException) {
+            throw new InvalidResourceIdException('无效的资源 ID');
+        }
     }
 
     /**

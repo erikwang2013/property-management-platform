@@ -53,7 +53,9 @@ class PermissionController extends BaseController
 
         $perm = new AdminPermission();
         $perm->id = $this->generateId();
-        $perm->parent_id = (int) $request->input('parent_id', 0);
+        // 父级权限收 hashid（权限树节点的 id 已编码）；空值/'0' 表示顶级
+        $parentHashid = (string) $request->input('parent_id', '');
+        $perm->parent_id = ($parentHashid === '' || $parentHashid === '0') ? 0 : $this->decodeId($parentHashid);
         $perm->name = $request->input('name');
         $perm->slug = $request->input('slug');
         $perm->type = (int) $request->input('type');

@@ -198,6 +198,15 @@ class OwnerController extends BaseController
             return $this->fail('请提供待导入的业主数据', 422);
         }
 
+        // 手机号是 Encryptable（随机 IV，同一明文每次密文都不同），拿明文做 where('phone', ...) 等值查询
+        // 恒不命中，导入会静默插入重复号。只取 id+phone 两列、游标遍历逐行解密比对，先把库内已有号码
+        // 收进集合（整表只扫一次，而不是每行一次查询）。
+        // ponytail: 全表游标扫描，业主上万后改成盲索引列（phone_hash 唯一）或走 ES，接口不变。
+        $existing = [];
+        foreach (Owner::query()->select(['id', 'phone'])->cursor() as $row) {
+            $existing[(string) $row->phone] = true;
+        }
+
         $created = 0;
         $failed  = 0;
         foreach ($items as $item) {
@@ -205,8 +214,8 @@ class OwnerController extends BaseController
                 $failed++;
                 continue;
             }
-            $exists = Owner::where('phone', $item['phone'])->exists();
-            if ($exists) {
+            // 集合里也包含本批次刚插入的号码，同一批次内的重复同样拦下
+            if (isset($existing[$item['phone']])) {
                 $failed++;
                 continue;
             }
@@ -224,6 +233,7 @@ class OwnerController extends BaseController
                 'remark'            => $item['remark'] ?? '',
                 'status'            => (int) ($item['status'] ?? 1),
             ]);
+            $existing[$item['phone']] = true;
             $created++;
         }
 

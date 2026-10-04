@@ -21,10 +21,7 @@ struct AnnouncementPage {
   async loadList(): Promise<void> {
     this.loading = true;
     try {
-      const resp = await this.api.get('/service/announcements?page=1&per_page=50') as Record<string, Object>;
-      if (resp['code'] === 0) {
-        this.announcements = (resp['data'] as Announcement[]) || [];
-      }
+      this.announcements = await this.api.getList<Announcement>('/service/announcements?page=1&per_page=50');
     } catch (e) {}
     this.loading = false;
   }

@@ -24,7 +24,7 @@ class FeeBillListPage extends GetView<FeeBillController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.bills.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('费项')), DataColumn(label: Text('金额')), DataColumn(label: Text('已缴')),

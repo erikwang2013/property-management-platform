@@ -16,7 +16,7 @@ class Announcement extends BaseModel
     protected $table = 'management_announcement';
 
     protected $fillable = [
-        'community_id', 'title', 'content', 'category',
+        'id', 'community_id', 'title', 'content', 'category',
         'is_top', 'is_published', 'published_at', 'publisher_id',
     ];
 

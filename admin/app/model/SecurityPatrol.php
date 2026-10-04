@@ -8,7 +8,7 @@ namespace app\model;
 class SecurityPatrol extends BaseModel
 {
     protected $table = 'management_security_patrol';
-    protected $fillable = ['community_id', 'name', 'route_points', 'checkpoints', 'sort', 'status'];
+    protected $fillable = ['id', 'community_id', 'name', 'route_points', 'checkpoints', 'sort', 'status'];
     protected $casts = [
         'sort' => 'integer', 'status' => 'integer',
         'created_at' => 'datetime', 'updated_at' => 'datetime',

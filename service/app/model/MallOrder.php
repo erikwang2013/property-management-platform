@@ -14,7 +14,7 @@ class MallOrder extends BaseModel
     protected $table = 'management_mall_order';
 
     protected $fillable = [
-        'order_number', 'owner_id', 'product_id', 'quantity', 'amount',
+        'id', 'order_number', 'owner_id', 'product_id', 'quantity', 'amount',
         'status', 'address', 'contact_phone', 'express_company',
         'express_number', 'paid_at', 'shipped_at', 'completed_at', 'remark',
     ];

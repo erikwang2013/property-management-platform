@@ -12,7 +12,7 @@ class KnowledgeBase extends BaseModel
     protected $table = 'management_knowledge_base';
 
     protected $fillable = [
-        'category_id', 'question', 'answer', 'keywords',
+        'id', 'category_id', 'question', 'answer', 'keywords',
         'view_count', 'helpful_count', 'sort', 'status',
     ];
 

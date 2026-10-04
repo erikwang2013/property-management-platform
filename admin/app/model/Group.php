@@ -14,7 +14,7 @@ class Group extends BaseModel
     protected $table = 'management_group';
 
     protected $fillable = [
-        'name', 'contact_person', 'contact_phone', 'description', 'status',
+        'id', 'name', 'contact_person', 'contact_phone', 'description', 'status',
     ];
 
     protected $casts = [

@@ -14,7 +14,7 @@ class RepairOrder extends BaseModel
     protected $table = 'management_repair_order';
 
     protected $fillable = [
-        'order_number', 'room_id', 'owner_id', 'contact_phone',
+        'id', 'order_number', 'room_id', 'owner_id', 'contact_phone',
         'category', 'urgency', 'description', 'images',
         'scheduled_at', 'status', 'staff_id',
         'completed_at', 'rating', 'feedback',

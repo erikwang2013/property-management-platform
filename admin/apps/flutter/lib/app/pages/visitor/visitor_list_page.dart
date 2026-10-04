@@ -18,7 +18,7 @@ class VisitorListPage extends GetView<VisitorController> {
       const Text('访客管理', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.visitors.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('访客姓名')), DataColumn(label: Text('手机号')), DataColumn(label: Text('被访人')),

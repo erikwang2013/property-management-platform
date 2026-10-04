@@ -62,10 +62,11 @@ class _HomePageState extends State<HomePage> {
 
       final annoResponse = await api.dio.get(ApiConfig.announcements, queryParameters: {'page': 1, 'per_page': 5});
       setState(() {
-        _announcements = List<Map<String, dynamic>>.from(annoResponse.data['data'] ?? []);
+        _announcements = List<Map<String, dynamic>>.from(annoResponse.data['data']?['data'] ?? []);
       });
-    } catch (_) {
+    } catch (e) {
       // Use default values on error
+      debugPrint('[home_page] $e');
     } finally {
       setState(() => _loading = false);
     }
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? PetLoading()
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Column(

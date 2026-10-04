@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class ParkingSpacesPage extends StatefulWidget {
   const ParkingSpacesPage({super.key});
@@ -18,11 +19,11 @@ class _ParkingSpacesPageState extends State<ParkingSpacesPage> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try { final api = Get.find<ApiService>(); final r = await api.dio.get(ApiConfig.parkingSpaces);
-      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data'] ?? [])); } catch (_) {} finally { setState(() => _loading = false); }
+      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data']?['data'] ?? [])); } catch (e) { debugPrint('[parking_spaces_page] $e'); } finally { setState(() => _loading = false); }
   }
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('我的车位')),
-    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((s) => Card(child: ListTile(leading: const Icon(Icons.local_parking), title: Text(s['space_number'] ?? ''), subtitle: Text('类型: ${s['type'] ?? '-'} | 面积: ${s['area'] ?? '-'}m²')))).toList()))),
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? PetLoading() : ListView(padding: const EdgeInsets.all(16), children: _items.map((s) => Card(child: ListTile(leading: const Icon(Icons.local_parking), title: Text(s['space_number'] ?? ''), subtitle: Text('类型: ${s['type'] ?? '-'} | 面积: ${s['area'] ?? '-'}m²')))).toList()))),
   );
 }

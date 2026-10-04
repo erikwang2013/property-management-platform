@@ -4,7 +4,7 @@
 
 ## 1. Current-State Audit Conclusions
 
-**Feature surface: consistent with the claims.** All 22 business modules + 12 extension features are complete; 68 tables / 178 APIs, admin 58 controllers / 127 routes, service 19 controllers / 57 routes, Flutter Web admin panel 42 pages + owner portal 13 pages, HarmonyOS 5 pages. All 14 documents in docs/ + 35 SVGs are backed by code; no "claimed but unimplemented" features were found.
+**Feature surface: consistent with the claims.** All 22 business modules + 12 extension features are complete; 67 tables / 178 APIs, admin 58 controllers / 127 routes, service 19 controllers / 57 routes, Flutter Web admin panel 42 pages + owner portal 13 pages, HarmonyOS 5 pages. All 14 documents in docs/ + 35 SVGs are backed by code; no "claimed but unimplemented" features were found.
 
 **Tests: all green (as of 2026-08-17).** admin 193 tests / 452 assertions, service 101 tests / 385 assertions (7 skips are environment-dependent), Flutter widget tests 9 (login/home/bills pages).
 

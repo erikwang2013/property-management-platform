@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace tests;
 
 use app\admin\controller\ImportController;
+use app\common\SnowflakeService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +20,9 @@ class ImportControllerTest extends TestCase
 {
     private static bool $dbAvailable = false;
     private static string $tmpDir = '';
+    /** 重名用例的夹具：用户名与 id 由本用例自建自删 */
+    private static string $dupUsername = '';
+    private static string $dupUserId = '';
 
     public static function setUpBeforeClass(): void
     {
@@ -32,10 +36,31 @@ class ImportControllerTest extends TestCase
         } catch (\Throwable) {
             self::$dbAvailable = false;
         }
+
+        // 自备夹具：install.sql 不播管理员种子（管理员由安装向导 InstallController::createAdminUser 建），
+        // 依赖「库里已有 admin」会让纯 install.sql 的全新库上重名用例拿到 0 failed 而误判
+        if (self::$dbAvailable) {
+            try {
+                self::$dupUserId = (string) SnowflakeService::generate();
+                self::$dupUsername = 'phpunit_dup_' . getmypid();
+                Db::table('management_admin_user')->insert([
+                    'id'        => self::$dupUserId,
+                    'username'  => self::$dupUsername,
+                    'password'  => password_hash('Pass1234!', PASSWORD_BCRYPT),
+                    'real_name' => '单测夹具',
+                    'status'    => 1,
+                ]);
+            } catch (\Throwable) {
+                self::$dupUserId = '';
+            }
+        }
     }
 
     public static function tearDownAfterClass(): void
     {
+        if (self::$dupUserId !== '') {
+            Db::table('management_admin_user')->where('id', self::$dupUserId)->delete();
+        }
         foreach (glob(self::$tmpDir . '/*') ?: [] as $f) {
             @unlink($f);
         }
@@ -151,12 +176,12 @@ class ImportControllerTest extends TestCase
 
     public function test_duplicate_username_row_rejected(): void
     {
-        if (!self::$dbAvailable) {
+        if (!self::$dbAvailable || self::$dupUserId === '') {
             $this->markTestSkipped('DB 不可用');
         }
         $path = self::makeXlsx([
             ['username', 'password', 'real_name', 'phone', 'email'],
-            ['admin', 'Pass1234!', '管理员', '13800000000', 'a@b.c'], // 种子数据中 admin 已存在
+            [self::$dupUsername, 'Pass1234!', '重复用户', '13800000000', 'a@b.c'], // 夹具用户，见 setUpBeforeClass
         ]);
         $file = new UploadFile($path, 'dup.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', UPLOAD_ERR_OK);
         $body = self::call($file);

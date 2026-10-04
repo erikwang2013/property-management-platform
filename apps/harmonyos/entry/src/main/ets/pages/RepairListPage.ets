@@ -24,10 +24,7 @@ struct RepairListPage {
     try {
       let path = '/service/repairs?page=1&per_page=50';
       if (this.statusFilter) path += `&status=${this.statusFilter}`;
-      const resp = await this.api.get(path) as Record<string, Object>;
-      if (resp['code'] === 0) {
-        this.repairs = (resp['data'] as RepairOrder[]) || [];
-      }
+      this.repairs = await this.api.getList<RepairOrder>(path);
     } catch (e) {}
     this.loading = false;
   }

@@ -8,7 +8,7 @@ namespace app\model;
 class CleaningRecord extends BaseModel
 {
     protected $table = 'management_cleaning_record';
-    protected $fillable = ['area_id', 'staff_id', 'cleaned_at', 'status', 'inspector_id', 'inspection_remark', 'inspection_at', 'images'];
+    protected $fillable = ['id', 'area_id', 'staff_id', 'cleaned_at', 'status', 'inspector_id', 'inspection_remark', 'inspection_at', 'images'];
     protected $casts = [
         'status' => 'integer',
         'cleaned_at' => 'datetime', 'inspection_at' => 'datetime',

@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'energy_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class EnergyMeterListPage extends GetView<EnergyMeterController> {
   const EnergyMeterListPage({super.key});
@@ -20,7 +21,7 @@ class EnergyMeterListPage extends GetView<EnergyMeterController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增仪表')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('仪表编号')),DataColumn(label:Text('类型')),DataColumn(label:Text('位置')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.meters.map((m){final id=m['id'].toString();return DataRow(cells:[
             DataCell(Text(m['meter_no']??'')),DataCell(Text(m['type']??'-')),DataCell(Text(m['location']??'-')),DataCell(StatusChip(status:m['status']as int?)),
@@ -52,7 +53,7 @@ class EnergyRecordListPage extends GetView<EnergyRecordController> {
         ElevatedButton.icon(onPressed:()=>_readingForm(context,c), icon:const Icon(Icons.add), label:const Text('录入抄表')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('仪表')),DataColumn(label:Text('读数')),DataColumn(label:Text('用量')),DataColumn(label:Text('日期'))],
           rows:c.records.map((r)=>DataRow(cells:[DataCell(Text(r['meter_no']??'-')),DataCell(Text('${r['reading']??'-'}')),DataCell(Text('${r['usage_amount']??'-'}')),DataCell(Text(r['record_date']??'-'))])).toList());
       })),

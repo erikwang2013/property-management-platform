@@ -22,7 +22,7 @@ class FeeTypeListPage extends GetView<FeeTypeController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.feeTypes.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('费项名称')), DataColumn(label: Text('单价')), DataColumn(label: Text('计费周期')), DataColumn(label: Text('科目')), DataColumn(label: Text('操作')),

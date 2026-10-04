@@ -8,6 +8,8 @@
 #   默认从 docker-compose.yml 探测 MySQL 服务（mysql/db）并经 compose 在容器内
 #   执行 mysqldump；找不到 compose 文件或未运行 docker 时回退本机 mysqldump。
 #   可 --container= 显式指定容器名（docker exec 方式，跳过 compose 探测）。
+#   注意: 两种 docker 模式都在 MySQL 容器内执行 mysqldump，连接固定用容器内视角
+#   127.0.0.1:3306；.env 的 DB_HOST/DB_PORT 是宿主映射（如 3307），仅 --local 模式生效。
 # 定时: 0 2 * * * cd /path/to/property-management-platform && bash scripts/backup.sh >> /var/log/pmp-backup.log 2>&1
 # 幂等: 每次生成独立时间戳文件，可重复执行；无交互，适合 cron。
 # 兼容: bash 3.2+（macOS 默认 bash 可跑）。
@@ -30,6 +32,9 @@ usage() {
   --keep-days=N      保留 N 天，过期文件自动删除（默认 7）
   --local            强制本机 mysqldump（不经 docker）
   -h, --help         显示本帮助
+
+说明: docker 模式（compose 探测 / --container=）在容器内执行 mysqldump，固定连
+      容器内 127.0.0.1:3306；.env 的 DB_HOST/DB_PORT（宿主映射端口）仅 --local 生效。
 
 示例:
   bash scripts/backup.sh                       # 探测 compose 并备份
@@ -98,6 +103,14 @@ if [ -n "$CONTAINER" ]; then
 elif [ "$LOCAL_MODE" -ne 1 ] && command -v docker >/dev/null 2>&1 && find_compose_mysql; then
     DOCKER_MODE=1
     DOCKER_CMD=(docker compose -f "$COMPOSE_FILE" exec -T -e "MYSQL_PWD=$DB_PASSWORD" "$COMPOSE_SVC")
+fi
+
+# 容器内视角：compose exec / docker exec 都在 MySQL 容器里跑 mysqldump，而 .env 的
+# host:port 是宿主映射（如 127.0.0.1:3307 → 容器 3306），照搬会连不上容器内的 MySQL。
+# 故 docker 模式统一改为容器内地址，仅 --local 模式沿用 .env。
+if [ "$DOCKER_MODE" -eq 1 ]; then
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
 fi
 
 mkdir -p "$BACKUP_DIR"

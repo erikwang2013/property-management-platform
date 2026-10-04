@@ -36,7 +36,7 @@ class _RepairListPageState extends State<RepairListPage> {
       }
       final response = await api.dio.get(ApiConfig.repairs, queryParameters: queryParams);
       setState(() {
-        _repairs = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
+        _repairs = List<Map<String, dynamic>>.from(response.data['data']?['data'] ?? []);
       });
     } catch (e) {
       Get.snackbar('错误', '加载报修列表失败: $e', backgroundColor: Colors.red.shade50);
@@ -148,7 +148,7 @@ class _RepairListPageState extends State<RepairListPage> {
           // 列表
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator())
+                ? PetLoading()
                 : _repairs.isEmpty
                     ? const PetEmpty()
                     : RefreshIndicator(

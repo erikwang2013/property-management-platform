@@ -31,7 +31,7 @@ class VoteController extends BaseController
         $query = Vote::query();
 
         if ($c = $request->input('community_id')) {
-            $query->where('community_id', (int) $c);
+            $query->where('community_id', $this->decodeId($c));
         }
         if ($s = $request->input('status')) {
             $query->where('status', (int) $s);
@@ -41,7 +41,7 @@ class VoteController extends BaseController
             ->paginate(20)
             ->through(fn($i) => [
                 'id'                      => $this->encodeId($i->id),
-                'community_id'            => $i->community_id,
+                'community_id'            => $i->community_id ? $this->encodeId($i->community_id) : '',
                 'title'                   => $i->title,
                 'description'             => $i->description,
                 'vote_type'               => $i->vote_type,
@@ -50,7 +50,7 @@ class VoteController extends BaseController
                 'is_anonymous'            => $i->is_anonymous,
                 'min_participation_rate'  => $i->min_participation_rate,
                 'status'                  => $i->status,
-                'publisher_id'            => $i->publisher_id,
+                'publisher_id'            => $i->publisher_id ? $this->encodeId($i->publisher_id) : '',
                 'created_at'              => $i->created_at ? $i->created_at->format('Y-m-d H:i') : '',
             ]);
 
@@ -86,7 +86,7 @@ class VoteController extends BaseController
 
         $data = [
             'id'                      => $this->encodeId($vote->id),
-            'community_id'            => $vote->community_id,
+            'community_id'            => $vote->community_id ? $this->encodeId($vote->community_id) : '',
             'title'                   => $vote->title,
             'description'             => $vote->description,
             'vote_type'               => $vote->vote_type,
@@ -95,7 +95,7 @@ class VoteController extends BaseController
             'is_anonymous'            => $vote->is_anonymous,
             'min_participation_rate'  => $vote->min_participation_rate,
             'status'                  => $vote->status,
-            'publisher_id'            => $vote->publisher_id,
+            'publisher_id'            => $vote->publisher_id ? $this->encodeId($vote->publisher_id) : '',
             'created_at'              => $vote->created_at ? $vote->created_at->format('Y-m-d H:i') : '',
             'updated_at'              => $vote->updated_at ? $vote->updated_at->format('Y-m-d H:i') : '',
         ];

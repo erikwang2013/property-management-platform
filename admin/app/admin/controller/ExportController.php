@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 use app\common\EncryptionService;
 use app\model\AdminUser;
 use app\model\OperationLog;
@@ -134,7 +135,7 @@ class ExportController extends BaseController
 
         $html = $this->buildPdfHtml($type, $title, $data);
 
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf($this->pdfOptions());
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->loadHtml($html);
         $dompdf->render();
@@ -153,16 +154,49 @@ class ExportController extends BaseController
     }
 
     /**
+     * dompdf 运行参数：字体与度量缓存落 runtime（vendor 只读）；
+     * chroot 放宽到 public，放行 public/fonts 下的中文子集字体
+     */
+    private function pdfOptions(): Options
+    {
+        $fontDir = runtime_path() . '/dompdf/fonts';
+        $cacheDir = $fontDir . '/cache';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+
+        $options = new Options();
+        $options->setChroot([public_path()]);
+        $options->setFontDir($fontDir);
+        $options->setFontCache($cacheDir);
+
+        return $options;
+    }
+
+    /**
      * 构建 PDF HTML 模板
      */
     private function buildPdfHtml(string $type, string $title, array $data): string
     {
         $timestamp = date('Y-m-d H:i:s');
 
+        // 中文子集字体（文泉驿微米黑 GB2312 子集，Apache-2.0，见 public/fonts/LICENSE）；
+        // bold 复用同一文件——dompdf 对 bold 子类不做同族回退，不注册就会退回 DejaVu 出方框
+        $fontCss = '';
+        $fontFile = public_path() . '/fonts/pet-pdf-cjk.ttf';
+        if (is_file($fontFile)) {
+            $fontFace = '@font-face { font-family: "PetPdfCjk"; src: url("' . $fontFile . '") format("truetype"); }';
+            $fontCss = $fontFace . '@font-face { font-family: "PetPdfCjk"; font-weight: bold; src: url("' . $fontFile . '") format("truetype"); }';
+        }
+
         $html = '<!DOCTYPE html><html><head><meta charset="utf-8">';
-        $html .= '<style>
-            body { font-family: "DejaVu Sans", sans-serif; margin: 20px; }
+        $html .= '<style>' . $fontCss . '
+            body { font-family: "PetPdfCjk", "DejaVu Sans", sans-serif; margin: 20px; }
             .header { text-align: center; margin-bottom: 20px; }
+            .header table { width: 100%; border-collapse: collapse; margin: 0; }
+            .header td { border: none; padding: 0; vertical-align: middle; text-align: center; }
+            .header .brand { width: 68px; }
+            .header .brand img { height: 56px; width: 56px; }
             .header h1 { font-size: 20px; color: #1677FF; margin-bottom: 4px; }
             .header .meta { font-size: 11px; color: #999; }
             table { width: 100%; border-collapse: collapse; margin-top: 12px; }
@@ -170,25 +204,42 @@ class ExportController extends BaseController
             td { padding: 6px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
             tr:nth-child(even) { background-color: #fafafa; }
             .footer { text-align: center; font-size: 10px; color: #999; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
-            .cards { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-            .card { flex: 1; min-width: 140px; padding: 16px; background: #f5f5f5; border-radius: 8px; text-align: center; }
+            .cards { width: 100%; border-collapse: collapse; margin-top: 12px; }
+            .cards td { border: none; padding: 0 6px; vertical-align: top; background: none; }
+            .cards .card { padding: 16px; background: #f5f5f5; border-radius: 8px; text-align: center; }
             .card-label { font-size: 12px; color: #666; }
             .card-value { font-size: 24px; font-weight: bold; color: #1677FF; }
         </style></head><body>';
 
-        $html .= '<div class="header">';
+        // 页头品牌标记：dompdf 不渲染 SVG，内嵌 pet_mark_128.png 的 base64 data URI（固定资产，无注入面）
+        $markImg = '';
+        $markFile = public_path() . '/pet_mark_128.png';
+        if (is_file($markFile)) {
+            $markImg = '<img src="data:image/png;base64,' . base64_encode((string) file_get_contents($markFile)) . '" alt="小筑">';
+        }
+
+        $html .= '<div class="header"><table><tr>';
+        $html .= '<td class="brand">' . $markImg . '</td>';
+        $html .= '<td>';
         $html .= '<h1>' . htmlspecialchars($title) . '</h1>';
         $html .= '<div class="meta">Copyright (c) 2026 erik &lt;erik@erik.xyz&gt; — https://erik.xyz</div>';
         $html .= '<div class="meta">导出时间: ' . $timestamp . '</div>';
-        $html .= '</div>';
+        $html .= '</td></tr></table></div>';
 
         if ($type === 'dashboard') {
-            $html .= '<div class="cards">';
-            foreach ($data['stats'] ?? [] as $card) {
-                $html .= '<div class="card"><div class="card-label">' . htmlspecialchars($card['label']) . '</div>';
-                $html .= '<div class="card-value">' . htmlspecialchars($card['value']) . '</div></div>';
+            $stats = $data['stats'] ?? [];
+            if ($stats) {
+                // dompdf 不支持 flex：卡片改等宽表格单元格横排（间距 = 单元格左右各 6px，首尾对称内缩 6px）
+                $cellWidth = round(100 / count($stats), 4) . '%';
+                $html .= '<table class="cards"><tr>';
+                foreach ($stats as $card) {
+                    $html .= '<td style="width:' . $cellWidth . '"><div class="card">';
+                    $html .= '<div class="card-label">' . htmlspecialchars($card['label']) . '</div>';
+                    $html .= '<div class="card-value">' . htmlspecialchars($card['value']) . '</div>';
+                    $html .= '</div></td>';
+                }
+                $html .= '</tr></table>';
             }
-            $html .= '</div>';
         } elseif (!empty($data['rows'])) {
             $html .= '<table><thead><tr>';
             foreach ($data['columns'] as $col) {
@@ -291,7 +342,10 @@ class ExportController extends BaseController
     public function propertyExcel(Request $request): Response
     {
         $type = $request->input('type', 'owners');
-        $communityId = $request->input('community_id');
+        // 小区筛选收 hashid（与列表接口一致），空值表示不筛选
+        $communityId = $request->input('community_id')
+            ? $this->decodeId((string) $request->input('community_id'))
+            : null;
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

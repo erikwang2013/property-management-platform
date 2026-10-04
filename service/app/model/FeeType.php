@@ -17,7 +17,7 @@ class FeeType extends BaseModel
     ];
 
     protected $casts = [
-        'unit_price' => 'decimal',
+        'unit_price' => 'decimal:2',
         'sort'       => 'integer',
         'is_required' => 'boolean',
         'created_at' => 'datetime',

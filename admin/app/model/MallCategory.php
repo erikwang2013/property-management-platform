@@ -12,7 +12,7 @@ class MallCategory extends BaseModel
     protected $table = 'management_mall_category';
 
     protected $fillable = [
-        'name', 'icon', 'sort', 'status',
+        'id', 'name', 'icon', 'sort', 'status',
     ];
 
     protected $casts = [

@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'knowledge_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class KnowledgeCategoryListPage extends GetView<KnowledgeCategoryController> {
   const KnowledgeCategoryListPage({super.key});
@@ -20,7 +21,7 @@ class KnowledgeCategoryListPage extends GetView<KnowledgeCategoryController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增分类')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('名称')),DataColumn(label:Text('排序')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.categories.map((x){final id=x['id'].toString();return DataRow(cells:[DataCell(Text(x['name']??'')),DataCell(Text('${x['sort']??0}')),DataCell(StatusChip(status:x['status']as int?)),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:x)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:x['name']??'');if(p!=null)c.deleteItem(id,p);})]))]);}).toList());
       })),
@@ -40,7 +41,7 @@ class KnowledgeArticleListPage extends GetView<KnowledgeArticleController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增文章')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('标题')),DataColumn(label:Text('分类')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.articles.map((a){final id=a['id'].toString();return DataRow(cells:[DataCell(Text(a['question']??a['title']??'')),DataCell(Text(a['category_name']??'-')),DataCell(StatusChip(status:a['status']as int?)),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:a)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:a['question']??a['title']??'');if(p!=null)c.deleteItem(id,p);})]))]);}).toList());
       })),
@@ -60,7 +61,7 @@ class ChatRecordListPage extends GetView<ChatRecordController> {
       Obx(()=>Row(children:[_statCard('总对话',c.stats['total_chats']?.toString()??'0',Colors.blue),_statCard('满意率',c.stats['satisfaction_rate']?.toString()??'0%',Colors.green)]),),
       const SizedBox(height:12),const Text('对话记录',style:TextStyle(fontSize:16,fontWeight:FontWeight.w600)),const SizedBox(height:8),
       Expanded(child:Obx((){
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return ListView(children:c.records.map((r)=>Card(child:ListTile(title:Text(r['question']??''),subtitle:Text(r['answer']??r['reply']??''),trailing:Text(r['created_at']??'',style:const TextStyle(fontSize:11,color:Colors.grey))))).toList());
       })),
     ]);

@@ -76,7 +76,7 @@ class UserListPage extends GetView<UserController> {
         // Table
         Expanded(
           child: Obx(() {
-            if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+            if (ctrl.isLoading.value) return PetLoading();
             if (ctrl.users.isEmpty) return const PetEmpty();
 
             return SingleChildScrollView(

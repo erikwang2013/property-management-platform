@@ -10,7 +10,7 @@ namespace app\model;
 class RoomType extends BaseModel
 {
     protected $table = 'management_room_type';
-    protected $fillable = ['name', 'bedrooms', 'halls', 'bathrooms', 'image'];
+    protected $fillable = ['id', 'name', 'bedrooms', 'halls', 'bathrooms', 'image'];
     protected $casts = [
         'bedrooms' => 'integer', 'halls' => 'integer', 'bathrooms' => 'integer',
         'created_at' => 'datetime', 'updated_at' => 'datetime',

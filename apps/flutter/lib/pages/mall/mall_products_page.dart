@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class MallProductsPage extends StatefulWidget {
   const MallProductsPage({super.key});
@@ -20,8 +21,8 @@ class _MallProductsPageState extends State<MallProductsPage> {
     try {
       final api = Get.find<ApiService>();
       final r = await api.dio.get(ApiConfig.mallProducts);
-      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data'] ?? []));
-    } catch (_) {} finally { setState(() => _loading = false); }
+      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data']?['data'] ?? []));
+    } catch (e) { debugPrint('[mall_products_page] $e'); } finally { setState(() => _loading = false); }
   }
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class _MallProductsPageState extends State<MallProductsPage> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
           child: _loading
-              ? const Center(child: CircularProgressIndicator())
+              ? PetLoading()
               : GridView.builder(
                   padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

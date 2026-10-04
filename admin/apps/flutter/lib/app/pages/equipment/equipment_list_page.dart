@@ -24,7 +24,7 @@ class EquipmentListPage extends GetView<EquipmentController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.equipment.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('设备名称')), DataColumn(label: Text('编号')), DataColumn(label: Text('位置')),

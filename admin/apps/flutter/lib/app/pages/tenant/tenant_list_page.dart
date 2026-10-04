@@ -33,7 +33,7 @@ class TenantListPage extends GetView<TenantController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.tenants.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('姓名')), DataColumn(label: Text('手机号')),

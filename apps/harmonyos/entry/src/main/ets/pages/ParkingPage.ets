@@ -4,6 +4,7 @@
 
 import { ApiService } from '../services/ApiService';
 import { ParkingVehicle, ParkingSpace, ParkingRecord } from '../model/Models';
+import { EmptyView } from '../common/Components';
 
 @Entry
 @Component
@@ -23,20 +24,14 @@ struct ParkingPage {
   async loadAll(): Promise<void> {
     this.loading = true;
     try {
-      const [v, s, r] = await Promise.all([
-        this.api.get('/service/parking/vehicles?page=1&per_page=50'),
-        this.api.get('/service/parking/spaces?page=1&per_page=50'),
-        this.api.get('/service/parking/records?page=1&per_page=50')
+      const [vehicles, spaces, records] = await Promise.all([
+        this.api.getList<ParkingVehicle>('/service/parking/vehicles?page=1&per_page=50'),
+        this.api.getList<ParkingSpace>('/service/parking/spaces?page=1&per_page=50'),
+        this.api.getList<ParkingRecord>('/service/parking/records?page=1&per_page=50')
       ]);
-      if ((v as Record<string, Object>)['code'] === 0) {
-        this.vehicles = ((v as Record<string, Object>)['data'] as ParkingVehicle[]) || [];
-      }
-      if ((s as Record<string, Object>)['code'] === 0) {
-        this.spaces = ((s as Record<string, Object>)['data'] as ParkingSpace[]) || [];
-      }
-      if ((r as Record<string, Object>)['code'] === 0) {
-        this.records = ((r as Record<string, Object>)['data'] as ParkingRecord[]) || [];
-      }
+      this.vehicles = vehicles;
+      this.spaces = spaces;
+      this.records = records;
     } catch (e) {}
     this.loading = false;
   }
@@ -76,6 +71,12 @@ struct ParkingPage {
       if (this.loading) {
         Column() { LoadingProgress().width(40).height(40) }
         .width('100%').layoutWeight(1).justifyContent(FlexAlign.Center)
+      } else if (this.tab === 'vehicles' && this.vehicles.length === 0) {
+        EmptyView({ message: '暂无车辆' })
+      } else if (this.tab === 'spaces' && this.spaces.length === 0) {
+        EmptyView({ message: '暂无车位' })
+      } else if (this.tab === 'records' && this.records.length === 0) {
+        EmptyView({ message: '暂无停车记录' })
       } else if (this.tab === 'vehicles') {
         List() {
           ForEach(this.vehicles, (v: ParkingVehicle) => {

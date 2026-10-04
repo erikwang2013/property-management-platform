@@ -128,10 +128,12 @@ class ControllerValidationTest extends TestCase
 
     public function test_payment_create_rejects_unknown_channel(): void
     {
+        // user_id 同 bill_id 一样收 hashid（PaymentController::create 会 decode），
+        // 传原生 int 会抛「无效的加密ID」，走不到渠道校验分支
         $resp = (new PaymentController())->create(self::makeRequest([
             'bill_id' => HashidsService::encode(123),
             'channel' => 'bitcoin',
-            'user_id' => 1,
+            'user_id' => HashidsService::encode(1),
         ]));
         $body = self::body($resp);
         $this->assertSame(422, $body['code']);

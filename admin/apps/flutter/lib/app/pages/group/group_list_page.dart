@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'group_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class GroupListPage extends GetView<GroupController> {
   const GroupListPage({super.key});
@@ -19,7 +20,7 @@ class GroupListPage extends GetView<GroupController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增集团')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('集团名称')),DataColumn(label:Text('小区数')),DataColumn(label:Text('操作'))],
           rows:c.groups.map((g){final id=g['id'].toString();return DataRow(cells:[DataCell(Text(g['name']??'')),DataCell(Text('${g['community_count']??0}')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:const Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:g)),IconButton(icon:const Icon(Icons.visibility,size:18),tooltip:'查看汇总',onPressed:()async{await c.loadSummary(id);Get.defaultDialog(title:'集团汇总',content:Obx(()=>Column(mainAxisSize:MainAxisSize.min,children:[Text('小区数:${c.summary['community_count']??0}'),Text('业主数:${c.summary['owner_count']??0}'),Text('房产数:${c.summary['room_count']??0}')])));}),IconButton(icon:const Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:g['name']??'');if(p!=null)c.deleteItem(id,p);})]))]);
         }).toList());

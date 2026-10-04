@@ -28,7 +28,7 @@ class RepairListPage extends GetView<RepairController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.repairs.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('报修编号')), DataColumn(label: Text('类型')), DataColumn(label: Text('紧急度')),

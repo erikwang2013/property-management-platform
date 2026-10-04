@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class ActivityDetailPage extends StatefulWidget {
   const ActivityDetailPage({super.key});
@@ -20,14 +21,14 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   Future<void> _load() async {
     if (_hashid == null) return;
     try { final api = Get.find<ApiService>(); final r = await api.dio.get(ApiConfig.activityDetail(_hashid!));
-      setState(() => _detail = r.data['data']); } catch (_) {} finally { setState(() => _loading = false); }
+      setState(() => _detail = r.data['data']); } catch (e) { debugPrint('[activity_detail_page] $e'); } finally { setState(() => _loading = false); }
   }
   Future<void> _signup() async {
     try { final api = Get.find<ApiService>(); await api.dio.post(ApiConfig.activitySignup, data: {'activity_id': _hashid}); Get.snackbar('成功', '报名成功'); _load(); } catch (e) { Get.snackbar('错误', '报名失败: $e'); }
   }
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: Text(_detail?['title'] ?? '活动详情')),
-    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? PetLoading() : Card(child: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(_detail?['title'] ?? '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       const SizedBox(height: 16), _row('地点', _detail?['location']), _row('时间', '${_detail?['start_time']} - ${_detail?['end_time']}'),
       _row('报名', '${_detail?['signup_count'] ?? 0}/${_detail?['max_signup'] ?? '-'}'),

@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'activity_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class ActivityListPage extends GetView<ActivityController> {
   const ActivityListPage({super.key});
@@ -20,7 +21,7 @@ class ActivityListPage extends GetView<ActivityController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增活动')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('活动名称')),DataColumn(label:Text('地点')),DataColumn(label:Text('开始时间')),DataColumn(label:Text('报名')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.activities.map((a){final id=a['id'].toString();return DataRow(cells:[
             DataCell(Text(a['title']??'')),DataCell(Text(a['location']??'-')),DataCell(Text(a['start_time']??'-')),
@@ -50,7 +51,7 @@ class ActivitySignupListPage extends GetView<ActivitySignupController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text('活动报名', style: TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('活动')),DataColumn(label:Text('报名人')),DataColumn(label:Text('手机号')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],
           rows:c.signups.map((s)=>DataRow(cells:[DataCell(Text(s['activity_title']??'-')),DataCell(Text(s['name']??'-')),DataCell(Text(s['phone']??'-')),DataCell(Text(s['checked_in']==1?'已签到':'未签到')),DataCell(s['checked_in']!=1?ElevatedButton(onPressed:()=>c.checkin(s['id']),style:ElevatedButton.styleFrom(padding:EdgeInsets.zero),child:const Text('签到')):const Text('-'))])).toList());
       })),

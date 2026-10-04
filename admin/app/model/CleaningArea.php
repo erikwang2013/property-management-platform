@@ -8,7 +8,7 @@ namespace app\model;
 class CleaningArea extends BaseModel
 {
     protected $table = 'management_cleaning_area';
-    protected $fillable = ['community_id', 'name', 'location', 'area', 'frequency', 'responsible_staff', 'sort', 'status'];
+    protected $fillable = ['id', 'community_id', 'name', 'location', 'area', 'frequency', 'responsible_staff', 'sort', 'status'];
     protected $casts = [
         'area' => 'decimal:2', 'frequency' => 'integer', 'sort' => 'integer', 'status' => 'integer',
         'created_at' => 'datetime', 'updated_at' => 'datetime',

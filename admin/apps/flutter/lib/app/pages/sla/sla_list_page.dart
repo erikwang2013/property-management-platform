@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'sla_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class SlaRuleListPage extends GetView<SlaRuleController> {
   const SlaRuleListPage({super.key});
@@ -19,7 +20,7 @@ class SlaRuleListPage extends GetView<SlaRuleController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增规则')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('规则名称')),DataColumn(label:Text('超时时限')),DataColumn(label:Text('升级动作')),DataColumn(label:Text('操作'))],
           rows:c.rules.map((r){final id=r['id'].toString();return DataRow(cells:[DataCell(Text(r['name']??'')),DataCell(Text(r['timeout_hours']!=null?'${r['timeout_hours']}小时':'-')),DataCell(Text(r['escalation_action']??'-')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:r)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:r['name']??'');if(p!=null)c.deleteItem(id,p);})]))]);
         }).toList());
@@ -44,7 +45,7 @@ class SlaRecordListPage extends GetView<SlaRecordController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text('SLA升级记录', style: TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('关联对象')),DataColumn(label:Text('规则')),DataColumn(label:Text('升级级别')),DataColumn(label:Text('时间'))],
           rows:c.records.map((r)=>DataRow(cells:[DataCell(Text(r['target_name']??'-')),DataCell(Text(r['rule_name']??'-')),DataCell(Text('${r['escalation_level']??'-'}')),DataCell(Text(r['created_at']??'-'))])).toList());
       })),

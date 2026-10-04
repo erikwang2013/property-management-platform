@@ -16,7 +16,7 @@ class Room extends BaseModel
     protected $table = 'management_room';
 
     protected $fillable = [
-        'community_id', 'building_id', 'unit_id', 'room_number',
+        'id', 'community_id', 'building_id', 'unit_id', 'room_number',
         'floor', 'room_type_id', 'area_indoor', 'area_shared',
         'area_total', 'orientation', 'decoration', 'usage_type',
         'status', 'remark',

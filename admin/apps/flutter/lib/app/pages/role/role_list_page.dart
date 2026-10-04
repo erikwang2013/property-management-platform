@@ -31,7 +31,7 @@ class RoleListPage extends GetView<RoleController> {
         ]),
         const SizedBox(height: 12),
         Expanded(child: Obx(() {
-          if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+          if (ctrl.isLoading.value) return PetLoading();
           if (ctrl.roles.isEmpty) return const PetEmpty(message: '暂无角色');
 
           return ListView.builder(

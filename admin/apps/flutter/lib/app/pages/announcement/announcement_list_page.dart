@@ -23,7 +23,7 @@ class AnnouncementListPage extends GetView<AnnouncementController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.announcements.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('标题')), DataColumn(label: Text('状态')),

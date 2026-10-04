@@ -12,7 +12,7 @@ class CollectionStrategy extends BaseModel
     protected $table = 'management_collection_strategy';
 
     protected $fillable = [
-        'name', 'overdue_days', 'action', 'template_id',
+        'id', 'name', 'overdue_days', 'action', 'template_id',
         'late_fee_rate', 'sort', 'status',
     ];
 

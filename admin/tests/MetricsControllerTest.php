@@ -50,9 +50,16 @@ class MetricsControllerTest extends TestCase
 
     public function test_metrics_reports_dependency_status(): void
     {
-        // 测试环境 MySQL 不可用 → db_up 必须为 0（try/catch 兜底）；Redis 可用性随环境浮动，取 0/1 之一
+        // db_up 必须与实际可达性一致：可连 => 1、不可连 => 0。
+        // 两条路径都钉死才防得住「恒 1 / 恒 0」的指标僵死（对齐 service 端同款断言）。
         $body = (new MetricsController())->index(new Request('', 'GET'))->rawBody();
-        $this->assertMatchesRegularExpression('/open_admin_db_up 0\n/', $body);
+        $dbUp = 0;
+        try {
+            \support\Db::select('SELECT 1');
+            $dbUp = 1;
+        } catch (\Throwable) {
+        }
+        $this->assertMatchesRegularExpression("/open_admin_db_up {$dbUp}\n/", $body);
         $this->assertMatchesRegularExpression('/open_admin_redis_up [01]\n/', $body);
         $this->assertMatchesRegularExpression('/open_admin_active_users \d+/', $body);
     }

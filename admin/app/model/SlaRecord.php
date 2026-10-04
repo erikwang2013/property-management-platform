@@ -12,7 +12,7 @@ class SlaRecord extends BaseModel
     protected $table = 'management_sla_record';
 
     protected $fillable = [
-        'repair_order_id', 'rule_id', 'response_deadline', 'resolve_deadline',
+        'id', 'repair_order_id', 'rule_id', 'response_deadline', 'resolve_deadline',
         'escalated_at', 'escalate_level', 'is_response_overtime',
         'is_resolve_overtime', 'penalty_amount',
     ];

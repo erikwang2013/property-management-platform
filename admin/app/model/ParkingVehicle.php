@@ -9,7 +9,7 @@ use Erikwang2013\Encryptable\Encryptable;
 class ParkingVehicle extends BaseModel
 {
     protected $table = 'management_parking_vehicle';
-    protected $fillable = ['owner_id', 'space_id', 'plate_number', 'vehicle_brand', 'vehicle_color', 'vehicle_type', 'start_date', 'end_date', 'status'];
+    protected $fillable = ['id', 'owner_id', 'space_id', 'plate_number', 'vehicle_brand', 'vehicle_color', 'vehicle_type', 'start_date', 'end_date', 'status'];
     protected $casts = [
         'vehicle_type' => 'integer', 'status' => 'integer',
         'start_date' => 'date', 'end_date' => 'date',

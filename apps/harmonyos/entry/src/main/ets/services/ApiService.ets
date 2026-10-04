@@ -46,6 +46,19 @@ export class ApiService {
     return JSON.parse(resp.result as string);
   }
 
+  /**
+   * 分页列表统一解包。service 端列表接口为 illuminate paginate() 线格式：
+   * {code, message, data: {current_page, data: [...], total, ...}} —— 列表项在 data.data。
+   */
+  async getList<T>(path: string): Promise<T[]> {
+    const resp = await this.get(path) as Record<string, Object>;
+    if (resp['code'] !== 0) {
+      return [];
+    }
+    const page = resp['data'] as Record<string, Object>;
+    return (page['data'] as T[]) || [];
+  }
+
   async post(path: string, data?: Object): Promise<Object> {
     const req = http.createHttp();
     const resp = await req.request(this.versioned(path), {

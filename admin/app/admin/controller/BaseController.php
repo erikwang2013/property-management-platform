@@ -9,7 +9,9 @@ namespace app\admin\controller;
 
 use app\common\HashidsService;
 use app\common\SnowflakeService;
+use app\exception\InvalidResourceIdException;
 use app\model\AdminUser;
+use InvalidArgumentException;
 use support\Request;
 use support\Response;
 
@@ -45,10 +47,17 @@ class BaseController
 
     /**
      * 将 hashid 字符串解码为原始 ID
+     *
+     * 非法/旧盐字符串转 InvalidResourceIdException（自带 render() → 干净 422），
+     * 不再以 500 暴露异常类名与栈路径。
      */
     protected function decodeId(string $hashid): int
     {
-        return HashidsService::decode($hashid);
+        try {
+            return HashidsService::decode($hashid);
+        } catch (InvalidArgumentException) {
+            throw new InvalidResourceIdException('无效的资源 ID');
+        }
     }
 
     /**
@@ -57,6 +66,23 @@ class BaseController
     protected function encodeIds(array $data, array $idFields = ['id']): array
     {
         return HashidsService::encodeIds($data, $idFields);
+    }
+
+    /**
+     * 批量把请求里的外键 hashid 解码为原始 ID（与 encodeIds 对称）。
+     * 契约：读响应里 encodeId 出去的外键，写路径必须在本处解码——
+     * 客户端送回的就是 hashid，直写 BIGINT 列会 1366 / 落垃圾值。
+     * 只处理数组里实际存在的键（更新时未传的字段不能凭空补 null）。
+     */
+    protected function decodeIds(array $data, array $idFields = []): array
+    {
+        foreach ($idFields as $field) {
+            if (!array_key_exists($field, $data) || $data[$field] === '' || $data[$field] === null) {
+                continue;
+            }
+            $data[$field] = $this->decodeId((string) $data[$field]);
+        }
+        return $data;
     }
 
     /**

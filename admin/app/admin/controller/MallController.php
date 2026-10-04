@@ -196,10 +196,10 @@ class MallController extends BaseController
 
         $query = MallProduct::with('category');
         if (!empty($categoryId)) {
-            $query->where('category_id', (int) $categoryId);
+            $query->where('category_id', $this->decodeId($categoryId));
         }
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -213,9 +213,9 @@ class MallController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'             => $this->encodeId($item->id),
-                    'category_id'    => $item->category_id,
+                    'category_id'    => $item->category_id ? $this->encodeId($item->category_id) : '',
                     'category_name'  => $item->category->name ?? '',
-                    'community_id'   => $item->community_id,
+                    'community_id'   => $item->community_id ? $this->encodeId($item->community_id) : '',
                     'name'           => $item->name,
                     'description'    => $item->description,
                     'images'         => $item->images,
@@ -251,9 +251,9 @@ class MallController extends BaseController
 
         return $this->success([
             'id'             => $this->encodeId($item->id),
-            'category_id'    => $item->category_id,
+            'category_id'    => $item->category_id ? $this->encodeId($item->category_id) : '',
             'category_name'  => $item->category->name ?? '',
-            'community_id'   => $item->community_id,
+            'community_id'   => $item->community_id ? $this->encodeId($item->community_id) : '',
             'name'           => $item->name,
             'description'    => $item->description,
             'images'         => $item->images,

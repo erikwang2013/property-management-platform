@@ -111,6 +111,37 @@ magick "$TMP/ico-16.png" "$TMP/ico-32.png" "$TMP/ico-48.png" "$ROOT/admin/public
 cp "$ROOT/admin/public/favicon.ico" "$ROOT/service/public/favicon.ico"
 OUTS+=("$ROOT/admin/public/favicon.ico" "$ROOT/service/public/favicon.ico")
 
+# ⑨ Android adaptive icon 前景（anydpi-v26：背景纯靛蓝，前景=满铺瓦片缩到 66.7% 安全区，
+#     圆形遮罩裁出的正是瓦片中心的小筑；XML 见 mipmap-anydpi-v26/ic_launcher.xml 与 values/）
+for x in mdpi:108 hdpi:162 xhdpi:216 xxhdpi:324 xxxhdpi:432; do
+  d="${x%%:*}"; n="${x##*:}"; fg=$(( n * 2 / 3 ))
+  R "$fg" "$FULL" "$TMP/fg-$n.png"
+  magick "$TMP/fg-$n.png" -background none -gravity center -extent "${n}x${n}" "${STRIP_DATES[@]}" \
+    "$AF/android/app/src/main/res/mipmap-$d/ic_launcher_foreground.png"
+  OUTS+=("$AF/android/app/src/main/res/mipmap-$d/ic_launcher_foreground.png")
+done
+
+# ⑩ og 分享卡 1200×630（README/站点社交预览；思源黑体，缺失即中止）
+FONT="$(fc-list :lang=zh -f '%{file}\n' 2>/dev/null | grep -i 'SourceHanSansCN-Regular' | head -1 || true)"
+[ -n "$FONT" ] || FONT="$(fc-list :lang=zh -f '%{file}\n' 2>/dev/null | head -1 || true)"
+[ -n "$FONT" ] || fail "无中文字体（fc-list :lang=zh 为空），og 卡无法生成"
+R 140 "$TILE" "$TMP/og-mark.png"
+# 全身像用 rsvg 预渲染（IM 内置 SVG 渲染器不认渐变/透明，会画出白块）
+rsvg-convert -h 500 "$ROOT/docs/images/pet_xiaozhu.svg" -o "$TMP/og-pet.png"
+magick -size 1200x630 "gradient:#6366F1-#4338CA" \
+  "$TMP/og-mark.png" -geometry +80+80 -composite \
+  "$TMP/og-pet.png" -gravity southeast -geometry +80+24 -composite \
+  -gravity northwest -font "$FONT" -fill white -pointsize 64 -annotate +80+300 '物业管理平台' \
+  -fill '#E0E7FF' -pointsize 30 -annotate +84+372 '小筑 · 楼宇管家' \
+  "${STRIP_DATES[@]}" "$ROOT/docs/images/og_card.png"
+OUTS+=("$ROOT/docs/images/og_card.png")
+for d in "$AF/web" "$OF/web" "$ROOT/admin/public" "$ROOT/service/public"; do
+  cp "$ROOT/docs/images/og_card.png" "$d/og_card.png"; OUTS+=("$d/og_card.png")
+done
+
+# ⑪ 后端 PDF 品牌位（dompdf 不渲染 SVG，用 128px PNG 由 ExportController base64 内嵌）
+T 128 "$ROOT/admin/public/pet_mark_128.png"
+
 # ---- 校验 ----
 # %[channels] 值形如 "srgb 3.0" / "srgba 4.0" —— 必须以 "srgb " 开头（排除 srgba）。
 # 注：小尺寸位图 IM 会做调色板优化，报 "srgb 4.0"（索引通道被计为 channel），
@@ -126,6 +157,9 @@ done
 size "$I/Icon-App-1024x1024@1x.png" 1024
 size "$OH/AppScope/resources/base/media/app_icon.png" 216
 size "$AF/web/favicon.png" 32
+size "$AF/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" 432
+size "$ROOT/admin/public/pet_mark_128.png" 128
+[ "$(identify -format '%wx%h' "$ROOT/docs/images/og_card.png")" = "1200x630" ] || fail "og_card 尺寸错"
 [ "$(magick identify "$AF/windows/runner/resources/app_icon.ico" | wc -l)" -eq 7 ] || fail "Windows ico 帧数不对"
 [ "$(magick identify "$ROOT/admin/public/favicon.ico" | wc -l)" -eq 3 ] || fail "favicon.ico 帧数不对"
 

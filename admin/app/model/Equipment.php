@@ -8,7 +8,7 @@ namespace app\model;
 class Equipment extends BaseModel
 {
     protected $table = 'management_equipment';
-    protected $fillable = ['community_id', 'name', 'equipment_number', 'category', 'brand', 'model', 'location', 'install_date', 'warranty_end', 'service_life', 'status'];
+    protected $fillable = ['id', 'community_id', 'name', 'equipment_number', 'category', 'brand', 'model', 'location', 'install_date', 'warranty_end', 'service_life', 'status'];
     protected $casts = [
         'category' => 'integer', 'service_life' => 'integer', 'status' => 'integer',
         'install_date' => 'date', 'warranty_end' => 'date',

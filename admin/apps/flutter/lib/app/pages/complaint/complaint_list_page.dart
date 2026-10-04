@@ -25,7 +25,7 @@ class ComplaintListPage extends GetView<ComplaintController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.complaints.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('投诉人')), DataColumn(label: Text('类型')), DataColumn(label: Text('内容')),

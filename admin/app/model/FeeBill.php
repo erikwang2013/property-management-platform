@@ -12,7 +12,7 @@ class FeeBill extends BaseModel
     protected $table = 'management_fee_bill';
 
     protected $fillable = [
-        'room_id', 'owner_id', 'fee_type_id', 'bill_number',
+        'id', 'room_id', 'owner_id', 'fee_type_id', 'bill_number',
         'amount', 'paid_amount', 'late_fee',
         'start_date', 'end_date', 'due_date',
         'status', 'paid_at', 'remark',

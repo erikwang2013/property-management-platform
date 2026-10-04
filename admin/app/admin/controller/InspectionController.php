@@ -85,7 +85,7 @@ class InspectionController extends BaseController
 
         $query = InspectionTask::query();
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -99,12 +99,12 @@ class InspectionController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'             => $this->encodeId($item->id),
-                    'community_id'   => $item->community_id,
+                    'community_id'   => $item->community_id ? $this->encodeId($item->community_id) : '',
                     'title'          => $item->title,
                     'task_type'      => $item->task_type,
                     'route_points'   => $item->route_points,
                     'checkpoints'    => $item->checkpoints,
-                    'assigned_to'    => $item->assigned_to,
+                    'assigned_to'    => $item->assigned_to ? $this->encodeId($item->assigned_to) : '',
                     'scheduled_date' => $item->scheduled_date ? $item->scheduled_date->format('Y-m-d') : '',
                     'status'         => $item->status,
                     'started_at'     => $item->started_at ? $item->started_at->format('Y-m-d H:i') : '',
@@ -228,12 +228,12 @@ class InspectionController extends BaseController
 
         return $this->success([
             'id'             => $this->encodeId($item->id),
-            'community_id'   => $item->community_id,
+            'community_id'   => $item->community_id ? $this->encodeId($item->community_id) : '',
             'title'          => $item->title,
             'task_type'      => $item->task_type,
             'route_points'   => $item->route_points,
             'checkpoints'    => $item->checkpoints,
-            'assigned_to'    => $item->assigned_to,
+            'assigned_to'    => $item->assigned_to ? $this->encodeId($item->assigned_to) : '',
             'scheduled_date' => $item->scheduled_date ? $item->scheduled_date->format('Y-m-d') : '',
             'status'         => $item->status,
             'started_at'     => $item->started_at ? $item->started_at->format('Y-m-d H:i') : '',

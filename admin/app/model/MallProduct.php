@@ -12,7 +12,7 @@ class MallProduct extends BaseModel
     protected $table = 'management_mall_product';
 
     protected $fillable = [
-        'category_id', 'community_id', 'name', 'description', 'images',
+        'id', 'category_id', 'community_id', 'name', 'description', 'images',
         'price', 'original_price', 'stock', 'sales', 'is_recommend', 'status',
     ];
 

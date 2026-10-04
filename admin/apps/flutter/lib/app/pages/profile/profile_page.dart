@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
+import '../../widgets/pet_mark.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -119,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) return PetLoading();
 
     return Center(child: SizedBox(width: 500, child: ListView(padding: const EdgeInsets.all(24), children: [
       const Text('个人中心', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),

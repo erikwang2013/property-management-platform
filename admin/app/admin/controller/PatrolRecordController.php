@@ -34,10 +34,10 @@ class PatrolRecordController extends BaseController
         $query = PatrolRecord::query();
 
         if (!empty($patrolId)) {
-            $query->where('patrol_id', (int) $patrolId);
+            $query->where('patrol_id', $this->decodeId($patrolId));
         }
         if (!empty($staffId)) {
-            $query->where('staff_id', (int) $staffId);
+            $query->where('staff_id', $this->decodeId($staffId));
         }
         if (!empty($startDate)) {
             $query->where('started_at', '>=', $startDate);
@@ -79,6 +79,9 @@ class PatrolRecordController extends BaseController
         if (empty($data['patrol_id'])) {
             return $this->fail('请选择巡逻路线', 422);
         }
+
+        // 路线/巡逻人员收 hashid，入库前解码（读响应用 encodeId 返回，写路径必须对称）
+        $data = $this->decodeIds($data, ['patrol_id', 'staff_id']);
 
         // 自动计算时长（分钟）
         if (!empty($data['started_at']) && !empty($data['ended_at'])) {

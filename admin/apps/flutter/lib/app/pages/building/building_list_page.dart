@@ -49,7 +49,7 @@ class BuildingListPage extends GetView<BuildingController> {
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.buildings.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('楼栋名称')), DataColumn(label: Text('编号')),

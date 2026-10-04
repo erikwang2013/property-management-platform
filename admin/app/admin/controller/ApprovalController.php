@@ -197,10 +197,11 @@ class ApprovalController extends BaseController
             'id'               => $id,
             'approval_type_id' => $this->decodeId($approvalTypeId),
             'title'            => $title,
-            'applicant_id'     => $request->input('applicant_id', 0),
+            // 申请人 / 关联单据 ID 同列表接口口径，收 hashid；未传则保持 0
+            'applicant_id'     => $request->input('applicant_id') ? $this->decodeId((string) $request->input('applicant_id')) : 0,
             'applicant_type'   => $request->input('applicant_type', 0),
             'ref_type'         => $refType,
-            'ref_id'           => (int) $refId,
+            'ref_id'           => $refId ? $this->decodeId((string) $refId) : 0,
             'current_step'     => 1,
             'status'           => 0,
             'remark'           => $remark,

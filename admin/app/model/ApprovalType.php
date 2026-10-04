@@ -12,7 +12,7 @@ class ApprovalType extends BaseModel
     protected $table = 'management_approval_type';
 
     protected $fillable = [
-        'code', 'name', 'steps', 'status',
+        'id', 'code', 'name', 'steps', 'status',
     ];
 
     protected $casts = [

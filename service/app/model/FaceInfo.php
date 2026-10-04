@@ -14,7 +14,7 @@ class FaceInfo extends BaseModel
     protected $table = 'management_face_info';
 
     protected $fillable = [
-        'owner_id', 'face_image', 'face_token', 'feature_data',
+        'id', 'owner_id', 'face_image', 'face_token', 'feature_data',
         'verify_status', 'verified_at',
     ];
 

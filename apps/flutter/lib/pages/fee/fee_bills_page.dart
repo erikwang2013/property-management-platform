@@ -36,7 +36,7 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
       }
       final response = await api.dio.get(ApiConfig.feeBills, queryParameters: queryParams);
       setState(() {
-        _bills = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
+        _bills = List<Map<String, dynamic>>.from(response.data['data']?['data'] ?? []);
       });
     } catch (e) {
       Get.snackbar('错误', '加载账单失败: $e', backgroundColor: Colors.red.shade50);
@@ -109,7 +109,7 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
           // 账单列表
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator())
+                ? PetLoading()
                 : _bills.isEmpty
                     ? const PetEmpty()
                     : RefreshIndicator(

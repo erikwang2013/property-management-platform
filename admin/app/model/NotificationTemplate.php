@@ -12,7 +12,7 @@ class NotificationTemplate extends BaseModel
     protected $table = 'management_notification_template';
 
     protected $fillable = [
-        'code', 'name', 'title_template', 'content_template', 'channels', 'status',
+        'id', 'code', 'name', 'title_template', 'content_template', 'channels', 'status',
     ];
 
     protected $casts = [

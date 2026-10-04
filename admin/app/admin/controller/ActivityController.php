@@ -34,7 +34,7 @@ class ActivityController extends BaseController
         $query = CommunityActivity::query()->withCount('signups');
 
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -127,6 +127,9 @@ class ActivityController extends BaseController
             return $this->fail('活动标题不能为空', 422);
         }
 
+        // 小区收 hashid，入库前解码（读响应用 encodeId 返回该字段，写路径必须对称）
+        $data = $this->decodeIds($data, ['community_id']);
+
         $data['id']     = SnowflakeService::generate();
         $data['status'] = (int) $request->input('status', 0); // 0=草稿
 
@@ -147,12 +150,12 @@ class ActivityController extends BaseController
             return $this->fail('活动不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'community_id', 'title', 'content', 'category', 'cover_image',
             'location', 'max_participants', 'start_time', 'end_time',
             'signup_start', 'signup_end', 'is_free', 'cost',
             'organizer', 'contact_phone', 'status',
-        ]));
+        ]), ['community_id']));
         $item->save();
 
         return $this->success([], '更新成功');

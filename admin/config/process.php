@@ -46,13 +46,15 @@ return [
         'reloadable' => false,
         'constructor' => [
             // Monitor these directories
+            // 不监听 base_path().'/.env'：安装向导会中途改写 .env，触发 reload 会把正在执行
+            // 导入请求的 worker 打断（HTTP 000 / 半灌库），而 .env 是部署期文件、无需自动重载。
+            // 其余目录保持监听（worker 启动时的 bootstrap 会重读 config/route，故 config 目录仍需监听）。
             'monitorDir' => array_merge([
                 app_path(),
                 config_path(),
                 base_path() . '/process',
                 base_path() . '/support',
                 base_path() . '/resource',
-                base_path() . '/.env',
             ], glob(base_path() . '/plugin/*/app'), glob(base_path() . '/plugin/*/config'), glob(base_path() . '/plugin/*/api')),
             // Files with these suffixes will be monitored
             'monitorExtensions' => [

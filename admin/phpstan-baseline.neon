@@ -1405,12 +1405,6 @@ parameters:
 			path: app/admin/controller/OwnerController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Owner\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/OwnerController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\Owner\:\:whereIn\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -2601,6 +2595,12 @@ parameters:
 		-
 			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
 			identifier: staticMethod.notFound
+			count: 1
+			path: app/middleware/AdminPermission.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
 			count: 1
 			path: app/middleware/AdminPermission.php
 

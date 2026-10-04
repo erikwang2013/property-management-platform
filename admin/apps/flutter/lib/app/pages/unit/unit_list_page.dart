@@ -21,7 +21,7 @@ class UnitListPage extends GetView<UnitController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader(context, ctrl),
       Expanded(child: Obx(() {
-        if (ctrl.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (ctrl.isLoading.value) return PetLoading();
         if (ctrl.units.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('单元号')), DataColumn(label: Text('楼层数')),

@@ -34,7 +34,7 @@ class SecurityPatrolController extends BaseController
         $query = SecurityPatrol::query();
 
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -125,6 +125,9 @@ class SecurityPatrolController extends BaseController
             return $this->fail('路线名称不能为空', 422);
         }
 
+        // 小区收 hashid，入库前解码（读响应用 encodeId 返回该字段，写路径必须对称）
+        $data = $this->decodeIds($data, ['community_id']);
+
         // checkpoints 存储为JSON
         if (isset($data['checkpoints']) && is_array($data['checkpoints'])) {
             $data['checkpoints'] = json_encode($data['checkpoints'], JSON_UNESCAPED_UNICODE);
@@ -152,9 +155,9 @@ class SecurityPatrolController extends BaseController
             return $this->fail('巡逻路线不存在', 404);
         }
 
-        $updateData = $request->only([
+        $updateData = $this->decodeIds($request->only([
             'community_id', 'name', 'route_points', 'checkpoints', 'sort', 'status',
-        ]);
+        ]), ['community_id']);
 
         if (isset($updateData['checkpoints']) && is_array($updateData['checkpoints'])) {
             $updateData['checkpoints'] = json_encode($updateData['checkpoints'], JSON_UNESCAPED_UNICODE);

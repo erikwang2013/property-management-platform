@@ -33,7 +33,7 @@ class GreenAreaController extends BaseController
         $query = GreenArea::query();
 
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($status !== null && $status !== '') {
             $query->where('status', (int) $status);
@@ -108,6 +108,9 @@ class GreenAreaController extends BaseController
             return $this->fail('区域名称不能为空', 422);
         }
 
+        // 小区收 hashid，入库前解码（读响应用 encodeId 返回该字段，写路径必须对称）
+        $data = $this->decodeIds($data, ['community_id']);
+
         $data['id']     = SnowflakeService::generate();
         $data['status'] = $request->input('status', 1);
 
@@ -128,10 +131,10 @@ class GreenAreaController extends BaseController
             return $this->fail('绿化区域不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'community_id', 'name', 'location', 'area', 'plant_types',
             'responsible_staff', 'sort', 'status',
-        ]));
+        ]), ['community_id']));
         $item->save();
 
         return $this->success([], '更新成功');

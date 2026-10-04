@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class MallOrdersPage extends StatefulWidget {
   const MallOrdersPage({super.key});
@@ -18,12 +19,12 @@ class _MallOrdersPageState extends State<MallOrdersPage> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try { final api = Get.find<ApiService>(); final r = await api.dio.get(ApiConfig.mallOrders);
-      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data'] ?? [])); } catch (_) {} finally { setState(() => _loading = false); }
+      setState(() => _items = List<Map<String, dynamic>>.from(r.data['data']?['data'] ?? [])); } catch (e) { debugPrint('[mall_orders_page] $e'); } finally { setState(() => _loading = false); }
   }
   String _status(dynamic s) => {0: '待支付', 1: '已支付', 2: '已发货', 3: '已完成', 4: '已退款'}[s as int?] ?? '-';
   @override
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('我的订单')),
-    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: _items.map((o) => Card(child: ListTile(
+    body: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 600), child: _loading ? PetLoading() : ListView(padding: const EdgeInsets.all(16), children: _items.map((o) => Card(child: ListTile(
       leading: const Icon(Icons.receipt), title: Text(o['product_name'] ?? o['order_no'] ?? ''),
       subtitle: Text('¥${o['amount'] ?? '-'} | ${_status(o['status'])}'), trailing: Text(o['created_at'] ?? '', style: const TextStyle(fontSize: 11, color: Colors.grey)),
     ))).toList()))),

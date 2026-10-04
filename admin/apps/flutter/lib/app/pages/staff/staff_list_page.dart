@@ -8,6 +8,7 @@ import '../../widgets/status_chip.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'staff_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class StaffListPage extends GetView<StaffController> {
   const StaffListPage({super.key});
@@ -28,7 +29,7 @@ class StaffListPage extends GetView<StaffController> {
         const SizedBox(width:12),ChoiceChip(label:Text('全部'),selected:c.statusFilter.value==null,onSelected:(_)=>c.filterByStatus(null)),const SizedBox(width:4),ChoiceChip(label:Text('在职'),selected:c.statusFilter.value==1,onSelected:(_)=>c.filterByStatus(1)),const SizedBox(width:4),ChoiceChip(label:Text('离职'),selected:c.statusFilter.value==0,onSelected:(_)=>c.filterByStatus(0)),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:[DataColumn(label:Checkbox(value:c.selectedIds.length==c.staff.length&&c.staff.isNotEmpty,onChanged:(_)=>c.toggleSelectAll())),const DataColumn(label:Text('姓名')),const DataColumn(label:Text('工号')),const DataColumn(label:Text('部门')),const DataColumn(label:Text('手机号')),const DataColumn(label:Text('状态')),const DataColumn(label:Text('操作'))],
           rows:c.staff.map((s){final id=s['id'].toString();return DataRow(selected:c.selectedIds.contains(id),onSelectChanged:(_)=>c.toggleSelect(id),cells:[
             DataCell(Checkbox(value:c.selectedIds.contains(id),onChanged:(_)=>c.toggleSelect(id))),

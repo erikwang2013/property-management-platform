@@ -17,7 +17,7 @@ class Owner extends BaseModel
     protected $table = 'management_owner';
 
     protected $fillable = [
-        'name', 'phone', 'email', 'id_card', 'password',
+        'id', 'name', 'phone', 'email', 'id_card', 'password',
         'gender', 'birthday', 'emergency_contact', 'emergency_phone',
         'check_in_date', 'remark', 'status',
         'last_login_at', 'last_login_ip', 'login_failures', 'locked_until',

@@ -9,7 +9,7 @@ namespace app\middleware;
 
 use app\common\Tenant;
 use support\Request;
-use support\Response;
+use Webman\Http\Response;
 
 /**
  * 租户上下文中间件：将 AdminAuth 注入的 $request->tenantId 压入租户栈，

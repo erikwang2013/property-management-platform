@@ -53,7 +53,7 @@ class AuthController extends BaseController
             return $this->fail('验证码错误', 422);
         }
 
-        $owner = Owner::where('phone', $phone)->first();
+        $owner = $this->findOwnerByPhone($phone);
 
         // 锁定检查必须在密码验证之前，否则锁定期间仍可无限尝试密码
         if ($owner && $owner->locked_until && strtotime($owner->locked_until) > time()) {
@@ -88,8 +88,10 @@ class AuthController extends BaseController
         $owner->save();
 
         $jwt = JWTFactory::createFromConfig(config('plugin.erikwang2013.jwt.jwt', []));
-        $accessToken = $jwt->create(['sub' => $owner->id, 'phone' => $owner->phone]);
-        $refreshToken = $jwt->createRefresh(['sub' => $owner->id, 'phone' => $owner->phone]);
+        $claims = ['sub' => $owner->id, 'phone' => $owner->phone];
+        // encode() 的 expire 传 0 时按 token_type 取配置：access 走 default_expire、refresh 走 refresh_expire
+        $accessToken = $jwt->encode($claims);
+        $refreshToken = $jwt->encode($claims + ['token_type' => 'refresh']);
 
         return $this->success([
             'access_token' => $accessToken,
@@ -131,7 +133,7 @@ class AuthController extends BaseController
             return $this->fail('验证码错误', 422);
         }
 
-        if (Owner::where('phone', $phone)->exists()) {
+        if ($this->findOwnerByPhone($phone) !== null) {
             return $this->fail('该手机号已注册', 422);
         }
 
@@ -160,12 +162,40 @@ class AuthController extends BaseController
 
         try {
             $jwt = JWTFactory::createFromConfig(config('plugin.erikwang2013.jwt.jwt', []));
-            $payload = $jwt->decode($refreshToken);
-            $accessToken = $jwt->create(['sub' => $payload['sub'], 'phone' => $payload['phone']]);
+            // 刷新令牌默认被 decode() 拒绝，显式放行；此处不轮换（客户端只存 refresh_token 不更新，
+            // 轮换会让它拿着已拉黑的旧 token 二次刷新），轮换需客户端同步改造
+            $payload = $jwt->decode($refreshToken, true);
+            $accessToken = $jwt->encode(['sub' => $payload['sub'], 'phone' => $payload['phone']]);
             return $this->success(['access_token' => $accessToken]);
         } catch (\Exception $e) {
             return $this->fail('Token已过期，请重新登录', 401);
         }
+    }
+
+    /**
+     * 按手机号查业主。
+     *
+     * `owner.phone` 是 encryptable 加密列（PHPEncrypter：AES-256-CBC + 随机 IV + 序列化信封），
+     * 同一明文每次密文都不同，密文等值查询（where('phone', $phone)）永远匹配不到。
+     * 插件的等值查询能力只有 UniqueEncrypted / ExistsEncrypted 两个规则，且它们强制要求
+     * 确定性加密（ECB），本项目未启用，因此插件能力范围内只剩「解密后比对」。
+     *
+     * ponytail: 全表解密比对，O(业主数)/次登录；业主量上万后加确定性 phone_hash 列
+     * （HMAC-SHA256(明文)，非加密）并回填，注册/导入一并写入，查询与唯一性校验改走该列。
+     */
+    private function findOwnerByPhone(string $phone): ?Owner
+    {
+        $ownerId = null;
+        // 只取 id+phone 两列并游标遍历：避免把每个业主的 email/id_card/紧急联系人等加密列解密一遍，
+        // 也避免整表 hydrate 进内存
+        foreach (Owner::query()->select(['id', 'phone'])->cursor() as $row) {
+            if ((string) $row->phone === $phone) {
+                $ownerId = (int) $row->id;
+                break;
+            }
+        }
+
+        return $ownerId !== null ? Owner::find($ownerId) : null;
     }
 
     /** 记录登录失败：连续 5 次失败锁定账号 15 分钟 */

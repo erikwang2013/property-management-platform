@@ -9,6 +9,7 @@ import '../../widgets/confirm_delete_dialog.dart';
 import '../../widgets/base_crud_controller.dart';
 import '../../config/api_config.dart';
 import '../../services/api_service.dart';
+import '../../widgets/pet_mark.dart';
 
 class MallCategoryController extends BaseCrudController {
   final categories = <Map<String, dynamic>>[].obs;
@@ -48,7 +49,7 @@ class MallCategoryListPage extends GetView<MallCategoryController> {
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Row(children:[const Text('商品分类',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const Spacer(),ElevatedButton.icon(onPressed:()=>_catForm(context,c),icon:const Icon(Icons.add),label:const Text('新增分类'))]),const SizedBox(height:12),
       Expanded(child:Obx((){
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('名称')),DataColumn(label:Text('排序')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],rows:c.categories.map((x){final id=x['id'].toString();return DataRow(cells:[DataCell(Text(x['name']??'')),DataCell(Text('${x['sort']??0}')),DataCell(StatusChip(status:x['status']as int?)),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_catForm(context,c,data:x)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:x['name']??'');if(p!=null)c.deleteItem(id,p);})]))]);}).toList());
       })),
       Obx(()=>PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -65,7 +66,7 @@ class MallProductListPage extends GetView<MallProductController> {
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Row(children:[const Text('商品管理',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const Spacer(),ElevatedButton.icon(onPressed:()=>_prodForm(context,c),icon:const Icon(Icons.add),label:const Text('新增商品'))]),const SizedBox(height:12),
       Expanded(child:Obx((){
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('商品名称')),DataColumn(label:Text('价格')),DataColumn(label:Text('库存')),DataColumn(label:Text('状态')),DataColumn(label:Text('操作'))],rows:c.products.map((p){final id=p['id'].toString();return DataRow(cells:[DataCell(Text(p['name']??'')),DataCell(Text('${p['price']??'-'}')),DataCell(Text('${p['stock']??0}')),DataCell(StatusChip(status:p['status']as int?)),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_prodForm(context,c,data:p)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final pwd=await ConfirmDeleteDialog.show(context,itemName:p['name']??'');if(pwd!=null)c.deleteItem(id,pwd);})]))]);}).toList());
       })),
       Obx(()=>PaginationRow(page:c.page.value,total:c.total.value,pageSize:c.limit.value,onPrev:c.prevPage,onNext:c.nextPage)),
@@ -82,7 +83,7 @@ class MallOrderListPage extends GetView<MallOrderController> {
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       const Text('订单管理',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),const SizedBox(height:12),
       Expanded(child:Obx((){
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('订单号')),DataColumn(label:Text('商品')),DataColumn(label:Text('金额')),DataColumn(label:Text('状态')),DataColumn(label:Text('时间')),DataColumn(label:Text('操作'))],rows:c.orders.map((o){final hid=o['id'].toString();return DataRow(cells:[DataCell(Text(o['order_no']??'-')),DataCell(Text(o['product_name']??'-')),DataCell(Text('${o['amount']??'-'}')),DataCell(StatusChip(status:o['status']as int?,labels:const{0:'待支付',1:'已支付',2:'已发货',3:'已完成',4:'已退款'})),DataCell(Text(o['created_at']??'-')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[
           if((o['status']as int? ??0)==1)IconButton(icon:const Icon(Icons.local_shipping,size:18,color:Colors.blue),tooltip:'发货',onPressed:()=>_shipDialog(context,c,hid)),
           if((o['status']as int? ??0)==1)IconButton(icon:const Icon(Icons.undo,size:18,color:Colors.orange),tooltip:'退款',onPressed:()=>_refundDialog(context,c,hid)),

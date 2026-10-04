@@ -229,9 +229,14 @@ class GroupController extends BaseController
             return $this->fail('集团不存在', 404);
         }
 
-        $communityId = (int) $request->input('community_id', 0);
-        if ($communityId <= 0) {
+        $communityHashid = (string) $request->input('community_id', '');
+        if ($communityHashid === '') {
             return $this->fail('小区ID不能为空', 422);
+        }
+        try {
+            $communityId = $this->decodeId($communityHashid);
+        } catch (InvalidArgumentException) {
+            return $this->fail('无效的小区ID', 404);
         }
 
         // 检查是否已存在

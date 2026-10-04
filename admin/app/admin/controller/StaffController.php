@@ -34,7 +34,7 @@ class StaffController extends BaseController
         $query = Staff::query();
 
         if (!empty($communityId)) {
-            $query->where('community_id', (int) $communityId);
+            $query->where('community_id', $this->decodeId($communityId));
         }
         if ($department !== null && $department !== '') {
             $query->where('department', (int) $department);
@@ -115,6 +115,9 @@ class StaffController extends BaseController
             return $this->fail('员工姓名不能为空', 422);
         }
 
+        // 小区收 hashid，入库前解码（staff 列表/详情用 encodeId 返回该字段，写路径必须对称解码）
+        $data = $this->decodeIds($data, ['community_id']);
+
         $data['id']     = SnowflakeService::generate();
         $data['status'] = $request->input('status', 1);
 
@@ -135,10 +138,10 @@ class StaffController extends BaseController
             return $this->fail('员工不存在', 404);
         }
 
-        $item->fill($request->only([
+        $item->fill($this->decodeIds($request->only([
             'community_id', 'name', 'phone', 'id_card',
             'job_title', 'department', 'hire_date', 'salary', 'status',
-        ]));
+        ]), ['community_id']));
         $item->save();
 
         return $this->success([], '更新成功');

@@ -11,8 +11,12 @@ class GroupCommunity extends BaseModel
 {
     protected $table = 'management_group_community';
 
+    // 关联表只有 created_at（install.sql 全库唯一无 updated_at 的表），不写 updated_at
+    // ponytail: 若后端后续给该表补 updated_at 列，删掉此行即可
+    public const UPDATED_AT = null;
+
     protected $fillable = [
-        'group_id', 'community_id',
+        'id', 'group_id', 'community_id',
     ];
 
     protected $casts = [

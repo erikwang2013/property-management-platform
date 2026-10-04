@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 import '../../config/theme.dart';
+import '../../widgets/pet_mark.dart';
 
 class RepairDetailPage extends StatefulWidget {
   const RepairDetailPage({super.key});
@@ -59,7 +60,7 @@ class _RepairDetailPageState extends State<RepairDetailPage> {
     return Scaffold(
       appBar: AppBar(title: Text('repair_detail'.tr)),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? PetLoading()
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Column(

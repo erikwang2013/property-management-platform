@@ -79,10 +79,7 @@ class ModelTest extends TestCase
 
     public function test_room_decimal_cast(): void
     {
-        // 应用缺陷：Room 等模型的 decimal 裸 cast（无 :2 位数）在 Eloquent 11+ 序列化时
-        // toScale(null) 直接 TypeError（HasAttributes:1449），任何非空 decimal 字段读取即崩。
-        // 属应用级 bug（10+ 模型同类），非测试可绕开，见 docs/tests/api-report.md；修复应用后取消跳过。
-        $this->markTestSkipped('应用 decimal 裸 cast 缺陷（Eloquent 需 decimal:2），等待应用修复');
+        // 2026-10-04 修复：Room 等模型 decimal 裸 cast 已全部补显式 scale（decimal:2，对齐 install.sql DECIMAL(x,2)）
         $this->requireDb();
         $room = new Room();
         $room->id = SnowflakeService::generate();

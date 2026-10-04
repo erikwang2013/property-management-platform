@@ -17,7 +17,7 @@ class ParkingRecordListPage extends GetView<ParkingRecordController> {
       const Text('出入记录', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.records.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('车牌号')), DataColumn(label: Text('进入时间')), DataColumn(label: Text('离开时间')), DataColumn(label: Text('类型')),

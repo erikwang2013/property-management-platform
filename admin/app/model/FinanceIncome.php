@@ -12,7 +12,7 @@ class FinanceIncome extends BaseModel
     protected $table = 'management_finance_income';
 
     protected $fillable = [
-        'income_number', 'income_type', 'amount',
+        'id', 'income_number', 'income_type', 'amount',
         'payer_type', 'payer_id', 'payment_method',
         'income_date', 'operator_id', 'remark',
     ];

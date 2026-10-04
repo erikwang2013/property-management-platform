@@ -34,7 +34,7 @@ class GreenMaintenanceController extends BaseController
         $query = GreenMaintenance::query();
 
         if (!empty($areaId)) {
-            $query->where('area_id', (int) $areaId);
+            $query->where('area_id', $this->decodeId($areaId));
         }
         if ($maintenanceType !== null && $maintenanceType !== '') {
             $query->where('maintenance_type', (int) $maintenanceType);
@@ -78,6 +78,9 @@ class GreenMaintenanceController extends BaseController
         if (empty($data['area_id'])) {
             return $this->fail('请选择绿化区域', 422);
         }
+
+        // 区域/养护人员收 hashid，入库前解码（读响应用 encodeId 返回，写路径必须对称）
+        $data = $this->decodeIds($data, ['area_id', 'staff_id']);
 
         $data['id'] = SnowflakeService::generate();
 

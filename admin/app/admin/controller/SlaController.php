@@ -154,7 +154,7 @@ class SlaController extends BaseController
 
         $query = SlaRecord::with('rule');
         if (!empty($repairOrderId)) {
-            $query->where('repair_order_id', (int) $repairOrderId);
+            $query->where('repair_order_id', $this->decodeId($repairOrderId));
         }
 
         $list = $query->orderBy('created_at', 'desc')
@@ -162,7 +162,7 @@ class SlaController extends BaseController
             ->through(function ($item) {
                 return [
                     'id'                   => $this->encodeId($item->id),
-                    'repair_order_id'      => $item->repair_order_id,
+                    'repair_order_id'      => $item->repair_order_id ? $this->encodeId($item->repair_order_id) : '',
                     'rule_id'              => $item->rule_id ? $this->encodeId($item->rule_id) : '',
                     'rule_name'            => $item->rule->name ?? '',
                     'response_deadline'    => $item->response_deadline ? $item->response_deadline->format('Y-m-d H:i') : '',

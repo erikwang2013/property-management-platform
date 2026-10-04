@@ -19,7 +19,7 @@
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
 | 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
-| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 8 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`、React / Angular 的 `public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等 57 件）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 8 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`、React / Angular 的 `public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等 68 件）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
 | 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 管理端 React / Angular 重设计（登录页 + 值班台 + 空态 + 404）· 两端 Flutter 与两端 HarmonyOS 的壳层图标与启动图（launcher / 应用图标 / splash）· 四端空态插图（React / Angular / Flutter / HarmonyOS）· 六个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
 
 ## 项目结构
@@ -80,7 +80,7 @@ property-management-platform/
 
 | 层 | 数量 | 详情 |
 |----|------|------|
-| 数据库表 | 65张 | 全部 `management_` 前缀，BIGINT 非自增主键 |
+| 数据库表 | 67张 | 全部 `management_` 前缀，BIGINT 非自增主键 |
 | PHP 模型 | admin 64 / service 57 | 均为 Eloquent 模型，含 encryptable 加密字段；service 端 57 为模型文件数（含 BaseModel 基类） |
 | admin 控制器 | 58个 | 通用管理 + 22个物业模块 + 12个扩展功能 |
 | service 控制器 | 17个 | 业主端全部 API |
@@ -88,7 +88,7 @@ property-management-platform/
 | Flutter 管理后台 | 42页 | admin 42个页面模块，96文件/6,662行 |
 | Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/商城/智能问答/人脸，32文件/3,582行 |
 | HarmonyOS | 7页 | 登录/首页/账单/报修(2)/公告/个人中心，11文件/927行 |
-| 测试 | 459个 | admin 258个(619断言) + service 201个(661断言)，详见 [测试报告](docs/tests/) |
+| 测试 | 471个 | admin 271个(675断言) + service 200个(847断言)，详见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
 

@@ -14,7 +14,7 @@ class FinanceStatisticsPage extends GetView<FinanceController> {
     if (!Get.isRegistered<FinanceController>()) Get.put(FinanceController(), permanent: false);
     final c = controller;
     return Obx(() {
-      if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+      if (c.isLoading.value) return PetLoading();
       final s = c.statistics;
       return SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('财务统计', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -43,7 +43,7 @@ class FinanceIncomeListPage extends GetView<FinanceIncomeController> {
       const Text('收入记录', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.incomes.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('科目')), DataColumn(label: Text('金额')), DataColumn(label: Text('来源')), DataColumn(label: Text('日期')),
@@ -67,7 +67,7 @@ class FinanceExpenseListPage extends GetView<FinanceExpenseController> {
       const Text('支出记录', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
-        if (c.isLoading.value) return const Center(child: CircularProgressIndicator());
+        if (c.isLoading.value) return PetLoading();
         if (c.expenses.isEmpty) return const PetEmpty();
         return DataTable(columns: const [
           DataColumn(label: Text('科目')), DataColumn(label: Text('金额')), DataColumn(label: Text('用途')), DataColumn(label: Text('日期')),

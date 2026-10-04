@@ -35,10 +35,10 @@ class EnergyRecordController extends BaseController
         $query = EnergyRecord::query();
 
         if (!empty($meterId)) {
-            $query->where('meter_id', (int) $meterId);
+            $query->where('meter_id', $this->decodeId($meterId));
         }
         if (!empty($roomId)) {
-            $query->where('room_id', (int) $roomId);
+            $query->where('room_id', $this->decodeId($roomId));
         }
         if (!empty($startDate)) {
             $query->where('record_date', '>=', $startDate);

@@ -7,6 +7,7 @@ import '../../widgets/pagination_row.dart';
 import '../../widgets/confirm_delete_dialog.dart';
 import 'collection_controller.dart';
 import '../../config/api_config.dart';
+import '../../widgets/pet_mark.dart';
 
 class CollectionStrategyListPage extends GetView<CollectionStrategyController> {
   const CollectionStrategyListPage({super.key});
@@ -19,7 +20,7 @@ class CollectionStrategyListPage extends GetView<CollectionStrategyController> {
         ElevatedButton.icon(onPressed:()=>_form(context,c), icon:const Icon(Icons.add), label:const Text('新增策略')),
       ]),const SizedBox(height:12),
       Expanded(child: Obx(() {
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('策略名称')),DataColumn(label:Text('逾期天数')),DataColumn(label:Text('通知方式')),DataColumn(label:Text('操作'))],
           rows:c.strategies.map((s){final id=s['id'].toString();return DataRow(cells:[DataCell(Text(s['name']??'')),DataCell(Text('${s['overdue_days']??'-'}天')),DataCell(Text(s['notify_method']??'-')),DataCell(Row(mainAxisSize:MainAxisSize.min,children:[IconButton(icon:Icon(Icons.edit,size:18),onPressed:()=>_form(context,c,data:s)),IconButton(icon:Icon(Icons.delete,size:18,color:Colors.red),onPressed:()async{final p=await ConfirmDeleteDialog.show(context,itemName:s['name']??'');if(p!=null)c.deleteItem(id,p);})]))]);
         }).toList());
@@ -46,7 +47,7 @@ class CollectionRecordListPage extends GetView<CollectionRecordController> {
         ElevatedButton.icon(onPressed:()=>c.run(),icon:const Icon(Icons.play_arrow),label:const Text('执行催缴')),
       ]),const SizedBox(height:12),
       Expanded(child:Obx((){
-        if(c.isLoading.value)return const Center(child:CircularProgressIndicator());
+        if(c.isLoading.value)return PetLoading();
         return DataTable(columns:const[DataColumn(label:Text('业主')),DataColumn(label:Text('账单')),DataColumn(label:Text('策略')),DataColumn(label:Text('结果')),DataColumn(label:Text('时间'))],
           rows:c.records.map((r)=>DataRow(cells:[DataCell(Text(r['owner_name']??'-')),DataCell(Text(r['bill_info']??'-')),DataCell(Text(r['strategy_name']??'-')),DataCell(Text(r['result']??'-')),DataCell(Text(r['created_at']??'-'))])).toList());
       })),

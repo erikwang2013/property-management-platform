@@ -2,6 +2,8 @@
 
 > 生成日期：2026-08-16 · 来源：pmp-team ci-agent（P3-③ 现状盘点，只读）
 > 对应路线图：docs/PROJECT_PLAN.md P3 — "HarmonyOS 7 页扩至核心路径（缴费/报修/公告/访客/停车），Flutter 业主端移动适配"
+>
+> **2026-10-04 更新（本清单已部分过期，以代码现状为准）**：下文「无入口 / 页面缺失」各项在前几轮已落地——HomePage 六项入口全部可达、VisitorPage/ParkingPage 已建并注册；本轮（v1.7.0）另修掉全端列表「`data.data` 少解一层」缺陷（HarmonyOS 6 处 + Flutter owner 14 处，症状是列表静默为空的假象）并补 EmptyView 空态。仍未做：访客取消（PUT/DELETE）、列表分页、HarmonyOS 侧真机/编译验证。
 
 ## 一、HarmonyOS 业主端现状（apps/harmonyos，7 页）
 

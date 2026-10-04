@@ -49,6 +49,8 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY composer.json composer.lock ./
+# post-autoload-dump 钩子脚本，必须先于 composer install 就位
+COPY scripts/ ./scripts/
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 COPY . .
