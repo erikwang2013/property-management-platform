@@ -49,27 +49,46 @@ bash scripts/backup.sh
 
 ## 2. 密钥管理
 
-项目依赖 5 个密钥，均在 `.env` 中（admin 与 service 各自独立，勿共用同一套）：
+项目依赖以下密钥，均在 `.env` 中（admin 与 service 各自独立，勿共用同一套）：
 
 | 变量 | 长度 | 用途 |
 |---|---|---|
 | `ENCRYPTION_KEY` | 32 字节 | API 传输加密（config/encryption.php） |
 | `ENCRYPTABLE_KEY` | 32 字节 | 数据库敏感字段加密（encryptable 插件，**勿与 ENCRYPTION_KEY 共用**） |
 | `JWT_SECRET_KEY` | 64 位以上 | JWT 签名 |
-| `HASHIDS_SALT` | — | ID 加解密 |
+| `HASHIDS_SALT` | — | ID 加解密（admin 与 service **必须不同**，有意隔离） |
 | `HASHIDS_ALT_SALT` | — | ID 加解密备用 |
+| `DB_PASSWORD` | 32 位 hex | 数据库应用用户密码（compose 的 `MYSQL_PASSWORD` 默认派生自此） |
+| `REDIS_PASSWORD` | 32 位 hex | Redis 密码（compose 内 `redis-server --requirepass`） |
+| `ELASTIC_PASSWORD` | 32 位 hex | Elasticsearch `elastic` 用户密码（内嵌于 `SCOUT_HOSTS`/`OPENSEARCH_PASSWORD`，替换时自动同步） |
+| `MYSQL_ROOT_PASSWORD` | 32 位 hex | MySQL root 密码（compose 必填插值） |
+| `GRAFANA_ADMIN_PASSWORD` | 24 位 hex | Grafana 管理员密码（compose 必填插值） |
 
 ### 2.1 生成密钥
 
 ```bash
-# 输出 5 个 KEY=VALUE 到 stdout，可直接追加到 .env
+# 输出全部密钥 KEY=VALUE 到 stdout，可直接追加到 .env
 php scripts/gen_env_keys.php
 
-# 直接写入 .env：已存在的密钥不覆盖，只追加缺失的
+# 写入 .env：只追加缺失键，已有键（含占位符）一律不动
 php scripts/gen_env_keys.php --file=.env
+
+# 额外把 change-me* 占位符替换为随机值（deploy.sh 仅在 .env 刚由模板生成时使用）
+php scripts/gen_env_keys.php --file=.env --replace-placeholders
 ```
 
-> 若 .env 中某密钥仍是 `change-me` 占位符，先删除该行再运行（占位符被视为"已存在"，不会覆盖）。
+**取值语义（旧密钥保留）**：
+
+| 当前状态 | 行为 |
+|---|---|
+| 键缺失 | 追加生成 |
+| 值为 `change-me*` | 默认仅告警；加 `--replace-placeholders` 时替换 |
+| 值为空 | 不动（可能是有意留空），仅告警 |
+| 真实密钥 | 保留，绝不覆盖 |
+
+> compose 的 `${VAR:?}` 对「未设置」与「空值」都报错：`scripts/deploy.sh` 会硬校验 `MYSQL_ROOT_PASSWORD` / `REDIS_PASSWORD` / `ELASTIC_PASSWORD` / `GRAFANA_ADMIN_PASSWORD` 非空。
+>
+> `ELASTIC_PASSWORD` 是例外：它一旦被某个部署沿用（哪怕仍是 `change-me`），替换会断开 ES 连接——脚本只在新 `.env` 中替换，已有 `.env` 中仅告警。
 
 ### 2.2 密钥轮换（encryptable）
 
@@ -98,7 +117,7 @@ bash scripts/rotate_keys.sh /path/to/service/.env
 
 **日常操作清单**：
 
-1. 部署新环境：`cp .env.example .env` → 删除 `change-me` 占位行 → `php scripts/gen_env_keys.php --file=.env` → 启动服务确认无密钥报错。
+1. 部署新环境：`cp .env.example .env` → `php scripts/gen_env_keys.php --file=.env --replace-placeholders` → 启动服务确认无密钥报错。（Docker 部署直接跑 `bash scripts/deploy.sh`：自动补密钥并启动双端）
 2. 例行轮换：按 2.2 执行，季度一次即可（无强制周期，泄漏时立即轮换）。
 3. 备份的 `.env.bak.*` 含明文密钥，与数据库备份同等对待（权限 600、异地存放）。
 

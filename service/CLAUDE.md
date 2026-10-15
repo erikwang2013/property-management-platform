@@ -48,11 +48,14 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ```bash
 cp .env.docker .env
-# 修改 .env 中所有 change-me-* 占位符
-docker-compose up -d
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders  # 占位密钥自动生成；已有密钥保留
+docker compose up -d
+# 或一键（推荐）: bash scripts/deploy.sh（双端一起，幂等）
 ```
 
-编排: nginx + app(PHP 8.3) + mysql + redis + elasticsearch
+编排: nginx + app(PHP 8.3) + mysql + redis + elasticsearch + prometheus + grafana + redis-exporter（9 个服务，端口相对 admin 预设偏移）
+
+> MySQL 容器的库名/用户/密码派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`；compose 必填插值 `MYSQL_ROOT_PASSWORD`/`GRAFANA_ADMIN_PASSWORD` 由生成脚本补齐。完整说明见根 README「Docker 部署」与 `docs/INSTALL.md`。
 
 ## CI/CD
 

@@ -231,20 +231,25 @@ Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 
 ### Docker Compose（推荐生产环境）
 
-项目根目录 `docker-compose.yml` 编排 5 个服务：
+本目录 `docker-compose.yml` 编排 9 个服务（admin 与 service 各自独立一套，端口已错开）：
 
 | 服务 | 说明 |
 |------|------|
 | `nginx` | Nginx 反向代理（80/443），静态文件服务 |
 | `app` | webman PHP 8.3 应用，`Dockerfile` 构建（含 OPcache） |
-| `mysql` | MySQL 8.0，数据卷持久化 |
+| `mysql` | MySQL 8.0，数据卷持久化；首启自动导入 `docs/install.sql` |
 | `redis` | Redis 7 Alpine，缓存/限流/Session |
 | `elasticsearch` | Elasticsearch 8.x，全文检索 |
+| `prometheus` / `grafana` / `redis-exporter` | 监控（`deploy/monitoring/`） |
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders  # 占位密钥自动生成；已有密钥保留
+docker compose up -d
+# 或一键（推荐）: bash scripts/deploy.sh（双端一起，幂等）
 ```
+
+> MySQL 容器的库名/用户/密码派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`；compose 必填插值 `MYSQL_ROOT_PASSWORD`/`GRAFANA_ADMIN_PASSWORD` 由生成脚本补齐。完整说明见根 README「Docker 部署」与 `docs/INSTALL.md`。
 
 ### CI/CD
 

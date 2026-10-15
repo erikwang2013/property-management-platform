@@ -4,8 +4,9 @@
 # Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 # ============================================================
 # 用法: bash scripts/deploy.sh
-# 流程: git pull → 检查/生成双端 .env → 双端 docker compose up -d
-#       → 数据库未初始化时导入 docs/install.sql → 监控冒烟验证
+# 流程: git pull → 检查/生成双端 .env（缺失键自动补齐，已有密钥一律保留）
+#       → 双端 docker compose up -d（MySQL 首启由 compose initdb 挂载自动导入 install.sql）
+#       → 数据库初始化校验 → 监控冒烟验证
 # 幂等: 可重复执行；已存在的 .env 不覆盖，已初始化的库不重复导入。
 # 出错即停: 任一步骤失败立即退出并打印失败步骤。
 set -euo pipefail
@@ -14,7 +15,10 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ADMIN_DIR="$ROOT/admin"
 SERVICE_DIR="$ROOT/service"
 SQL_FILE="$ROOT/docs/install.sql"
+# 加密密钥：占位符视为未完成部署，硬校验（gen_env_keys.php 仅在新 .env 时替换）
 CRYPTO_KEYS=(ENCRYPTION_KEY ENCRYPTABLE_KEY JWT_SECRET_KEY HASHIDS_SALT HASHIDS_ALT_SALT)
+# compose 插值必需键：缺失或为空值时 docker compose config 直接报错
+COMPOSE_KEYS=(MYSQL_ROOT_PASSWORD REDIS_PASSWORD ELASTIC_PASSWORD GRAFANA_ADMIN_PASSWORD)
 
 CURRENT_STEP="初始化"
 trap 'echo "部署失败于步骤: ${CURRENT_STEP}" >&2; exit 1' ERR
@@ -30,26 +34,43 @@ env_value() {
     if [ -n "$v" ]; then printf '%s' "$v"; else printf '%s' "$default"; fi
 }
 
-# 检查/生成单端 .env：模板复制 + 加密密钥补齐 + 必需键/占位符校验
+# 检查/生成单端 .env：模板复制 + 密钥补齐 + 必需键/占位符/空值校验
+# 旧密钥保留：已存在的真实密钥绝不改写；仅「新生成的 .env」会把 change-me 占位符替换为随机值
 prepare_env() {
-    local dir="$1" name="$2"
+    local dir="$1" name="$2" fresh=0
     step "$name: 检查 .env"
     if [ ! -f "$dir/.env" ]; then
         cp "$dir/.env.docker" "$dir/.env"
-        say OK "$name: 已从 .env.docker 生成 .env"
+        fresh=1
+        say OK "$name: 已从 .env.docker 生成 .env（占位符将自动替换为随机密钥）"
     else
-        say OK "$name: .env 已存在，跳过生成"
+        say OK "$name: .env 已存在，仅补齐缺失键（旧密钥一律保留）"
     fi
 
-    php "$ROOT/scripts/gen_env_keys.php" --file="$dir/.env"
+    if [ "$fresh" = 1 ]; then
+        php "$ROOT/scripts/gen_env_keys.php" --file="$dir/.env" --replace-placeholders
+    else
+        php "$ROOT/scripts/gen_env_keys.php" --file="$dir/.env"
+    fi
 
     local missing=() k
-    for k in "${CRYPTO_KEYS[@]}" DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD REDIS_HOST REDIS_PORT REDIS_PASSWORD; do
+    for k in "${CRYPTO_KEYS[@]}" "${COMPOSE_KEYS[@]}" DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD REDIS_HOST REDIS_PORT; do
         grep -qE "^${k}=" "$dir/.env" || missing+=("$k")
     done
     if [ "${#missing[@]}" -gt 0 ]; then
         echo "错误: $name/.env 缺少必需键: ${missing[*]}" >&2
-        echo "提示: 删除 .env 后重跑 deploy.sh（将从 .env.docker 重新生成）" >&2
+        echo "提示: 删除 .env 后重跑 deploy.sh（将从 .env.docker 重新生成），或手工补齐" >&2
+        exit 1
+    fi
+
+    # 空值检查：compose 的 ${VAR:?} 对「未设置」与「空值」同样报错
+    local empty=()
+    for k in "${CRYPTO_KEYS[@]}" "${COMPOSE_KEYS[@]}" DB_PASSWORD; do
+        [ -z "$(grep -E "^${k}=" "$dir/.env" | head -1 | cut -d= -f2-)" ] && empty+=("$k")
+    done
+    if [ "${#empty[@]}" -gt 0 ]; then
+        echo "错误: $name/.env 以下必需键为空值: ${empty[*]}" >&2
+        echo "提示: 填入随机值后重跑（生成脚本不会改动已存在的非空键，也不会填它认为有意留空的空值）" >&2
         exit 1
     fi
 
@@ -63,7 +84,7 @@ prepare_env() {
         exit 1
     fi
 
-    grep -qE '^[A-Z0-9_]+=change-me' "$dir/.env" && say WARN "$name: 存在 change-me 占位密码（DB/REDIS/ES 等），生产环境请修改"
+    grep -qE '^[A-Z0-9_]+=change-me' "$dir/.env" && say WARN "$name: 存在 change-me 占位值（如 ELASTIC_PASSWORD），该键已随部署长期使用，未自动替换；如需更换请同步 ES 容器"
     [ "$(env_value "$dir" DB_HOST)" != "mysql" ] && say WARN "$name: DB_HOST=$(env_value "$dir" DB_HOST)，docker 部署应为 mysql，连接失败请检查"
 }
 

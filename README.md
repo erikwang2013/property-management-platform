@@ -194,6 +194,18 @@ bash scripts/deploy.sh
 
 > 要求：Docker + Docker Compose。脚本幂等，可重复执行；详见 [scripts/deploy.sh](scripts/deploy.sh)。
 
+### 方式二：Docker Compose 部署
+
+```bash
+cd admin
+cp .env.docker .env
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders  # 自动生成全部密钥
+docker compose up -d                                                # 首次启动自动导入建库 SQL
+# 业务端: cd service 重复上述三步（端口已预设偏移，可与 admin 同主机共存）
+```
+
+> 密钥自动生成：模板中 `change-me*` 占位符会被替换为随机密钥；**已存在的密钥一律保留**，重复执行只追加缺失键。完整说明见下方 [Docker 部署](#docker-部署)。
+
 ### 方式三：Web 安装向导
 
 启动管理端后访问 `http://localhost:8787/install`，通过界面完成数据库配置和后台管理员账户创建。
@@ -276,12 +288,40 @@ service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公�
 
 ### Docker 部署
 
+每条堆栈（admin / service）各自独立编排 9 个服务：Nginx + PHP(webman) + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter。
+
 ```bash
+# 一键（推荐，幂等）：密钥补齐 → 双端启动 → 建库校验 → 监控冒烟
+bash scripts/deploy.sh
+
+# 手工部署单端（以 admin 为例）
 cd admin
 cp .env.docker .env
-docker-compose up -d
-# 包含 Nginx + PHP + MySQL + Redis + Elasticsearch
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders
+docker compose up -d
 ```
+
+**密钥口径**
+
+- 模板内 `change-me*` 为占位符，由 `gen_env_keys.php` 生成随机值；`.env` 中已有的真实密钥绝不覆盖（旧密钥保留），缺失键只做追加
+- `ELASTIC_PASSWORD` 被 `SCOUT_HOSTS` / `OPENSEARCH_PASSWORD` 内嵌引用，替换时会自动同步
+- 数据库加密密钥轮换用 `bash scripts/rotate_keys.sh`（旧 key 自动写入 `ENCRYPTION_PREVIOUS_KEYS`）
+- MySQL 容器的库名/用户/密码默认派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`（单一真源），无需重复配置 `MYSQL_*`
+
+**服务端口**（同主机双栈时已预设偏移；Nginx 需手动错开）
+
+| 服务 | admin | service |
+|------|-------|---------|
+| 应用 | 8787 | 8788 |
+| MySQL | 3306 | 3307 |
+| Redis | 6379 | 6380 |
+| Elasticsearch | 9200 | 9201 |
+| Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 |
+| Nginx | 80 / 443 | 建议 8080 / 8443（`.env` 的 `NGINX_PORT`/`NGINX_SSL_PORT`） |
+
+> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（67 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
+>
+> ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
 
 ## 部署拓扑
 

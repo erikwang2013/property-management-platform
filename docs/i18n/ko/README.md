@@ -350,4 +350,4 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 ## License
 
-MIT License. 자세한 내용은 [LICENSE](LICENSE) 참조.
+MIT License. 자세한 내용은 [LICENSE](../../../LICENSE) 참조.

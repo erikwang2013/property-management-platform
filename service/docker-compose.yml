@@ -74,14 +74,17 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?please set MYSQL_ROOT_PASSWORD in .env}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-management}
-      MYSQL_USER: ${MYSQL_USER:-property_svc_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?please set MYSQL_PASSWORD in .env}
+      # 库名/用户/密码默认派生自应用配置 DB_DATABASE/DB_USERNAME/DB_PASSWORD（单一真源，
+      # 避免应用与容器两处密码不一致）；需要独立覆盖时再显式设置 MYSQL_* 键
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-${DB_DATABASE:-management}}
+      MYSQL_USER: ${MYSQL_USER:-${DB_USERNAME:-property_svc_user}}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-${DB_PASSWORD:?please set DB_PASSWORD in .env}}
     ports:
       - "127.0.0.1:${MYSQL_PORT:-3307}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+      # 数据卷为空时自动导入全量建库 SQL（与 scripts/deploy.sh 导入的是同一文件）
+      - ../docs/install.sql:/docker-entrypoint-initdb.d/install.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

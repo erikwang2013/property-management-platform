@@ -350,4 +350,4 @@ Wir freuen uns über Ihre Unterstützung dieses Projekts!
 
 ## Lizenz
 
-MIT-Lizenz. Details siehe [LICENSE](LICENSE).
+MIT-Lizenz. Details siehe [LICENSE](../../../LICENSE).

@@ -350,4 +350,4 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 ## License
 
-MIT License. См. [LICENSE](LICENSE) для подробностей.
+MIT License. См. [LICENSE](../../../LICENSE) для подробностей.

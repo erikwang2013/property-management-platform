@@ -1,5 +1,35 @@
 # Changelog
 
+## v1.8.0 (2026-10-15)
+
+> **注意（行为变更）**：① docker compose 此前**无法启动**（两端 compose 的 `${VAR:?}` 必填插值在 `.env` 中缺失或为空），现已补齐并自动化；② MySQL 容器的库名/用户/密码改为从 `DB_DATABASE/DB_USERNAME/DB_PASSWORD` 嵌套派生（单一真源），不再需要独立配置 `MYSQL_*`；③ 首次启动且数据卷为空时 `docs/install.sql` 由 compose initdb 挂载自动导入（原挂载的 `./database/migrations` 目录并不存在）；④ `ELASTIC_PASSWORD` 替换语义收紧：仅当 `.env` 刚由模板生成时才替换占位符，已有 `.env` 中只告警不改写——沿用旧值的部署不会因重跑部署脚本而失去 ES 连接。
+
+### 新增
+- **LICENSE**：仓库根新增 MIT（此前 README.md / README_EN.md / 12 个 i18n README 共 14 处链接指向的根 LICENSE **从未存在**，全为死链），版权行 `Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz`
+- **docker compose 密钥自动化**：`scripts/gen_env_keys.php` 由 5 个加密密钥扩到 **10 个**（新增 `DB_PASSWORD`/`REDIS_PASSWORD`/`ELASTIC_PASSWORD`/`MYSQL_ROOT_PASSWORD`/`GRAFANA_ADMIN_PASSWORD`）；新增 `--replace-placeholders` 用于「新 `.env`」场景替换 `change-me*` 占位符；`ELASTIC_PASSWORD` 被 `SCOUT_HOSTS`/`OPENSEARCH_PASSWORD` 内嵌引用，替换时**自动同步**内嵌凭证
+- **配置补全**：两份 `.env.docker` 重写为完整模板——此前缺 19 个 `config/` 无默认值键（`ENCRYPTION_CIPHER`/`ENCRYPTION_IV`/`ENCRYPTABLE_CIPHER`、`POSTER_*` 验证码 6 项、`SERVER_LISTEN`、`SESSION_*`、`REDIS_DATABASE`、`SCOUT_*` 调优 6 项、`SNOWFLAKE_START_TIMESTAMP` 等），即便 compose 能起、应用也会运行时缺配置；同时清除重复的 `SCOUT_HOSTS` 行、全部密钥改为占位符（原 `admin/.env.docker` 提交着真实形态的 JWT/加密密钥，新鲜克隆会原样沿用）。两份 `.env.example` 补 `MYSQL_*` 派生说明与端口覆盖清单
+- **首启自动建库**：`admin|service/docker-compose.yml` 的 mysql 挂载由不存在的 `./database/migrations` 改为 `../docs/install.sql`（与 `scripts/deploy.sh` 导入的是同一文件，67 表 + RBAC 种子）
+
+### 修复
+- **compose 无法启动**（交付阻断，实测）：`docker compose config` 实报 `required variable MYSQL_ROOT_PASSWORD is missing`（admin）/ `GRAFANA_ADMIN_PASSWORD is missing`（service）
+- **`scripts/deploy.sh`**：必填键校验扩到 compose 插值集合，新增**空值**硬校验（`${VAR:?}` 对未设置与空值同样报错，报错信息给出可操作指引）；仅在 `.env` 刚由模板生成时传 `--replace-placeholders`，已有 `.env` 只追加缺失键（**旧密钥保留**）
+- **文档口径修正**：`docs/INSTALL.md` 中「`HASHIDS_SALT` 必须与 admin 一致」与 `.env.example` 的隔离口径及线上实际（两端盐不同）矛盾，改为「相互独立（有意隔离）」；`admin/CLAUDE.md` 的「项目根目录 `docker-compose.yml` 编排 5 个服务」为过期描述（根目录并无此文件），改为本目录 9 服务
+- **文档链接**：10 个 `docs/i18n/*/README.md` 的 `[LICENSE](LICENSE)` 相对路径错误（解析到不存在的 `docs/i18n/xx/LICENSE`），统一改为 `../../../LICENSE`
+
+### 变更
+- `README.md` 补回缺失的「方式二：Docker Compose 部署」（原编号 一/三/四 断档），重写「Docker 部署」段：密钥口径、端口表（Nginx 需手动错开）、两条警告（docker 部署后勿跑 Web 向导改库配置——会重写 `DB_*` 破坏容器连接；首启 initdb 导入条件）；`README_EN.md` 同步（新增 Option 2，Web Installer/Manual 顺延为 3/4）；`docs/OPS_RUNBOOK.md` 密钥章节更新（10 键表 + 取值语义表 + ES 例外说明）；`service/CLAUDE.md` 部署段同步
+
+### 测试
+- 全新部署路径：两端模板生成后**残留占位符 0**，`docker compose config -q` **双端通过**（以生成后的临时 env 插值；本机 Compose v2.26.1）
+- 幂等：`--replace-placeholders` 连跑 3 次 **0 改动**；旧密钥保留：线上 `.env` 副本跑生成器 → 除新增 2 键外**逐字节 diff 一致**，线上 `.env` 全程未改动（mtime 未变）
+- initdb 挂载：一次性容器（独立卷、无宿主端口）实测导入 **67 张表、零错误**
+- `EnvConfigTest` 等价断言（`config/` 键 ⊆ `.env`、向导键 ⊆ `.env.example`）直接复跑通过；`php -l` / `bash -n` 通过
+
+### 边界（如实）
+- **完整 `docker compose up` 未在本机执行**：本机 6379/9200/3307 已被其他项目容器占用，且 `mysql:8.0.36`/`elasticsearch:8.12.0` 镜像本地缺失（需拉网）；initdb 机制用本地 `mysql:8.0` 镜像实测（compose 固化 8.0.36）
+- 12 个 i18n README 的 Docker 段落仍是旧文案（独立翻译波次，未动）
+- 本机 phpunit 二进制挂起（连 `--version` 均超时，属环境问题），测试回归未在本机跑
+
 ## v1.7.0 (2026-10-04)
 
 > **注意（行为变更）**：① admin 的 hashids 盐由「空串（可离线反解）」改为 `.env` 注入 —— **所有旧 hashid 串作废**，请从列表接口重新拉取；跨端（admin↔service）不要互传 hashid，传原始 BIGINT。② 非法 hashid 由 HTTP 500（响应体曾泄漏异常类名与栈帧绝对路径）改为 HTTP 200 + `code 422「无效的资源 ID」`；`findOrFail` 未命中由 500 改为 404。③ 权限动作端点 slug 判定改为「先剥 `{...}` 参数段再前缀回退」，非超管角色若原依赖短前缀兜底需核对其授权。

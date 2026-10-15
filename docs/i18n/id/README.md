@@ -352,4 +352,4 @@ Selamat datang untuk mendukung proyek ini!
 
 ## Lisensi
 
-Lisensi MIT. Lihat [LICENSE](LICENSE) untuk detail.
+Lisensi MIT. Lihat [LICENSE](../../../LICENSE) untuk detail.

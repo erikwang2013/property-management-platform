@@ -195,7 +195,19 @@ bash scripts/deploy.sh
 
 > Requires Docker + Docker Compose. Idempotent and re-runnable; see [scripts/deploy.sh](scripts/deploy.sh).
 
-### Option 2: Web Installer (Recommended)
+### Option 2: Docker Compose Deployment
+
+```bash
+cd admin
+cp .env.docker .env
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders  # generate all secrets
+docker compose up -d                                                # first boot imports the install SQL
+# Service app: repeat in service/ (ports are pre-offset, coexists with admin on one host)
+```
+
+> Secrets are auto-generated: `change-me*` placeholders are replaced with random values; **existing keys are never overwritten** — re-runs only append missing keys. See [Docker Deployment](#docker-deployment) below for details.
+
+### Option 3: Web Installer (Recommended)
 
 Start the admin panel and open `http://localhost:8787/install` to configure the database and create an admin account through the UI.
 
@@ -209,7 +221,7 @@ php start.php start -d
 
 See [Installation Guide](docs/INSTALL.md) for details.
 
-### Option 3: Manual Setup
+### Option 4: Manual Setup
 
 #### Requirements
 
@@ -280,12 +292,40 @@ Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / 
 
 ### Docker Deployment
 
+Each stack (admin / service) orchestrates 9 services independently: Nginx + PHP (webman) + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter.
+
 ```bash
+# One command (recommended, idempotent): fill secrets → start both stacks → verify DB → monitoring smoke test
+bash scripts/deploy.sh
+
+# Manual, single stack (admin shown)
 cd admin
 cp .env.docker .env
-docker-compose up -d
-# Includes Nginx + PHP + MySQL + Redis + Elasticsearch
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders
+docker compose up -d
 ```
+
+**Secret semantics**
+
+- `change-me*` values in the template are placeholders; `gen_env_keys.php` replaces them with random values. Real keys already present in `.env` are never overwritten (old keys preserved); missing keys are only appended
+- `ELASTIC_PASSWORD` is embedded in `SCOUT_HOSTS` / `OPENSEARCH_PASSWORD` and is synced automatically when replaced
+- Rotate the DB encryption key with `bash scripts/rotate_keys.sh` (the old key lands in `ENCRYPTION_PREVIOUS_KEYS`)
+- The MySQL container's database/user/password derive from `DB_DATABASE/DB_USERNAME/DB_PASSWORD` (single source of truth) — no need to duplicate `MYSQL_*`
+
+**Service ports** (pre-offset for a two-stack host; Nginx must be offset manually)
+
+| Service | admin | service |
+|---------|-------|---------|
+| App | 8787 | 8788 |
+| MySQL | 3306 | 3307 |
+| Redis | 6379 | 6380 |
+| Elasticsearch | 9200 | 9201 |
+| Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 |
+| Nginx | 80 / 443 | 8080 / 8443 recommended (`NGINX_PORT`/`NGINX_SSL_PORT`) |
+
+> On first boot the MySQL volume is empty and `docs/install.sql` (67 tables + RBAC seed) is imported automatically via the compose initdb mount; existing volumes are left untouched.
+>
+> ⚠️ After a Docker deployment do not use the Web Installer (`/install`) to change DB settings — it rewrites `DB_*` in `.env` and breaks the container's `DB_HOST=mysql` connection.
 
 ## Deployment Topology
 

@@ -172,32 +172,47 @@ php start.php start -d
 curl http://localhost:8788/health
 ```
 
-> **注意：** admin 和 service 共享同一数据库。`HASHIDS_SALT` 必须与 admin 保持一致，否则 admin 生成的加密 ID 在 service 端无法解密。
+> **注意：** admin 和 service 共享同一数据库（表前缀 `management_`）。两端 `HASHIDS_SALT` 相互独立（有意隔离：一端泄漏不至于对端 hashid 被反解，见 `.env.example` 注释），各自的 ID 由各自加解密。
 
 ---
 
 ## Docker 部署
 
-### 管理端
+### 一键部署（推荐）
+
+```bash
+bash scripts/deploy.sh
+# 幂等：git pull → 补齐双端 .env 缺失密钥 → 双端 compose up → 建库校验 → 监控冒烟
+# 已有密钥一律保留，只追加缺失键
+```
+
+### 手工部署单端（以管理端为例）
 
 ```bash
 cd admin
 cp .env.docker .env
-# 编辑 .env 修改生产密钥
+php ../scripts/gen_env_keys.php --file=.env --replace-placeholders
+# 模板中的 change-me* 占位符会被替换为随机密钥；已存在的真实密钥不会被覆盖
+# 生产环境仍需复核 APP_URL / CORS_ALLOWED_ORIGIN 等非密钥配置
 
 docker compose up -d
-# 包含: Nginx + PHP + MySQL + Redis + Elasticsearch
+# 包含: Nginx + PHP + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter
+# 业务端: cd service 重复上述三步（端口已预设偏移，可与 admin 同主机共存）
 ```
 
-### 业务端
+### 密钥规则
 
-```bash
-cd service
-cp .env.docker .env
-# 编辑 .env 修改生产密钥
+| 规则 | 说明 |
+|------|------|
+| 自动生成 | 缺失键追加、占位符（`change-me*`）替换为随机值，由 `gen_env_keys.php` 完成 |
+| 旧密钥保留 | `.env` 中已有的真实密钥绝不改写；重复执行幂等 |
+| ES 密码联动 | 替换 `ELASTIC_PASSWORD` 时会同步改写 `SCOUT_HOSTS` / `OPENSEARCH_PASSWORD` 中的内嵌凭证 |
+| 加密密钥轮换 | `bash scripts/rotate_keys.sh`（旧 key 自动写入 `ENCRYPTION_PREVIOUS_KEYS`） |
+| MySQL 密码 | 容器库名/用户/密码默认派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`，无需配置 `MYSQL_*` |
 
-docker compose up -d
-```
+> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（67 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
+>
+> ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
 
 ### 服务端口规划
 
@@ -207,9 +222,10 @@ docker compose up -d
 | MySQL | 3306 | 3307 | 容器端口映射 |
 | Redis | 6379 | 6380 | 容器端口映射 |
 | Elasticsearch | 9200 | 9201 | 容器端口映射 |
-| Nginx | 80/443 | 80/443 | 需错开部署 |
+| Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 | 容器端口映射 |
+| Nginx | 80/443 | 80/443 | 需错开部署（service 建议 8080/8443） |
 
-> 同一主机部署两个 docker-compose 时，service 的端口已预设偏移避免冲突。
+> 同一主机部署两个 docker-compose 时，service 的除 Nginx 外端口已预设偏移避免冲突；Nginx 端口需在 `.env` 用 `NGINX_PORT`/`NGINX_SSL_PORT` 手动错开。
 
 ---
 

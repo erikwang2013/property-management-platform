@@ -350,4 +350,4 @@ Si este proyecto te resulta útil, escanea el código QR para donar, ¡gracias!
 
 ## Licencia
 
-Licencia MIT. Consulte [LICENSE](LICENSE) para más detalles.
+Licencia MIT. Consulte [LICENSE](../../../LICENSE) para más detalles.

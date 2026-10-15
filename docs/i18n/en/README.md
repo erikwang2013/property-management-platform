@@ -350,4 +350,4 @@ Your support is welcome!
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](../../../LICENSE) for details.

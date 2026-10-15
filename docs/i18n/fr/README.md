@@ -350,4 +350,4 @@ Bienvenue pour soutenir ce projet !
 
 ## License
 
-Licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+Licence MIT. Voir [LICENSE](../../../LICENSE) pour plus de détails.
