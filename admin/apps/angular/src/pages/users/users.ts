@@ -15,6 +15,11 @@ import { DataTableComponent } from '../../components/data-table/data-table';
 import { FormModalComponent } from '../../components/form-modal/form-modal';
 import { Column, FormField, FormValue, RowAction } from '../../components/types';
 
+// 与后端登录口径一致（8-32 位 + 大小写 + 数字 + 特殊字符）：登录口对不满足者直接 422，
+// 建号/改密侧放宽会造出「能建号、永远登不上」的账号（2026-10 修复，两端同文案）
+const PASSWORD_RULE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
+const PASSWORD_HINT = '8-32 位，含大小写字母、数字与特殊字符 @$!%*?&';
+
 interface UserRow extends Record<string, unknown> {
   id: string;
   username: string;
@@ -81,13 +86,19 @@ export class UsersComponent {
 
   private readonly createFields: FormField[] = [
     { key: 'username', label: '用户名', required: true, hint: '3-50 个字符' },
-    { key: 'password', label: '密码', kind: 'password', required: true, hint: '6-32 个字符' },
+    {
+      key: 'password', label: '密码', kind: 'password', required: true,
+      hint: PASSWORD_HINT, pattern: PASSWORD_RULE, patternMessage: PASSWORD_HINT,
+    },
     ...this.tailFields,
   ];
 
   private readonly editFields: FormField[] = [
     { key: 'username', label: '用户名', immutable: true, hint: '用户名不可修改' },
-    { key: 'password', label: '新密码', kind: 'password', hint: '留空则不修改' },
+    {
+      key: 'password', label: '新密码', kind: 'password', hint: '留空则不修改',
+      pattern: PASSWORD_RULE, patternMessage: PASSWORD_HINT,
+    },
     ...this.tailFields,
   ];
 

@@ -26,6 +26,21 @@ class _UserFormPageState extends State<UserFormPage> {
 
   bool get isEdit => widget.userData != null;
 
+  /// 与后端登录口径一致（8-32 位 + 大小写 + 数字 + 特殊字符）：
+  /// 登录口强校验该规则，建号/改密侧放宽会造出「能建号、永远登不上」的账号（2026-10 修复）
+  String? _validatePassword(String? v) {
+    if (v == null || v.isEmpty) {
+      return isEdit ? null : '请输入密码'; // 编辑态留空 = 不修改
+    }
+    if (v.length < 8 || v.length > 32) {
+      return '密码需 8-32 位';
+    }
+    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$').hasMatch(v)) {
+      return r'需含大小写字母、数字和特殊字符 @$!%*?&';
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +100,7 @@ class _UserFormPageState extends State<UserFormPage> {
               children: [
                 TextFormField(controller: _usernameCtrl, enabled: !isEdit, decoration: const InputDecoration(labelText: '用户名'), validator: (v) => (v == null || v.isEmpty) ? '请输入用户名' : null),
                 const SizedBox(height: 16),
-                TextFormField(controller: _passwordCtrl, obscureText: true, decoration: InputDecoration(labelText: isEdit ? '新密码（留空不修改）' : '密码'), validator: (v) => !isEdit && (v == null || v.isEmpty) ? '请输入密码' : null),
+                TextFormField(controller: _passwordCtrl, obscureText: true, decoration: InputDecoration(labelText: isEdit ? '新密码（留空不修改）' : '密码'), validator: _validatePassword),
                 const SizedBox(height: 16),
                 TextFormField(controller: _realNameCtrl, decoration: const InputDecoration(labelText: '真实姓名'), validator: (v) => (v == null || v.isEmpty) ? '请输入真实姓名' : null),
                 const SizedBox(height: 16),

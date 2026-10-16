@@ -97,7 +97,7 @@ open-admin/
 │   ├── react/                  # React redesign admin panel (React 19 + Vite + Ant Design)
 │   └── angular/                # Angular redesign admin panel (Angular 20 + NG-ZORRO)
 ├── config/                     # Config files
-└── docs/install.sql            # Full install SQL (66 tables + permission seeds, single entry)
+└── docs/install.sql            # Full install SQL (67 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
 ```
 
@@ -146,7 +146,7 @@ Key environment variables:
 
 ### 3. Initialize Database
 
-Run the consolidated install script at repo root (66 tables + RBAC permission seeds, idempotent):
+Run the consolidated install script at repo root (67 tables + RBAC permission seeds, idempotent):
 
 ```bash
 mysql -u root -p < ../docs/install.sql
@@ -422,7 +422,7 @@ Authorization: Bearer <token>
 
 ## Usage Guide
 
-1. **Sign in**: default account `admin / admin123` — change the password immediately.
+1. **Sign in**: default account `admin / Admin@123456` (created automatically by the one-click deploy; with the web wizard, use what you set in step 2) — change the password immediately.
 2. **Base data**: Community → Building → Unit → Room Type → Room → Owner binding.
 3. **Operations**: fee types → batch-generate bills → offline collection; repair assignment/progress; complaint handling/visit; Report Center for income & collection overview.
 4. **System**: add admins, RBAC roles, system config, audit logs.

@@ -44,20 +44,21 @@ Acceda en el navegador a **`http://localhost:8787/install`** y complete la confi
 | Paso | Contenido | Descripción |
 |------|------|------|
 | Paso 1 | Configuración de base de datos | Completar host, puerto, nombre de base, usuario y contraseña |
-| Paso 2 | Cuenta de administrador | Configurar el usuario y la contraseña de inicio de sesión del panel (mínimo 6 caracteres) |
+| Paso 2 | Cuenta de administrador | Configurar el usuario y la contraseña de inicio de sesión del panel (8–32 caracteres, con mayúsculas, minúsculas, dígitos y caracteres especiales @$!%*?&) |
 | Paso 3 | Confirmar la instalación | Revisar la información de configuración; al confirmar, la instalación se ejecuta automáticamente |
 
 El proceso de instalación completa automáticamente:
 1. Prueba de conexión a la base de datos
 2. Escritura del archivo de configuración `.env`
-3. Importación de las 65 tablas de datos + semilla de permisos
+3. Importación de las 67 tablas de datos + semilla de permisos
 4. Creación de la cuenta de administrador con rol de superadministrador
 5. Creación del archivo de bloqueo de instalación `public/.installed`
 
 ### Después de la instalación
 
-- Dirección del panel de administración: `http://localhost:8787/admin`
-- El asistente de instalación mostrará la dirección de inicio de sesión y la información de la cuenta
+- Servicio backend: `http://localhost:8787` (endpoint de inicio de sesión `POST /api/v1/auth/login`, documentación de API `http://localhost:8787/apidoc`)
+- El frontend del panel (Flutter / React / Angular, ver `admin/apps/README.md`) se despliega por separado y no forma parte de este servicio
+- El asistente de instalación mostrará el endpoint de inicio de sesión y la información de la cuenta
 - Se recomienda reiniciar el servicio para que la configuración surta efecto: `php start.php restart -d`
 - Si necesita reinstalar, basta con eliminar el archivo `public/.installed`
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` incluye las 65 tablas + datos semilla de permisos RBAC, y usa `CREATE TABLE IF NOT EXISTS` para garantizar que se puede ejecutar repetidamente.
+`docs/install.sql` incluye las 67 tablas + datos semilla de permisos RBAC, y usa `CREATE TABLE IF NOT EXISTS` para garantizar que se puede ejecutar repetidamente.
 
 Verificación después de ejecutar:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# Debe mostrar: 66 (65 tablas + 1 línea de encabezado)
+# Debe mostrar: 68 (67 tablas + 1 línea de encabezado)
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | Usuario | Contraseña | Rol | Descripción |
 |--------|------|------|------|
-| admin | admin123 | Superadministrador | Tiene todos los permisos |
+| admin | Admin@123456 | Superadministrador | Tiene todos los permisos |
+
+> Esta cuenta la crea automáticamente el despliegue en un clic (`bash scripts/deploy.sh`); la contraseña puede sobrescribirse con `ADMIN_INITIAL_PASSWORD` en `.env` (con el asistente, se define en el paso 2).
 
 > **Cambie inmediatamente la contraseña predeterminada en el entorno de producción.**
 
@@ -247,7 +250,7 @@ Todos los endpoints de API y descripciones de parámetros se encuentran en el do
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. Ejecutar las pruebas

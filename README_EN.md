@@ -237,7 +237,7 @@ See [Installation Guide](docs/INSTALL.md) for details.
 # Create database
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Import merged install script (all 65 tables + RBAC seed data)
+# Import merged install script (all 67 tables + RBAC seed data)
 mysql -u root management < docs/install.sql
 ```
 
@@ -361,16 +361,18 @@ Static files: Flutter Web build/
 
 | Username | Password | Role |
 |----------|----------|------|
-| admin | admin123 | Super Admin |
+| admin | Admin@123456 | Super Admin |
 
-> Change the default password immediately in production.
+> This account is created automatically by the one-click deploy (`bash scripts/deploy.sh`); if you install via the web wizard, set your own in step 2.
+>
+> Change the default password immediately in production (rule: 8–32 chars with upper/lower-case letters, digits and special characters `@$!%*?&`).
 
 ## Document Index
 
 | Document | Description |
 |----------|-------------|
 | [Installation Guide](docs/INSTALL.md) | Deployment guide: database init, Docker, FAQ |
-| [Install SQL](docs/install.sql) | All 65 tables + RBAC seed data, single import |
+| [Install SQL](docs/install.sql) | All 67 tables + RBAC seed data, single import |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
 | [Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | System architecture, layered detail, deployment (Mermaid visualization) |

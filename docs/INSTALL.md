@@ -46,20 +46,21 @@ php start.php start -d
 | 步骤 | 内容 | 说明 |
 |------|------|------|
 | 第1步 | 数据库配置 | 填写主机、端口、库名、用户名、密码 |
-| 第2步 | 管理员账户 | 设置后台登录用户名和密码（至少6位） |
+| 第2步 | 管理员账户 | 设置后台登录用户名和密码（8-32 位，含大小写字母、数字和特殊字符 `@$!%*?&`） |
 | 第3步 | 确认安装 | 核对配置信息，点击确认后自动执行安装 |
 
 安装过程会自动完成：
 1. 测试数据库连接
 2. 写入 `.env` 配置文件
-3. 导入全部 65 张数据表 + 权限种子
+3. 导入全部 67 张数据表 + 权限种子
 4. 创建管理员账户并授予超级管理员角色
 5. 创建安装锁定文件 `public/.installed`
 
 ### 安装完成后
 
-- 管理后台地址：`http://localhost:8787/admin`
-- 安装向导将显示登录地址和账户信息
+- 后端服务：`http://localhost:8787`（登录接口 `POST /api/v1/auth/login`，接口文档 `http://localhost:8787/apidoc`）
+- 管理后台前端（Flutter / React / Angular，见 `admin/apps/README.md`）为独立部署，不在本服务内提供
+- 安装向导将显示登录接口和账户信息
 - 建议重启服务使配置生效：`php start.php restart -d`
 - 如需重新安装，删除 `public/.installed` 文件即可
 
@@ -104,13 +105,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` 包含全部 65 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS` 确保可重复执行。
+`docs/install.sql` 包含全部 67 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS` 确保可重复执行。
 
 执行后验证：
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# 应输出: 66（65张表 + 1行表头）
+# 应输出: 68（67张表 + 1行表头）
 ```
 
 ---
@@ -233,9 +234,11 @@ docker compose up -d
 
 | 用户名 | 密码 | 角色 | 说明 |
 |--------|------|------|------|
-| admin | admin123 | 超级管理员 | 拥有全部权限 |
+| admin | Admin@123456 | 超级管理员 | 拥有全部权限 |
 
-> **生产环境请立即修改默认密码。**
+> 该账号由一键部署（`bash scripts/deploy.sh`）自动创建，密码可在 `.env` 用 `ADMIN_INITIAL_PASSWORD` 覆盖；走 Web 安装向导部署时，在第 2 步自行设置。
+>
+> **生产环境请立即修改默认密码**（密码规则：8-32 位，含大小写字母、数字和特殊字符 `@$!%*?&`）。
 
 ---
 
@@ -265,7 +268,7 @@ curl http://localhost:8788/health
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. 运行测试

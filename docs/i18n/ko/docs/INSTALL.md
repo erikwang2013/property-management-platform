@@ -44,20 +44,21 @@ php start.php start -d
 | 단계 | 내용 | 설명 |
 |------|------|------|
 | 1단계 | 데이터베이스 설정 | 호스트, 포트, DB명, 사용자명, 비밀번호 입력 |
-| 2단계 | 관리자 계정 | 관리 콘솔 로그인 사용자명과 비밀번호 설정（6자 이상） |
+| 2단계 | 관리자 계정 | 관리 콘솔 로그인 사용자명과 비밀번호 설정（8~32자, 대문자·소문자·숫자·특수문자 @$!%*?& 포함） |
 | 3단계 | 설치 확인 | 설정 정보 확인 후 확인 클릭 시 자동 설치 실행 |
 
 설치 과정에서 자동으로 다음을 수행합니다:
 1. 데이터베이스 연결 테스트
 2. `.env` 설정 파일 작성
-3. 전체 65개 데이터 테이블 + 권한 시드 가져오기
+3. 전체 67개 데이터 테이블 + 권한 시드 가져오기
 4. 관리자 계정 생성 및 슈퍼 관리자 역할 부여
 5. 설치 잠금 파일 `public/.installed` 생성
 
 ### 설치 완료 후
 
-- 관리 콘솔 주소: `http://localhost:8787/admin`
-- 설치 마법사가 로그인 주소와 계정 정보를 표시
+- 백엔드 서비스: `http://localhost:8787` (로그인 엔드포인트 `POST /api/v1/auth/login`, API 문서 `http://localhost:8787/apidoc`)
+- 관리 콘솔 프론트엔드(Flutter / React / Angular, `admin/apps/README.md` 참조)는 별도로 배포되며 이 서비스에 포함되지 않습니다
+- 설치 마법사가 로그인 엔드포인트와 계정 정보를 표시
 - 설정 적용을 위해 서비스 재시작 권장: `php start.php restart -d`
 - 재설치가 필요하면 `public/.installed` 파일 삭제
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql`에는 전체 65개 테이블 + RBAC 권한 시드 데이터가 포함되며, `CREATE TABLE IF NOT EXISTS`를 사용해 반복 실행 가능합니다.
+`docs/install.sql`에는 전체 67개 테이블 + RBAC 권한 시드 데이터가 포함되며, `CREATE TABLE IF NOT EXISTS`를 사용해 반복 실행 가능합니다.
 
 실행 후 검증:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# 应输出: 66（65张表 + 1行表头）
+# 출력: 68（67 테이블 + 1 행 헤더）
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | 사용자명 | 비밀번호 | 역할 | 설명 |
 |--------|------|------|------|
-| admin | admin123 | 슈퍼 관리자 | 전체 권한 보유 |
+| admin | Admin@123456 | 슈퍼 관리자 | 전체 권한 보유 |
+
+> 이 계정은 원클릭 배포(`bash scripts/deploy.sh`)에서 자동 생성됩니다(비밀번호는 `.env`의 `ADMIN_INITIAL_PASSWORD`로 변경 가능. 마법사 설치 시 2단계에서 설정).
 
 > **프로덕션 환경에서는 즉시 기본 비밀번호를 변경하세요.**
 
@@ -247,7 +250,7 @@ curl http://localhost:8788/health
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. 테스트 실행

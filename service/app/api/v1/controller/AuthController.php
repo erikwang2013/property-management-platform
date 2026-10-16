@@ -9,6 +9,7 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\PasswordRule;
 use app\common\SnowflakeService;
 use app\model\Owner;
 use app\model\Room;
@@ -26,7 +27,7 @@ class AuthController extends BaseController
     /**
      * 业主登录
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/login")
+     * @Apidoc\Url("/api/v1/auth/login")
      * @Apidoc\Desc("业主手机号+密码+验证码登录，返回JWT令牌")
      * @Apidoc\Param("phone", type="string", require=true, desc="手机号")
      * @Apidoc\Param("password", type="string", require=true, desc="密码")
@@ -107,7 +108,7 @@ class AuthController extends BaseController
 
     /**
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/register")
+     * @Apidoc\Url("/api/v1/auth/register")
      */
     public function register(Request $request): Response
     {
@@ -121,12 +122,10 @@ class AuthController extends BaseController
             return $this->fail('手机号、密码、姓名不能为空', 422);
         }
 
-        if (strlen($password) < 8 || strlen($password) > 32) {
-            return $this->fail('密码长度 8-32 位', 422);
-        }
-
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/', $password)) {
-            return $this->fail('密码需包含大小写字母、数字和特殊字符(@$!%*?&)', 422);
+        // 与改密口共用同一规则源（app\common\PasswordRule），防止两处口径漂移
+        $passwordError = PasswordRule::check($password);
+        if ($passwordError !== null) {
+            return $this->fail($passwordError, 422);
         }
 
         if (!captcha_verify($captchaKey, 'click', $clicks)) {
@@ -151,7 +150,7 @@ class AuthController extends BaseController
 
     /**
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/refresh")
+     * @Apidoc\Url("/api/v1/auth/refresh")
      */
     public function refresh(Request $request): Response
     {

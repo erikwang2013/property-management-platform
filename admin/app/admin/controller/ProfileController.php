@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\admin\validate\PasswordRule;
 use app\model\AdminUser;
 use support\Request;
 use support\Response;
@@ -104,12 +105,10 @@ class ProfileController extends BaseController
             return $this->fail('旧密码错误', 422);
         }
 
-        if (strlen($newPassword) < 8 || strlen($newPassword) > 32) {
-            return $this->fail('新密码长度 8-32 位', 422);
-        }
-
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/', $newPassword)) {
-            return $this->fail('密码需包含大小写字母、数字和特殊字符(@$!%*?&)', 422);
+        // 与登录/建号同一规则源：放宽会造出「改完就登不上」的账号
+        $passwordError = PasswordRule::check($newPassword);
+        if ($passwordError !== null) {
+            return $this->fail($passwordError, 422);
         }
 
         $user->password = password_hash($newPassword, PASSWORD_BCRYPT);

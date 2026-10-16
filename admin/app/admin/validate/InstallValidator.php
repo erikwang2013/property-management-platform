@@ -30,10 +30,10 @@ class InstallValidator
         $errors = [];
         if (mb_strlen($admin['admin_username']) < 3) $errors[] = '管理员用户名至少3个字符';
         // 密码强度与登录校验保持一致：8-32 位 + 大小写字母 + 数字 + 特殊字符
-        if (strlen($admin['admin_password']) < 8 || strlen($admin['admin_password']) > 32) {
+        if (strlen($admin['admin_password']) < PasswordRule::MIN_LENGTH || strlen($admin['admin_password']) > PasswordRule::MAX_LENGTH) {
             $errors[] = '管理员密码长度需 8-32 位';
         }
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/', $admin['admin_password'])) {
+        if (!preg_match(PasswordRule::REGEX, $admin['admin_password'])) {
             $errors[] = '管理员密码需包含大小写字母、数字和特殊字符(@$!%*?&)';
         }
         if ($admin['admin_password'] !== $confirm) $errors[] = '两次输入的密码不一致';

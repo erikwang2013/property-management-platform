@@ -177,7 +177,7 @@ POST /api/v1/auth/login
 ```json
 {
   "username": "admin",
-  "password": "123456",
+  "password": "Admin@123456",
   "captcha_key": "abc123def456",
   "clicks": [
     { "x": 120, "y": 85 },
@@ -240,7 +240,7 @@ POST /api/v1/auth/register
 ```json
 {
   "username": "newuser",
-  "password": "123456",
+  "password": "Newuser@123",
   "real_name": "新用户",
   "captcha_key": "abc123def456",
   "clicks": [
@@ -516,7 +516,7 @@ POST /admin/user
 ```json
 {
   "username": "newuser",
-  "password": "123456",
+  "password": "Newuser@123",
   "real_name": "新用户",
   "phone": "13800138000",
   "email": "newuser@example.com",

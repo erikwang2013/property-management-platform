@@ -289,7 +289,9 @@ Statische Dateien: Flutter Web build/
 
 | Benutzername | Passwort | Rolle |
 |--------|------|------|
-| admin | admin123 | Superadministrator |
+| admin | Admin@123456 | Superadministrator |
+
+> Dieses Konto wird vom Ein-Klick-Deployment (`bash scripts/deploy.sh`) automatisch erstellt; das Passwort kann in `.env` über `ADMIN_INITIAL_PASSWORD` überschrieben werden (beim Assistenten: Schritt 2).
 
 > Bitte ändern Sie das Standardpasswort in der Produktion sofort.
 

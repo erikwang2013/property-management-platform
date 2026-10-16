@@ -60,7 +60,7 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
       <p class="subtitle">物业管理系统 &middot; 步骤 3/3 &middot; <?= $executed ? '安装结果' : '确认安装' ?></p>
     </div>
   </div>
-  <p class="bubble"><b>小筑</b>：正在导入 65 张数据表与 RBAC 权限种子，马上就好。</p>
+  <p class="bubble"><b>小筑</b>：正在导入 67 张数据表与 RBAC 权限种子，马上就好。</p>
   <div class="progress">
     <div class="step done">&#10003;</div><div class="line done"></div>
     <div class="step done">&#10003;</div><div class="line <?= $executed ? 'done' : '' ?>"></div>
@@ -76,6 +76,29 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     <strong>管理员账户</strong><br>
     用户名：<?= htmlspecialchars($adminConfig['admin_username']) ?><br>
     密码：<span class="mask"><?= str_repeat('&bull;', strlen($adminConfig['admin_password'])) ?></span>
+    <?php
+    // 已填写的可选配置要在确认前可见（值不回显，避免密钥进 HTML）；默认 sandbox 不算“已填写”
+    $optionalFilled = [];
+    if (($optional['payment_env'] ?? 'sandbox') !== 'sandbox') {
+        $optionalFilled[] = '支付环境：' . $optional['payment_env'];
+    }
+    if (($optional['payment_notify_host'] ?? '') !== '') {
+        $optionalFilled[] = '支付回调地址';
+    }
+    if (($optional['wechat_app_id'] ?? '') !== '' || ($optional['wechat_mch_id'] ?? '') !== '' || ($optional['wechat_api_v3'] ?? '') !== '') {
+        $optionalFilled[] = '微信支付凭证';
+    }
+    if (($optional['alipay_app_id'] ?? '') !== '' || ($optional['alipay_private'] ?? '') !== '') {
+        $optionalFilled[] = '支付宝凭证';
+    }
+    if (($optional['es_host'] ?? '') !== '' || ($optional['es_username'] ?? '') !== '' || ($optional['es_password'] ?? '') !== '') {
+        $optionalFilled[] = 'Elasticsearch 配置';
+    }
+    if ($optionalFilled): ?>
+    <br><br>
+    <strong>可选配置（将写入 .env）</strong><br>
+    <?= htmlspecialchars(implode(' · ', $optionalFilled)) ?>
+    <?php endif; ?>
   </div>
   <form method="post" action="/install">
     <input type="hidden" name="_step" value="3">
@@ -90,6 +113,18 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     <!-- 确认密码要随表单回传：控制器读 admin_password_confirm 做一致性校验（InstallController.php:89），
          step2 已校验过一次，step3 提交时缺此字段会被判「两次输入的密码不一致」，安装永远走不完 -->
     <input type="hidden" name="admin_password_confirm" value="<?= htmlspecialchars($adminConfig['admin_password']) ?>">
+    <!-- 可选配置必须随确认表单回传：processStep2 在 _confirm=1 时从 POST 读它们写入 .env，
+         缺失（曾如此）会让 step2 填写的支付/ES 凭证在确认环节被静默丢弃（2026-10 修复） -->
+    <input type="hidden" name="payment_env" value="<?= htmlspecialchars($optional['payment_env'] ?? 'sandbox') ?>">
+    <input type="hidden" name="payment_notify_host" value="<?= htmlspecialchars($optional['payment_notify_host'] ?? '') ?>">
+    <input type="hidden" name="wechat_app_id" value="<?= htmlspecialchars($optional['wechat_app_id'] ?? '') ?>">
+    <input type="hidden" name="wechat_mch_id" value="<?= htmlspecialchars($optional['wechat_mch_id'] ?? '') ?>">
+    <input type="hidden" name="wechat_api_v3" value="<?= htmlspecialchars($optional['wechat_api_v3'] ?? '') ?>">
+    <input type="hidden" name="alipay_app_id" value="<?= htmlspecialchars($optional['alipay_app_id'] ?? '') ?>">
+    <input type="hidden" name="alipay_private" value="<?= htmlspecialchars($optional['alipay_private'] ?? '') ?>">
+    <input type="hidden" name="es_host" value="<?= htmlspecialchars($optional['es_host'] ?? '') ?>">
+    <input type="hidden" name="es_username" value="<?= htmlspecialchars($optional['es_username'] ?? '') ?>">
+    <input type="hidden" name="es_password" value="<?= htmlspecialchars($optional['es_password'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">确认安装</button>
   </form>
 
@@ -114,14 +149,15 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     <h2>安装成功！</h2>
     <p>物业管理系统已就绪</p>
     <div class="login-info">
-      登录地址：<code><?= htmlspecialchars($loginUrl) ?></code><br>
+      登录接口：<code><?= htmlspecialchars($loginUrl) ?></code><br>
       用户名：<code><?= htmlspecialchars($adminConfig['admin_username']) ?></code><br>
       密码：<code><?= htmlspecialchars($adminConfig['admin_password']) ?></code>
     </div>
-    <a href="/admin" class="btn btn-primary" style="margin-top:8px;">前往管理后台</a>
+    <a href="/apidoc" class="btn btn-primary" style="margin-top:8px;" target="_blank" rel="noopener">查看接口文档</a>
+    <p style="font-size:12px;color:#6b7280;margin:10px 0 0;">管理后台前端（React / Angular / Flutter Web）为独立部署，请按你的部署方式打开；本向导仅提供后端服务。</p>
   </div>
   <div class="note">
-    <strong>重要：</strong>请立即删除 <code>public/.installed</code> 文件或确保安装向导不可公开访问。<br>
+    <strong>重要：</strong>请确保 <code>public/.installed</code> 存在——它是安装锁，删除即重新解锁向导（任何人可重跑安装并改写 .env）；如需对外收紧，请在反向代理层禁止访问 <code>/install</code>。<br>
     建议重启服务使 .env 配置生效：<code>php start.php restart -d</code>
   </div>
   <?php else: ?>

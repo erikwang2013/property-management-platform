@@ -289,7 +289,9 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | 사용자명 | 비밀번호 | 역할 |
 |--------|------|------|
-| admin | admin123 | 슈퍼 관리자 |
+| admin | Admin@123456 | 슈퍼 관리자 |
+
+> 이 계정은 원클릭 배포(`bash scripts/deploy.sh`)에서 자동 생성됩니다(비밀번호는 `.env`의 `ADMIN_INITIAL_PASSWORD`로 변경 가능. 마법사 설치 시 2단계에서 설정).
 
 > 운영 환경에서는 즉시 기본 비밀번호를 변경하세요.
 

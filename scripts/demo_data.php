@@ -112,7 +112,7 @@ foreach ([['张三', '13800000001'], ['李四', '13800000002']] as [$name, $phon
     // phone 字段为加密存储（随机 IV），无法按明文查询，改用 name 作幂等键
     $owners[] = Owner::firstOrCreate(
         ['name' => $name],
-        ['name' => $name, 'password' => password_hash('demo123456', PASSWORD_BCRYPT), 'phone' => $phone, 'email' => '',
+        ['name' => $name, 'password' => password_hash('Demo@123456', PASSWORD_BCRYPT), 'phone' => $phone, 'email' => '',
          'id_card' => '', 'gender' => 1, 'check_in_date' => date('Y-m-d', strtotime('-2 years')),
          'remark' => 'demo', 'status' => 1]
     );
@@ -152,15 +152,15 @@ foreach ($rooms as $i => $room) {
 }
 $mark('fee_bill', FeeBill::first());
 
-// 演示后台账号（仅在无管理员时创建，密码 demo123456）
+// 演示后台账号（仅在无管理员时创建；密码与登录口同一规则，8-32 位 + 大小写 + 数字 + 特殊字符）
 // 注意: AdminUser 挂载了 scout 观察者，CLI 无 ES 客户端会崩，故用原生 insert
 if (AdminUser::query()->count() === 0) {
     \support\Db::table('management_admin_user')->insert([
         'id' => SnowflakeService::generate(), 'username' => 'admin',
-        'password' => password_hash('demo123456', PASSWORD_BCRYPT), 'real_name' => '系统管理员',
+        'password' => password_hash('Admin@123456', PASSWORD_BCRYPT), 'real_name' => '系统管理员',
         'status' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
     ]);
-    $stats['admin_user'] = 'created (demo123456)';
+    $stats['admin_user'] = 'created (Admin@123456)';
 }
 $publisherId = AdminUser::query()->value('id');
 Announcement::firstOrCreate(
@@ -174,4 +174,4 @@ echo "Demo 数据就绪：\n";
 foreach ($stats as $entity => $state) {
     printf("  %-12s %s\n", $entity, $state);
 }
-echo "演示账号: admin / demo123456（仅当系统无管理员时创建）\n";
+echo "演示账号: admin / Admin@123456（仅当系统无管理员时创建；与一键部署默认一致）\n";

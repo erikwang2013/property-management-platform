@@ -289,7 +289,9 @@ Abra `http://localhost:8788` (ou Flutter Web / HarmonyOS): a página inicial mos
 
 | Usuário | Senha | Papel |
 |--------|------|------|
-| admin | admin123 | Superadministrador |
+| admin | Admin@123456 | Superadministrador |
+
+> Esta conta é criada automaticamente pelo deploy de um clique (`bash scripts/deploy.sh`); a senha pode ser substituída via `ADMIN_INITIAL_PASSWORD` no `.env` (no assistente: passo 2).
 
 > Em produção, altere a senha padrão imediatamente.
 

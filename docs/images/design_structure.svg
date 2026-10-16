@@ -118,7 +118,7 @@
 <circle cx="841.2" cy="316" r="2.4" fill="#6D28D9" opacity="0.8"/>
 <text x="850.2" y="319.4" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">backups/ — 数据库备份</text>
 <rect x="20.0" y="348" width="192.0" height="34" rx="9" fill="#EEF2FF"/>
-<text x="116.0" y="370" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="600">65 张数据表</text>
+<text x="116.0" y="370" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="600">67 张数据表</text>
 <rect x="222.0" y="348" width="192.0" height="34" rx="9" fill="#EEF2FF"/>
 <text x="318.0" y="370" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="600">178 条 API 路由</text>
 <rect x="424.0" y="348" width="192.0" height="34" rx="9" fill="#EEF2FF"/>

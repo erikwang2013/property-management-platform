@@ -75,11 +75,11 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     </div>
     <div class="form-group">
       <label for="admin_password">管理员密码</label>
-      <input type="password" id="admin_password" name="admin_password" required minlength="6" placeholder="至少6位">
+      <input type="password" id="admin_password" name="admin_password" required minlength="8" maxlength="32" placeholder="8-32 位，含大小写字母、数字与特殊字符 @$!%*?&amp;">
     </div>
     <div class="form-group">
       <label for="admin_password_confirm">确认密码</label>
-      <input type="password" id="admin_password_confirm" name="admin_password_confirm" required minlength="6" placeholder="再次输入密码">
+      <input type="password" id="admin_password_confirm" name="admin_password_confirm" required minlength="8" maxlength="32" placeholder="再次输入密码">
     </div>
     <details style="margin-bottom:18px; border:1px solid #e2e8f0; border-radius:8px; padding:14px 18px;">
       <summary style="font-size:13px; font-weight:600; color:#555; cursor:pointer;">可选：支付与 Elasticsearch 配置（可跳过，稍后手动配置）</summary>

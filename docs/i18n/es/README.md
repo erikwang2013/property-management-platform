@@ -289,7 +289,9 @@ Abra `http://localhost:8788` (o Flutter Web / HarmonyOS): la página de inicio m
 
 | Usuario | Contraseña | Rol |
 |--------|------|------|
-| admin | admin123 | Superadministrador |
+| admin | Admin@123456 | Superadministrador |
+
+> Esta cuenta la crea automáticamente el despliegue en un clic (`bash scripts/deploy.sh`); la contraseña puede sobrescribirse con `ADMIN_INITIAL_PASSWORD` en `.env` (con el asistente, se define en el paso 2).
 
 > Cambie inmediatamente la contraseña predeterminada en el entorno de producción.
 

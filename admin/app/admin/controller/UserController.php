@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\admin\validate\PasswordRule;
 use app\model\AdminUser;
 use support\Request;
 use support\Response;
@@ -77,7 +78,7 @@ class UserController extends BaseController
     {
         $validator = validator($request->all(), [
             'username' => 'required|string|min:3|max:50',
-            'password' => 'required|string|min:6|max:32',
+            'password' => PasswordRule::ruleString(),
             'real_name' => 'required|string|max:50',
             'status' => 'in:0,1',
         ]);
@@ -141,8 +142,14 @@ class UserController extends BaseController
         $user->real_name = $request->input('real_name', $user->real_name);
         $user->status = (int) $request->input('status', $user->status);
 
-        if ($request->input('password') !== null && !empty($request->input('password'))) {
-            $user->password = password_hash($request->input('password'), PASSWORD_BCRYPT);
+        $password = $request->input('password');
+        if ($password !== null && $password !== '') {
+            // 更新口同样强制登录规则：曾零校验，可改成任意弱密码且此后永远登不上
+            $validator = validator($request->all(), ['password' => PasswordRule::ruleString()]);
+            if ($validator->fails()) {
+                return $this->fail($validator->errors()->first(), 422);
+            }
+            $user->password = password_hash($password, PASSWORD_BCRYPT);
         }
         if ($request->input('phone') !== null) {
             $user->phone = $request->input('phone', '');

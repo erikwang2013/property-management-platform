@@ -134,22 +134,27 @@ class ProfileControllerTest extends TestCase
         $this->assertSame('旧密码错误', $body['message']);
     }
 
-    public function test_update_password_too_short(): void
+    public function test_update_password_weak_rejected(): void
     {
         $this->requireDb();
         self::createOwner(1, 'correct-pass');
+        // 长度不足
         $body = self::call('updatePassword', ['old_password' => 'correct-pass', 'new_password' => '123'], 1);
         $this->assertSame(422, $body['code']);
-        $this->assertSame('新密码至少6位', $body['message']);
+        $this->assertSame('密码长度 8-32 位', $body['message']);
+        // 长度够但缺大写/特殊字符（曾放行「至少6位」的宽松口径，可把账号降级成弱密码）
+        $body = self::call('updatePassword', ['old_password' => 'correct-pass', 'new_password' => 'newpass6'], 1);
+        $this->assertSame(422, $body['code']);
+        $this->assertSame('密码需包含大小写字母、数字和特殊字符(@$!%*?&)', $body['message']);
     }
 
     public function test_update_password_success(): void
     {
         $this->requireDb();
         $owner = self::createOwner(1, 'correct-pass');
-        $body = self::call('updatePassword', ['old_password' => 'correct-pass', 'new_password' => 'newpass6'], 1);
+        $body = self::call('updatePassword', ['old_password' => 'correct-pass', 'new_password' => 'Newpass6@'], 1);
         $this->assertSame(0, $body['code']);
-        $this->assertTrue(password_verify('newpass6', $owner->fresh()->password));
+        $this->assertTrue(password_verify('Newpass6@', $owner->fresh()->password));
     }
 
     public function test_logout_without_token_returns_401(): void

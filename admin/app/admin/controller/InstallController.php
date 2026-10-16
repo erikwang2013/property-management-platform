@@ -22,7 +22,7 @@ class InstallController
 
     /**
      * @Apidoc\Method("GET")
-     * @Apidoc\Url("/api/install")
+     * @Apidoc\Url("/install")
      */
     public function index(Request $request): Response
     {
@@ -34,7 +34,7 @@ class InstallController
 
     /**
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/install")
+     * @Apidoc\Url("/install")
      */
     public function store(Request $request): Response
     {
@@ -133,7 +133,7 @@ class InstallController
     {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8787';
-        $loginUrl = "$scheme://$host/api/auth/login";
+        $loginUrl = "$scheme://$host/api/v1/auth/login";
 
         return view('install/step3', [
             'dbConfig'    => $dbConfig,
@@ -142,6 +142,8 @@ class InstallController
             'results'     => $results,
             'allSuccess'  => $allSuccess,
             'loginUrl'    => $loginUrl,
+            // 可选配置必须传给视图：step3 确认表单靠它渲染隐藏域回传（缺失=静默丢配置）
+            'optional'    => $optional,
         ]);
     }
 

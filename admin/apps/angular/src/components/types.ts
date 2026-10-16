@@ -59,6 +59,10 @@ export interface FormField {
   immutable?: boolean;
   /** 占满两列（默认单列，textarea 自动占满） */
   wide?: boolean;
+  /** 正则校验（如密码复杂度）；Angular Validators.pattern 对空值跳过，编辑态留空不触发 */
+  pattern?: RegExp;
+  /** pattern 不满足时的错误提示；缺省回落「请填写{label}」 */
+  patternMessage?: string;
   min?: number;
   max?: number;
   step?: number;

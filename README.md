@@ -357,16 +357,18 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | 用户名 | 密码 | 角色 |
 |--------|------|------|
-| admin | admin123 | 超级管理员 |
+| admin | Admin@123456 | 超级管理员 |
 
-> 生产环境请立即修改默认密码。
+> 该账号由一键部署（`bash scripts/deploy.sh`）自动创建；走 Web 安装向导部署时，在第 2 步自行设置。
+>
+> 生产环境请立即修改默认密码（密码规则：8-32 位，含大小写字母、数字和特殊字符 `@$!%*?&`）。
 
 ## 文档索引
 
 | 文档 | 说明 |
 |------|------|
 | [安装指南](docs/INSTALL.md) | 从零部署指南，含数据库初始化、Docker 部署、常见问题 |
-| [合并安装脚本](docs/install.sql) | 全部 65 张表 + RBAC 权限种子数据，一键导入 |
+| [合并安装脚本](docs/install.sql) | 全部 67 张表 + RBAC 权限种子数据，一键导入 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |
 | [系统架构图](docs/ARCHITECTURE_DIAGRAM.md) | 全景架构、分层详图、部署架构（Mermaid 可视化） |

@@ -174,8 +174,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         Get.snackbar('提示', '请填写旧密码和新密码', backgroundColor: Colors.orange.shade50);
                         return;
                       }
-                      if (newPassword.length < 6) {
-                        Get.snackbar('提示', '新密码至少6位', backgroundColor: Colors.orange.shade50);
+                      // 与后端改密口径一致（8-32 位 + 大小写 + 数字 + 特殊字符）：曾只查「至少6位」（2026-10 修复）
+                      if (newPassword.length < 8 || newPassword.length > 32) {
+                        Get.snackbar('提示', '新密码需 8-32 位', backgroundColor: Colors.orange.shade50);
+                        return;
+                      }
+                      if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$').hasMatch(newPassword)) {
+                        Get.snackbar('提示', r'新密码需含大小写字母、数字和特殊字符 @$!%*?&', backgroundColor: Colors.orange.shade50);
                         return;
                       }
                       if (newPassword != confirmPassword) {

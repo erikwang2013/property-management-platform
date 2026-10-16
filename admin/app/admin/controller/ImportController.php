@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\admin\validate\PasswordRule;
 use app\model\AdminUser;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use support\Request;
@@ -80,6 +81,14 @@ class ImportController extends BaseController
             if (empty($username)) {
                 $failed++;
                 $errors[] = ['row' => $idx + 1, 'reason' => '用户名为空'];
+                continue;
+            }
+
+            // 密码必须过登录口同一规则：曾零校验，导入的弱密码账号永远 422 登不上
+            $passwordError = PasswordRule::check($password);
+            if ($passwordError !== null) {
+                $failed++;
+                $errors[] = ['row' => $idx + 1, 'reason' => $passwordError];
                 continue;
             }
 

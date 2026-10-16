@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\admin\validate\PasswordRule;
 use app\model\AdminUser;
 use app\common\SnowflakeService;
 use support\Container;
@@ -54,13 +55,13 @@ class AuthController
     /**
      * 登录（需先通过点击验证码）
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/login")
+     * @Apidoc\Url("/api/v1/auth/login")
      */
     public function login(Request $request): Response
     {
         $validator = validator($request->all(), [
             'username'    => 'required|string|min:3|max:50',
-            'password'    => 'required|string|min:8|max:32|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+            'password'    => PasswordRule::ruleString(),
             'captcha_key' => 'required|string',
             'clicks'      => 'required|array|min:2',
         ]);
@@ -153,13 +154,13 @@ class AuthController
     /**
      * 注册（需先通过点击验证码）
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/register")
+     * @Apidoc\Url("/api/v1/auth/register")
      */
     public function register(Request $request): Response
     {
         $validator = validator($request->all(), [
             'username'    => 'required|string|min:3|max:50',
-            'password'    => 'required|string|min:8|max:32|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+            'password'    => PasswordRule::ruleString(),
             'real_name'   => 'required|string|max:50',
             'captcha_key' => 'required|string',
             'clicks'      => 'required|array|min:2',
@@ -216,7 +217,7 @@ class AuthController
     /**
      * 刷新令牌
      * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/auth/refresh")
+     * @Apidoc\Url("/api/v1/auth/refresh")
      */
     public function refresh(Request $request): Response
     {

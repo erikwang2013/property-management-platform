@@ -27,6 +27,13 @@ const filters: Filter[] = [
   { name: 'status', label: '状态', type: 'select', options: toOptions(STATUS_MAPS.enable) },
 ]
 
+// 与后端登录口径一致（8-32 位 + 大小写 + 数字 + 特殊字符）：登录口对不满足者直接 422，
+// 建号/改密侧放宽会造出「能建号、永远登不上」的账号（2026-10 修复，两端同文案）
+const passwordRule = {
+  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/,
+  message: '8-32 位，含大小写字母、数字与特殊字符 @$!%*?&',
+}
+
 const commonFields: Field[] = [
   { name: 'real_name', label: '姓名', required: true },
   { name: 'phone', label: '手机号' },
@@ -45,10 +52,10 @@ export default function UsersPage() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['users'] })
 
   const fields: Field[] = editing
-    ? [{ name: 'password', label: '新密码', type: 'password', extra: '留空表示不修改' }, ...commonFields]
+    ? [{ name: 'password', label: '新密码', type: 'password', extra: '留空表示不修改', rules: [passwordRule] }, ...commonFields]
     : [
         { name: 'username', label: '用户名', required: true },
-        { name: 'password', label: '密码', type: 'password', required: true },
+        { name: 'password', label: '密码', type: 'password', required: true, rules: [passwordRule] },
         ...commonFields,
       ]
 

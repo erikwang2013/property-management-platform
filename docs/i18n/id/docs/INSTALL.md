@@ -44,20 +44,21 @@ Browser akses **`http://localhost:8787/install`**, selesaikan konfigurasi tiga l
 | Langkah | Konten | Deskripsi |
 |------|------|------|
 | Langkah 1 | Konfigurasi database | Isi host, port, nama database, username, kata sandi |
-| Langkah 2 | Akun admin | Set username dan kata sandi login backoffice (minimal 6 karakter) |
+| Langkah 2 | Akun admin | Set username dan kata sandi login backoffice (8–32 karakter, dengan huruf besar, huruf kecil, angka, dan karakter khusus @$!%*?&) |
 | Langkah 3 | Konfirmasi instalasi | Periksa informasi konfigurasi, klik konfirmasi lalu otomatis eksekusi instalasi |
 
 Proses instalasi otomatis menyelesaikan:
 1. Test koneksi database
 2. Tulis file konfigurasi `.env`
-3. Impor semua 65 tabel data + seed permission
+3. Impor semua 67 tabel data + seed permission
 4. Buat akun admin dan beri peran super admin
 5. Buat file kunci instalasi `public/.installed`
 
 ### Setelah Instalasi Selesai
 
-- Alamat backoffice: `http://localhost:8787/admin`
-- Wizard instalasi akan menampilkan alamat login dan informasi akun
+- Layanan backend: `http://localhost:8787` (endpoint login `POST /api/v1/auth/login`, dokumentasi API `http://localhost:8787/apidoc`)
+- Frontend panel admin (Flutter / React / Angular, lihat `admin/apps/README.md`) di-deploy terpisah dan bukan bagian dari layanan ini
+- Wizard instalasi akan menampilkan endpoint login dan informasi akun
 - Disarankan restart layanan agar konfigurasi berlaku: `php start.php restart -d`
 - Jika perlu install ulang, hapus file `public/.installed` saja
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` berisi semua 65 tabel + data seed permission RBAC, menggunakan `CREATE TABLE IF NOT EXISTS` untuk memastikan dapat dieksekusi berulang.
+`docs/install.sql` berisi semua 67 tabel + data seed permission RBAC, menggunakan `CREATE TABLE IF NOT EXISTS` untuk memastikan dapat dieksekusi berulang.
 
 Setelah eksekusi verifikasi:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# Harus output: 66（65 tabel + 1 baris header）
+# Harus output: 68（67 tabel + 1 baris header）
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | Username | Kata sandi | Peran | Deskripsi |
 |--------|------|------|------|
-| admin | admin123 | Super admin | Memiliki semua permission |
+| admin | Admin@123456 | Super admin | Memiliki semua permission |
+
+> Akun ini dibuat otomatis oleh deploy sekali klik (`bash scripts/deploy.sh`); kata sandi dapat diubah via `ADMIN_INITIAL_PASSWORD` di `.env` (pada wizard: langkah 2).
 
 > **Segera ubah kata sandi default di lingkungan produksi.**
 
@@ -247,7 +250,7 @@ Semua endpoint API dan deskripsi parameter lihat dokumen terpisah [API.md](API.m
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. Jalankan Pengujian

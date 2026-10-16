@@ -291,7 +291,9 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | ユーザー名 | パスワード | ロール |
 |--------|------|------|
-| admin | admin123 | スーパー管理者 |
+| admin | Admin@123456 | スーパー管理者 |
+
+> このアカウントはワンクリックデプロイ（`bash scripts/deploy.sh`）で自動作成されます（パスワードは `.env` の `ADMIN_INITIAL_PASSWORD` で変更可。ウィザードの場合はステップ 2 で設定）。
 
 > 本番環境では直ちにデフォルトパスワードを変更してください。
 

@@ -16,7 +16,7 @@
         <div [nzSpan]="f.wide || f.kind === 'textarea' ? 24 : 12" nz-col>
           <nz-form-item>
             <nz-form-label [nzRequired]="!!f.required">{{ f.label }}</nz-form-label>
-            <nz-form-control [nzErrorTip]="'请填写' + f.label">
+            <nz-form-control [nzErrorTip]="errText(f)">
               @switch (f.kind) {
                 @case ('textarea') {
                   <textarea

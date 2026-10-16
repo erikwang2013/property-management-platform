@@ -6,7 +6,7 @@
 # 用法: bash scripts/deploy.sh
 # 流程: git pull → 检查/生成双端 .env（缺失键自动补齐，已有密钥一律保留）
 #       → 双端 docker compose up -d（MySQL 首启由 compose initdb 挂载自动导入 install.sql）
-#       → 数据库初始化校验 → 监控冒烟验证
+#       → 数据库初始化校验 → 创建默认管理员（admin，幂等）→ 监控冒烟验证
 # 幂等: 可重复执行；已存在的 .env 不覆盖，已初始化的库不重复导入。
 # 出错即停: 任一步骤失败立即退出并打印失败步骤。
 set -euo pipefail
@@ -119,9 +119,20 @@ init_db() {
     fi
 }
 
-for c in git docker php; do
-    command -v "$c" >/dev/null 2>&1 || { echo "错误: 缺少依赖命令 $c" >&2; exit 1; }
-done
+# 默认管理员：install.sql 不含管理员种子（由安装向导建号），一键部署在此补齐
+# 文档承诺的默认账号——密码可用 .env 的 ADMIN_INITIAL_PASSWORD 覆盖；已存在则跳过（幂等）
+init_default_admin() {
+    local dir="$1" pw
+    step "admin: 初始化默认管理员"
+    pw="$(env_value "$dir" ADMIN_INITIAL_PASSWORD "Admin@123456")"
+    if ( cd "$dir" && docker compose exec -T app php /app/scripts/create_admin.php --username=admin --password="$pw" ); then
+        say OK "admin: 默认管理员就绪（admin / $pw，见「默认账户」文档；首登后请立即改密）"
+    else
+        echo "错误: 默认管理员创建失败（密码需满足 8-32 位 + 大小写 + 数字 + 特殊字符 @\$!%*?&）" >&2
+        exit 1
+    fi
+}
+
 docker compose version >/dev/null 2>&1 || { echo "错误: docker compose 插件不可用（需 Compose v2）" >&2; exit 1; }
 
 step "git pull"
@@ -137,6 +148,7 @@ step "service: docker compose 校验并启动"
 ( cd "$SERVICE_DIR" && docker compose config -q && docker compose up -d )
 
 init_db "$ADMIN_DIR" "admin"
+init_default_admin "$ADMIN_DIR"
 init_db "$SERVICE_DIR" "service"
 
 step "监控冒烟验证 (scripts/verify_monitoring.sh)"
@@ -149,6 +161,7 @@ fi
 
 echo
 echo "部署完成。"
+echo "  默认管理员: admin / Admin@123456（除非 .env 设置了 ADMIN_INITIAL_PASSWORD；生产环境请立即修改）"
 echo "  监控入口: admin Prometheus :9090 / Grafana :3000；service :9091 / :3001（可用 .env 中 PROMETHEUS_PORT/GRAFANA_PORT 覆盖）"
 echo "  注意: 双端 nginx 默认均映射 80/443，同主机部署需通过 .env 的 NGINX_PORT/NGINX_SSL_PORT 错开"
 echo "  提醒: 上线后配置数据库备份 cron（bash scripts/backup.sh，详见 docs/OPS_RUNBOOK.md 1.2 与 docs/RECOVERY_RUNBOOK.md）"

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 // 通用表单弹窗：按字段描述符生成响应式表单，13 个模块复用一个弹窗。
 import { Component, computed, effect, inject, input, model, signal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -71,6 +71,9 @@ export class FormModalComponent {
     for (const key of Object.keys(this.form.controls)) this.form.removeControl(key);
     const edit = values !== null;
     for (const f of fields) {
+      const validators: ValidatorFn[] = [];
+      if (f.required) validators.push(Validators.required);
+      if (f.pattern) validators.push(Validators.pattern(f.pattern));
       this.form.addControl(
         f.key,
         this.fb.control(
@@ -78,7 +81,7 @@ export class FormModalComponent {
             value: values?.[f.key] ?? this.emptyValue(f),
             disabled: edit && !!f.immutable,
           },
-          f.required ? [Validators.required] : [],
+          validators,
         ),
       );
     }
@@ -132,6 +135,12 @@ export class FormModalComponent {
   protected invalid(key: string): boolean {
     const c = this.form.get(key);
     return !!c && c.invalid && c.touched;
+  }
+
+  /** 错误提示：pattern 未通过且声明了 patternMessage 时用它，否则统一「请填写{label}」 */
+  protected errText(f: FormField): string {
+    if (f.patternMessage && this.form.get(f.key)?.errors?.['pattern']) return f.patternMessage;
+    return `请填写${f.label}`;
   }
 }
 

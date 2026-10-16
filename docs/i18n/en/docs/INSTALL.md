@@ -44,20 +44,21 @@ Visit **`http://localhost:8787/install`** in a browser and complete the three-st
 | Step | Content | Description |
 |------|------|------|
 | Step 1 | Database config | Enter host, port, database name, username, password |
-| Step 2 | Admin account | Set the admin login username and password (at least 6 characters) |
+| Step 2 | Admin account | Set the admin login username and password (8–32 characters, including lower/upper case letters, digits and special characters @$!%*?&) |
 | Step 3 | Confirm installation | Review the config, click confirm, and installation runs automatically |
 
 The installation process automatically completes:
 1. Tests the database connection
 2. Writes the `.env` config file
-3. Imports all 65 tables + permission seeds
+3. Imports all 67 tables + permission seeds
 4. Creates the admin account with the super admin role
 5. Creates the installation lock file `public/.installed`
 
 ### After Installation
 
-- Admin panel address: `http://localhost:8787/admin`
-- The wizard shows the login address and account info
+- Backend service: `http://localhost:8787` (login endpoint `POST /api/v1/auth/login`, API docs `http://localhost:8787/apidoc`)
+- The admin frontend (Flutter / React / Angular, see `admin/apps/README.md`) is deployed separately and not part of this service
+- The wizard shows the login endpoint and account info
 - Recommended to restart the service for config to take effect: `php start.php restart -d`
 - To reinstall, simply delete the `public/.installed` file
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` contains all 65 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
+`docs/install.sql` contains all 67 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
 
 Verify after execution:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# Should output: 66 (65 tables + 1 header line)
+# Should output: 68 (67 tables + 1 header line)
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | Username | Password | Role | Notes |
 |--------|------|------|------|
-| admin | admin123 | Super admin | Has all permissions |
+| admin | Admin@123456 | Super admin | Has all permissions |
+
+> This account is created automatically by the one-click deploy (`bash scripts/deploy.sh`); override the password via `ADMIN_INITIAL_PASSWORD` in `.env`, or set your own in step 2 of the web wizard.
 
 > **Change the default password immediately in production.**
 
@@ -247,7 +250,7 @@ All API endpoints and parameter descriptions are in the standalone [API.md](API.
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. Run Tests

@@ -289,7 +289,9 @@ Open `http://localhost:8788` (or Flutter Web / HarmonyOS): the home page shows r
 
 | Username | Password | Role |
 |--------|------|------|
-| admin | admin123 | Super admin |
+| admin | Admin@123456 | Super admin |
+
+> This account is created automatically by the one-click deploy (`bash scripts/deploy.sh`); override the password via `ADMIN_INITIAL_PASSWORD` in `.env`, or set your own in step 2 of the web wizard.
 
 > Change the default password immediately in production.
 

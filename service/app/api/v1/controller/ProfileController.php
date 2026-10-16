@@ -9,6 +9,7 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\PasswordRule;
 use app\model\Owner;
 use support\Request;
 use support\Response;
@@ -123,8 +124,10 @@ class ProfileController extends BaseController
             return $this->fail('旧密码错误', 422);
         }
 
-        if (strlen($newPassword) < 6) {
-            return $this->fail('新密码至少6位', 422);
+        // 与注册口共用同一规则源：曾只查「至少6位」，改密即可把账号降级成弱密码（2026-10 修复）
+        $passwordError = PasswordRule::check($newPassword);
+        if ($passwordError !== null) {
+            return $this->fail($passwordError, 422);
         }
 
         $owner->password = password_hash($newPassword, PASSWORD_BCRYPT);

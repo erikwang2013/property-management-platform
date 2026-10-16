@@ -1,5 +1,36 @@
 # Changelog
 
+## v1.9.0 (2026-10-16)
+
+> **注意（行为变更）**：① **一键部署**（`bash scripts/deploy.sh`）现**自动创建默认管理员** `admin / Admin@123456`（可用 `.env` 的 `ADMIN_INITIAL_PASSWORD` 覆盖）——此前 README/INSTALL 承诺的默认账号从未被任何安装路径创建（`install.sql` 无管理员种子），且其口令 `admin123` 过不了登录复杂度校验，照文档登录必报「密码错误」；② 建用户/改用户/Excel 导入/业主改密的密码强度校验**统一为登录口同款规则**（8-32 位 + 大小写字母 + 数字 + 特殊字符 `@$!%*?&`）——此前这些入口更宽松，可造出「能建号、永远登不上」的账号；③ 安装向导确认页现**携带可选支付/ES 配置**（此前在确认环节被静默丢弃）。
+
+### 新增
+- **一键部署默认管理员**：`scripts/deploy.sh` 增 `init_default_admin()`（幂等，容器内执行）；新增 `admin/scripts/create_admin.php`（强制过 `PasswordRule`、snowflake id、超管角色与向导同源 `10000000000000001`、原生 Db 写入绕开 scout 观察者）；`admin/.env.docker` 增 `ADMIN_INITIAL_PASSWORD` 键；部署完成输出明示账号与改密提醒
+- **密码规则唯一源 `PasswordRule`**（admin `app/admin/validate/`、service `app/common/`）：登录/注册/建号/改密/导入/安装向导共用同一正则；新增 `PasswordRuleTest`（两端，行为用例 + **源码扫描防漂移**：入口必须引用单源、不得内联 `(?=.*[a-z])`）
+- **`InstallWizardFieldParityTest`**：断言 step2 收集字段 ⊆ step3 回传字段 + 控制器 `$optional` 透传（防「页面填了、确认丢」回归）
+- **前端四端密码表单与后端同规则**：React `UsersPage` 加 rules；Angular `FormField` 新增 `pattern/patternMessage` 并接进 `form-modal`（错误提示区分「请填写」与规则提示）；admin Flutter 建/改用户校验；业主端 Flutter 改密校验与文案
+
+### 修复
+- **一键安装「密码错误」（用户反馈）**：`admin/admin123` 从未存在（管理员只由向导建、docker 场景又被文档劝退）→ 一键部署现自动建号；`demo_data.php` 演示口令同步合规（后台 `Admin@123456` / 业主 `Demo@123456`）
+- **「能建号、永远登不上」账号（P0）**：`UserController::store`（原 min:6 无复杂度）/`update`（原零校验）/`ImportController`（原零校验）全部改引 `PasswordRule`；service 改密（原「至少6位」，可把账号降级成弱密码）与注册同口径
+- **安装向导丢可选配置**：`renderStep3` 透传 `$optional` + `step3.html` 确认表单补 10 个 `payment_*/wechat_*/alipay_*/es_*` 隐藏域 + 审查页新增「可选配置（将写入 .env）」摘要（值不回显）；step2 页面密码提示由「至少6位」改为完整规则口径
+- **成功页反安全建议**：「请立即删除 `public/.installed`」→「确保其存在（安装锁）；收紧访问请在反向代理层封 `/install`」
+- **成功页登录地址缺 `/v1`**：→ `/api/v1/auth/login` 且标签改「登录接口」；「前往管理后台」（无此页面）改「查看接口文档」`/apidoc`
+- **同族 stale 路径**：admin/service 两份 `docs/nginx-security.conf` 登录限流 location（此前挂在不存在的路径上、该层限流空转）、Auth/Captcha 共 10 处与 InstallController 2 处 `@Apidoc`、`/api/install`→`/install`；删除残留空目录 `admin/app/view/install/`（v1.7.0 的 500 故障路径）
+
+### 变更
+- **文档全量同步**：`admin123`→`Admin@123456` + 「由一键部署自动创建」注记——README 中英、admin README 中英、`docs/INSTALL.md`（含登录 curl 示例）及 **12 语言 i18n 共 24 文件**；`admin/docs/API.md` 登录/注册/建用户三处示例改合规值；表数口径统一 67（`step3.html` 气泡）
+- **图片同步 10 张 SVG**：`architecture_overview`/`readme_architecture`（64→67）、`design_architecture`/`design_structure`(+`_en`)（65→67）；`flow_auth`/`lifecycle_owner`/`lifecycle_token`/`security_auth_model` 的 `/api/auth/*`、`/api/captcha/*`→`/api/v1/*`（`lifecycle_owner` 边标签为定宽 foreignObject，同步加宽 166.9→192 并重定位居中）
+
+### 测试
+- **真库实测**（pmp-mysql + scratch 库导入 install.sql 67 表）：建号脚本首次创建成功 / 重跑幂等跳过 / 弱密码被拒 exit 1；模型层 `password_verify('Admin@123456')` 通过、角色关联 = `10000000000000001`、登录口规则接受新口令并**拒绝旧 `admin123`（证伪测试）**；scratch 库删除、`.env` 还原 md5 一致
+- **等价复核**（php -r 复跑，本机 phpunit 挂起）：admin 26 项 / service 11 项全 PASS；`php -l` / `bash -n` 全通过；React `tsc --noEmit`、Angular `ng build`（含模板编译）、两端 Flutter `dart analyze` 全过——analyze 抓出并修复 Dart 字符串 `$!` 插值语法错误 2 处
+
+### 边界（如实）
+- 完整 docker 九服务栈端到端未在本机执行（3306 被宿主 MySQL 占用）；建号脚本本体已真库验证，未验证的差异仅为 `docker compose exec` 薄包装层
+- 环境发现（供后续会话）：phpdotenv `createUnsafeMutable()->load()` 会覆盖已存在环境变量（`DB_DATABASE=xx php …` 前缀覆盖无效），隔离验证需用「备份 .env + trap 还原」手法
+- 带日期的历史评审稿（`MULTI_TENANT_PLAN` / `PERFORMANCE_REPORT` 2026-08-16）与 `admin/docs/superpowers` 计划文档未动；12 个 i18n README 的 Docker 段落旧文案维持现状（独立翻译波次）
+
 ## v1.8.0 (2026-10-15)
 
 > **注意（行为变更）**：① docker compose 此前**无法启动**（两端 compose 的 `${VAR:?}` 必填插值在 `.env` 中缺失或为空），现已补齐并自动化；② MySQL 容器的库名/用户/密码改为从 `DB_DATABASE/DB_USERNAME/DB_PASSWORD` 嵌套派生（单一真源），不再需要独立配置 `MYSQL_*`；③ 首次启动且数据卷为空时 `docs/install.sql` 由 compose initdb 挂载自动导入（原挂载的 `./database/migrations` 目录并不存在）；④ `ELASTIC_PASSWORD` 替换语义收紧：仅当 `.env` 刚由模板生成时才替换占位符，已有 `.env` 中只告警不改写——沿用旧值的部署不会因重跑部署脚本而失去 ES 连接。

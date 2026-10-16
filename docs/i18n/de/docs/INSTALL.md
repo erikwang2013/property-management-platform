@@ -44,20 +44,21 @@ Im Browser **`http://localhost:8787/install`** aufrufen und die dreistufige Konf
 | Schritt | Inhalt | Beschreibung |
 |------|------|------|
 | Schritt 1 | Datenbankkonfiguration | Host, Port, Datenbankname, Benutzername, Passwort eintragen |
-| Schritt 2 | Administratorkonto | Benutzername und Passwort für das Backend festlegen (mindestens 6 Zeichen) |
+| Schritt 2 | Administratorkonto | Benutzername und Passwort für das Backend festlegen (8–32 Zeichen, inkl. Groß-/Kleinbuchstaben, Ziffern und Sonderzeichen @$!%*?&) |
 | Schritt 3 | Installation bestätigen | Konfiguration prüfen, nach Bestätigung wird die Installation automatisch ausgeführt |
 
 Der Installationsprozess erledigt automatisch:
 1. Datenbankverbindung testen
 2. `.env`-Konfigurationsdatei schreiben
-3. Alle 65 Datentabellen + Berechtigungs-Seeds importieren
+3. Alle 67 Datentabellen + Berechtigungs-Seeds importieren
 4. Administratorkonto erstellen und Rolle „Superadministrator" vergeben
 5. Sperrdatei `public/.installed` erstellen
 
 ### Nach der Installation
 
-- Admin-Backend-Adresse: `http://localhost:8787/admin`
-- Der Installationsassistent zeigt Anmeldeadresse und Kontoinformationen an
+- Backend-Dienst: `http://localhost:8787` (Login-Endpunkt `POST /api/v1/auth/login`, API-Dokumentation `http://localhost:8787/apidoc`)
+- Das Admin-Frontend (Flutter / React / Angular, siehe `admin/apps/README.md`) wird separat bereitgestellt und ist nicht Teil dieses Dienstes
+- Der Installationsassistent zeigt Login-Endpunkt und Kontoinformationen an
 - Es wird empfohlen, den Dienst neu zu starten, damit die Konfiguration wirksam wird: `php start.php restart -d`
 - Für eine Neuinstallation genügt es, die Datei `public/.installed` zu löschen
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` enthält alle 65 Tabellen + RBAC-Berechtigungs-Seed-Daten und verwendet `CREATE TABLE IF NOT EXISTS`, um die erneute Ausführbarkeit sicherzustellen.
+`docs/install.sql` enthält alle 67 Tabellen + RBAC-Berechtigungs-Seed-Daten und verwendet `CREATE TABLE IF NOT EXISTS`, um die erneute Ausführbarkeit sicherzustellen.
 
 Nach der Ausführung verifizieren:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# Sollte ausgeben: 66 (65 Tabellen + 1 Kopfzeile)
+# Sollte ausgeben: 68 (67 Tabellen + 1 Kopfzeile)
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | Benutzername | Passwort | Rolle | Beschreibung |
 |--------|------|------|------|
-| admin | admin123 | Superadministrator | Besitzt alle Berechtigungen |
+| admin | Admin@123456 | Superadministrator | Besitzt alle Berechtigungen |
+
+> Dieses Konto wird vom Ein-Klick-Deployment (`bash scripts/deploy.sh`) automatisch erstellt; das Passwort kann in `.env` über `ADMIN_INITIAL_PASSWORD` überschrieben werden (beim Assistenten: Schritt 2).
 
 > **Bitte das Standardpasswort in der Produktion umgehend ändern.**
 
@@ -247,7 +250,7 @@ Alle API-Endpunkte und Parameterbeschreibungen finden Sie im separaten Dokument 
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. Tests ausführen

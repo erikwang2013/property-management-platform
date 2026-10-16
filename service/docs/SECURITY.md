@@ -74,8 +74,8 @@ Redis Sorted Set 滑动窗口 + Lua 原子化脚本，与 admin 端共享相同�
 | 路由 | 限制 | 窗口 |
 |------|------|------|
 | 默认 | 60 次/分钟 | 60s |
-| `/api/auth/login` | 10 次/分钟 | 60s |
-| `/api/auth/register` | 5 次/分钟 | 60s |
+| `/api/v1/auth/login` | 10 次/分钟 | 60s |
+| `/api/v1/auth/register` | 5 次/分钟 | 60s |
 
 Redis 不可用时 fail-open，放行所有请求。
 

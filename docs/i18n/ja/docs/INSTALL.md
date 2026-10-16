@@ -44,20 +44,21 @@ php start.php start -d
 | ステップ | 内容 | 説明 |
 |------|------|------|
 | 第 1 步 | 数据库配置 | ホスト、ポート、DB 名、ユーザー名、パスワードを入力 |
-| 第 2 步 | 管理员账户 | 管理画面のログインユーザー名とパスワードを設定（最低 6 桁） |
+| 第 2 步 | 管理员账户 | 管理画面のログインユーザー名とパスワードを設定（8〜32 桁、大文字・小文字・数字・記号 @$!%*?& を含む） |
 | 第 3 步 | 确认安装 | 設定情報を確認し、確認クリックでインストールを自動実行 |
 
 インストールプロセスで自動的に完了する処理：
 1. データベース接続のテスト
 2. `.env` 設定ファイルの書き込み
-3. 全 65 テーブル + 権限シードデータのインポート
+3. 全 67 テーブル + 権限シードデータのインポート
 4. 管理者アカウントの作成とスーパー管理者ロールの付与
 5. インストールロックファイル `public/.installed` の作成
 
 ### インストール完了後
 
-- 管理画面アドレス：`http://localhost:8787/admin`
-- インストールウィザードにログインアドレスとアカウント情報が表示されます
+- バックエンドサービス：`http://localhost:8787`（ログインエンドポイント `POST /api/v1/auth/login`、API ドキュメント `http://localhost:8787/apidoc`）
+- 管理画面フロントエンド（Flutter / React / Angular、`admin/apps/README.md` 参照）は別途デプロイされ、本サービスには含まれません
+- インストールウィザードにログインエンドポイントとアカウント情報が表示されます
 - 設定を反映するためサービスの再起動を推奨：`php start.php restart -d`
 - 再インストールする場合は `public/.installed` ファイルを削除するだけ
 
@@ -102,13 +103,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` には全 65 テーブル + RBAC 権限シードデータが含まれ、`CREATE TABLE IF NOT EXISTS` により再実行可能です。
+`docs/install.sql` には全 67 テーブル + RBAC 権限シードデータが含まれ、`CREATE TABLE IF NOT EXISTS` により再実行可能です。
 
 実行後の検証：
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# 出力: 66（65 テーブル + 1 行のヘッダー）
+# 出力: 68（67 テーブル + 1 行のヘッダー）
 ```
 
 ---
@@ -215,7 +216,9 @@ docker compose up -d
 
 | ユーザー名 | パスワード | ロール | 説明 |
 |--------|------|------|------|
-| admin | admin123 | スーパー管理者 | 全権限を持つ |
+| admin | Admin@123456 | スーパー管理者 | 全権限を持つ |
+
+> このアカウントはワンクリックデプロイ（`bash scripts/deploy.sh`）で自動作成されます（パスワードは `.env` の `ADMIN_INITIAL_PASSWORD` で変更可。ウィザードの場合はステップ 2 で設定）。
 
 > **本番環境では直ちにデフォルトパスワードを変更してください。**
 
@@ -247,7 +250,7 @@ curl http://localhost:8788/health
 ```bash
 curl -X POST http://localhost:8787/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"Admin@123456"}'
 ```
 
 ### 4. テスト実行

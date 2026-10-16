@@ -291,7 +291,9 @@ Buka `http://localhost:8788` (atau Flutter Web / HarmonyOS): beranda menampilkan
 
 | Username | Kata sandi | Peran |
 |--------|------|------|
-| admin | admin123 | Super admin |
+| admin | Admin@123456 | Super admin |
+
+> Akun ini dibuat otomatis oleh deploy sekali klik (`bash scripts/deploy.sh`); kata sandi dapat diubah via `ADMIN_INITIAL_PASSWORD` di `.env` (pada wizard: langkah 2).
 
 > Segera ubah kata sandi default di lingkungan produksi.
 
