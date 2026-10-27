@@ -214,11 +214,6 @@ Route::group('/admin', function () {
     Route::get('/collection-record', [app\admin\controller\CollectionController::class, 'records']);
     Route::post('/collection/run', [app\admin\controller\CollectionController::class, 'run']);
     // 巡检管理
-    $resource('/inspection-task', app\admin\controller\InspectionController::class);
-    Route::get('/inspection-task/{taskHashid}/checkpoints', [app\admin\controller\InspectionController::class, 'checkpoints']);
-    Route::put('/inspection-task/{hashid}/start', [app\admin\controller\InspectionController::class, 'startTask']);
-    Route::put('/inspection-task/{hashid}/complete', [app\admin\controller\InspectionController::class, 'completeTask']);
-    Route::put('/inspection-checkpoint/{checkpointHashid}/checkin', [app\admin\controller\InspectionController::class, 'checkin']);
     // 社区商城
     $resource('/mall-category', app\admin\controller\MallController::class);
     $resource('/mall-product', app\admin\controller\MallController::class);

@@ -118,7 +118,6 @@ open-admin/
 │   │       │   ├── vote/       # 投票管理
 │   │       │   ├── sla/        # SLA管理(2)
 │   │       │   ├── collection/ # 催缴管理(2)
-│   │       │   ├── inspection/ # 巡检管理
 │   │       │   ├── mall/       # 商城管理(3)
 │   │       │   ├── face/       # 人脸管理
 │   │       │   ├── group/      # 集团管理

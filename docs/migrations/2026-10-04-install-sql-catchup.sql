@@ -2,7 +2,7 @@
 -- 存量库补齐：install.sql 的修正补齐（2026-10-04）
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- ============================================================
--- 背景：install.sql 原有 19 张有 created_at 的表缺 updated_at 列，而对应 Eloquent 模型
+-- 背景：install.sql 原有 18 张有 created_at 的表缺 updated_at 列，而对应 Eloquent 模型
 -- 的 timestamps 默认开启 —— 任何走模型写入的路径都报 1054 Unknown column 'updated_at'
 -- （报修派单落 repair_progress 时实测触发）。新建库已由 install.sql 直接带列；
 -- 本文件供已建库一次性补齐，执行后与 install.sql 的 schema 等价。
@@ -14,7 +14,7 @@
 -- 注意客户端字符集：中文权限名要 --default-character-set=utf8mb4。
 -- ============================================================
 
--- ---------- 1. 补 19 张表的 updated_at（位置与 install.sql 一致：紧跟 created_at）----------
+-- ---------- 1. 补 18 张表的 updated_at（位置与 install.sql 一致：紧跟 created_at）----------
 ALTER TABLE `management_operation_log` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_fee_payment` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_repair_progress` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
@@ -30,7 +30,6 @@ ALTER TABLE `management_vote_option` ADD COLUMN `updated_at` DATETIME NOT NULL D
 ALTER TABLE `management_vote_record` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_collection_strategy` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_collection_record` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
-ALTER TABLE `management_inspection_checkpoint` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_mall_category` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_group_community` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;
 ALTER TABLE `management_chat_record` ADD COLUMN `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `created_at`;

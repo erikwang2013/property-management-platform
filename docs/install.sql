@@ -387,13 +387,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010087, 0, '更新员工', 'put.admin/staff',    3, '', '', 3, NOW(), NOW()),
 (2100000000010088, 0, '删除员工', 'delete.admin/staff', 3, '', '', 4, NOW(), NOW());
 
--- API 权限 — 巡检任务
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010089, 0, '查看巡检任务', 'get.admin/inspection-task',    3, '', '', 1, NOW(), NOW()),
-(2100000000010090, 0, '创建巡检任务', 'post.admin/inspection-task',   3, '', '', 2, NOW(), NOW()),
-(2100000000010091, 0, '更新巡检任务', 'put.admin/inspection-task',    3, '', '', 3, NOW(), NOW()),
-(2100000000010092, 0, '删除巡检任务', 'delete.admin/inspection-task', 3, '', '', 4, NOW(), NOW());
-
 -- API 权限 — 商城分类
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010093, 0, '查看商城分类', 'get.admin/mall-category',    3, '', '', 1, NOW(), NOW()),
@@ -494,13 +487,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 -- API 权限 — 员工批量状态
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010169, 0, '员工批量启禁用', 'post.admin/staff/batch/status', 3, '', '', 1, NOW(), NOW());
-
--- API 权限 — 巡检扩展端点
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010170, 0, '查看巡检点',       'get.admin/inspection-task/checkpoints',     3, '', '', 1, NOW(), NOW()),
-(2100000000010171, 0, '开始巡检任务',     'put.admin/inspection-task/start',           3, '', '', 2, NOW(), NOW()),
-(2100000000010172, 0, '完成巡检任务',     'put.admin/inspection-task/complete',        3, '', '', 3, NOW(), NOW()),
-(2100000000010173, 0, '巡检点打卡',       'put.admin/inspection-checkpoint/checkin',   3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 集团移除小区
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
@@ -1554,49 +1540,6 @@ CREATE TABLE IF NOT EXISTS `management_collection_record` (
     KEY `idx_executed_at` (`executed_at`),
     UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴记录表';
-
--- ============================================================
--- 9. 巡检记录（移动端）
--- ============================================================
-
--- 巡检任务表
-CREATE TABLE IF NOT EXISTS `management_inspection_task` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区',
-    `title` VARCHAR(200) NOT NULL COMMENT '任务标题',
-    `task_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=安保 2=保洁 3=设备 4=绿化 5=消防',
-    `route_points` TEXT COMMENT '巡检路线 (JSON坐标)',
-    `checkpoints` TEXT COMMENT '检查点列表 (JSON)',
-    `assigned_to` BIGINT UNSIGNED NOT NULL COMMENT '指派人员ID',
-    `scheduled_date` DATE NOT NULL COMMENT '计划日期',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=待执行 1=执行中 2=已完成 3=已超时',
-    `started_at` DATETIME DEFAULT NULL,
-    `completed_at` DATETIME DEFAULT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_community` (`community_id`),
-    KEY `idx_assigned` (`assigned_to`),
-    KEY `idx_scheduled` (`scheduled_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡检任务表';
-
--- 巡检打卡记录表
-CREATE TABLE IF NOT EXISTS `management_inspection_checkpoint` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `task_id` BIGINT UNSIGNED NOT NULL COMMENT '巡检任务ID',
-    `checkpoint_index` INT UNSIGNED NOT NULL COMMENT '检查点序号',
-    `checkpoint_name` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '检查点名称',
-    `latitude` DECIMAL(10,7) NOT NULL DEFAULT 0 COMMENT '纬度',
-    `longitude` DECIMAL(10,7) NOT NULL DEFAULT 0 COMMENT '经度',
-    `photo_url` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '现场照片',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=未打卡 1=正常 2=异常',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '检查备注',
-    `checked_at` DATETIME DEFAULT NULL COMMENT '打卡时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_task_id` (`task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='巡检打卡记录表';
 
 -- ============================================================
 -- 12. 社区商城

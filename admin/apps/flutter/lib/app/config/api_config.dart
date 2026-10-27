@@ -165,12 +165,6 @@ class ApiConfig {
   static const String collectionRecord = '/admin/collection-record';
   static const String collectionRun = '/admin/collection/run';
 
-  // 巡检
-  static const String inspectionTask = '/admin/inspection-task';
-  static String inspectionCheckpoints(String hashid) => '/admin/inspection-task/$hashid/checkpoints';
-  static String inspectionStart(String hashid) => '/admin/inspection-task/$hashid/start';
-  static String inspectionComplete(String hashid) => '/admin/inspection-task/$hashid/complete';
-
   // 商城
   static const String mallCategory = '/admin/mall-category';
   static const String mallProduct = '/admin/mall-product';

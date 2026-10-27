@@ -112,7 +112,6 @@ class _AdminLayoutState extends State<AdminLayout> {
       _MenuItem('SLA记录', Icons.history_toggle_off, '/sla-records'),
       _MenuItem('催缴策略', Icons.event_repeat, '/collection-strategies'),
       _MenuItem('催缴记录', Icons.repeat, '/collection-records'),
-      _MenuItem('巡检管理', Icons.travel_explore, '/inspections'),
       _MenuItem('商城分类', Icons.storefront, '/mall-categories'),
       _MenuItem('商城商品', Icons.shopping_cart, '/mall-products'),
       _MenuItem('商城订单', Icons.receipt, '/mall-orders'),
