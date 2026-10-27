@@ -207,18 +207,6 @@ Route::group('/admin', function () {
     Route::delete('/collection-strategy/{hashid}', [app\admin\controller\CollectionController::class, 'strategyDestroy']);
     Route::get('/collection-record', [app\admin\controller\CollectionController::class, 'records']);
     Route::post('/collection/run', [app\admin\controller\CollectionController::class, 'run']);
-    // 巡检管理
-    // 社区商城
-    $resource('/mall-category', app\admin\controller\MallController::class);
-    $resource('/mall-product', app\admin\controller\MallController::class);
-    Route::get('/mall-order', [app\admin\controller\MallController::class, 'orders']);
-    Route::get('/mall-order/{hashid}', [app\admin\controller\MallController::class, 'orderShow']);
-    Route::put('/mall-order/{hashid}/ship', [app\admin\controller\MallController::class, 'ship']);
-    Route::post('/mall-order/{hashid}/refund', [app\admin\controller\MallController::class, 'refundOrder']);
-    // 人脸管理
-    Route::get('/face', [app\admin\controller\FaceController::class, 'index']);
-    Route::put('/face/{hashid}/verify', [app\admin\controller\FaceController::class, 'verify']);
-    Route::put('/face/{hashid}/reject', [app\admin\controller\FaceController::class, 'reject']);
     // 集团管理
     $resource('/group', app\admin\controller\GroupController::class);
     Route::get('/group/{groupHashid}/communities', [app\admin\controller\GroupController::class, 'communities']);

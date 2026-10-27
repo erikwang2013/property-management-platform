@@ -29,9 +29,7 @@ const List<_FunctionEntry> _entries = [
   _FunctionEntry('社区活动', Icons.celebration, Color(0xFF722ED1), '/activities'),
   _FunctionEntry('消息通知', Icons.notifications, Color(0xFFFA8C16), '/notifications'),
   _FunctionEntry('社区投票', Icons.how_to_vote, Color(0xFFD4380D), '/votes'),
-  _FunctionEntry('社区商城', Icons.storefront, Color(0xFF8C6D1F), '/mall-products'),
   _FunctionEntry('智能问答', Icons.chat_bubble_outline, Color(0xFF1677FF), '/chat'),
-  _FunctionEntry('人脸识别', Icons.face, Color(0xFF531DAB), '/face-register'),
   _FunctionEntry('个人中心', Icons.person, AppTheme.danger, '/profile'),
 ];
 

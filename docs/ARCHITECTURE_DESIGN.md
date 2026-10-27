@@ -379,9 +379,6 @@ apps/harmonyos/entry/src/main/ets/
 ### 智能催缴
 催缴策略匹配 → 逾期检测 → 自动生成催缴任务 → 执行催缴动作
 
-### 巡检管理
-任务派发 → 移动端GPS打卡 → 拍照上传 → 异常标记 → 完成统计
-
 ### 集团管理
 集团 → 小区关联 → 跨小区数据汇总（房产/业主/收费/报修）
 
@@ -389,7 +386,7 @@ apps/harmonyos/entry/src/main/ets/
 
 使用 `hg/apidoc` 从控制器注解自动生成接口文档，按功能分组。
 
-**管理端** (`http://localhost:8787/apidoc`): 10组 — 57个控制器注入注解（Base/Docs/Install 未分组）
+**管理端** (`http://localhost:8787/apidoc`): 10组 — 55个控制器注入注解（Base/Docs/Install 未分组）
 
 | 分组 | 数量 | 控制器 |
 |------|------|--------|
@@ -402,7 +399,7 @@ apps/harmonyos/entry/src/main/ets/
 | `property-core` | 12 | Community, Building, Unit, RoomType, Room, Owner, Tenant, FeeType, FeeBill, FeePayment, Repair, Announcement |
 | `property-aux` | 9 | Parking(3), Equipment(2), Complaint, Visitor, Contract, Finance |
 | `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
-| `extensions` | 11 | Notification, Approval, Payment, Vote, Sla, Collection, Inspection, Mall, Face, Group, Knowledge |
+| `extensions` | 7 | Notification, Approval, Payment, Vote, Collection, Group, Knowledge |
 
 **业务端** (`http://localhost:8788/apidoc`): 9组 — 17个控制器注入注解
 
@@ -416,7 +413,7 @@ apps/harmonyos/entry/src/main/ets/
 | `parking` | 2 | Parking, Visitor |
 | `activity` | 1 | Activity |
 | `profile` | 1 | Profile |
-| `extensions` | 5 | Notification, Vote, Mall, Knowledge, Face |
+| `extensions` | 3 | Notification, Vote, Knowledge |
 
 ### 注解规范
 

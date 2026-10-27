@@ -41,7 +41,6 @@ This copyright notice is permanent, must not be modified, removed, or reversed. 
 | Backend | webman v2 (workerman) | High-performance PHP daemon framework |
 | PHP | 8.3+ | |
 | Database | MySQL 8.0+ | Table prefix `management_`, BIGINT non-auto-increment PKs |
-| Search | Elasticsearch | Synced via `webman-scout` |
 | Admin Frontend | Flutter 3.x | Web renders as desktop admin panel (`apps/flutter/`) |
 
 ## Core Packages
@@ -53,7 +52,6 @@ This copyright notice is permanent, must not be modified, removed, or reversed. 
 | `erikwang2013/jwt-webman` | JWT token issuance and verification |
 | `erikwang2013/encryption` | Transport-layer sensitive data encryption |
 | `erikwang2013/encryptable` | Database-layer sensitive field auto encryption |
-| `erikwang2013/webman-scout` | Elasticsearch sync and full-text search |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/poster-php` | Click captcha generation/verification + poster generation |
 | `phpoffice/phpspreadsheet` | Excel export |
@@ -92,7 +90,7 @@ open-admin/
 ├── apps/
 │   └── flutter/                # Flutter Web admin panel
 ├── config/                     # Config files
-└── docs/install.sql            # Full install SQL (67 tables + permission seeds, single entry)
+└── docs/install.sql            # Full install SQL (60 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
 ```
 
@@ -102,7 +100,6 @@ open-admin/
 - Composer 2.x
 - MySQL >= 8.0
 - Flutter >= 3.41 (frontend development only)
-- Elasticsearch >= 7.x (optional, for search)
 
 ## Quick Start
 
@@ -141,7 +138,7 @@ Key environment variables:
 
 ### 3. Initialize Database
 
-Run the consolidated install script at repo root (67 tables + RBAC permission seeds, idempotent):
+Run the consolidated install script at repo root (60 tables + RBAC permission seeds, idempotent):
 
 ```bash
 mysql -u root -p < ../docs/install.sql
@@ -167,7 +164,7 @@ flutter run -d chrome    # Web (desktop admin panel style)
 
 ### 6. Docker Compose (Recommended for Production)
 
-Full Docker orchestration with 5 services: Nginx, PHP (webman app), MySQL, Redis, Elasticsearch.
+Full Docker orchestration with 4 services: Nginx, PHP (webman app), MySQL, Redis.
 
 ```bash
 # 1. Configure Docker environment variables

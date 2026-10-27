@@ -25,11 +25,7 @@ import 'pages/activity/activity_detail_page.dart';
 import 'pages/notification/notification_list_page.dart';
 import 'pages/vote/vote_list_page.dart';
 import 'pages/vote/vote_detail_page.dart';
-import 'pages/mall/mall_products_page.dart';
-import 'pages/mall/mall_product_detail_page.dart';
-import 'pages/mall/mall_orders_page.dart';
 import 'pages/chat/chat_page.dart';
-import 'pages/face/face_register_page.dart';
 
 class PortalApp extends StatelessWidget {
   const PortalApp({super.key});
@@ -63,11 +59,7 @@ class PortalApp extends StatelessWidget {
         GetPage(name: '/notifications', page: () => const NotificationListPage()),
         GetPage(name: '/votes', page: () => const VoteListPage()),
         GetPage(name: '/vote-detail', page: () => const VoteDetailPage()),
-        GetPage(name: '/mall-products', page: () => const MallProductsPage()),
-        GetPage(name: '/mall-product-detail', page: () => const MallProductDetailPage()),
-        GetPage(name: '/mall-orders', page: () => const MallOrdersPage()),
         GetPage(name: '/chat', page: () => const ChatPage()),
-        GetPage(name: '/face-register', page: () => const FaceRegisterPage()),
       ],
     );
   }

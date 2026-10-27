@@ -6,7 +6,7 @@
 
 <img src="docs/images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="120" align="right">
 
-全栈物业管理系统，覆盖22个业务模块 + 12个扩展功能（消息通知/审批工作流/支付/投票/SLA/数据大屏/催缴/巡检/商城/人脸/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端为 Flutter Web（PC 管理后台风格）。
+全栈物业管理系统，覆盖22个业务模块 + 7个扩展功能（消息通知/审批工作流/支付/投票/催缴/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端为 Flutter Web（PC 管理后台风格）。
 
 **小筑** 是本项目的宠物 —— 一位楼宇管家：一栋亮着灯的公寓楼，戴管家帽、拿工单板，胸前工牌打勾。它出现在安装向导、错误页、登录页与架构图中，代表「在管的每一栋楼都有人照看」。
 
@@ -100,13 +100,13 @@ property-management-platform/
 
 | 层 | 数量 | 详情 |
 |----|------|------|
-| 数据库表 | 67张 | 全部 `management_` 前缀，BIGINT 非自增主键 |
-| PHP 模型 | admin 64 / service 57 | 均为 Eloquent 模型，含 encryptable 加密字段；service 端 57 为模型文件数（含 BaseModel 基类） |
-| admin 控制器 | 58个 | 通用管理 + 22个物业模块 + 12个扩展功能 |
+| 数据库表 | 60张 | 全部 `management_` 前缀，BIGINT 非自增主键 |
+| PHP 模型 | admin 57 / service 50 | 均为 Eloquent 模型，含 encryptable 加密字段；service 端 50 为模型文件数（含 BaseModel 基类） |
+| admin 控制器 | 55个 | 通用管理 + 22个物业模块 + 7个扩展功能 |
 | service 控制器 | 17个 | 业主端全部 API |
-| API 路由 | 178 | admin 125 + service 53 |
-| Flutter 管理后台 | 42页 | admin 42个页面模块，96文件/6,662行 |
-| Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/商城/智能问答/人脸，32文件/3,582行 |
+| API 路由 | 168 | admin 119 + service 49 |
+| Flutter 管理后台 | 41页 | admin 41个页面模块，93文件/6,976行 |
+| Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/智能问答，29文件/3,506行 |
 | 测试 | 471个 | admin 271个(675断言) + service 200个(847断言)，详见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
@@ -133,14 +133,14 @@ property-management-platform/
 
 <img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="330">
 
-## 功能模块（22大模块 + 12扩展）
+## 功能模块（22大模块 + 7扩展）
 
 | 批次 | 模块 | 状态 |
 |------|------|------|
 | 第1批 | 小区、楼栋、单元、户型、房产、业主、租户、费用、报修、公告（10模块） | ✅ 全部完成 |
 | 第2批 | 停车、设备、投诉、访客、合同、财务（6模块）+ 面板可视化 + Excel/PDF导出（平台功能） | ✅ 全部完成 |
 | 第3批 | 安保巡逻、保洁、绿化、社区活动、能耗、员工（6模块） | ✅ 全部完成 |
-| 扩展 | 消息通知、审批工作流、支付集成、业主投票、SLA自动升级、数据大屏、智能催缴、巡检移动端、社区商城、人脸识别、多小区集团管理、智能问答（12模块） | ✅ 全部完成 |
+| 扩展 | 消息通知、审批工作流、支付集成、业主投票、智能催缴、多小区集团管理、智能问答（7模块） | ✅ 全部完成 |
 | 平台功能 | 报表中心（收支趋势 / 收缴率 / 业务分布 / 欠费排行 / PDF导出）+ 业主起始页统计（投诉 / 活动 / 投票 / 未读消息） | ✅ 全部完成 |
 
 ## 技术栈
@@ -149,7 +149,6 @@ property-management-platform/
 - **框架**: webman v2 (workerman/webman)
 - **语言**: PHP 8.3+
 - **数据库**: MySQL 8.0+，表前缀 `management_`，主键 BIGINT 非自增
-- **搜索引擎**: Elasticsearch 8.x
 - **缓存**: Redis 7.x
 
 ### 核心依赖
@@ -160,7 +159,6 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT 认证（HS256） |
 | `erikwang2013/encryption` | API 传输敏感数据 AES-256-CBC 加密 |
 | `erikwang2013/encryptable` | 数据库敏感字段加解密 |
-| `erikwang2013/webman-scout` | Elasticsearch 数据同步与全文检索 |
 | `erikwang2013/season` | 国家旗帜数据 |
 | `erikwang2013/security-php` | 安全工具检测 |
 | `erikwang2013/poster-php` | 敏感操作随机验证码 |
@@ -306,7 +304,7 @@ service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公�
 
 ### Docker 部署
 
-每条堆栈（admin / service）各自独立编排 9 个服务：Nginx + PHP(webman) + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter。
+每条堆栈（admin / service）各自独立编排：Nginx + PHP(webman) + MySQL + Redis + Prometheus + Grafana + redis-exporter。
 
 ```bash
 # 一键（推荐，幂等）：密钥补齐 → 双端启动 → 建库校验 → 监控冒烟
@@ -333,18 +331,17 @@ docker compose up -d
 | 应用 | 8787 | 8788 |
 | MySQL | 3306 | 3307 |
 | Redis | 6379 | 6380 |
-| Elasticsearch | 9200 | 9201 |
 | Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 |
 | Nginx | 80 / 443 | 建议 8080 / 8443（`.env` 的 `NGINX_PORT`/`NGINX_SSL_PORT`） |
 
-> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（67 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
+> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（60 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
 >
 > ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
 
 ## 部署拓扑
 
 ```
-Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
+Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 静态文件: Flutter Web build/
 ```
 
@@ -385,7 +382,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | 文档 | 说明 |
 |------|------|
 | [安装指南](docs/INSTALL.md) | 从零部署指南，含数据库初始化、Docker 部署、常见问题 |
-| [合并安装脚本](docs/install.sql) | 全部 67 张表 + RBAC 权限种子数据，一键导入 |
+| [合并安装脚本](docs/install.sql) | 全部 60 张表 + RBAC 权限种子数据，一键导入 |
 | [架构设计文档](docs/ARCHITECTURE_DESIGN.md) | 系统分层架构、中间件执行链、安全纵深防御设计 |
 | [架构文档](docs/ARCHITECTURE.md) | Mermaid 架构图（系统拓扑、请求生命周期、数据加密、部署） |
 | [系统架构图](docs/ARCHITECTURE_DIAGRAM.md) | 全景架构、分层详图、部署架构（Mermaid 可视化） |

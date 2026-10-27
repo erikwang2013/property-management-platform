@@ -6,7 +6,7 @@
 
 <img src="docs/images/pet_xiaozhu.svg" alt="Xiaozhu · project mascot" width="120" align="right">
 
-A full-stack property management system covering 22 business modules + 12 extension features (notifications, approval workflow, payments, voting, SLA, data dashboard, collections, inspections, marketplace, face recognition, group management, AI Q&A). The admin panel and owner service are independently deployed, with a Flutter Web PC-style dashboard.
+A full-stack property management system covering 22 business modules + 7 extension features (notifications, approval workflow, payments, voting, collections, group management, AI Q&A). The admin panel and owner service are independently deployed, with a Flutter Web PC-style dashboard.
 
 **Xiaozhu** (小筑) is the project mascot — a building steward: an apartment block with its lights on, wearing a steward's cap and carrying a work-order clipboard. It appears in the install wizard, error pages, the login page and the architecture diagram, standing for "every building under management has someone looking after it".
 
@@ -76,13 +76,13 @@ property-management-platform/
 
 | Layer | Count | Details |
 |-------|-------|---------|
-| Database Tables | 67 | All `management_` prefix, BIGINT non-auto-increment PK |
-| PHP Models | 64 | With encryptable field encryption |
-| Admin Controllers | 58 | General admin + 22 modules + 12 extensions |
+| Database Tables | 60 | All `management_` prefix, BIGINT non-auto-increment PK |
+| PHP Models | 57 | With encryptable field encryption |
+| Admin Controllers | 55 | General admin + 22 modules + 7 extensions |
 | Service Controllers | 17 | Complete owner-facing API |
-| API Routes | 178 | admin 125 + service 53 |
-| Flutter Admin | 42 pages | 42 page modules, 96 files/6,662 lines |
-| Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Mall/Chat/Face, 32 files/3,582 lines |
+| API Routes | 168 | admin 119 + service 49 |
+| Flutter Admin | 41 pages | 41 page modules, 93 files/6,976 lines |
+| Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Chat, 29 files/3,506 lines |
 | Tests | 471 total | admin 271(675 assertions) + service 200(847 assertions), see [test reports](docs/tests/) |
 
 ## System Architecture & Design Diagrams
@@ -116,7 +116,7 @@ property-management-platform/
 | Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Repair, Announcement (10) | ✅ Complete |
 | Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance (6) + Dashboard/Export (platform features) | ✅ Complete |
 | Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
-| Extensions | Notifications, Approval, Payment, Voting, SLA, Data Dashboard, Collection, Inspection, Mall, Face, Group, Knowledge (12) | ✅ Complete |
+| Extensions | Notifications, Approval, Payment, Voting, Collection, Group, Knowledge (7) | ✅ Complete |
 | Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home page stats (complaints / activities / votes / unread) | ✅ Complete |
 
 ## Tech Stack
@@ -125,7 +125,6 @@ property-management-platform/
 - **Framework**: webman v2 (workerman/webman)
 - **Language**: PHP 8.3+
 - **Database**: MySQL 8.0+, table prefix `management_`, BIGINT non-auto-increment PKs
-- **Search Engine**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
 ### Core Dependencies
@@ -137,7 +136,6 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT authentication (HS256) |
 | `erikwang2013/encryption` | API transport AES-256-CBC encryption |
 | `erikwang2013/encryptable` | Database field encryption |
-| `erikwang2013/webman-scout` | Elasticsearch data sync and full-text search |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/security-php` | Security scanning |
 | `erikwang2013/poster-php` | Sensitive operation verification |
@@ -229,7 +227,7 @@ See [Installation Guide](docs/INSTALL.md) for details.
 # Create database
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Import merged install script (all 67 tables + RBAC seed data)
+# Import merged install script (all 60 tables + RBAC seed data)
 mysql -u root management < docs/install.sql
 ```
 
@@ -284,7 +282,7 @@ Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / 
 
 ### Docker Deployment
 
-Each stack (admin / service) orchestrates 9 services independently: Nginx + PHP (webman) + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter.
+Each stack (admin / service) orchestrates independently: Nginx + PHP (webman) + MySQL + Redis + Prometheus + Grafana + redis-exporter.
 
 ```bash
 # One command (recommended, idempotent): fill secrets → start both stacks → verify DB → monitoring smoke test
@@ -311,18 +309,17 @@ docker compose up -d
 | App | 8787 | 8788 |
 | MySQL | 3306 | 3307 |
 | Redis | 6379 | 6380 |
-| Elasticsearch | 9200 | 9201 |
 | Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 |
 | Nginx | 80 / 443 | 8080 / 8443 recommended (`NGINX_PORT`/`NGINX_SSL_PORT`) |
 
-> On first boot the MySQL volume is empty and `docs/install.sql` (67 tables + RBAC seed) is imported automatically via the compose initdb mount; existing volumes are left untouched.
+> On first boot the MySQL volume is empty and `docs/install.sql` (60 tables + RBAC seed) is imported automatically via the compose initdb mount; existing volumes are left untouched.
 >
 > ⚠️ After a Docker deployment do not use the Web Installer (`/install`) to change DB settings — it rewrites `DB_*` in `.env` and breaks the container's `DB_HOST=mysql` connection.
 
 ## Deployment Topology
 
 ```
-Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
+Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 Static files: Flutter Web build/
 ```
 
@@ -363,7 +360,7 @@ Static files: Flutter Web build/
 | Document | Description |
 |----------|-------------|
 | [Installation Guide](docs/INSTALL.md) | Deployment guide: database init, Docker, FAQ |
-| [Install SQL](docs/install.sql) | All 67 tables + RBAC seed data, single import |
+| [Install SQL](docs/install.sql) | All 60 tables + RBAC seed data, single import |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
 | [Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | System architecture, layered detail, deployment (Mermaid visualization) |

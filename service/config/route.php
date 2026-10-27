@@ -105,16 +105,8 @@ Route::group('/service/v1', function () {
     Route::get('/votes', [app\api\v1\controller\VoteController::class, 'index']);
     Route::get('/vote/{hashid}', [app\api\v1\controller\VoteController::class, 'show']);
     Route::post('/vote/{hashid}/cast', [app\api\v1\controller\VoteController::class, 'cast']);
-    // 商城
-    Route::get('/mall/products', [app\api\v1\controller\MallController::class, 'products']);
-    Route::get('/mall/product/{hashid}', [app\api\v1\controller\MallController::class, 'productDetail']);
-    Route::post('/mall/order', [app\api\v1\controller\MallController::class, 'createOrder']);
-    Route::get('/mall/orders', [app\api\v1\controller\MallController::class, 'myOrders']);
     // 智能问答
     Route::post('/chat/ask', [app\api\v1\controller\KnowledgeController::class, 'ask']);
-    // 人脸
-    Route::post('/face/register', [app\api\v1\controller\FaceController::class, 'register']);
-    Route::get('/face/status', [app\api\v1\controller\FaceController::class, 'status']);
 })->middleware([
     app\middleware\ServiceAuth::class,
     app\middleware\OperationLog::class,

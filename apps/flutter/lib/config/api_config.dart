@@ -60,16 +60,6 @@ class ApiConfig {
   static String voteDetail(String hid) => '/service/vote/$hid';
   static const String voteCast = '/service/vote/cast';
 
-  // 商城
-  static const String mallProducts = '/service/mall/products';
-  static String mallProductDetail(String hid) => '/service/mall/product/$hid';
-  static const String mallOrder = '/service/mall/order';
-  static const String mallOrders = '/service/mall/orders';
-
   // 智能问答
   static const String chatAsk = '/service/chat/ask';
-
-  // 人脸
-  static const String faceRegister = '/service/face/register';
-  static const String faceStatus = '/service/face/status';
 }

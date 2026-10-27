@@ -2,7 +2,7 @@
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- 迁移: 初始化管理后台核心数据表
 -- 注意: 主键 id 使用 BIGINT 非自增，由 snowflake-php 在应用层生成
--- 注意: 本文件为全量安装入口（67 张表 + RBAC 种子数据），唯一建库入口。
+-- 注意: 本文件为全量安装入口（60 张表 + RBAC 种子数据），唯一建库入口。
 --       幂等口径: 表/列/种子幂等；索引重跑需向导或 mysql --force——
 --       建表走 IF NOT EXISTS，但 ALTER 加索引/列与种子 INSERT 重跑会分别报
 --       1061/1060/1062「已存在」（向导导入循环把这四类 [含 1050] 降级为跳过，直连 mysql 重灌需 --force）。
@@ -387,20 +387,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010087, 0, '更新员工', 'put.admin/staff',    3, '', '', 3, NOW(), NOW()),
 (2100000000010088, 0, '删除员工', 'delete.admin/staff', 3, '', '', 4, NOW(), NOW());
 
--- API 权限 — 商城分类
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010093, 0, '查看商城分类', 'get.admin/mall-category',    3, '', '', 1, NOW(), NOW()),
-(2100000000010094, 0, '创建商城分类', 'post.admin/mall-category',   3, '', '', 2, NOW(), NOW()),
-(2100000000010095, 0, '更新商城分类', 'put.admin/mall-category',    3, '', '', 3, NOW(), NOW()),
-(2100000000010096, 0, '删除商城分类', 'delete.admin/mall-category', 3, '', '', 4, NOW(), NOW());
-
--- API 权限 — 商城商品
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010097, 0, '查看商品', 'get.admin/mall-product',    3, '', '', 1, NOW(), NOW()),
-(2100000000010098, 0, '创建商品', 'post.admin/mall-product',   3, '', '', 2, NOW(), NOW()),
-(2100000000010099, 0, '更新商品', 'put.admin/mall-product',    3, '', '', 3, NOW(), NOW()),
-(2100000000010100, 0, '删除商品', 'delete.admin/mall-product', 3, '', '', 4, NOW(), NOW());
-
 -- API 权限 — 集团管理
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010101, 0, '查看集团', 'get.admin/group',    3, '', '', 1, NOW(), NOW()),
@@ -452,12 +438,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010143, 0, '删除催缴策略',     'delete.admin/collection-strategy',  3, '', '', 31, NOW(), NOW()),
 (2100000000010144, 0, '查看催缴记录',     'get.admin/collection-record',       3, '', '', 32, NOW(), NOW()),
 (2100000000010145, 0, '执行催缴',         'post.admin/collection/run',         3, '', '', 33, NOW(), NOW()),
-(2100000000010146, 0, '查看商城订单',     'get.admin/mall-order',              3, '', '', 34, NOW(), NOW()),
-(2100000000010147, 0, '商城订单发货',     'put.admin/mall-order/ship',         3, '', '', 35, NOW(), NOW()),
-(2100000000010148, 0, '商城订单退款',     'post.admin/mall-order/refund',      3, '', '', 36, NOW(), NOW()),
-(2100000000010149, 0, '查看人脸库',       'get.admin/face',                    3, '', '', 37, NOW(), NOW()),
-(2100000000010150, 0, '人脸审核通过',     'put.admin/face/verify',             3, '', '', 38, NOW(), NOW()),
-(2100000000010151, 0, '人脸审核拒绝',     'put.admin/face/reject',             3, '', '', 39, NOW(), NOW()),
 (2100000000010152, 0, '集团小区列表',     'get.admin/group/communities',       3, '', '', 40, NOW(), NOW()),
 (2100000000010153, 0, '集团添加小区',     'post.admin/group/community',        3, '', '', 41, NOW(), NOW()),
 (2100000000010154, 0, '集团统计',         'get.admin/group/summary',           3, '', '', 42, NOW(), NOW()),
@@ -1277,7 +1257,7 @@ CREATE TABLE IF NOT EXISTS `management_staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工表';
 -- ============================================================
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
--- 迁移: 功能扩展（消息通知/审批工作流/支付/ES搜索/投票/SLA/数据大屏/催缴/巡检/商城/人脸/集团/智能问答）
+-- 迁移: 功能扩展（消息通知/审批工作流/支付/ES搜索/投票/SLA/催缴/巡检/集团/智能问答）
 -- ============================================================
 
 -- ============================================================
@@ -1498,89 +1478,6 @@ CREATE TABLE IF NOT EXISTS `management_collection_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴记录表';
 
 -- ============================================================
--- 12. 社区商城
--- ============================================================
-
--- 商品分类表
-CREATE TABLE IF NOT EXISTS `management_mall_category` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `name` VARCHAR(50) NOT NULL COMMENT '分类名称',
-    `icon` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '图标',
-    `sort` INT UNSIGNED NOT NULL DEFAULT 0,
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城分类表';
-
--- 商品表
-CREATE TABLE IF NOT EXISTS `management_mall_product` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `category_id` BIGINT UNSIGNED NOT NULL COMMENT '分类ID',
-    `community_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '所属小区(0=全平台)',
-    `name` VARCHAR(200) NOT NULL COMMENT '商品名称',
-    `description` TEXT COMMENT '商品描述',
-    `images` TEXT COMMENT '商品图片 (JSON)',
-    `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '价格',
-    `original_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '原价',
-    `stock` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '库存',
-    `sales` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '销量',
-    `is_recommend` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否推荐',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '0=下架 1=上架',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_category` (`category_id`),
-    KEY `idx_community` (`community_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城商品表';
-
--- 订单表
-CREATE TABLE IF NOT EXISTS `management_mall_order` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `order_number` VARCHAR(32) NOT NULL COMMENT '订单编号',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '买家ID',
-    `product_id` BIGINT UNSIGNED NOT NULL COMMENT '商品ID',
-    `quantity` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '数量',
-    `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '实付金额',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=待付款 1=已付款 2=已发货 3=已完成 4=已取消 5=退款中 6=已退款',
-    `address` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '收货地址',
-    `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话(加密)',
-    `express_company` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '快递公司',
-    `express_number` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '快递单号',
-    `paid_at` DATETIME DEFAULT NULL,
-    `shipped_at` DATETIME DEFAULT NULL,
-    `completed_at` DATETIME DEFAULT NULL,
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '买家备注',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_order_number` (`order_number`),
-    KEY `idx_owner` (`owner_id`),
-    KEY `idx_owner_status` (`owner_id`, `status`),
-    KEY `idx_product` (`product_id`),
-    KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商城订单表';
-
--- ============================================================
--- 13. 人脸识别
--- ============================================================
-
--- 人脸信息表
-CREATE TABLE IF NOT EXISTS `management_face_info` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '业主ID',
-    `face_image` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '人脸照片URL',
-    `face_token` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '第三方人脸标识',
-    `feature_data` TEXT COMMENT '人脸特征数据(加密)',
-    `verify_status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '认证状态: 0=未认证 1=审核中 2=已认证 3=认证失败',
-    `verified_at` DATETIME DEFAULT NULL COMMENT '认证时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_owner_id` (`owner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='人脸信息表';
-
--- ============================================================
 -- 14. 多小区集团管理
 -- ============================================================
 
@@ -1677,10 +1574,6 @@ PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_energy_record' AND index_name = 'idx_meter_date');
 SET @sql := IF(@ix = 0, 'ALTER TABLE `management_energy_record` ADD INDEX `idx_meter_date` (`meter_id`, `record_date`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
-
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_mall_order' AND index_name = 'idx_owner_status');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_mall_order` ADD INDEX `idx_owner_status` (`owner_id`, `status`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_equipment' AND index_name = 'idx_community_status');

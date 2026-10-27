@@ -161,16 +161,6 @@ class ApiConfig {
   static const String collectionRecord = '/admin/collection-record';
   static const String collectionRun = '/admin/collection/run';
 
-  // 商城
-  static const String mallCategory = '/admin/mall-category';
-  static const String mallProduct = '/admin/mall-product';
-  static const String mallOrder = '/admin/mall-order';
-  static String mallOrderShip(String hashid) => '/admin/mall-order/$hashid/ship';
-  static String mallOrderRefund(String hashid) => '/admin/mall-order/$hashid/refund';
-
-  // 人脸
-  static const String face = '/admin/face';
-
   // 集团
   static const String group = '/admin/group';
   static String groupCommunities(String hashid) => '/admin/group/$hashid/communities';

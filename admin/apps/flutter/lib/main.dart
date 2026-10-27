@@ -43,8 +43,6 @@ import 'app/pages/approval/approval_list_page.dart';
 import 'app/pages/payment/payment_list_page.dart';
 import 'app/pages/vote/vote_list_page.dart';
 import 'app/pages/collection/collection_list_page.dart';
-import 'app/pages/mall/mall_list_page.dart';
-import 'app/pages/face/face_list_page.dart';
 import 'app/pages/group/group_list_page.dart';
 import 'app/pages/knowledge/knowledge_list_page.dart';
 
@@ -118,10 +116,6 @@ class AdminApp extends StatelessWidget {
         GetPage(name: '/votes', page: () => const AdminLayout(child: VoteListPage())),
         GetPage(name: '/collection-strategies', page: () => const AdminLayout(child: CollectionStrategyListPage())),
         GetPage(name: '/collection-records', page: () => const AdminLayout(child: CollectionRecordListPage())),
-        GetPage(name: '/mall-categories', page: () => const AdminLayout(child: MallCategoryListPage())),
-        GetPage(name: '/mall-products', page: () => const AdminLayout(child: MallProductListPage())),
-        GetPage(name: '/mall-orders', page: () => const AdminLayout(child: MallOrderListPage())),
-        GetPage(name: '/faces', page: () => const AdminLayout(child: FaceListPage())),
         GetPage(name: '/groups', page: () => const AdminLayout(child: GroupListPage())),
         GetPage(name: '/knowledge-categories', page: () => const AdminLayout(child: KnowledgeCategoryListPage())),
         GetPage(name: '/knowledge-articles', page: () => const AdminLayout(child: KnowledgeArticleListPage())),

@@ -46,7 +46,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ```
 open-admin/
 ├── app/
-│   ├── admin/controller/       # 管理端控制器 (58 个，列表从略)
+│   ├── admin/controller/       # 管理端控制器 (55 个，列表从略)
 │   │   ├── BaseController.php      # 基础控制器
 │   │   ├── DashboardController.php # 仪表盘（Redis 缓存）
 │   │   ├── UserController.php      # 用户 CRUD + 批量操作
@@ -115,8 +115,6 @@ open-admin/
 │   │       │   ├── payment/    # 支付管理
 │   │       │   ├── vote/       # 投票管理
 │   │       │   ├── collection/ # 催缴管理(2)
-│   │       │   ├── mall/       # 商城管理(3)
-│   │       │   ├── face/       # 人脸管理
 │   │       │   ├── group/      # 集团管理
 │   │       │   ├── knowledge/  # 智能问答(3)
 │   │       │   ├── config/     # 系统配置

@@ -66,7 +66,7 @@ return [
                 'title' => '扩展功能（通知/投票/商城/问答/人脸）',
                 'path'  => 'app\api\v1\controller',
                 'key'   => 'extensions',
-                'controllers' => ['FaceController', 'KnowledgeController', 'MallController', 'NotificationController', 'VoteController'],
+                'controllers' => ['KnowledgeController', 'NotificationController', 'VoteController'],
             ],
         ],
         // 通用注释定义

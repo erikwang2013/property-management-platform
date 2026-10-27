@@ -27,13 +27,12 @@ flowchart TB
 
     subgraph "存储层"
         D1[("MySQL 8.0<br/>主存储<br/>表前缀 management_")]
-        D2[("Elasticsearch 8.x<br/>全文检索")]
         D3[("Redis 7.x<br/>缓存/限流/Session")]
     end
 
     A1 & A2 & A3 --> B1
     B1 --> C1 & C2
-    C1 & C2 --> D1 & D2 & D3
+    C1 & C2 --> D1 & D3
 ```
 
 ---
@@ -64,11 +63,11 @@ flowchart TD
     end
 
     subgraph "模型层 Model"
-        MD["Eloquent ORM<br/>encryptable 自动加解密<br/>scout ES 同步"]
+        MD["Eloquent ORM<br/>encryptable 自动加解密"]
     end
 
     subgraph "驱动层 Driver"
-        D["MySQL PDO / ES HTTP / Redis"]
+        D["MySQL PDO / Redis"]
     end
 
     R1 --> M_SF --> M_RL --> M0 --> M1 --> M2 --> M_OP --> CT
@@ -381,7 +380,6 @@ flowchart TB
 
     subgraph "数据层"
         MYSQL["MySQL 8.0<br/>management_ 前缀"]
-        ES["Elasticsearch 8.x"]
         REDIS["Redis 7.x<br/>缓存/限流/Session"]
     end
 
@@ -391,7 +389,7 @@ flowchart TB
 
     DNS --> NGX
     NGX --> WM1 & WM2
-    WM1 & WM2 --> MYSQL & ES & REDIS
+    WM1 & WM2 --> MYSQL & REDIS
     WM1 & WM2 --> MON
 ```
 

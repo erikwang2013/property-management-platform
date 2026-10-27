@@ -46,7 +46,7 @@ mysql_q() { docker exec -i pmp-mysql mysql -h127.0.0.1 -u"$DB_USERNAME" -p"$DB_P
 fresh_invariants() { # $1=标签
     local tag=$1 T M P G slug U
     T=$(mysql_q "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$VERIFY_DB'")
-    [ "$T" = "67" ] && ok "$tag：表数 67" || bad "$tag：表数 $T（期望 67）"
+    [ "$T" = "60" ] && ok "$tag：表数 60" || bad "$tag：表数 $T（期望 60）"
     # 唯一索引：无 uk_slug 时 INSERT IGNORE 挡不住「同 slug 不同 id」的重复权限行（2026-10-04 撞过）
     U=$(mysql_q "SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema='$VERIFY_DB' AND table_name='management_admin_permission' AND index_name='uk_slug' AND non_unique=0")
     [ "$U" = "1" ] && ok "$tag：permission.slug 唯一索引 uk_slug 存在" || bad "$tag：permission.slug 缺唯一索引（uk_slug=$U）"

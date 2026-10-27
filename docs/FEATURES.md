@@ -29,7 +29,7 @@
 | 21 | 能耗管理 | 第3批 | 仪表管理 + 抄表记录 | - | management_energy_meter, management_energy_record |
 | 22 | 员工管理 | 第3批 | CRUD + 状态管理 | - | management_staff |
 
-## 扩展功能（第4批 — 12模块）
+## 扩展功能（第4批 — 7模块）
 
 | 序号 | 模块 | 管理员端 | 业主端 | 数据表 |
 |------|------|---------|--------|--------|
@@ -37,13 +37,9 @@
 | 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | management_approval_type, management_approval, management_approval_record |
 | 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
 | 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | management_vote, management_vote_option, management_vote_record |
-| 28 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | management_collection_strategy, management_collection_record |
-| 29 | 巡检移动端 | 任务派发 + GPS打卡 + 拍照 | - | management_inspection_task, management_inspection_checkpoint |
-| 30 | 社区商城 | 分类/商品/订单/发货管理 | 浏览商品 + 下单 + 我的订单 | management_mall_category, management_mall_product, management_mall_order |
-| 31 | 人脸识别 | 审核管理 | 注册人脸 + 认证状态 | management_face_info |
-| 32 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | management_group, management_group_community |
-| 33 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | management_knowledge_base, management_chat_record |
-| - | 数据大屏 | 实时物业数据可视化全屏展示 | - | (复用已有数据接口) |
+| 27 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | management_collection_strategy, management_collection_record |
+| 28 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | management_group, management_group_community |
+| 29 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | management_knowledge_base, management_chat_record |
 
 ## 管理后台模块（admin 已有）
 
@@ -66,7 +62,7 @@
 | 模块 | 功能 |
 |------|------|
 | 起始页统计 | 我的房产 / 待缴费用 / 维修工单 / 待处理投诉 / 进行中活动 / 进行中投票 / 未读消息，Flutter Web + HarmonyOS 双端展示 |
-| 核心业务 | 房产绑定、账单查询与在线缴费、报修提交与进度、公告、投诉建议、访客通行、停车、活动报名、投票、商城、智能问答 |
+| 核心业务 | 房产绑定、账单查询与在线缴费、报修提交与进度、公告、投诉建议、访客通行、停车、活动报名、投票、智能问答 |
 
 ## 跨功能特性
 
