@@ -49,7 +49,7 @@
 <rect x="704.6666666666666" y="130" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
 <text x="855.3333333333333" y="146" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">Complaints</text>
 <rect x="704.6666666666666" y="158" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
-<text x="855.3333333333333" y="174" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">Inspections</text>
+<text x="855.3333333333333" y="174" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">Cleaning</text>
 <rect x="704.6666666666666" y="186" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
 <text x="855.3333333333333" y="202" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#D97706" text-anchor="middle" font-weight="600">Cleaning</text>
 <rect x="704.6666666666666" y="214" width="301.3333333333333" height="24" rx="7" fill="#FEF3C7"/>
@@ -73,7 +73,7 @@
 <rect x="34" y="468" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
 <text x="268.5" y="484" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">Activities</text>
 <rect x="34" y="496" width="469.0" height="24" rx="7" fill="#D1FAE5"/>
-<text x="268.5" y="512" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">Marketplace</text>
+<text x="268.5" y="512" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.8" fill="#059669" text-anchor="middle" font-weight="600">Community activities</text>
 <rect x="527.0" y="316" width="489.0" height="210" rx="11" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
 <rect x="527.0" y="316" width="489.0" height="41" rx="11" fill="#7C3AED"/>
 <rect x="527.0" y="345" width="489.0" height="12" rx="0" fill="#7C3AED"/>
@@ -103,15 +103,15 @@
 <rect x="525.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
 <text x="601.5" y="631.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Voting</text>
 <rect x="688.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
-<text x="764.5" y="631.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">SLA escalation</text>
+<text x="764.5" y="631.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Timeliness escalation</text>
 <rect x="851.0" y="614" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
 <text x="927.5" y="631.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Dashboard</text>
 <rect x="36.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
 <text x="112.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Collections</text>
 <rect x="199.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
-<text x="275.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Inspections app</text>
+<text x="275.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Cleaning app</text>
 <rect x="362.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
-<text x="438.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Face ID</text>
+<text x="438.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">Visitor registration</text>
 <rect x="525.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
 <text x="601.5" y="667.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.6" fill="#E11D48" text-anchor="middle" font-weight="600">AI Q&amp;A</text>
 <rect x="688.0" y="650" width="153.0" height="26" rx="7" fill="#FFE4E6"/>
@@ -141,7 +141,7 @@
 <rect x="772.5" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
 <text x="811.0833333333334" y="761" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">Voting</text>
 <rect x="855.6666666666667" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
-<text x="894.2500000000001" y="761" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">Marketplace</text>
+<text x="894.2500000000001" y="761" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">Community activities</text>
 <rect x="938.8333333333334" y="740" width="77.16666666666667" height="34" rx="8" fill="#CFFAFE"/>
 <text x="977.4166666666667" y="761" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9" fill="#0E7490" text-anchor="middle" font-weight="600">AI Q&amp;A</text>
 </svg>

@@ -54,14 +54,14 @@
 | 文件管理 | 上传 + Excel/PDF 导出（敏感数据脱敏）|
 | 安全管理 | 19 层纵深防御 + security.txt |
 | 运维监控 | 健康检查 + Prometheus 指标 + API 文档 |
-| 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations + HarmonyOS 资源限定符 |
+| 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations |
 | API 文档 | `hg/apidoc` 自动生成，admin 10分组 + service 9分组，按功能模块组织 |
 
 ## 业主端模块（service 已有）
 
 | 模块 | 功能 |
 |------|------|
-| 起始页统计 | 我的房产 / 待缴费用 / 维修工单 / 待处理投诉 / 进行中活动 / 进行中投票 / 未读消息，Flutter Web + HarmonyOS 双端展示 |
+| 起始页统计 | 我的房产 / 待缴费用 / 维修工单 / 待处理投诉 / 进行中活动 / 进行中投票 / 未读消息，Flutter Web 展示 |
 | 核心业务 | 房产绑定、账单查询与在线缴费、报修提交与进度、公告、投诉建议、访客通行、停车、活动报名、投票、智能问答 |
 
 ## 跨功能特性
@@ -92,7 +92,6 @@
 ### 国际化 (i18n)
 - **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，42个翻译键，控制器通过 `__()` 方法获取翻译
 - **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，101个翻译键，页面通过 `.tr` 扩展使用
-- **HarmonyOS**: `resources/{base,en_US}/element/string.json` 资源限定符
 - **默认语言**: 简体中文（zh_CN），降级语言英语（en）
 - **请求头**: 支持 `Accept-Language` 控制响应语言
 

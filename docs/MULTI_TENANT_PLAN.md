@@ -1,5 +1,8 @@
 # 多租户 SaaS 方案评审 (Multi-Tenant Plan)
 
+> **历史设计（2026-10-27）**：多租户方案未实施；当前代码为单租户部署。本文仅作设计记录。
+
+
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 > 状态: 评审稿 (P3-① 先行任务) | 日期: 2026-08-16
 

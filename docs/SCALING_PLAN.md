@@ -1,5 +1,8 @@
 # 扩容预案 (Scaling Plan)
 
+> **历史文档（2026-10-27）**：部分功能已移除（巡检、SLA、Elasticsearch/Scout、Angular/React/HarmonyOS 前端、社区商城、人脸识别、数据大屏）。本文仅作历史记录，当前功能以 README.md / docs/FEATURES.md 为准。
+
+
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 当前部署为单机 docker-compose（MySQL/Redis/Elasticsearch 与应用同机，见 `admin/docker-compose.yml`），无 HA。本文档说明风险与现有缓解，给出水平扩容路径、数据量触发点与演练建议。运维基线（备份/恢复、监控告警、日志轮转）见 [OPS_RUNBOOK.md](OPS_RUNBOOK.md)。

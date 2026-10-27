@@ -13,7 +13,6 @@ flowchart TB
     subgraph "客户端层"
         A1["Flutter Web<br/>PC 管理后台<br/>(Port 3000)"]
         A2["Flutter Web<br/>PC 业主端<br/>(Port 3001)"]
-        A3["HarmonyOS ArkTS<br/>手机/平板客户端"]
     end
 
     subgraph "网关层 (Nginx)"
@@ -30,7 +29,7 @@ flowchart TB
         D3[("Redis 7.x<br/>缓存/限流/Session")]
     end
 
-    A1 & A2 & A3 --> B1
+    A1 & A2 --> B1
     B1 --> C1 & C2
     C1 & C2 --> D1 & D3
 ```

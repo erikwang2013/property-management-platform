@@ -11,8 +11,8 @@
 <text x="284" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Flutter Web</text>
 <text x="284" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Owner portal</text>
 <rect x="374" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
-<text x="452" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">HarmonyOS</text>
-<text x="452" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">ArkTS app</text>
+<text x="452" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Flutter</text>
+<text x="452" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Dart app</text>
 <rect x="542" y="46" width="156" height="56" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="1.5"/>
 <text x="620" y="68.0" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">Browser / HTTP</text>
 <text x="620" y="81.5" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#3730A3" text-anchor="middle" font-weight="700">API clients</text>
@@ -79,7 +79,7 @@
 <rect x="38" y="574" width="672" height="36" rx="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
 <circle cx="54" cy="592" r="4" fill="#F59E0B"/>
 <text x="66" y="589" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#0F172A" text-anchor="start" font-weight="700">12 extension features</text>
-<text x="66" y="602" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.4" fill="#94A3B8" text-anchor="start" font-weight="400">Notifications/Approvals/Payments/Voting/SLA escalation/Dashboard/Collections/Inspections/Marketplace/Face ID/Group management/AI Q&amp;A</text>
+<text x="66" y="602" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.4" fill="#94A3B8" text-anchor="start" font-weight="400">Notifications/Approvals/Payments/Voting/Timeliness escalation/Dashboard/Collections/Cleaning/Community activities/Visitor registration/Group management/AI Q&amp;A</text>
 <rect x="38" y="616" width="672" height="36" rx="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
 <circle cx="54" cy="634" r="4" fill="#10B981"/>
 <text x="66" y="631" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="10.5" fill="#0F172A" text-anchor="start" font-weight="700">Platform features</text>
@@ -100,7 +100,7 @@
 <text x="281.33333333333337" y="768" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">Circuit breaker / queue</text>
 <rect x="492.6666666666667" y="710" width="217.33333333333334" height="84" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
 <circle cx="512.6666666666667" cy="730" r="5" fill="#0E7490"/>
-<text x="524.6666666666667" y="734" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="11" fill="#0F172A" text-anchor="start" font-weight="700">Elasticsearch 8.x</text>
+<text x="524.6666666666667" y="734" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="11" fill="#0F172A" text-anchor="start" font-weight="700">MySQL 8.x</text>
 <text x="508.6666666666667" y="756" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">Full-text search</text>
 <text x="508.6666666666667" y="768" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="8.8" fill="#94A3B8" text-anchor="start" font-weight="400">scout sync</text>
 <rect x="748" y="24" width="268" height="782" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>

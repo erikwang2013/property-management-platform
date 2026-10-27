@@ -60,7 +60,7 @@
 <text x="444.6" y="179.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">flutter/ — owner Flutter Web</text>
 <rect x="425.6" y="192" width="188.8" height="24" rx="7" fill="#FEF3C7"/>
 <circle cx="435.6" cy="204" r="2.4" fill="#B45309" opacity="0.8"/>
-<text x="444.6" y="207.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">harmonyos/ — owner ArkTS app</text>
+<text x="444.6" y="207.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">harmonyos/ — owner Dart app</text>
 <rect x="425.6" y="220" width="188.8" height="24" rx="7" fill="#FEF3C7"/>
 <circle cx="435.6" cy="232" r="2.4" fill="#B45309" opacity="0.8"/>
 <text x="444.6" y="235.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">admin/apps/flutter — 42 admin pages</text>
@@ -69,7 +69,7 @@
 <text x="444.6" y="263.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">admin/apps/harmonyos — admin app</text>
 <rect x="425.6" y="276" width="188.8" height="24" rx="7" fill="#FEF3C7"/>
 <circle cx="435.6" cy="288" r="2.4" fill="#B45309" opacity="0.8"/>
-<text x="444.6" y="291.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">13 owner pages / 7 ArkTS pages</text>
+<text x="444.6" y="291.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">13 owner pages / 7 Dart pages</text>
 <rect x="425.6" y="304" width="188.8" height="24" rx="7" fill="#FEF3C7"/>
 <circle cx="435.6" cy="316" r="2.4" fill="#B45309" opacity="0.8"/>
 <text x="444.6" y="319.4" font-family="system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif" font-size="9.2" fill="#94A3B8" text-anchor="start" font-weight="400">i18n — GetX message tables</text>

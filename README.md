@@ -1,6 +1,6 @@
 # 物业管理系统 (Property Management Platform)
 
-[English](docs/i18n/en/README.md) | [한국어](docs/i18n/ko/README.md) | [Русский](docs/i18n/ru/README.md) | [Deutsch](docs/i18n/de/README.md) | [Français](docs/i18n/fr/README.md) | [Español](docs/i18n/es/README.md) | [Português](docs/i18n/pt/README.md) | [हिन्दी](docs/i18n/hi/README.md) | [العربية](docs/i18n/ar/README.md) | [বাংলা](docs/i18n/bn/README.md) | [Bahasa Indonesia](docs/i18n/id/README.md) | [日本語](docs/i18n/ja/README.md) | 中文
+[English](README_EN.md) | 中文
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
@@ -18,7 +18,7 @@
 |----|------|
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
-| 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
+| 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（中英文共用） |
 | 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 6 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
 | 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 两端 Flutter 的壳层图标与启动图（launcher / 应用图标 / splash）· Flutter 空态插图 · 两个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
 
@@ -320,7 +320,6 @@ docker compose up -d
 **密钥口径**
 
 - 模板内 `change-me*` 为占位符，由 `gen_env_keys.php` 生成随机值；`.env` 中已有的真实密钥绝不覆盖（旧密钥保留），缺失键只做追加
-- `ELASTIC_PASSWORD` 被 `SCOUT_HOSTS` / `OPENSEARCH_PASSWORD` 内嵌引用，替换时会自动同步
 - 数据库加密密钥轮换用 `bash scripts/rotate_keys.sh`（旧 key 自动写入 `ENCRYPTION_PREVIOUS_KEYS`）
 - MySQL 容器的库名/用户/密码默认派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`（单一真源），无需重复配置 `MYSQL_*`
 
@@ -402,43 +401,14 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 |:---:|:---:|
 | 微信支付 | 支付宝 |
 
-### 全球转账打赏
+## 项目授权 / Project License
 
-支持来自全球的银行转账，收款账户为香港 ZA Bank（众安银行）：
+Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
-| 项目 | 信息 |
-|------|------|
-| 收款人姓名 | WANG KEXUN |
-| 收款账户号码 | 881015918251 |
-| 收款银行 | ZA Bank Limited |
-| SWIFT Code | AABLHKHHXXX |
-| 银行编号 | 387 |
-| 银行地址 | Core F, Cyberport 3, 100 Cyberport Road, Hong Kong |
+- 本项目仅供个人学习、研究使用。
+- 未经作者书面授权，禁止任何形式的商业使用（包括但不限于商业部署、付费服务、二次销售、SaaS 运营及以本项目为基础提供商业服务）。
+- 商业授权请联系 **erik@erik.xyz**。
+- 未经授权的商业使用，作者将在全球范围内依法追究法律责任，并保留终身追责的权利。
+- 第三方组件仍遵循其各自原有的许可证；视觉资产适用仓库内的 ASSETS-LICENSE.md（如适用）。
 
-> **跨境汇款代理银行（中转银行）**：以下为代理银行（中转银行）信息，非收款银行信息。请向汇款银行查询是否需要提供代理银行信息。
->
-> - **汇入港元、人民币及美元**（Citibank N.A. Hong Kong）：SWIFT `CITIHKXXXX`，银行编号 006，分行编号 391，地址：Citibank Tower, Citibank Plaza, 3 Garden Road, Central, Hong Kong
-> - **汇入其他币种**（THE BANK OF NEW YORK MELLON）：SWIFT `IRVTUS3NXXX`，地址：240 GREENWICH STREET, NEW YORK, United States
-
-欢迎支持本项目！
-
-### 虚拟币打赏 (Crypto Donation)
-
-如果这个项目对你有帮助，欢迎扫描二维码打赏支持，谢谢！
-
-| 主网 (Network) | 二维码 (QR Code) | 钱包地址 (Wallet Address) |
-|---|---|---|
-| BNB Smart Chain (BEP20) | [<img src="docs/coin/1.jpg" width="150" alt="BNB Smart Chain (BEP20)">](docs/coin/1.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| Tron (TRC20) | [<img src="docs/coin/2.jpg" width="150" alt="Tron (TRC20)">](docs/coin/2.jpg) | `TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
-| Ethereum (ERC20) | [<img src="docs/coin/3.jpg" width="150" alt="Ethereum (ERC20)">](docs/coin/3.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| Aptos | [<img src="docs/coin/4.jpg" width="150" alt="Aptos">](docs/coin/4.jpg) | `0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
-| Plasma | [<img src="docs/coin/5.jpg" width="150" alt="Plasma">](docs/coin/5.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| Polygon POS | [<img src="docs/coin/6.jpg" width="150" alt="Polygon POS">](docs/coin/6.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| Solana | [<img src="docs/coin/7.jpg" width="150" alt="Solana">](docs/coin/7.jpg) | `2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` |
-| The Open Network (TON) | [<img src="docs/coin/8.jpg" width="150" alt="The Open Network (TON)">](docs/coin/8.jpg) | `UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
-| Arbitrum One | [<img src="docs/coin/9.jpg" width="150" alt="Arbitrum One">](docs/coin/9.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| AVAX C-Chain | [<img src="docs/coin/10.jpg" width="150" alt="AVAX C-Chain">](docs/coin/10.jpg) | `0x355d429f97511897ccb4e271ec888205f9ab6629` |
-
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
+**English:** This project is provided for personal study and research only. Commercial use of any kind requires prior written authorization from the author (erik@erik.xyz). Unauthorized commercial use will be pursued for legal liability worldwide, and the author reserves the right to pursue such liability for life. Third-party components remain under their original licenses; visual assets are governed by ASSETS-LICENSE.md where applicable.

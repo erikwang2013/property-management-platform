@@ -20,7 +20,7 @@
 
 ## 1. 系统架构概述
 
-物业管理系统采用「双后端 + 多前端」分层架构。管理员端（admin）和业主业务端（service）为两个独立的 webman v2 项目，通过共享 MySQL 数据库协同工作。前端覆盖 Flutter Web（PC 管理后台风格）和 HarmonyOS 移动端。
+物业管理系统采用「双后端 + 多前端」分层架构。管理员端（admin）和业主业务端（service）为两个独立的 webman v2 项目，通过共享 MySQL 数据库协同工作。前端为 Flutter Web（PC 管理后台风格），移动端由 Flutter 跨平台构建。
 
 ### 设计目标
 
@@ -274,7 +274,6 @@ Get.updateLocale(Locale('en', 'US'));  // 切换英文
 | 投诉 | `complaint.submit_success` | `complaint_type`, `type_complaint` |
 | 个人 | - | `profile`, `change_password` |
 
-**HarmonyOS:** 使用 `resources/base/element/string.json` + `resources/en_US/element/string.json` 资源限定符（创建 HarmonyOS 项目时同步实现）。
 
 ## 12. 测试策略
 
@@ -334,33 +333,9 @@ apps/flutter/lib/
     └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
 ```
 
-### HarmonyOS 移动端
+### 移动端
 
-```
-apps/harmonyos/entry/src/main/ets/
-├── services/
-│   ├── ApiService.ets           # @ohos.net.http 封装，Bearer Token
-│   └── AuthService.ets          # 登录/登出（Preference 持久化）
-├── model/
-│   └── Models.ets               # TypeScript 接口定义
-├── pages/
-│   ├── LoginPage.ets            # 手机号 + 密码登录
-│   └── HomePage.ets             # 仪表盘（统计卡片 + 公告列表）
-└── resources/
-    ├── base/element/string.json # 中文资源
-    └── en_US/element/string.json# 英文资源
-```
-
-### 技术选型
-
-| 层 | Flutter Web | HarmonyOS |
-|----|------------|-----------|
-| 状态管理 | GetX | @State + @Prop |
-| HTTP | Dio + JWT 拦截器 | @ohos.net.http |
-| 持久化 | shared_preferences | @ohos.data.preferences |
-| 图表 | fl_chart | Web 组件 + ECharts |
-| 国际化 | GetX Translations | resource 限定符 |
-| 路由 | GetX named routes | router.pushUrl/replaceUrl |
+移动端由 Flutter 跨平台构建，与管理端共用 GetX 状态管理、Dio + JWT 拦截器、shared_preferences 持久化与 GetX 路由。
 
 ## 14. 扩展功能架构
 

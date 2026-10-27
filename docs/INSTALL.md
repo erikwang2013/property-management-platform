@@ -59,7 +59,7 @@ php start.php start -d
 ### 安装完成后
 
 - 后端服务：`http://localhost:8787`（登录接口 `POST /api/v1/auth/login`，接口文档 `http://localhost:8787/apidoc`）
-- 管理后台前端（Flutter / React / Angular，见 `admin/apps/README.md`）为独立部署，不在本服务内提供
+- 管理后台前端（Flutter，见 `admin/apps/README.md`）为独立部署，不在本服务内提供
 - 安装向导将显示登录接口和账户信息
 - 建议重启服务使配置生效：`php start.php restart -d`
 - 如需重新安装，删除 `public/.installed` 文件即可
@@ -284,7 +284,7 @@ cd service && php vendor/bin/phpunit
 | service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
 | **合计** | **459** | **1280** | — |
 
-单元测试 / API 自动化 / 端到端测试报告见 [docs/tests/](../tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）。
+单元测试 / API 自动化 / 端到端测试报告见 [docs/tests/](tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）。
 
 ---
 

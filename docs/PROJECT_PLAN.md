@@ -1,10 +1,13 @@
 # 物业管理系统 — 全面项目规划
 
+> **历史文档（2026-10-27）**：部分功能已移除（巡检、SLA、Elasticsearch/Scout、Angular/React/HarmonyOS 前端、社区商城、人脸识别、数据大屏）。本文仅作历史记录，当前功能以 README.md / docs/FEATURES.md 为准。
+
+
 > 生成日期：2026-08-16 · 来源：pmp-team 团队审计（auditor / security-auditor / planner）
 
 ## 一、现状审计结论
 
-**功能面：与声明一致。** 22 业务模块 + 12 扩展功能全部完成，67 张表 / 178 API，admin 58 控制器 / 127 路由、service 19 控制器 / 57 路由，Flutter Web 管理后台 42 页 + 业主端 13 页，HarmonyOS 5 页。docs/ 14 份文档 + 35 张 SVG 均有代码支撑，未发现"声明未实现"的功能。
+**功能面：** 当前保留核心业务模块与扩展功能；表结构以 docs/install.sql（60 张表）为准，Flutter 管理后台 41 页 + 业主端 13 页。巡检/SLA/ES/商城/人脸/大屏/Angular/React/HarmonyOS 已移除，详见下方历史说明。
 
 **测试：全绿（截至 2026-08-17）。** admin 193 tests / 452 assertions、service 101 tests / 385 assertions（7 skip 为环境依赖）、Flutter widget 测试 9 例（登录/首页/账单页）。
 
