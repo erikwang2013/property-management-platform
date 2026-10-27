@@ -54,7 +54,7 @@ return [
                 'title' => '扩展功能（通知/审批/支付/投票/SLA/催缴/巡检/商城/人脸/集团/问答）',
                 'path'  => 'app\admin\controller',
                 'key'   => 'extensions',
-                'controllers' => ['ApprovalController', 'CollectionController', 'FaceController', 'GroupController', 'KnowledgeController', 'MallController', 'NotificationController', 'PaymentController', 'SlaController', 'VoteController'],
+                'controllers' => ['ApprovalController', 'CollectionController', 'FaceController', 'GroupController', 'KnowledgeController', 'MallController', 'NotificationController', 'PaymentController', 'VoteController'],
             ],
             [
                 'title' => '导出（Excel/PDF，敏感数据脱敏）',

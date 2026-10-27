@@ -37,7 +37,6 @@
 | 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | management_approval_type, management_approval, management_approval_record |
 | 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
 | 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | management_vote, management_vote_option, management_vote_record |
-| 27 | SLA自动升级 | 规则配置 + 超时检查 + 罚款 | - | management_sla_rule, management_sla_record |
 | 28 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | management_collection_strategy, management_collection_record |
 | 29 | 巡检移动端 | 任务派发 + GPS打卡 + 拍照 | - | management_inspection_task, management_inspection_checkpoint |
 | 30 | 社区商城 | 分类/商品/订单/发货管理 | 浏览商品 + 下单 + 我的订单 | management_mall_category, management_mall_product, management_mall_order |

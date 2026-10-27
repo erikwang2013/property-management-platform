@@ -470,7 +470,7 @@ OpenAPI 文档。
 | PUT | /admin/vote/{hashid}/publish | 发布投票 |
 | PUT | /admin/vote/{hashid}/end | 结束投票 |
 
-#### SLA管理 · 智能催缴 · 巡检管理 · 商城管理 · 人脸管理 · 集团管理 · 知识库
+#### 智能催缴 · 巡检管理 · 商城管理 · 人脸管理 · 集团管理 · 知识库
 
 （完整端点参见 `docs/API.md` 文件）
 

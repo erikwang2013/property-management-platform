@@ -200,12 +200,6 @@ Route::group('/admin', function () {
     // ============================================================
     // 物业管理 — 第4批扩展功能
     // ============================================================
-    // SLA管理
-    Route::get('/sla-rule', [app\admin\controller\SlaController::class, 'rules']);
-    Route::post('/sla-rule', [app\admin\controller\SlaController::class, 'ruleStore']);
-    Route::put('/sla-rule/{hashid}', [app\admin\controller\SlaController::class, 'ruleUpdate']);
-    Route::delete('/sla-rule/{hashid}', [app\admin\controller\SlaController::class, 'ruleDestroy']);
-    Route::get('/sla-record', [app\admin\controller\SlaController::class, 'records']);
     // 智能催缴
     Route::get('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategies']);
     Route::post('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategyStore']);

@@ -108,8 +108,6 @@ class _AdminLayoutState extends State<AdminLayout> {
       _MenuItem('审批管理', Icons.fact_check, '/approvals'),
       _MenuItem('支付管理', Icons.account_balance_wallet, '/payments'),
       _MenuItem('投票管理', Icons.ballot, '/votes'),
-      _MenuItem('SLA规则', Icons.timer, '/sla-rules'),
-      _MenuItem('SLA记录', Icons.history_toggle_off, '/sla-records'),
       _MenuItem('催缴策略', Icons.event_repeat, '/collection-strategies'),
       _MenuItem('催缴记录', Icons.repeat, '/collection-records'),
       _MenuItem('商城分类', Icons.storefront, '/mall-categories'),

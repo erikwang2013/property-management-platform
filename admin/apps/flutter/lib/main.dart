@@ -42,7 +42,6 @@ import 'app/pages/notification/notification_list_page.dart';
 import 'app/pages/approval/approval_list_page.dart';
 import 'app/pages/payment/payment_list_page.dart';
 import 'app/pages/vote/vote_list_page.dart';
-import 'app/pages/sla/sla_list_page.dart';
 import 'app/pages/collection/collection_list_page.dart';
 import 'app/pages/mall/mall_list_page.dart';
 import 'app/pages/face/face_list_page.dart';
@@ -117,8 +116,6 @@ class AdminApp extends StatelessWidget {
         GetPage(name: '/approvals', page: () => const AdminLayout(child: ApprovalListPage())),
         GetPage(name: '/payments', page: () => const AdminLayout(child: PaymentListPage())),
         GetPage(name: '/votes', page: () => const AdminLayout(child: VoteListPage())),
-        GetPage(name: '/sla-rules', page: () => const AdminLayout(child: SlaRuleListPage())),
-        GetPage(name: '/sla-records', page: () => const AdminLayout(child: SlaRecordListPage())),
         GetPage(name: '/collection-strategies', page: () => const AdminLayout(child: CollectionStrategyListPage())),
         GetPage(name: '/collection-records', page: () => const AdminLayout(child: CollectionRecordListPage())),
         GetPage(name: '/mall-categories', page: () => const AdminLayout(child: MallCategoryListPage())),

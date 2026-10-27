@@ -1960,54 +1960,6 @@ parameters:
 			message: '#^Access to an undefined property support\\Request\:\:\$adminId\.$#'
 			identifier: property.notFound
 			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Notification\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\SlaRecord\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\SlaRecord\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\SlaRule\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\SlaRule\:\:find\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\SlaRule\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/SlaController.php
-
-		-
-			message: '#^Access to an undefined property support\\Request\:\:\$adminId\.$#'
-			identifier: property.notFound
-			count: 1
 			path: app/admin/controller/StaffController.php
 
 		-

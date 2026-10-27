@@ -115,7 +115,6 @@ open-admin/
 │   │       │   ├── approval/   # 审批管理
 │   │       │   ├── payment/    # 支付管理
 │   │       │   ├── vote/       # 投票管理
-│   │       │   ├── sla/        # SLA管理(2)
 │   │       │   ├── collection/ # 催缴管理(2)
 │   │       │   ├── mall/       # 商城管理(3)
 │   │       │   ├── face/       # 人脸管理

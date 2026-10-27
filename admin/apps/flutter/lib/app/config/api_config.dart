@@ -156,10 +156,6 @@ class ApiConfig {
   // 投票
   static const String vote = '/admin/vote';
 
-  // SLA
-  static const String slaRule = '/admin/sla-rule';
-  static const String slaRecord = '/admin/sla-record';
-
   // 催缴
   static const String collectionStrategy = '/admin/collection-strategy';
   static const String collectionRecord = '/admin/collection-record';

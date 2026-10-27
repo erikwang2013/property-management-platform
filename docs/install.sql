@@ -446,11 +446,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010132, 0, '活动签到',         'put.admin/activity-signup/checkin', 3, '', '', 20, NOW(), NOW()),
 (2100000000010133, 0, '查看能耗记录',     'get.admin/energy-record',           3, '', '', 21, NOW(), NOW()),
 (2100000000010134, 0, '创建能耗记录',     'post.admin/energy-record',          3, '', '', 22, NOW(), NOW()),
-(2100000000010135, 0, '查看SLA规则',      'get.admin/sla-rule',                3, '', '', 23, NOW(), NOW()),
-(2100000000010136, 0, '创建SLA规则',      'post.admin/sla-rule',               3, '', '', 24, NOW(), NOW()),
-(2100000000010137, 0, '更新SLA规则',      'put.admin/sla-rule',                3, '', '', 25, NOW(), NOW()),
-(2100000000010138, 0, '删除SLA规则',      'delete.admin/sla-rule',             3, '', '', 26, NOW(), NOW()),
-(2100000000010139, 0, '查看SLA记录',      'get.admin/sla-record',              3, '', '', 27, NOW(), NOW()),
 (2100000000010140, 0, '查看催缴策略',     'get.admin/collection-strategy',     3, '', '', 28, NOW(), NOW()),
 (2100000000010141, 0, '创建催缴策略',     'post.admin/collection-strategy',    3, '', '', 29, NOW(), NOW()),
 (2100000000010142, 0, '更新催缴策略',     'put.admin/collection-strategy',     3, '', '', 30, NOW(), NOW()),
@@ -1465,45 +1460,6 @@ CREATE TABLE IF NOT EXISTS `management_vote_record` (
     KEY `idx_vote_id` (`vote_id`),
     KEY `idx_option_id` (`option_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票记录表';
-
--- ============================================================
--- 6. 报修 SLA 自动升级
--- ============================================================
-
--- SLA规则表
-CREATE TABLE IF NOT EXISTS `management_sla_rule` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `name` VARCHAR(100) NOT NULL COMMENT '规则名称',
-    `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '报修分类: 1=水电 2=门窗 ...',
-    `urgency` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '紧急程度: 1=普通 2=紧急 3=非常紧急',
-    `response_minutes` INT UNSIGNED NOT NULL DEFAULT 60 COMMENT '响应时限(分钟)',
-    `resolve_minutes` INT UNSIGNED NOT NULL DEFAULT 480 COMMENT '解决时限(分钟)',
-    `escalate_to_role` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '升级目标角色slug',
-    `escalate_minutes` INT UNSIGNED NOT NULL DEFAULT 120 COMMENT '超时多久后升级(分钟)',
-    `penalty_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '超时罚款金额',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SLA规则表';
-
--- SLA记录表
-CREATE TABLE IF NOT EXISTS `management_sla_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `repair_order_id` BIGINT UNSIGNED NOT NULL COMMENT '报修单ID',
-    `rule_id` BIGINT UNSIGNED NOT NULL COMMENT 'SLA规则ID',
-    `response_deadline` DATETIME DEFAULT NULL COMMENT '响应截止时间',
-    `resolve_deadline` DATETIME DEFAULT NULL COMMENT '解决截止时间',
-    `escalated_at` DATETIME DEFAULT NULL COMMENT '升级时间',
-    `escalate_level` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '当前升级级别',
-    `is_response_overtime` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否响应超时',
-    `is_resolve_overtime` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否解决超时',
-    `penalty_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '罚款金额',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_repair_order_id` (`repair_order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SLA记录表';
 
 -- ============================================================
 -- 8. 智能催缴
