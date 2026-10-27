@@ -379,6 +379,33 @@ Thank you for your support!
 |:---:|:---:|
 | WeChat Pay | Alipay |
 
+## Open Source vs Commercial Edition
+
+The open-source edition includes 22 core business modules and 7 extension modules for personal study, research, and secondary development. The commercial edition adds 5 extension modules, three additional frontends, and an Elasticsearch search stack on top of the same core. Code comparison found no open-source-only business modules: the open-source edition is a subset of the commercial edition.
+
+| Dimension | Open Source | Commercial |
+|---|---|---|
+| Positioning | Personal study, research, secondary development | Commercial deployment and production operations |
+| Business modules | 22 core + 7 extensions | 22 core + 12 extensions |
+| Commercial-only | — | Mobile inspection, SLA auto-escalation, community mall, face capture and review, data dashboard |
+| Backend size | 75 controllers / 107 models / 169 routes / 59 tables | 81 controllers / 123 models / 191 routes / 67 tables |
+| Admin frontends | Flutter Web (93 Dart files) | Flutter Web (99) + Angular (60 TS/HTML files) + React (42 TS/TSX) + HarmonyOS (12 ETS) |
+| Owner frontends | Flutter (29 Dart files) | Flutter (33) + HarmonyOS (14 ETS) |
+| Search | MySQL LIKE | Elasticsearch + webman-scout |
+| Compose services | 12 | 15 (adds ES and monitoring components) |
+
+Commercial-only modules (confirmed by code comparison):
+
+- **Mobile inspection**: inspection tasks/checkpoints and pages, 2 tables.
+- **SLA auto-escalation**: SLA rules/records and admin pages, 2 tables.
+- **Community mall**: products/categories/orders and owner mall pages, 3 tables.
+- **Face capture and manual review**: upload, approve, reject, 1 table (marketed as "face recognition").
+- **Data dashboard**: listed as an extension in the commercial README; no dedicated big-screen controller/page was found in code — it is dashboard visualization.
+
+The open-source edition retains all 22 core modules, 7 extensions (notifications, approval workflow, payment integration, owner voting, smart collection, multi-community group management, smart Q&A), the Flutter admin and owner apps, and the 19-layer security architecture.
+
+> For commercial licensing and delivery terms, contact **erik@erik.xyz**.
+
 ## 项目授权 / Project License
 
 Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
