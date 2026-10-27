@@ -6,7 +6,7 @@
 
 <img src="docs/images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="120" align="right">
 
-全栈物业管理系统，覆盖22个业务模块 + 12个扩展功能（消息通知/审批工作流/支付/投票/SLA/数据大屏/催缴/巡检/商城/人脸/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端覆盖 Flutter Web（PC 管理后台风格）与 HarmonyOS 移动端。
+全栈物业管理系统，覆盖22个业务模块 + 12个扩展功能（消息通知/审批工作流/支付/投票/SLA/数据大屏/催缴/巡检/商城/人脸/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端为 Flutter Web（PC 管理后台风格）。
 
 **小筑** 是本项目的宠物 —— 一位楼宇管家：一栋亮着灯的公寓楼，戴管家帽、拿工单板，胸前工牌打勾。它出现在安装向导、错误页、登录页与架构图中，代表「在管的每一栋楼都有人照看」。
 
@@ -19,8 +19,8 @@
 | 形象 | 拟人化楼宇管家（亮窗代表在管房源，工单板代表派单闭环） |
 | 配色 | 靛蓝 `#4F46E5` + 暖橙 `#F59E0B`，与前端主题一致 |
 | 矢量文件 | [docs/images/pet_xiaozhu.svg](docs/images/pet_xiaozhu.svg)（语言无关，13 种语言共用） |
-| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 8 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`、React / Angular 的 `public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等 68 件）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
-| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 管理端 React / Angular 重设计（登录页 + 值班台 + 空态 + 404）· 两端 Flutter 与两端 HarmonyOS 的壳层图标与启动图（launcher / 应用图标 / splash）· 四端空态插图（React / Angular / Flutter / HarmonyOS）· 六个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
+| 图标标记 | [docs/images/favicon.svg](docs/images/favicon.svg)，已部署到 6 处（两端 Flutter 的 `assets/` 与 `web/`、`admin/public/`、`service/public/`）；全平台派生位图（应用图标 / 启动图 / favicon.ico 等）由 [scripts/gen-pet-icons.sh](scripts/gen-pet-icons.sh) 生成 |
+| 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 两端 Flutter 的壳层图标与启动图（launcher / 应用图标 / splash）· Flutter 空态插图 · 两个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
 
 
 <!-- pet-expressions:start -->
@@ -60,10 +60,7 @@ property-management-platform/
 │   │   ├── queue/                 # 队列任务
 │   │   └── process/               # 进程管理
 │   ├── apps/
-│   │   ├── flutter/               # 管理后台 Flutter Web（PC 风格）
-│   │   ├── harmonyos/             # 管理后台 HarmonyOS App
-│   │   ├── react/                 # 管理后台 React 重设计（React 19 + Vite + Ant Design）
-│   │   └── angular/               # 管理后台 Angular 重设计（NG-ZORRO）
+│   │   └── flutter/               # 管理后台 Flutter Web（PC 风格）
 │   ├── config/                    # 配置文件（含中文注释）
 │   ├── database/
 │   │   └── backup/                # 数据库备份脚本
@@ -83,8 +80,7 @@ property-management-platform/
 │   ├── resource/
 │   │   └── translations/          # 国际化语言文件
 ├── apps/
-│   ├── flutter/                   # 业主端 Flutter Web（PC 风格）
-│   └── harmonyos/                 # 业主端 HarmonyOS App
+│   └── flutter/                   # 业主端 Flutter Web（PC 风格）
 └── docs/                          # 项目文档
     ├── ARCHITECTURE.md
     ├── ARCHITECTURE_DESIGN.md
@@ -111,7 +107,6 @@ property-management-platform/
 | API 路由 | 178 | admin 125 + service 53 |
 | Flutter 管理后台 | 42页 | admin 42个页面模块，96文件/6,662行 |
 | Flutter 业主端 | 13页 | 费用/报修/停车/访客/活动/通知/投票/商城/智能问答/人脸，32文件/3,582行 |
-| HarmonyOS | 7页 | 登录/首页/账单/报修(2)/公告/个人中心，11文件/927行 |
 | 测试 | 471个 | admin 271个(675断言) + service 200个(847断言)，详见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
@@ -174,8 +169,7 @@ property-management-platform/
 | `hg/apidoc` | API 接口文档自动生成 |
 
 ### 前端
-- **Flutter 3.x** + GetX（含 i18n） + Dio + fl_chart + flutter_svg（宠物矢量图） — PC 风格 Web 管理后台
-- **HarmonyOS ArkTS** + @ohos.net.http — 移动端 App
+- **Flutter 3.x** + GetX（含 i18n） + Dio + fl_chart + flutter_svg（宠物矢量图） — PC 风格 Web 管理后台与业主端
 
 ### API 文档
 
@@ -368,14 +362,13 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 ### 业主端（service）
 
-1. 访问 `http://localhost:8788`（或 Flutter Web / HarmonyOS App），注册/登录业主账号。
+1. 访问 `http://localhost:8788`（或 Flutter Web），注册/登录业主账号。
 2. 起始页查看：我的房产、待缴费用、维修工单、待处理投诉、进行中活动/投票、未读消息。
 3. 常用操作：在线缴费、提交报修、访客预约、停车查询、社区活动报名、投票、智能问答。
 
-### 移动端
+### 前端运行
 
 - **Flutter Web**：`cd apps/flutter && flutter run -d chrome`（业主端）
-- **HarmonyOS**：使用 DevEco Studio 打开 `apps/harmonyos` 构建运行。
 
 ## 默认管理员
 

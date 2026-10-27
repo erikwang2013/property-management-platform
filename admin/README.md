@@ -6,7 +6,7 @@
 
 > [English version](README_EN.md) | [架构设计图](docs/ARCHITECTURE.md) | [设计文档](docs/DESIGN.md) | [安全架构](docs/SECURITY.md) | [API 参考](docs/API.md)
 
-> 项目宠物 **小筑**（[docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)）已接入本端：安装向导 3 步 + 已安装页、`public/favicon.svg`、`public/404.html`、`public/504.html` 错误页、管理端 Flutter 登录页（`apps/flutter/assets/pet_xiaozhu.svg`）与 `apps/flutter/web/favicon.svg`；React（`apps/react/`）与 Angular（`apps/angular/`）重设计版另在各自登录页、侧栏、值班台、列表空态与 404 页接线，并各自带 `public/favicon.svg`。
+> 项目宠物 **小筑**（[docs/images/pet_xiaozhu.svg](../docs/images/pet_xiaozhu.svg)）已接入本端：安装向导 3 步 + 已安装页、`public/favicon.svg`、`public/404.html`、`public/504.html` 错误页、管理端 Flutter 登录页（`apps/flutter/assets/pet_xiaozhu.svg`）与 `apps/flutter/web/favicon.svg`。
 
 ## 功能清单
 
@@ -35,8 +35,6 @@
 | 数据库 | MySQL 8.0+ | 表前缀 `management_`，BIGINT 非自增主键 |
 | 搜索引擎 | Elasticsearch | 通过 `webman-scout` 同步与查询 |
 | 管理端前端 | Flutter 3.x | Web 端为 PC 管理后台风格（`apps/flutter/`） |
-| 管理端前端（重设计版） | React 19 / Angular 20 | `apps/react/`（Vite + Ant Design 6）、`apps/angular/`（NG-ZORRO），共用「小筑」设计语言 |
-| 移动端 | HarmonyOS ArkTS | 鸿蒙原生客户端（`apps/harmonyos/`），支持手机/平板/2in1 |
 
 ## 核心依赖
 
@@ -94,9 +92,6 @@ open-admin/
 │   │       ├── pages/          # 5 个完整页面（仪表盘/用户/角色/配置/日志/个人中心）
 │   │       ├── services/       # ApiService（JWT 拦截器）+ AuthService（Token 持久化）
 │   │       └── layouts/        # 响应式管理后台布局（侧边栏+顶栏+内容区）
-│   ├── harmonyos/              # HarmonyOS 原生客户端（Token 无感刷新）
-│   ├── react/                  # React 重设计管理端（React 19 + Vite + Ant Design）
-│   └── angular/                # Angular 重设计管理端（Angular 20 + NG-ZORRO）
 ├── config/                     # 配置文件（含中文注释）
 │   ├── route.php               # 路由 + API 版本策略
 │   ├── middleware.php           # 全局中间件注册
@@ -177,19 +172,6 @@ cd apps/flutter
 flutter pub get
 flutter run -d chrome    # Web 端（PC 管理后台风格）
 ```
-
-**React / Angular 管理端（重设计版）:**
-
-```bash
-cd apps/react   && pnpm install && pnpm dev     # 默认 5173
-cd apps/angular && pnpm install && pnpm start   # 默认 4200
-```
-
-两个开发服务器均把 `/api`、`/admin` 反代到 `http://localhost:8787`。
-
-**HarmonyOS 客户端（手机端）:**
-
-使用 DevEco Studio 打开 `apps/harmonyos/` 目录，连接真机或模拟器运行。
 
 ### 6. Docker Compose 一键部署（推荐生产环境）
 
@@ -402,30 +384,6 @@ Authorization: Bearer <token>
 - **批量操作**: 多选批量删除、批量启用/禁用
 - **主题**: Material 3 浅色/深色双主题
 
-### React 管理端（重设计版）
-
-- **技术栈**: React 19 + Vite + TypeScript（strict）+ Ant Design 6（`ConfigProvider` 覆写 token）+ TanStack Query 5 + Zustand（仅认证态）
-- **布局**: 侧边栏（240px / 收起 64px，<768px 变抽屉）+ 顶栏 + 内容区；导航按域分组（总览 / 资产 / 财务 / 服务 / 系统）
-- **页面**: 登录、值班台、报表中心、小区、房产（树形）、业主、账单、缴费、报修、投诉、用户、角色权限、系统配置 / 操作日志 / 个人中心（13 模块 / 16 路由）
-- **通用组件**: 共享列表页（搜索 + 表格 + 分页 + 行操作，10 个页面复用）+ 自封装 ECharts
-- **宠物**: 登录页全身像、侧栏图标标记、值班台欢迎卡、列表空态、404 页、`public/favicon.svg`
-- **启动**: `pnpm dev`（默认 5173，`/api`、`/admin` 反代到 8787）
-
-### Angular 管理端（重设计版）
-
-- **技术栈**: Angular 20（standalone + signals）+ NG-ZORRO（CSS 变量版 + `NzConfigService` 设 primaryColor）+ 自封装 ECharts；不用 NgRx
-- **布局**: 与 React 版同一设计语言与域分组导航（240px / 64px / 抽屉三态同规格）
-- **页面**: 模块集与数量同 React 版（13 模块 / 16 路由）；系统三页签入口为 `/system`（React 版为 `/system/config`，访问 `/system` 会重定向过去）
-- **通用组件**: `components/data-table`（11 页复用）+ `components/form-modal`（11 页复用）
-- **宠物**: 同 React 版六处接线
-- **启动**: `pnpm start`（默认 4200，`/api`、`/admin` 经 `proxy.conf.json` 反代到 8787）
-
-### HarmonyOS 移动端
-
-- **页面**: 登录、仪表盘、用户列表/详情、个人中心
-- **认证**: JWT Bearer + 401 自动无感刷新 Token，刷新失败自动重定向登录页
-- **存储**: Token 通过 AppStorage 管理
-
 ## 使用说明
 
 1. **登录**：默认账号 `admin / Admin@123456`（一键部署自动创建；向导部署以第 2 步设置为准），登录后请立即修改密码。
@@ -470,7 +428,6 @@ GitHub Actions 持续集成流水线：`.github/workflows/ci.yml`
 - PHP 语法检查 (`php -l`)
 - PHPUnit 单元测试
 - Flutter 静态分析 (`flutter analyze`)
-- React / Angular 管理端构建 + 单元测试（Node 22 + pnpm，仅相关路径变更时触发）
 
 ### 数据库备份
 

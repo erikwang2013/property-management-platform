@@ -48,7 +48,6 @@ F() { R "$1" "$FULL" "$2"; magick "$2" -alpha off +set date:create +set date:mod
 STRIP_DATES=(+set date:create +set date:modify +set date:timestamp)
 
 AF="$ROOT/admin/apps/flutter"; OF="$ROOT/apps/flutter"
-AH="$ROOT/admin/apps/harmonyos"; OH="$ROOT/apps/harmonyos"
 
 # ① Android launcher（full，5 档 legacy mipmap）
 for x in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
@@ -92,18 +91,6 @@ for x in mdpi:120 hdpi:180 xhdpi:240 xxhdpi:360 xxxhdpi:480; do
 done
 L="$AF/ios/Runner/Assets.xcassets/LaunchImage.imageset"
 T 168 "$L/LaunchImage.png"; T 336 "$L/LaunchImage@2x.png"; T 504 "$L/LaunchImage@3x.png"
-
-# ⑦ HarmonyOS 两端（应用图标 216 full；start_icon / rawfile 均 tile）
-F 216 "$AH/AppScope/resources/base/media/app_icon.png"
-F 216 "$AH/entry/src/main/resources/base/media/app_icon.png"
-F 216 "$OH/AppScope/resources/base/media/app_icon.png"
-F 216 "$OH/entry/src/main/resources/base/media/app_icon.png"
-T 128 "$AH/entry/src/main/resources/base/media/start_icon.png"
-T 128 "$OH/entry/src/main/resources/base/media/start_icon.png"   # owner 侧为死资源，一并换求一致
-T 128 "$AH/entry/src/main/resources/rawfile/logo.png"            # 登录页 64dp 位
-T 240 "$AH/entry/src/main/resources/rawfile/empty.png"            # EmptyView 120dp 位的 2×
-mkdir -p "$OH/entry/src/main/resources/rawfile"                   # owner 侧本次新建
-T 128 "$OH/entry/src/main/resources/rawfile/logo.png"
 
 # ⑧ 后端 favicon.ico（tile 16/32/48 多帧；service 与 admin 同一份）
 for s in 16 32 48; do R "$s" "$TILE" "$TMP/ico-$s.png"; done
@@ -149,13 +136,10 @@ T 128 "$ROOT/admin/public/pet_mark_128.png"
 no_alpha() { identify -format '%[channels]' "$1" | grep -q '^srgb ' || fail "含 alpha：$1（$(identify -format '%[channels]' "$1")）"; }
 size() { [ "$(identify -format '%wx%h' "$1")" = "$2x$2" ] || fail "尺寸错：$1（期望 ${2}²）"; }
 
-for f in "$I"/*.png "$AF"/android/app/src/main/res/mipmap-*/ic_launcher.png \
-         "$AH/AppScope/resources/base/media/app_icon.png" "$AH/entry/src/main/resources/base/media/app_icon.png" \
-         "$OH/AppScope/resources/base/media/app_icon.png" "$OH/entry/src/main/resources/base/media/app_icon.png"; do
+for f in "$I"/*.png "$AF"/android/app/src/main/res/mipmap-*/ic_launcher.png; do
   no_alpha "$f"
 done
 size "$I/Icon-App-1024x1024@1x.png" 1024
-size "$OH/AppScope/resources/base/media/app_icon.png" 216
 size "$AF/web/favicon.png" 32
 size "$AF/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" 432
 size "$ROOT/admin/public/pet_mark_128.png" 128

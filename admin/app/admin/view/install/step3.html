@@ -154,7 +154,7 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
       密码：<code><?= htmlspecialchars($adminConfig['admin_password']) ?></code>
     </div>
     <a href="/apidoc" class="btn btn-primary" style="margin-top:8px;" target="_blank" rel="noopener">查看接口文档</a>
-    <p style="font-size:12px;color:#6b7280;margin:10px 0 0;">管理后台前端（React / Angular / Flutter Web）为独立部署，请按你的部署方式打开；本向导仅提供后端服务。</p>
+    <p style="font-size:12px;color:#6b7280;margin:10px 0 0;">管理后台前端（Flutter Web）为独立部署，请按你的部署方式打开；本向导仅提供后端服务。</p>
   </div>
   <div class="note">
     <strong>重要：</strong>请确保 <code>public/.installed</code> 存在——它是安装锁，删除即重新解锁向导（任何人可重跑安装并改写 .env）；如需对外收紧，请在反向代理层禁止访问 <code>/install</code>。<br>
