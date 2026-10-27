@@ -470,7 +470,7 @@ Get dashboard statistics.
 | PUT | /admin/vote/{hashid}/publish | Publish vote |
 | PUT | /admin/vote/{hashid}/end | End vote |
 
-#### SLA Management · Smart Payment Reminders · Inspection · Mall · Face Recognition · Group Management · Knowledge Base
+#### Smart Payment Reminders · Group Management · Knowledge Base
 
 (For the full endpoint list, see the `docs/API.md` file)
 
@@ -632,7 +632,7 @@ Response:
 
 ## Open API — API Key Authentication
 
-Inbound read-only endpoints for third-party systems (property platform integration, data dashboards, etc.). Prefixed with `/open`, all read-only.
+Inbound read-only endpoints for third-party systems (property platform integration, reporting systems, etc.). Prefixed with `/open`, all read-only.
 
 ### Authentication
 

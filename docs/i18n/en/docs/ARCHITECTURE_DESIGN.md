@@ -15,7 +15,7 @@
 
 ## 1. System Architecture Overview
 
-The property management system uses a "dual backend + multi frontend" layered architecture. The admin portal (admin) and owner business service (service) are two independent webman v2 projects that work together over a shared MySQL database. Frontends cover Flutter Web (PC admin style) and HarmonyOS mobile.
+The property management system uses a "dual backend + multi frontend" layered architecture. The admin portal (admin) and owner business service (service) are two independent webman v2 projects that work together over a shared MySQL database. Frontends are Flutter Web (PC admin style) and Flutter mobile.
 
 ### Design Goals
 
@@ -41,10 +41,10 @@ The property management system uses a "dual backend + multi frontend" layered ar
 │   HashidsService | SnowflakeService | EncryptionService       │
 ├─────────────────────────────────────────────────────────────┤
 │                        模型层 (Model Layer)                    │
-│   Eloquent ORM + encryptable 自动加解密 + scout ES 同步        │
+│   Eloquent ORM + encryptable 自动加解密 + MySQL 检索           │
 ├─────────────────────────────────────────────────────────────┤
 │                        驱动层 (Driver Layer)                   │
-│   MySQL PDO | Elasticsearch HTTP | Redis                      │
+│   MySQL PDO | Redis                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -195,12 +195,12 @@ Over-limit returns 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` respons
        │                  │
        └────────┬─────────┘
                 │
-┌───────────────┼───────────────────┐
-│               │                   │
-┌▼──────┐  ┌────▼───┐  ┌──────────▼┐
-│MySQL  │  │ Redis  │  │Elasticsearch│
-│:3306  │  │ :6379  │  │ :9200      │
-└───────┘  └────────┘  └────────────┘
+┌───────────────┼───────────────┐
+│               │               │
+┌▼──────┐  ┌────▼───┐
+│MySQL  │  │ Redis  │
+│:3306  │  │ :6379  │
+└───────┘  └────────┘
 ```
 
 ### Docker Compose Services
@@ -212,7 +212,6 @@ Over-limit returns 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` respons
 | service | Dockerfile build | PHP 8.3 + OPcache |
 | mysql | mysql:8.0 | Data volume persistence |
 | redis | redis:7-alpine | Cache/rate limiting/Session |
-| elasticsearch | elasticsearch:8.x | Full-text search |
 
 ## 11. Internationalization Design (i18n)
 
@@ -272,7 +271,6 @@ Get.updateLocale(Locale('en', 'US'));  // 切换英文
 | Complaints | `complaint.submit_success` | `complaint_type`, `type_complaint` |
 | Profile | - | `profile`, `change_password` |
 
-**HarmonyOS:** uses `resources/base/element/string.json` + `resources/en_US/element/string.json` resource qualifiers (implemented when the HarmonyOS project is created).
 
 ## 12. Testing Strategy
 
@@ -332,33 +330,9 @@ apps/flutter/lib/
     └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
 ```
 
-### HarmonyOS Mobile
+### Mobile
 
-```
-apps/harmonyos/entry/src/main/ets/
-├── services/
-│   ├── ApiService.ets           # @ohos.net.http 封装，Bearer Token
-│   └── AuthService.ets          # 登录/登出（Preference 持久化）
-├── model/
-│   └── Models.ets               # TypeScript 接口定义
-├── pages/
-│   ├── LoginPage.ets            # 手机号 + 密码登录
-│   └── HomePage.ets             # 仪表盘（统计卡片 + 公告列表）
-└── resources/
-    ├── base/element/string.json # 中文资源
-    └── en_US/element/string.json# 英文资源
-```
-
-### Technology Choices
-
-| Layer | Flutter Web | HarmonyOS |
-|----|------------|-----------|
-| State management | GetX | @State + @Prop |
-| HTTP | Dio + JWT interceptor | @ohos.net.http |
-| Persistence | shared_preferences | @ohos.data.preferences |
-| Charts | fl_chart | Web component + ECharts |
-| i18n | GetX Translations | resource qualifiers |
-| Routing | GetX named routes | router.pushUrl/replaceUrl |
+Mobile is built with Flutter cross-platform, sharing GetX state management, Dio + JWT interceptors, shared_preferences persistence and GetX routing with the admin panel.
 
 ## 14. Extension Feature Architecture
 
@@ -374,14 +348,8 @@ Create payment order → third-party payment → async callback → update bill 
 ### Owner Voting
 Publish vote → owners vote (area-weighted) → real-time tally → result statistics
 
-### SLA Auto Escalation
-SLA rule matching → scheduled timeout checks → auto escalation → penalty records
-
 ### Smart Payment Reminders
 Reminder strategy matching → overdue detection → auto-generate reminder tasks → execute reminder actions
-
-### Inspection Management
-Task dispatch → mobile GPS check-in → photo upload → exception marking → completion statistics
 
 ### Group Management
 Group → community association → cross-community data aggregation (property/owner/charges/repairs)
@@ -403,7 +371,7 @@ Endpoint docs are auto-generated from controller annotations with `hg/apidoc`, g
 | `property-core` | 12 | Community, Building, Unit, RoomType, Room, Owner, Tenant, FeeType, FeeBill, FeePayment, Repair, Announcement |
 | `property-aux` | 9 | Parking(3), Equipment(2), Complaint, Visitor, Contract, Finance |
 | `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
-| `extensions` | 11 | Notification, Approval, Payment, Vote, Sla, Collection, Inspection, Mall, Face, Group, Knowledge |
+| `extensions` | 7 | Notification, Approval, Payment, Vote, Collection, Group, Knowledge |
 
 **Service** (`http://localhost:8788/apidoc`): 9 groups — 17 controllers annotated
 
@@ -417,7 +385,7 @@ Endpoint docs are auto-generated from controller annotations with `hg/apidoc`, g
 | `parking` | 2 | Parking, Visitor |
 | `activity` | 1 | Activity |
 | `profile` | 1 | Profile |
-| `extensions` | 5 | Notification, Vote, Mall, Knowledge, Face |
+| `extensions` | 3 | Notification, Vote, Knowledge |
 
 ### Annotation Conventions
 

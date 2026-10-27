@@ -1,5 +1,8 @@
 # Project Security & Ecosystem Configuration Review Report
 
+> **Historical document (2026-10-27)**: some features described here have since been removed. Current features follow README.md / docs/FEATURES.md.
+
+
 > Review date: 2026-08-04  
 > Review scope: admin + service full stack  
 > Baseline commit: 5fcc86f
@@ -166,7 +169,6 @@ Controllers take values directly via `$request->input()` without structured vali
 | app (PHP 8.3) | ✅ | ✅ | OPcache production config |
 | mysql (8.0) | ✅ | ✅ | Health check + dedicated user |
 | redis (7.2) | ✅ | ✅ | Health check (missing password) |
-| elasticsearch (8.x) | ✅ | ✅ | xpack.security enabled |
 
 ### 4.3 CI/CD
 
@@ -221,7 +223,6 @@ The following work was performed after the original review:
 - ✅ PHP Validator classes (admin + service, 11 rules with tests)
 - ✅ Admin Flutter expanded from 7 to 57 pages (100% coverage of 34 modules)
 - ✅ Owner Flutter expanded from 10 to 23 pages
-- ✅ HarmonyOS expanded from 2 to 7 pages
 - ✅ Tests expanded from 78 to 133 (admin 90 + service 43)
 
 ### Final State
@@ -229,6 +230,5 @@ The following work was performed after the original review:
 |------|:------:|:------:|
 | Admin Flutter | 7 pages/20 files | 57 pages/96 files |
 | Owner Flutter | 10 pages/32 files | 23 pages/32 files |
-| HarmonyOS | 2 pages/5 files | 7 pages/10 files |
 | Tests | 78 | 133 |
 | Overall score | B+ | **A** |

@@ -6,7 +6,7 @@
 
 <img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
 
-A full-stack property management system covering 22 business modules + 12 extension features (message notifications / approval workflow / payments / voting / SLA / data dashboard / payment reminders / inspection / mall / face recognition / group management / intelligent Q&A). The admin panel (admin) and owner portal (service) are deployed separately, with frontends covering Flutter Web (PC admin style) and HarmonyOS mobile.
+A full-stack property management system covering 22 business modules + 7 extension features (message notifications / approval workflow / payments / voting / payment reminders / group management / intelligent Q&A). The admin panel (admin) and owner portal (service) are deployed separately, with frontends built with Flutter Web (PC admin style) and Flutter mobile.
 
 **Xiaozhu** (小筑) is the project mascot — an anthropomorphic building steward with its lights on, appearing in the install wizard, the error pages, the login page and the architecture diagram.
 
@@ -25,7 +25,6 @@ property-management-platform/
 │   │   └── process/               # Process management
 │   ├── apps/
 │   │   ├── flutter/               # Admin Flutter Web (PC style)
-│   │   └── harmonyos/             # Admin HarmonyOS App
 │   ├── config/                    # Configuration files (with Chinese comments)
 │   ├── database/
 │   │   └── backup/                # Database backup scripts
@@ -46,7 +45,6 @@ property-management-platform/
 │   │   └── translations/          # i18n language files
 ├── apps/
 │   ├── flutter/                   # Owner Flutter Web (PC style)
-│   └── harmonyos/                 # Owner HarmonyOS App
 └── docs/                          # Project documentation
     ├── ARCHITECTURE.md
     ├── ARCHITECTURE_DESIGN.md
@@ -66,15 +64,14 @@ property-management-platform/
 
 | Layer | Count | Details |
 |----|------|------|
-| Database tables | 65 | All `management_` prefixed, BIGINT non-auto-increment primary keys |
-| PHP models | admin 64 / service 57 | All Eloquent models with encryptable encrypted fields; service 57 is the model file count (including the BaseModel base class) |
-| admin controllers | 58 | General management + 22 property modules + 12 extension features |
+| Database tables | 60 | All `management_` prefixed, BIGINT non-auto-increment primary keys |
+| PHP models | admin 57 / service 50 | All Eloquent models with encryptable encrypted fields; service 57 is the model file count (including the BaseModel base class) |
+| admin controllers | 55 | General management + 22 property modules + 7 extension features |
 | service controllers | 17 | All owner-side APIs |
-| API routes | 178 | admin 125 + service 53 |
-| Flutter admin panel | 42 pages | admin 42 page modules, 96 files / 6,662 lines |
-| Flutter owner portal | 13 pages | charges / repairs / parking / visitors / activities / notifications / voting / mall / intelligent Q&A / face recognition, 32 files / 3,582 lines |
-| HarmonyOS | 7 pages | login / home / bills / repair (2) / announcements / personal center, 11 files / 927 lines |
-| Tests | 133 | admin 90 (217 assertions) + service 43 (248 assertions) |
+| API routes | 168 | admin 119 + service 49 |
+| Flutter admin panel | 41 pages | admin 41 page modules, 93 files / 6,976 lines |
+| Flutter owner portal | 13 pages | charges / repairs / parking / visitors / activities / notifications / voting / intelligent Q&A, 29 files / 3,506 lines |
+| Tests | 471 | admin 271 (675 assertions) + service 200 (847 assertions) |
 
 ## System Architecture & Design Diagrams
 
@@ -100,14 +97,14 @@ property-management-platform/
 
 <img src="docs/images/readme_security.svg" alt="19-layer security defense in depth" width="330">
 
-## Function Modules (22 Major Modules + 12 Extensions)
+## Function Modules (22 Major Modules + 7 Extensions)
 
 | Batch | Modules | Status |
 |------|------|------|
 | Batch 1 | Community, building, unit, layout, property, owner, tenant, charges, repair, announcements (10 modules) | ✅ All complete |
 | Batch 2 | Parking, equipment, complaints, visitors, contracts, finance (6 modules) + panel visualization + Excel/PDF export (platform features) | ✅ All complete |
 | Batch 3 | Security patrol, cleaning, greening, community activities, energy, staff (6 modules) | ✅ All complete |
-| Extensions | Message notifications, approval workflow, payment integration, owner voting, SLA auto escalation, data dashboard, smart payment reminders, mobile inspection, community mall, face recognition, multi-community group management, intelligent Q&A (12 modules) | ✅ All complete |
+| Extensions | Message notifications, approval workflow, payment integration, owner voting, smart payment reminders, multi-community group management, intelligent Q&A (7 modules) | ✅ All complete |
 | Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home stats (complaints / activities / votes / unread) | ✅ All complete |
 
 ## Tech Stack
@@ -116,7 +113,6 @@ property-management-platform/
 - **Framework**: webman v2 (workerman/webman)
 - **Language**: PHP 8.3+
 - **Database**: MySQL 8.0+, table prefix `management_`, BIGINT non-auto-increment primary keys
-- **Search Engine**: Elasticsearch 8.x
 - **Cache**: Redis 7.x
 
 ### Core Dependencies
@@ -127,7 +123,6 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT authentication (HS256) |
 | `erikwang2013/encryption` | AES-256-CBC encryption of sensitive data in API transport |
 | `erikwang2013/encryptable` | Encryption/decryption of sensitive database fields |
-| `erikwang2013/webman-scout` | Elasticsearch data sync and full-text search |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/security-php` | Security tool detection |
 | `erikwang2013/poster-php` | Random verification codes for sensitive operations |
@@ -137,7 +132,7 @@ property-management-platform/
 
 ### Frontend
 - **Flutter 3.x** + GetX (with i18n) + Dio + fl_chart — PC-style Web admin panel
-- **HarmonyOS ArkTS** + @ohos.net.http — mobile App
+- **Flutter mobile** — cross-platform mobile app
 
 ### API Documentation
 
@@ -264,13 +259,13 @@ service tests cover: Snowflake ID, Hashids encode/decode, response format, datab
 cd admin
 cp .env.docker .env
 docker-compose up -d
-# Includes Nginx + PHP + MySQL + Redis + Elasticsearch
+# Includes Nginx + PHP + MySQL + Redis
 ```
 
 ## Deployment Topology
 
 ```
-Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis + Elasticsearch
+Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 Static files: Flutter Web build/
 ```
 
@@ -283,7 +278,7 @@ Static files: Flutter Web build/
 4. System: add admins, RBAC roles, config, audit logs.
 
 ### Owner Portal
-Open `http://localhost:8788` (or Flutter Web / HarmonyOS): the home page shows rooms, pending fees, repairs, complaints, activities, votes and unread messages.
+Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pending fees, repairs, complaints, activities, votes and unread messages.
 
 ## Default Admin Account
 

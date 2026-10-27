@@ -1,10 +1,13 @@
 # Property Management System — Comprehensive Project Plan
 
+> **Historical document (2026-10-27)**: some features described here have since been removed. Current features follow README.md / docs/FEATURES.md.
+
+
 > Generated: 2026-08-16 · Source: pmp-team audit (auditor / security-auditor / planner)
 
 ## 1. Current-State Audit Conclusions
 
-**Feature surface: consistent with the claims.** All 22 business modules + 12 extension features are complete; 67 tables / 178 APIs, admin 58 controllers / 127 routes, service 19 controllers / 57 routes, Flutter Web admin panel 42 pages + owner portal 13 pages, HarmonyOS 5 pages. All 14 documents in docs/ + 35 SVGs are backed by code; no "claimed but unimplemented" features were found.
+**Feature surface:** current code keeps the core business modules and 7 extension features; the schema in docs/install.sql has 60 tables, the Flutter admin panel has 41 pages and the owner portal 13 pages.
 
 **Tests: all green (as of 2026-08-17).** admin 193 tests / 452 assertions, service 101 tests / 385 assertions (7 skips are environment-dependent), Flutter widget tests 9 (login/home/bills pages).
 
@@ -55,16 +58,16 @@
 
 | Goal | Key Tasks | Acceptance Criteria |
 |------|---------|---------|
-| Multi-tenant, performance targets met, mobile completed | ① Multi-tenant SaaS: starting with group management, add tenant_id to management_community + middleware isolation (plan review first; independent databases as evolution direction) ② Performance load testing: wrk/k6 on login/charges/dashboard, slow query + Redis cache re-check ③ Mobile completion: expand HarmonyOS from 5 pages to core paths (payments/repairs/announcements/visitors/parking), Flutter owner mobile adaptation ④ Open API / Webhook (optional) | Tenant authorization-bypass tests pass; core endpoint P95 < 300ms; HarmonyOS core paths complete |
+| Multi-tenant, performance targets met, mobile completed | ① Multi-tenant SaaS: starting with group management, add tenant_id to management_community + middleware isolation (plan review first; independent databases as evolution direction) ② Performance load testing: wrk/k6 on login/charges/dashboard, slow query + Redis cache re-check ③ Mobile completion: expand Flutter mobile from 5 pages to core paths (payments/repairs/announcements/visitors/parking), Flutter owner mobile adaptation ④ Open API / Webhook (optional) | Tenant authorization-bypass tests pass; core endpoint P95 < 300ms; Flutter mobile core paths complete |
 
-**P3 status**: ✅ All complete (delivered 2026-08-16: multi-tenant trio + real load tests with P95 meeting targets + HarmonyOS expanded to 5 pages).
+**P3 status**: ✅ All complete (delivered 2026-08-16: multi-tenant trio + real load tests with P95 meeting targets + Flutter mobile expanded to 5 pages).
 
 ### P4-P9 Additional Delivery Records (2026-08-16 ~ 08-17, new engineering phases beyond the original P1-P3 scope)
 
 | Phase | Deliverables | Status |
 |------|---------|------|
 | P4 Wrap-up | ES write-path fallback (AdminUser Searchable try/catch + degraded logging), install wizard payment config (auto-enable when credentials filled), log rotation (logrotate.conf), monitoring alert orchestration (dual Prometheus stacks + 6 rules) | ✅ Complete |
-| P5 Remaining items | Webhook delivery (HMAC-SHA256 signing + exponential backoff retry + 3 trigger points), charge/approval/SLA business unit tests | ✅ Complete |
+| P5 Remaining items | Webhook delivery (HMAC-SHA256 signing + exponential backoff retry + 3 trigger points), charge/approval/timeliness business unit tests | ✅ Complete |
 | P6 Deployment wrap-up | One-click deployment script (deploy.sh: pull → .env → compose → idempotent install.sql import → monitoring smoke test), container log mount fix, CI coverage gate raised, scaling plan (SCALING_PLAN) | ✅ Complete |
 | P7 Test depth | service unit tests 43→82, Flutter widget tests 3 pages 8 cases (CI integrated), open API (/open 3 read-only endpoints + X-API-Key auth + gen_api_key.php), load-test smoke (k6 smoke.js + workflow_dispatch manual workflow) | ✅ Complete |
 | P8 Ops wrap-up | Backup/restore delivered (backup.sh + RECOVERY_RUNBOOK), Grafana dashboards (service-side 7-panel provisioning), admin unit tests +11 (152 all green), **install wizard template path bug fixed** (templates moved to app/view/install, curl-verified rendering 200) | ✅ Complete |
@@ -96,8 +99,8 @@
 | Key management | Placeholders + hardcoded fallback keys, no rotation | Generator + rotation scripts; production uses env var injection | ✅ Resolved (fail-fast validation + gen_env_keys.sh + rotate_keys.sh) |
 | Scattered payment credentials | Payment module no centralized config, sandbox unverified | Config centralization + sandbox first | 🔶 Config centralized (config/payment.php); sandbox integration awaits credentials |
 | Migration management | Single-file install.sql (IF NOT EXISTS idempotent) | Unified into a single full entry; incremental upgrade path to be discussed separately | ✅ Unified (merged 2026-08-16) |
-| Test coverage too structural | 133 tests concentrated on schema/security/round-trips | Coverage gates + unit tests for core business (charges/approval/SLA) | ✅ Strengthened (admin 193 / service 101 / Flutter 9; gates prevent zero-instrumentation regression) |
-| Mobile gaps | HarmonyOS only 5 pages, no native owner App | P3 core-path completion; dependency: HarmonyOS test device | ✅ Core paths completed (5 pages: payments/repairs/announcements/visitors/parking); real-device verification awaits device |
+| Test coverage too structural | 133 tests concentrated on schema/security/round-trips | Coverage gates + unit tests for core business (charges/approval/timeliness) | ✅ Strengthened (admin 193 / service 101 / Flutter 9; gates prevent zero-instrumentation regression) |
+| Mobile gaps | Flutter mobile only 5 pages, no native owner App | P3 core-path completion; dependency: Flutter mobile test device | ✅ Core paths completed (5 pages: payments/repairs/announcements/visitors/parking); real-device verification awaits device |
 
 ## 7. Team Roles (pmp-team)
 
@@ -106,7 +109,7 @@
 | Architecture | Multi-tenant plan review and tenant_id isolation design (P3), ES degradation architecture, monitoring architecture (P2), payment callback idempotency design review |
 | Backend | Key generation/rotation scripts, ES degradation implementation, payment config centralization + sandbox integration, migration script split, load testing and slow query governance |
 | Flutter frontend | CI-integrated flutter analyze, owner mobile adaptation (P3) |
-| HarmonyOS | Core-path completion: payments/repairs/announcements/visitors/parking (P3) |
+| Flutter mobile | Core-path completion: payments/repairs/announcements/visitors/parking (P3) |
 | Testing | Coverage gates, payment sandbox cases (duplicate callback/refund/reconciliation), load test scripts, backup/restore drill execution |
 | Review | Payment and security critical-path review, gitleaks into CI, multi-tenant bypass test review |
 | Documentation | Deployment/ops manuals (incl. restore drill), multi-tenant plan doc, monitoring config manual |
@@ -119,4 +122,4 @@
 1. Payment sandbox integration: after obtaining WECHAT_PAY_* / ALIPAY_* sandbox credentials, run `scripts/payment_sandbox_smoke.php` (order → duplicate-callback idempotency → refund → reconciliation full-chain verification)
 2. Monitoring alert real-trigger verification: after deployment, run `scripts/verify_monitoring.sh` to validate rule loading, and trigger real 5xx/connectivity failures to verify alerts (Http5xxRatio rule is already effective)
 3. Backup/restore drill: execute quarterly drills per docs/RECOVERY_RUNBOOK.md and record measured times (RTO ≤ 1h target)
-4. HarmonyOS real-device verification: run core paths (payments/repairs/announcements/visitors/parking) once test devices are available
+4. Flutter mobile real-device verification: run core paths (payments/repairs/announcements/visitors/parking) once test devices are available

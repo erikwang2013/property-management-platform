@@ -2,7 +2,7 @@
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
-The current deployment is a single-machine docker-compose (MySQL/Redis/Elasticsearch on the same host as the application, see `admin/docker-compose.yml`) with no HA. This document explains the risks and existing mitigations, and provides the horizontal scaling path, data-growth trigger points, and drill recommendations. The operations baseline (backup/restore, monitoring & alerting, log rotation) is in [OPS_RUNBOOK.md](OPS_RUNBOOK.md).
+The current deployment is a single-machine docker-compose (MySQL/Redis on the same host as the application, see `admin/docker-compose.yml`) with no HA. This document explains the risks and existing mitigations, and provides the horizontal scaling path, data-growth trigger points, and drill recommendations. The operations baseline (backup/restore, monitoring & alerting, log rotation) is in [OPS_RUNBOOK.md](OPS_RUNBOOK.md).
 
 ---
 
@@ -14,7 +14,6 @@ The current deployment is a single-machine docker-compose (MySQL/Redis/Elasticse
 |------|------|------|
 | MySQL | 8.0.36 | Single instance, data persisted in host volumes |
 | Redis | 7.2-alpine | Single instance, cache/queue/lock |
-| Elasticsearch | 8.12.0 | Single node, scout full-text search |
 | nginx + webman | — | admin (8787) and service (8788) multi-process on one host |
 | Prometheus + Grafana | — | Monitoring & alerting, same host |
 
@@ -31,7 +30,7 @@ The current deployment is a single-machine docker-compose (MySQL/Redis/Elasticse
 ## 2. Existing Mitigations (Implemented)
 
 - **Backup**: single-entry backup script `scripts/backup.sh` (reads connection from `admin/.env`, defaults to mysqldump inside the container), daily full backup via crontab, 7-day retention by default (`--keep-days=30` configurable); restore drill procedure and RPO/RTO details in OPS_RUNBOOK §1 and RECOVERY_RUNBOOK.
-- **Monitoring & alerting**: Prometheus + Grafana + `deploy/monitoring/alerts.yml`, covering AppDown / MysqlDown / RedisDown / ElasticsearchDown / QueueBacklog, see OPS_RUNBOOK §3.
+- **Monitoring & alerting**: Prometheus + Grafana + `deploy/monitoring/alerts.yml`, covering AppDown / MysqlDown / RedisDown / QueueBacklog, see OPS_RUNBOOK §3.
 - **Log rotation**: container logs `max-size 10m`, host logs rotated daily by logrotate with 30-day retention, see OPS_RUNBOOK §4.
 - **Application layer**: webman multi-process residency, queue tasks decouple slow operations, `/health` health check.
 
@@ -54,12 +53,6 @@ General scaling principle: vertical first (add CPU/memory/disk), then horizontal
 - Sentinel (3 nodes): choose sentinel when capacity needs are modest; failover is second-level, and the client must support `sentinel` mode.
 - Cluster (≥3 primary + 3 replica): choose Cluster when cache volume exceeds single-machine memory or write concurrency rises.
 - Note: queues and distributed locks depend on Redis; when changing topology, update `config/redis.php` accordingly and verify lock/queue behavior under failover.
-
-### 3.3 Elasticsearch Dedicated Node
-
-- A single-node ES has no replicas; index corruption makes search unavailable. At minimum, migrate to a dedicated machine + 1 replica.
-- As data grows, split indexes by business domain and disable replicas on unused indexes to control resources.
-- Upgrade trigger: heap usage sustained >70%, write rejections (rising `es_rejected_executions`), or query p95 over 1s.
 
 ### 3.4 Application Multi-Replica + Load Balancer (Last)
 

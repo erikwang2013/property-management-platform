@@ -57,7 +57,7 @@ The installation process automatically completes:
 ### After Installation
 
 - Backend service: `http://localhost:8787` (login endpoint `POST /api/v1/auth/login`, API docs `http://localhost:8787/apidoc`)
-- The admin frontend (Flutter / React / Angular, see `admin/apps/README.md`) is deployed separately and not part of this service
+- The admin frontend (Flutter, see `admin/apps/README.md`) is deployed separately and not part of this service
 - The wizard shows the login endpoint and account info
 - Recommended to restart the service for config to take effect: `php start.php restart -d`
 - To reinstall, simply delete the `public/.installed` file
@@ -74,7 +74,6 @@ The installation process automatically completes:
 | MySQL | 8.0+ | utf8mb4 charset |
 | Redis | 6.0+ | Cache, rate limiting, Session |
 | Composer | 2.x | PHP dependency management |
-| Elasticsearch | 8.x | Full-text search (optional; database queries used when disabled) |
 | Flutter SDK | 3.x | Only needed for frontend development |
 
 ### PHP Extension Check
@@ -185,7 +184,7 @@ cp .env.docker .env
 # Edit .env to change production keys
 
 docker compose up -d
-# Includes: Nginx + PHP + MySQL + Redis + Elasticsearch
+# Includes: Nginx + PHP + MySQL + Redis
 ```
 
 ### Business Service
@@ -205,7 +204,6 @@ docker compose up -d
 | App | 8787 | 8788 | webman HTTP |
 | MySQL | 3306 | 3307 | container port mapping |
 | Redis | 6379 | 6380 | container port mapping |
-| Elasticsearch | 9200 | 9201 | container port mapping |
 | Nginx | 80/443 | 80/443 | must avoid conflicts when deploying together |
 
 > When deploying both docker-compose stacks on the same host, the service ports are pre-offset to avoid conflicts.

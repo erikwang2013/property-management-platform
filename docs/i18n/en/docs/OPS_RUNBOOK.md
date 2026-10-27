@@ -117,9 +117,7 @@ docker compose up -d prometheus grafana redis-exporter
 - **Alert rules**: `deploy/monitoring/alerts.yml`, covering:
   - `AppDown` (application unreachable, equivalent to full-site 5xx) — critical
   - `MysqlDown` / `RedisDown` (app-side probe failures) — critical
-  - `ElasticsearchDown` (ES native `/_prometheus/metrics` scrape failure) + `ElasticsearchHealthYellow` (cluster not green) — critical/warning
-  - `QueueBacklog` (scout search queue `queues:scout_*` backlog >100 for 10 minutes) — warning
-- **ES password injection**: prometheus reads `ELASTIC_PASSWORD` via compose `secrets` (requires Docker Compose ≥ 2.24); the config file does not hardcode the password; if unset, the change-me placeholder is used and ES 401 scrapes trigger ElasticsearchDown.
+  - `QueueBacklog` (queue backlog >100 for 10 minutes) — warning
 - **Reloading rules**: after editing alerts.yml, run `curl -X POST localhost:9090/-/reload` (prometheus needs `--web.enable-lifecycle`; if not added by default, restart the container).
 - **Local verification**: `bash scripts/verify_monitoring.sh` — validates alert rule YAML syntax on both admin/service sides, curls both `/metrics` endpoints (admin:8787 / service:8788) for metric output, and checks Prometheus (9090/9091) rule loading; when the app/Prometheus is not running, the corresponding item prints SKIP and exits 0.
 

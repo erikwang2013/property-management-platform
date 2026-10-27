@@ -1,5 +1,8 @@
 # Multi-Tenant SaaS Plan Review
 
+> **Historical design (2026-10-27)**: multi-tenant was not implemented; current code is single-tenant. This document is kept as a design record.
+
+
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 > Status: review draft (P3-① predecessor task) | Date: 2026-08-16
 
@@ -12,7 +15,7 @@
 | Global/platform tables | management_admin_user / admin_role / admin_permission / admin_user_role / admin_role_permission, management_system_config, management_operation_log | Auth, config, audit — naturally platform-level, not tenant-bound |
 | Community-dimension tables | management_community and 40+ business tables owned via community_id (building/unit/room/owner/fee_*/repair_order/parking_*/announcement, etc.) | Indirectly tenant-bound through community_id |
 | Group association tables | management_group (group), management_group_community (group↔community) | Currently **optional associations**, no tenant semantics; cross-community aggregation relies on joins |
-| Platform extension tables | management_notification_template, management_knowledge_base, management_mall_*, management_face_info, etc. | Some platform-level, some community-level; need case-by-case confirmation |
+| Platform extension tables | management_notification_template, management_knowledge_base, etc. | Some platform-level, some community-level; need case-by-case confirmation |
 | Confusing table | **management_tenant (lease tenant table)** | ⚠️ Semantic conflict: it is a "property lease tenant" (room_id/owner_id dimension), **not** a SaaS tenant |
 
 ### 1.2 Authorization Chain (admin side, verified in code)
@@ -38,7 +41,7 @@ Route-group middleware: AdminAuth(JWT → $request->adminId) → AdminPermission
 |------|------|--------|----------|------|
 | **A. Shared database + tenant_id row isolation (recommended)** | Tenant table + tenant_id column on business tables + Eloquent global scope filtering | Medium (2 tables get columns + middleware + global scope + backfill existing data) | Low (single-db backup/migration unchanged) | Small/medium properties, <5M rows per tenant |
 | B. Independent databases (one DB per tenant) | Connection routing + cross-db aggregation | High (connection management/cross-db reports/migrations×N/backups×N) | High | Large groups, compliance isolation requirements |
-| C. Hybrid (sensitive DBs independent + shared) | A+B combination | High | High | Strong-isolation scenarios like payments/face recognition |
+| C. Hybrid (sensitive DBs independent + shared) | A+B combination | High | High | Strong-isolation scenarios like payments |
 
 **Recommendation: A, with B as the evolution direction.** Reasons:
 
@@ -90,7 +93,7 @@ Data migration strategy: all existing data goes to the "default tenant" (created
 |------|--------|-------------|
 | Large rework across 58+17 controller query paths | All business endpoints | Global scopes cover ~80% of list/detail; raw queries and batch imports use Tenant::for(); gradual rollout per batch |
 | Global scopes accidentally affecting platform-level queries (dashboard cross-community aggregation) | Dashboard/reports | Platform-level endpoints explicitly use Tenant::without() or tenant_id=0 bypass |
-| Scheduled tasks/queues have no request context | Background tasks like reminders/SLA/notifications | Tenant::for() explicit wrapping + fail closed |
+| Scheduled tasks/queues have no request context | Background tasks like reminders/notifications | Tenant::for() explicit wrapping + fail closed |
 | Existing-data backfill errors | All existing data | Idempotent script + backfill validation + dry-run mode |
 | Index/performance impact | High-frequency tables (fee_bill/room/owner) | (tenant_id, community_id) composite index; re-check slow query log |
 | 133-test regression | Full suite | Run full regression after scope injection before enabling pilots |
@@ -107,7 +110,7 @@ Data migration strategy: all existing data goes to the "default tenant" (created
 
 **Recommended to defer**:
 - Independent-database isolation (B): start only when a single tenant exceeds 5M rows or compliance requires it; the data model is already prepared
-- Hybrid option (C): evaluate only if a customer explicitly requires strong isolation for payments/face recognition
+- Hybrid option (C): evaluate only if a customer explicitly requires strong isolation for payments
 
 **Not recommended**:
 - Schema-level isolation (MySQL has no independent schema semantics; cost equals independent databases)
