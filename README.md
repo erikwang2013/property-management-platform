@@ -2,9 +2,9 @@
 
 [English](README_EN.md) | 中文
 
-> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+> Copyright (c) 2026 erik erik@erik.xyz — https://erik.xyz
 
-<img src="docs/images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="120" align="right">
+![小筑 · 项目宠物](docs/images/pet_xiaozhu.svg)
 
 全栈物业管理系统，覆盖22个业务模块 + 7个扩展功能（消息通知/审批工作流/支付/投票/催缴/集团/智能问答）。管理员端（admin）和业主端（service）分离部署，前端为 Flutter Web（PC 管理后台风格）。
 
@@ -12,7 +12,7 @@
 
 ## 项目宠物 · 小筑
 
-<img src="docs/images/pet_xiaozhu.svg" alt="小筑" width="160">
+![小筑](docs/images/pet_xiaozhu.svg)
 
 | 项 | 说明 |
 |----|------|
@@ -23,18 +23,18 @@
 | 已接入 | 安装向导 3 步 + 已安装页 · 404 / 504 错误页（内联矢量）· 业主端与管理端 Flutter 登录页 · 两端 Flutter 的壳层图标与启动图（launcher / 应用图标 / splash）· Flutter 空态插图 · 两个 Web 入口的浏览器标签图标 · 两个后端的多尺寸 favicon.ico · 架构图横切栏 |
 
 
-<!-- pet-expressions:start -->
 ## 项目宠物表情形态 · 小筑
 
-<table align="center">
-<tr><td align="center"><img src="docs/pet-expressions/smile.svg" width="88" alt="笑"><br><b>笑</b><br><code>:emoji-smile:</code></td><td align="center"><img src="docs/pet-expressions/joy.svg" width="88" alt="欢乐"><br><b>欢乐</b><br><code>:emoji-joy:</code></td><td align="center"><img src="docs/pet-expressions/cry.svg" width="88" alt="哭"><br><b>哭</b><br><code>:emoji-cry:</code></td><td align="center"><img src="docs/pet-expressions/depressed.svg" width="88" alt="沮丧"><br><b>沮丧</b><br><code>:emoji-depressed:</code></td><td align="center"><img src="docs/pet-expressions/terrified.svg" width="88" alt="惊恐"><br><b>惊恐</b><br><code>:emoji-terrified:</code></td><td align="center"><img src="docs/pet-expressions/angry.svg" width="88" alt="愤怒"><br><b>愤怒</b><br><code>:emoji-angry:</code></td></tr>
-<tr><td align="center"><img src="docs/pet-expressions/coquettish.svg" width="88" alt="撒娇"><br><b>撒娇</b><br><code>:emoji-coquettish:</code></td><td align="center"><img src="docs/pet-expressions/cute.svg" width="88" alt="卖萌"><br><b>卖萌</b><br><code>:emoji-cute:</code></td><td align="center"><img src="docs/pet-expressions/pleasing.svg" width="88" alt="讨好"><br><b>讨好</b><br><code>:emoji-pleasing:</code></td><td align="center"><img src="docs/pet-expressions/knocking.svg" width="88" alt="敲打"><br><b>敲打</b><br><code>:emoji-knocking:</code></td><td align="center"><img src="docs/pet-expressions/facepalm.svg" width="88" alt="捂脸"><br><b>捂脸</b><br><code>:emoji-facepalm:</code></td><td align="center"><img src="docs/pet-expressions/tongue.svg" width="88" alt="吐舌头"><br><b>吐舌头</b><br><code>:emoji-tongue:</code></td></tr>
-</table>
+| 表情 | 图片 | 代码 | 表情 | 图片 | 代码 |
+|---|---|---|---|---|---|
+| 笑 | ![笑](docs/pet-expressions/smile.svg) | `:emoji-smile:` | 欢乐 | ![欢乐](docs/pet-expressions/joy.svg) | `:emoji-joy:` |
+| 哭 | ![哭](docs/pet-expressions/cry.svg) | `:emoji-cry:` | 沮丧 | ![沮丧](docs/pet-expressions/depressed.svg) | `:emoji-depressed:` |
+| 惊恐 | ![惊恐](docs/pet-expressions/terrified.svg) | `:emoji-terrified:` | 愤怒 | ![愤怒](docs/pet-expressions/angry.svg) | `:emoji-angry:` |
+| 撒娇 | ![撒娇](docs/pet-expressions/coquettish.svg) | `:emoji-coquettish:` | 卖萌 | ![卖萌](docs/pet-expressions/cute.svg) | `:emoji-cute:` |
+| 讨好 | ![讨好](docs/pet-expressions/pleasing.svg) | `:emoji-pleasing:` | 敲打 | ![敲打](docs/pet-expressions/knocking.svg) | `:emoji-knocking:` |
+| 捂脸 | ![捂脸](docs/pet-expressions/facepalm.svg) | `:emoji-facepalm:` | 吐舌头 | ![吐舌头](docs/pet-expressions/tongue.svg) | `:emoji-tongue:` |
 
 > 12 种彩色动态形态：笑 / 欢乐 / 哭 / 沮丧 / 惊恐 / 愤怒 / 撒娇 / 卖萌 / 讨好 / 敲打 / 捂脸 / 吐舌头。每个 SVG 自带表情、情绪特效与整体动效，并遵循 `prefers-reduced-motion`。
-<!-- pet-expressions:end -->
-
-<!-- assets-license:start -->
 ## 视觉资产授权 / Visual Assets License
 
 本项目的项目宠物、图片、图标、表情（包括 `docs/pet-expressions/` 等目录下的
@@ -43,9 +43,6 @@ SVG / PNG）**不是开源资产**，版权归作者所有。未经书面许可�
 [ASSETS-LICENSE.md](ASSETS-LICENSE.md)。
 
 > 代码部分仍遵循仓库原有 `LICENSE`；第三方素材（如明确标注的 Go Gopher 等）仍遵循其原许可证。
-<!-- assets-license:end -->
-
-
 ## 项目结构
 
 ```
@@ -94,7 +91,7 @@ property-management-platform/
     └── FEATURE_DESIGN.md
 ```
 
-<img src="docs/images/design_structure.svg" alt="项目结构图" width="1000">
+![项目结构图](docs/images/design_structure.svg)
 
 ## 项目规模
 
@@ -115,23 +112,23 @@ property-management-platform/
 
 ### 架构设计
 
-<img src="docs/images/design_architecture.svg" alt="架构设计图" width="1000">
+![架构设计图](docs/images/design_architecture.svg)
 
 ### 功能设计
 
-<img src="docs/images/design_function.svg" alt="功能设计图" width="1000">
+![功能设计图](docs/images/design_function.svg)
 
 ### 生命周期
 
-<img src="docs/images/design_lifecycle.svg" alt="生命周期图" width="1000">
+![生命周期图](docs/images/design_lifecycle.svg)
 
 ### 核心业务流程
 
-<img src="docs/images/readme_business_flow.svg" alt="核心业务流程" width="860">
+![核心业务流程](docs/images/readme_business_flow.svg)
 
 ### 19层安全纵深防御
 
-<img src="docs/images/readme_security.svg" alt="19层安全纵深防御" width="330">
+![19层安全纵深防御](docs/images/readme_security.svg)
 
 ## 功能模块（22大模块 + 7扩展）
 
@@ -191,7 +188,7 @@ property-management-platform/
 
 ## 代码规范
 
-- 所有新建文件头包含版权声明：`Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz`
+- 所有新建文件头包含版权声明：`Copyright (c) 2026 erik erik@erik.xyz — https://erik.xyz`
 - 全局函数/类引用使用 `use` 导入，不加前置 `\`
 - 配置文件包含中文注释说明每个配置项
 - 主键 ID 使用 BIGINT UNSIGNED NOT NULL，由 snowflake-php 应用层生成
@@ -397,7 +394,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 感谢您的支持！
 
-| <img src="admin/docs/weixinpay.svg" width="130" height="130" alt="微信支付"> | <img src="admin/docs/alipay.svg" width="130" height="130" alt="支付宝"> |
+| ![微信支付](admin/docs/weixinpay.svg) | ![支付宝](admin/docs/alipay.svg) |
 |:---:|:---:|
 | 微信支付 | 支付宝 |
 
@@ -432,7 +429,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 ## 项目授权 / Project License
 
-Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+Copyright (c) 2026 erik erik@erik.xyz — https://erik.xyz
 
 - 本项目仅供个人学习、研究使用。
 - 未经作者书面授权，禁止任何形式的商业使用（包括但不限于商业部署、付费服务、二次销售、SaaS 运营及以本项目为基础提供商业服务）。

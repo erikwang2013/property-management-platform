@@ -1,6 +1,6 @@
 # 开放管理后台 (open-admin)
 
-<img src="../docs/images/pet_xiaozhu.svg" alt="小筑 · 项目宠物" width="100" align="right">
+![小筑 · 项目宠物](../docs/images/pet_xiaozhu.svg)
 
 基于 webman v2 + Flutter 的全栈管理后台系统。
 
@@ -443,7 +443,7 @@ GitHub Actions 持续集成流水线：`.github/workflows/ci.yml`
 
 ## 项目授权 / Project License
 
-Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+Copyright (c) 2026 erik erik@erik.xyz — https://erik.xyz
 
 - 本项目仅供个人学习、研究使用。
 - 未经作者书面授权，禁止任何形式的商业使用（包括但不限于商业部署、付费服务、二次销售、SaaS 运营及以本项目为基础提供商业服务）。
