@@ -2,9 +2,9 @@
 
 [English](../en/README.md) | [中文](../../../README.md)
 
-> Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
+> Copyright (c) 2026 erik erik@erik.xyz — https://erik.xyz
 
-<img src="../../images/pet_xiaozhu.svg" alt="小筑 · project mascot" width="120" align="right">
+![小筑 · project mascot](../../images/pet_xiaozhu.svg)
 
 A full-stack property management system covering 22 business modules + 7 extension features (message notifications / approval workflow / payments / voting / payment reminders / group management / intelligent Q&A). The admin panel (admin) and owner portal (service) are deployed separately, with frontends built with Flutter Web (PC admin style) and Flutter mobile.
 
@@ -14,51 +14,51 @@ A full-stack property management system covering 22 business modules + 7 extensi
 
 ```
 property-management-platform/
-├── admin/                         # Admin webman v2 project
-│   ├── app/
-│   │   ├── admin/controller/      # Admin controllers
-│   │   ├── api/v1/controller/     # Public API controllers
-│   │   ├── common/                # Shared utility classes
-│   │   ├── middleware/            # Middleware (auth / authorization / rate limiting / security)
-│   │   ├── model/                 # Data models (Eloquent ORM)
-│   │   ├── queue/                 # Queue tasks
-│   │   └── process/               # Process management
-│   ├── apps/
-│   │   ├── flutter/               # Admin Flutter Web (PC style)
-│   ├── config/                    # Configuration files (with Chinese comments)
-│   ├── database/
-│   │   └── backup/                # Database backup scripts
-│   ├── resource/
-│   │   └── translations/          # i18n language files (zh_CN / en)
-│   ├── docs/                      # Admin documentation
-│   ├── tests/                     # Unit tests
-│   └── public/                    # Web entry
-├── service/                       # Owner business webman v2 project
-│   ├── app/
-│   │   ├── api/v1/controller/     # Owner API controllers
-│   │   ├── common/                # Shared utility classes
-│   │   ├── middleware/            # Middleware
-│   │   ├── model/                 # Data models
-│   │   └── process/               # Process management
-│   ├── config/                    # Configuration files
-│   ├── resource/
-│   │   └── translations/          # i18n language files
+├── admin/ # Admin webman v2 project
+│ ├── app/
+│ │ ├── admin/controller/ # Admin controllers
+│ │ ├── api/v1/controller/ # Public API controllers
+│ │ ├── common/ # Shared utility classes
+│ │ ├── middleware/ # Middleware (auth / authorization / rate limiting / security)
+│ │ ├── model/ # Data models (Eloquent ORM)
+│ │ ├── queue/ # Queue tasks
+│ │ └── process/ # Process management
+│ ├── apps/
+│ │ ├── flutter/ # Admin Flutter Web (PC style)
+│ ├── config/ # Configuration files (with Chinese comments)
+│ ├── database/
+│ │ └── backup/ # Database backup scripts
+│ ├── resource/
+│ │ └── translations/ # i18n language files (zh_CN / en)
+│ ├── docs/ # Admin documentation
+│ ├── tests/ # Unit tests
+│ └── public/ # Web entry
+├── service/ # Owner business webman v2 project
+│ ├── app/
+│ │ ├── api/v1/controller/ # Owner API controllers
+│ │ ├── common/ # Shared utility classes
+│ │ ├── middleware/ # Middleware
+│ │ ├── model/ # Data models
+│ │ └── process/ # Process management
+│ ├── config/ # Configuration files
+│ ├── resource/
+│ │ └── translations/ # i18n language files
 ├── apps/
-│   ├── flutter/                   # Owner Flutter Web (PC style)
-└── docs/                          # Project documentation
-    ├── ARCHITECTURE.md
-    ├── ARCHITECTURE_DESIGN.md
-    ├── ARCHITECTURE_DIAGRAM.md    # System architecture diagrams
-    ├── FLOWCHART.md               # Business flowcharts
-    ├── FUNCTION_DIAGRAM.md        # Function module diagrams
-    ├── LIFECYCLE_DIAGRAM.md       # Lifecycle diagrams
-    ├── SECURITY_ARCHITECTURE.md   # Security architecture diagrams
-    ├── API.md
-    ├── FEATURES.md
-    └── FEATURE_DESIGN.md
+│ ├── flutter/ # Owner Flutter Web (PC style)
+└── docs/ # Project documentation
+ ├── ARCHITECTURE.md
+ ├── ARCHITECTURE_DESIGN.md
+ ├── ARCHITECTURE_DIAGRAM.md # System architecture diagrams
+ ├── FLOWCHART.md # Business flowcharts
+ ├── FUNCTION_DIAGRAM.md # Function module diagrams
+ ├── LIFECYCLE_DIAGRAM.md # Lifecycle diagrams
+ ├── SECURITY_ARCHITECTURE.md # Security architecture diagrams
+ ├── API.md
+ ├── FEATURES.md
+ └── FEATURE_DESIGN.md
 ```
 
-<img src="../../images/design_structure_en.svg" alt="Project Structure" width="1000">
+![Project Structure](../../images/design_structure_en.svg)
 
 ## Project Scale
 
@@ -79,23 +79,23 @@ property-management-platform/
 
 ### System Overview Architecture
 
-<img src="../../images/design_architecture_en.svg" alt="System Overview Architecture" width="1000">
+![System Overview Architecture](../../images/design_architecture_en.svg)
 
 ### Function Module Overview
 
-<img src="../../images/design_function_en.svg" alt="Function Module Overview" width="1000">
+![Function Module Overview](../../images/design_function_en.svg)
 
 ### Data Entity Lifecycle
 
-<img src="../../images/design_lifecycle_en.svg" alt="Data Entity Lifecycle" width="1000">
+![Data Entity Lifecycle](../../images/design_lifecycle_en.svg)
 
 ### Core Business Flow
 
-<img src="docs/images/readme_business_flow.svg" alt="Core business flow" width="860">
+![Core business flow](docs/images/readme_business_flow.svg)
 
 ### 19-Layer Security Defense in Depth
 
-<img src="docs/images/readme_security.svg" alt="19-layer security defense in depth" width="330">
+![19-layer security defense in depth](docs/images/readme_security.svg)
 
 ## Function Modules (22 Major Modules + 7 Extensions)
 
@@ -311,7 +311,7 @@ Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pendin
 
 Thank you for your support!
 
-| <img src="../../../admin/docs/weixinpay.svg" width="130" height="130" alt="WeChat Pay"> | <img src="../../../admin/docs/alipay.svg" width="130" height="130" alt="Alipay"> |
+| ![WeChat Pay](../../../admin/docs/weixinpay.svg) | ![Alipay](../../../admin/docs/alipay.svg) |
 |:---:|:---:|
 | WeChat Pay | Alipay |
 
@@ -337,11 +337,11 @@ Bank transfers from around the world are supported; the receiving account is ZA 
 
 If this project helps you, scan the QR code to donate, thank you!
 
-| <img src="../../coin/1.jpg" width="200" alt="BNB Smart Chain (BEP20)"><br>**BNB Smart Chain (BEP20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/2.jpg" width="200" alt="Tron (TRC20)"><br>**Tron (TRC20)**<br>`TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
-| <img src="../../coin/3.jpg" width="200" alt="Ethereum (ERC20)"><br>**Ethereum (ERC20)**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/4.jpg" width="200" alt="Aptos"><br>**Aptos**<br>`0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
-| <img src="../../coin/5.jpg" width="200" alt="Plasma"><br>**Plasma**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/6.jpg" width="200" alt="Polygon POS"><br>**Polygon POS**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
-| <img src="../../coin/7.jpg" width="200" alt="Solana"><br>**Solana**<br>`2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | <img src="../../coin/8.jpg" width="200" alt="The Open Network (TON)"><br>**The Open Network (TON)**<br>`UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
-| <img src="../../coin/9.jpg" width="200" alt="Arbitrum One"><br>**Arbitrum One**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` | <img src="../../coin/10.jpg" width="200" alt="AVAX C-Chain"><br>**AVAX C-Chain**<br>`0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| ![BNB Smart Chain (BEP20)](../../coin/1.jpg) **BNB Smart Chain (BEP20)** `0x355d429f97511897ccb4e271ec888205f9ab6629` | ![Tron (TRC20)](../../coin/2.jpg) **Tron (TRC20)** `TEdDHWLajt1XvqtPDWmQctdrJaC3pzZZzz` |
+| ![Ethereum (ERC20)](../../coin/3.jpg) **Ethereum (ERC20)** `0x355d429f97511897ccb4e271ec888205f9ab6629` | ![Aptos](../../coin/4.jpg) **Aptos** `0x836e3780edfc3f7b2372b39e2a1a3a5d7adfaccd96c726f21cfde1b50dd68030` |
+| ![Plasma](../../coin/5.jpg) **Plasma** `0x355d429f97511897ccb4e271ec888205f9ab6629` | ![Polygon POS](../../coin/6.jpg) **Polygon POS** `0x355d429f97511897ccb4e271ec888205f9ab6629` |
+| ![Solana](../../coin/7.jpg) **Solana** `2hfhboHdmdrYsY25XfQSsEWxq5ip4EQsR7f4AzSRMUyr` | ![The Open Network (TON)](../../coin/8.jpg) **The Open Network (TON)** `UQB9kFQohzmXUir9QSSZq01iwl9aQZIDdBpNmDklljRtCoGK` |
+| ![Arbitrum One](../../coin/9.jpg) **Arbitrum One** `0x355d429f97511897ccb4e271ec888205f9ab6629` | ![AVAX C-Chain](../../coin/10.jpg) **AVAX C-Chain** `0x355d429f97511897ccb4e271ec888205f9ab6629` |
 
 Your support is welcome!
 
