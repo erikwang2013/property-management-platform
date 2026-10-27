@@ -91,9 +91,6 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     if (($optional['alipay_app_id'] ?? '') !== '' || ($optional['alipay_private'] ?? '') !== '') {
         $optionalFilled[] = '支付宝凭证';
     }
-    if (($optional['es_host'] ?? '') !== '' || ($optional['es_username'] ?? '') !== '' || ($optional['es_password'] ?? '') !== '') {
-        $optionalFilled[] = 'Elasticsearch 配置';
-    }
     if ($optionalFilled): ?>
     <br><br>
     <strong>可选配置（将写入 .env）</strong><br>
@@ -122,9 +119,6 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     <input type="hidden" name="wechat_api_v3" value="<?= htmlspecialchars($optional['wechat_api_v3'] ?? '') ?>">
     <input type="hidden" name="alipay_app_id" value="<?= htmlspecialchars($optional['alipay_app_id'] ?? '') ?>">
     <input type="hidden" name="alipay_private" value="<?= htmlspecialchars($optional['alipay_private'] ?? '') ?>">
-    <input type="hidden" name="es_host" value="<?= htmlspecialchars($optional['es_host'] ?? '') ?>">
-    <input type="hidden" name="es_username" value="<?= htmlspecialchars($optional['es_username'] ?? '') ?>">
-    <input type="hidden" name="es_password" value="<?= htmlspecialchars($optional['es_password'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">确认安装</button>
   </form>
 

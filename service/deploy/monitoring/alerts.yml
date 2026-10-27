@@ -35,25 +35,6 @@ groups:
           summary: "Redis 连接失败"
           description: "应用连续 2 分钟探测 Redis 失败 (PING 异常)"
 
-      - alert: ElasticsearchDown
-        expr: up{job="elasticsearch"} == 0
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Elasticsearch 连接失败"
-          description: "连续 5 分钟无法抓取 ES 原生 /_prometheus/metrics"
-
-      # 0=green 1=yellow 2=red（label: color）
-      - alert: ElasticsearchHealthYellow
-        expr: elasticsearch_cluster_health_status > 0
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Elasticsearch 集群非绿色"
-          description: "集群 10 分钟未恢复绿色，分片可能未分配"
-
       # 5xx 比例过高（MetricsCollector 中间件按 code=all/5xx 累计，见 /metrics）
       - alert: Http5xxRatio
         expr: sum(rate(property_service_http_requests_total{code="5xx"}[5m])) / sum(rate(property_service_http_requests_total{code="all"}[5m])) > 0.05
@@ -65,5 +46,5 @@ groups:
           description: "过去 5 分钟 5xx 请求占比持续超过 5%，接口可能批量报错"
 
 # 说明: 未配置队列堆积告警 — 业务端未启用 redis-queue 消费者（无 plugin/webman/redis-queue
-# 与 app/queue 目录，scout 同步为同步直写模式），无队列指标可监控。若后续引入队列，
+# 与 app/queue 目录），无队列指标可监控。若后续引入队列，
 # 参考 admin 端规则增加: sum(redis_key_size{key=~"queues:.*"}) > 100。

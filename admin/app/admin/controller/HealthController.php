@@ -35,7 +35,6 @@ class HealthController
                 'version'       => '1.0',
                 'database'      => $this->checkDb(),
                 'redis'         => $this->checkRedis(),
-                'elasticsearch' => $this->checkES() === 'ok' ? 'ok' : 'unavailable',
                 'timestamp'     => time(),
             ],
         ]);
@@ -61,16 +60,4 @@ class HealthController
         }
     }
 
-    private function checkES(): string
-    {
-        try {
-            $hosts = config('plugin.erikwang2013.webman-scout.scout.hosts', ['http://localhost:9200']);
-            $client = new \GuzzleHttp\Client(['timeout' => 2]);
-            $resp = $client->get(rtrim($hosts[0], '/') . '/_cluster/health');
-            $body = json_decode((string) $resp->getBody(), true);
-            return $body['status'] ?? 'unknown';
-        } catch (Throwable) {
-            return 'unavailable';
-        }
-    }
 }

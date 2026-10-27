@@ -18,7 +18,7 @@ SQL_FILE="$ROOT/docs/install.sql"
 # 加密密钥：占位符视为未完成部署，硬校验（gen_env_keys.php 仅在新 .env 时替换）
 CRYPTO_KEYS=(ENCRYPTION_KEY ENCRYPTABLE_KEY JWT_SECRET_KEY HASHIDS_SALT HASHIDS_ALT_SALT)
 # compose 插值必需键：缺失或为空值时 docker compose config 直接报错
-COMPOSE_KEYS=(MYSQL_ROOT_PASSWORD REDIS_PASSWORD ELASTIC_PASSWORD GRAFANA_ADMIN_PASSWORD)
+COMPOSE_KEYS=(MYSQL_ROOT_PASSWORD REDIS_PASSWORD GRAFANA_ADMIN_PASSWORD)
 
 CURRENT_STEP="初始化"
 trap 'echo "部署失败于步骤: ${CURRENT_STEP}" >&2; exit 1' ERR
@@ -84,7 +84,7 @@ prepare_env() {
         exit 1
     fi
 
-    grep -qE '^[A-Z0-9_]+=change-me' "$dir/.env" && say WARN "$name: 存在 change-me 占位值（如 ELASTIC_PASSWORD），该键已随部署长期使用，未自动替换；如需更换请同步 ES 容器"
+    grep -qE '^[A-Z0-9_]+=change-me' "$dir/.env" && say WARN "$name: 存在 change-me 占位值（如 MYSQL_ROOT_PASSWORD），该键已随部署长期使用，未自动替换；如需更换请同步数据库"
     [ "$(env_value "$dir" DB_HOST)" != "mysql" ] && say WARN "$name: DB_HOST=$(env_value "$dir" DB_HOST)，docker 部署应为 mysql，连接失败请检查"
 }
 

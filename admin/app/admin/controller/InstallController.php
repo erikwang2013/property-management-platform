@@ -97,9 +97,6 @@ class InstallController
             'wechat_api_v3'       => trim($request->post('wechat_api_v3', '')),
             'alipay_app_id'       => trim($request->post('alipay_app_id', '')),
             'alipay_private'      => trim($request->post('alipay_private', '')),
-            'es_host'             => trim($request->post('es_host', '')),
-            'es_username'         => trim($request->post('es_username', '')),
-            'es_password'         => trim($request->post('es_password', '')),
         ];
 
         $errors = InstallValidator::validateAdminConfig($admin, $confirm);
@@ -252,9 +249,6 @@ class InstallController
             'wechat_api_v3'       => 'WECHAT_PAY_API_V3_KEY',
             'alipay_app_id'       => 'ALIPAY_APP_ID',
             'alipay_private'      => 'ALIPAY_PRIVATE_KEY',
-            'es_host'             => 'OPENSEARCH_HTTP_HOST',
-            'es_username'         => 'OPENSEARCH_USERNAME',
-            'es_password'         => 'OPENSEARCH_PASSWORD',
         ];
         foreach ($optionalMap as $field => $key) {
             $value = $optional[$field] ?? '';

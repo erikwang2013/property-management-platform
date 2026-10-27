@@ -630,7 +630,6 @@ Policy: https://erik.xyz/security-policy
 |------|:-----:|:-------:|------|
 | Docker 非 root 用户 | ✅ | ✅ | `adduser -S app` + `USER app` |
 | Redis 密码认证 | ✅ | ✅ | `requirepass` + `config/redis.php` |
-| ES xpack.security | ✅ | ✅ | 密码认证 + SCOUT_HOSTS 凭据 |
 | MySQL 专用用户 | ✅ | ✅ | 非 root 应用账户 |
 | Dependabot | ✅ | ✅ | 周一双周自动更新 composer + GA |
 | Nginx 安全配置 | ✅ | ✅ | 限流/安全头/敏感文件保护 |

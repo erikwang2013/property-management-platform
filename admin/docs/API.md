@@ -65,13 +65,12 @@ GET /health
     "php": "8.3.0",
     "database": "ok",
     "redis": "ok",
-    "elasticsearch": "ok",
     "timestamp": 1716249600
   }
 }
 ```
 
-`database`、`redis`、`elasticsearch` 取值: `"ok"` | `"unavailable"`。`elasticsearch` 在 ES 不可达时返回 `"unavailable"`，集群健康状态为非 green/yellow 则返回实际的 status 值（如 `"red"`）。
+`database`、`redis` 取值: `"ok"` | `"unavailable"`。
 
 ### 3.2 API 文档
 
@@ -1651,7 +1650,7 @@ POST /admin/upload
 
 ### Docker Compose
 
-项目根目录提供 `docker-compose.yml`，编排 5 个服务（Nginx、webman app、MySQL、Redis、Elasticsearch）。PHP 通过 `Dockerfile` 构建（基于 `php:8.3-cli`，启用 OPcache）。
+项目根目录提供 `docker-compose.yml`，编排 5 个服务（Nginx、webman app、MySQL、Redis、Prometheus/Grafana）。PHP 通过 `Dockerfile` 构建（基于 `php:8.3-cli`，启用 OPcache）。
 
 ```bash
 cp .env.docker .env

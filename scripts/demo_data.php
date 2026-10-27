@@ -153,7 +153,7 @@ foreach ($rooms as $i => $room) {
 $mark('fee_bill', FeeBill::first());
 
 // 演示后台账号（仅在无管理员时创建；密码与登录口同一规则，8-32 位 + 大小写 + 数字 + 特殊字符）
-// 注意: AdminUser 挂载了 scout 观察者，CLI 无 ES 客户端会崩，故用原生 insert
+// 注意: 用原生 insert，确保脚本不依赖模型事件
 if (AdminUser::query()->count() === 0) {
     \support\Db::table('management_admin_user')->insert([
         'id' => SnowflakeService::generate(), 'username' => 'admin',

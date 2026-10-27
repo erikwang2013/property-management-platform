@@ -93,11 +93,6 @@
 - PDF：Dompdf A4 横向，页头版权 + 页脚不可移除版权水印
 - 面板可视化数据导出 PDF
 
-### 搜索引擎
-- `erikwang2013/webman-scout` 驱动 Elasticsearch
-- 自动索引同步（增删改自动推送）
-- 索引前缀 `management_`，与数据库表前缀一致
-
 ### 国际化 (i18n)
 - **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，42个翻译键，控制器通过 `__()` 方法获取翻译
 - **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，101个翻译键，页面通过 `.tr` 扩展使用

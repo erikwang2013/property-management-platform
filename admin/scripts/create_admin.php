@@ -58,7 +58,7 @@ if ($exists > 0) {
 $id = SnowflakeService::generate();
 $now = date('Y-m-d H:i:s');
 
-// AdminUser 模型挂载了 scout 观察者，CLI 无 ES 客户端会崩，故用原生 insert（同 demo_data.php）
+// 用原生 insert，确保脚本不依赖模型事件（同 demo_data.php）
 support\Db::table('management_admin_user')->insert([
     'id'         => $id,
     'username'   => $username,

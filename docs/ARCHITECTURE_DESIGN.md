@@ -46,10 +46,10 @@
 │   HashidsService | SnowflakeService | EncryptionService       │
 ├─────────────────────────────────────────────────────────────┤
 │                        模型层 (Model Layer)                    │
-│   Eloquent ORM + encryptable 自动加解密 + scout ES 同步        │
+│   Eloquent ORM + encryptable 自动加解密                        │
 ├─────────────────────────────────────────────────────────────┤
 │                        驱动层 (Driver Layer)                   │
-│   MySQL PDO | Elasticsearch HTTP | Redis                      │
+│   MySQL PDO | Redis                                           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -198,12 +198,12 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
        │                  │
        └────────┬─────────┘
                 │
-┌───────────────┼───────────────────┐
-│               │                   │
-┌▼──────┐  ┌────▼───┐  ┌──────────▼┐
-│MySQL  │  │ Redis  │  │Elasticsearch│
-│:3306  │  │ :6379  │  │ :9200      │
-└───────┘  └────────┘  └────────────┘
+┌───────────────┼───────────────┐
+│               │
+┌▼──────┐  ┌────▼───┐
+│MySQL  │  │ Redis  │
+│:3306  │  │ :6379  │
+└───────┘  └────────┘
 ```
 
 ### Docker Compose 服务
@@ -215,7 +215,6 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | service | Dockerfile构建 | PHP 8.3 + OPcache |
 | mysql | mysql:8.0 | 数据卷持久化 |
 | redis | redis:7-alpine | 缓存/限流/Session |
-| elasticsearch | elasticsearch:8.x | 全文检索 |
 
 ## 11. 国际化设计 (i18n)
 

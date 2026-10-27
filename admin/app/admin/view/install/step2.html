@@ -82,7 +82,7 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
       <input type="password" id="admin_password_confirm" name="admin_password_confirm" required minlength="8" maxlength="32" placeholder="再次输入密码">
     </div>
     <details style="margin-bottom:18px; border:1px solid #e2e8f0; border-radius:8px; padding:14px 18px;">
-      <summary style="font-size:13px; font-weight:600; color:#555; cursor:pointer;">可选：支付与 Elasticsearch 配置（可跳过，稍后手动配置）</summary>
+      <summary style="font-size:13px; font-weight:600; color:#555; cursor:pointer;">可选：支付配置（可跳过，稍后手动配置）</summary>
       <div style="margin-top:14px;">
         <div class="form-group">
           <label for="payment_env">支付环境</label>
@@ -111,18 +111,6 @@ h1 { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
         <div class="form-group">
           <label for="alipay_private">支付宝应用私钥</label>
           <input type="text" id="alipay_private" name="alipay_private" value="<?= htmlspecialchars($optional['alipay_private'] ?? '') ?>" placeholder="RSA2 私钥 PEM 内容">
-        </div>
-        <div class="form-group">
-          <label for="es_host">ES 主机地址</label>
-          <input type="text" id="es_host" name="es_host" value="<?= htmlspecialchars($optional['es_host'] ?? '') ?>" placeholder="http://localhost:9200">
-        </div>
-        <div class="form-group">
-          <label for="es_username">ES 用户名</label>
-          <input type="text" id="es_username" name="es_username" value="<?= htmlspecialchars($optional['es_username'] ?? '') ?>" placeholder="elastic">
-        </div>
-        <div class="form-group">
-          <label for="es_password">ES 密码</label>
-          <input type="password" id="es_password" name="es_password" value="<?= htmlspecialchars($optional['es_password'] ?? '') ?>" placeholder="ES 认证密码">
         </div>
       </div>
     </details>

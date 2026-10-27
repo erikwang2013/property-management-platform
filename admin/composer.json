@@ -32,7 +32,6 @@
     "erikwang2013/jwt-webman": "^2.0",
     "erikwang2013/encryption": "^1.0",
     "erikwang2013/encryptable": "^2.0",
-    "erikwang2013/webman-scout": "^2.0",
     "erikwang2013/season": "^2.0",
     "phpoffice/phpspreadsheet": "^5.7",
     "barryvdh/laravel-dompdf": "^3.1",
@@ -79,7 +78,6 @@
   "config": {
     "allow-plugins": {
       "erikwang2013/encryptable": true,
-      "erikwang2013/webman-scout": true,
       "erikwang2013/encryption": true,
       "erikwang2013/security-php": true
     }

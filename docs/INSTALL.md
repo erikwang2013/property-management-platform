@@ -76,7 +76,6 @@ php start.php start -d
 | MySQL | 8.0+ | utf8mb4 字符集 |
 | Redis | 6.0+ | 缓存、限流、Session |
 | Composer | 2.x | PHP 依赖管理 |
-| Elasticsearch | 8.x | 全文检索（可选，禁用则使用数据库查询） |
 | Flutter SDK | 3.x | 仅前端开发需要 |
 
 ### PHP 扩展检查
@@ -197,7 +196,7 @@ php ../scripts/gen_env_keys.php --file=.env --replace-placeholders
 # 生产环境仍需复核 APP_URL / CORS_ALLOWED_ORIGIN 等非密钥配置
 
 docker compose up -d
-# 包含: Nginx + PHP + MySQL + Redis + Elasticsearch + Prometheus + Grafana + redis-exporter
+# 包含: Nginx + PHP + MySQL + Redis + Prometheus + Grafana + redis-exporter
 # 业务端: cd service 重复上述三步（端口已预设偏移，可与 admin 同主机共存）
 ```
 
@@ -207,7 +206,6 @@ docker compose up -d
 |------|------|
 | 自动生成 | 缺失键追加、占位符（`change-me*`）替换为随机值，由 `gen_env_keys.php` 完成 |
 | 旧密钥保留 | `.env` 中已有的真实密钥绝不改写；重复执行幂等 |
-| ES 密码联动 | 替换 `ELASTIC_PASSWORD` 时会同步改写 `SCOUT_HOSTS` / `OPENSEARCH_PASSWORD` 中的内嵌凭证 |
 | 加密密钥轮换 | `bash scripts/rotate_keys.sh`（旧 key 自动写入 `ENCRYPTION_PREVIOUS_KEYS`） |
 | MySQL 密码 | 容器库名/用户/密码默认派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`，无需配置 `MYSQL_*` |
 
@@ -222,7 +220,6 @@ docker compose up -d
 | 应用 | 8787 | 8788 | webman HTTP |
 | MySQL | 3306 | 3307 | 容器端口映射 |
 | Redis | 6379 | 6380 | 容器端口映射 |
-| Elasticsearch | 9200 | 9201 | 容器端口映射 |
 | Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 | 容器端口映射 |
 | Nginx | 80/443 | 80/443 | 需错开部署（service 建议 8080/8443） |
 

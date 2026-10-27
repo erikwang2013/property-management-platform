@@ -110,7 +110,6 @@ class DocsController
                             'version'       => ['type' => 'string', 'example' => '1.0'],
                             'database'      => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
                             'redis'         => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
-                            'elasticsearch' => ['type' => 'string', 'enum' => ['ok', 'unavailable']],
                             'timestamp'     => ['type' => 'integer'],
                         ],
                     ],

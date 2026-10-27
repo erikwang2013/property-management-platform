@@ -3,7 +3,10 @@
   "uid": "property-admin-overview",
   "title": "物业系统-管理后台 监控总览",
   "description": "Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz",
-  "tags": ["property-admin", "monitoring"],
+  "tags": [
+    "property-admin",
+    "monitoring"
+  ],
   "timezone": "browser",
   "editable": true,
   "graphTooltip": 1,
@@ -412,72 +415,6 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "legendFormat": "{{instance}}"
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "type": "stat",
-      "title": "ES 集群健康",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 16
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 2
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "elasticsearch_cluster_health_status",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "legendFormat": "{{color}}"
         }
       ]
     }

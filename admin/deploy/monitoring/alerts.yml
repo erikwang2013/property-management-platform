@@ -35,35 +35,6 @@ groups:
           summary: "Redis 连接失败"
           description: "应用连续 2 分钟探测 Redis 失败 (PING 异常)"
 
-      - alert: ElasticsearchDown
-        expr: up{job="elasticsearch"} == 0
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Elasticsearch 连接失败"
-          description: "连续 5 分钟无法抓取 ES 原生 /_prometheus/metrics"
-
-      # 0=green 1=yellow 2=red（label: color）
-      - alert: ElasticsearchHealthYellow
-        expr: elasticsearch_cluster_health_status > 0
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Elasticsearch 集群非绿色"
-          description: "集群 10 分钟未恢复绿色，分片可能未分配"
-
-      # scout 搜索队列堆积（webman/redis-queue 列表键 queues:scout_*）
-      - alert: QueueBacklog
-        expr: sum(redis_key_size{key=~"queues:scout_(make|remove|make_range)$"}) > 100
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "scout 队列堆积"
-          description: "待处理消息持续超过 100 条，消费者可能异常"
-
       # 5xx 比例过高（MetricsCollector 中间件按 code=all/5xx 累计，见 /metrics）
       - alert: Http5xxRatio
         expr: sum(rate(open_admin_http_requests_total{code="5xx"}[5m])) / sum(rate(open_admin_http_requests_total{code="all"}[5m])) > 0.05

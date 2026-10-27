@@ -34,7 +34,6 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 - JWT 认证: `erikwang2013/jwt-webman`
 - API 敏感数据加解密: `erikwang2013/encryption`
 - 数据库敏感字段加解密: `erikwang2013/encryptable`
-- ES 同步与查询: `erikwang2013/webman-scout`
 - 国家旗帜: `erikwang2013/season`
 
 ### 前端
@@ -177,7 +176,6 @@ open-admin/
 - **密码复杂度**：8-32 位，必须包含大小写字母、数字和特殊字符
 - **账号锁定**：连续 5 次登录失败，账号锁定 15 分钟
 - **并发会话限制**：同一用户最多 3 个有效 Token，超出时最旧 Token 加入黑名单
-- **ES 安全**：Elasticsearch 启用 xpack.security 密码认证
 - **MySQL 专用用户**：Docker 编排使用非 root 应用账户
 - **security.txt**：`/.well-known/security.txt` RFC 9116 端点
 - **Nginx 安全配置**：`docs/nginx-security.conf` 反向代理安全加固参考
@@ -230,7 +228,6 @@ Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 | `app` | webman PHP 8.3 应用，`Dockerfile` 构建（含 OPcache） |
 | `mysql` | MySQL 8.0，数据卷持久化；首启自动导入 `docs/install.sql` |
 | `redis` | Redis 7 Alpine，缓存/限流/Session |
-| `elasticsearch` | Elasticsearch 8.x，全文检索 |
 | `prometheus` / `grafana` / `redis-exporter` | 监控（`deploy/monitoring/`） |
 
 ```bash

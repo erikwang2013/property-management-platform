@@ -18,8 +18,6 @@
  *   值为空           → 不动（可能是有意留空，如 Redis 无密码），仅告警
  *   其他（真实密钥） → 保留，绝不覆盖
  *
- * 依赖同步: ELASTIC_PASSWORD 被 SCOUT_HOSTS / OPENSEARCH_PASSWORD 内嵌引用，
- *   该密钥被替换时会同步改写这两处（仅当其中仍引用旧值/旧占位符）。
  *
  * 生成规则:
  *   ENCRYPTION_KEY         32 位 hex — API 传输加密（AES-256-CBC 需 32 字节 key）
@@ -29,7 +27,6 @@
  *   HASHIDS_ALT_SALT       32 位 hex — ID 加解密备用
  *   DB_PASSWORD            32 位 hex — 数据库应用用户密码（compose 的 MYSQL_PASSWORD 默认派生自此）
  *   REDIS_PASSWORD         32 位 hex — Redis 密码（compose 内 redis-server --requirepass）
- *   ELASTIC_PASSWORD       32 位 hex — Elasticsearch elastic 用户密码
  *   MYSQL_ROOT_PASSWORD    32 位 hex — MySQL root 密码（compose 必填插值）
  *   GRAFANA_ADMIN_PASSWORD 24 位 hex — Grafana 管理员密码（compose 必填插值）
  */
@@ -42,13 +39,9 @@ $spec = [
     'HASHIDS_ALT_SALT'       => 16,
     'DB_PASSWORD'            => 16,
     'REDIS_PASSWORD'         => 16,
-    'ELASTIC_PASSWORD'       => 16,
     'MYSQL_ROOT_PASSWORD'    => 16,
     'GRAFANA_ADMIN_PASSWORD' => 12,
 ];
-
-/** ELASTIC_PASSWORD 的依赖键（值为内嵌了 ES 密码的整行内容） */
-$esDependents = ['SCOUT_HOSTS', 'OPENSEARCH_PASSWORD'];
 
 $file = null;
 $replacePlaceholders = false;
@@ -106,9 +99,6 @@ $changed = 0;
 $kept = 0;
 $warned = [];
 
-// 记录 ES 密码变化前后的值，供依赖同步使用
-$esOld = $valueOf('ELASTIC_PASSWORD');
-$esNew = null;
 
 // ── 主密钥处理 ──
 foreach ($spec as $name => $bytes) {
@@ -141,32 +131,6 @@ foreach ($spec as $name => $bytes) {
         echo "生成 $name=" . $mask($new) . "（替换占位符）\n";
     }
     $changed++;
-    if ($name === 'ELASTIC_PASSWORD') {
-        $esNew = $new;
-    }
-}
-
-// ── ELASTIC_PASSWORD 依赖同步 ──
-if ($esNew !== null) {
-    foreach ($esDependents as $dep) {
-        if (!isset($index[$dep])) {
-            continue;
-        }
-        foreach ($index[$dep] as $i) {
-            $line = $lines[$i];
-            if ($esOld !== null && $esOld !== '' && str_contains($line, $esOld)) {
-                $lines[$i] = "$dep=" . str_replace($esOld, $esNew, substr($line, strlen($dep) + 1));
-                echo "同步 $dep → 引用新 ELASTIC_PASSWORD\n";
-                $changed++;
-            } elseif (str_contains($line, 'change-me-es-password')) {
-                $lines[$i] = "$dep=" . str_replace('change-me-es-password', $esNew, substr($line, strlen($dep) + 1));
-                echo "同步 $dep → 替换 ES 占位符\n";
-                $changed++;
-            } else {
-                $warned[] = "$dep 未引用旧 ES 密码，未自动同步；确认其凭证是否仍有效";
-            }
-        }
-    }
 }
 
 // ── 落盘（临时文件 + rename，避免部分写入） ──

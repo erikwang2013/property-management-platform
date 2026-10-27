@@ -19,15 +19,6 @@ scrape_configs:
         labels:
           app: open-admin
 
-  # Elasticsearch 原生 Prometheus 端点 (xpack 已启用, 需 basic_auth;
-  # 密码经 compose secrets 注入 /run/secrets/es_password, 不写死在配置里)
-  - job_name: elasticsearch
-    metrics_path: /_prometheus/metrics
-    basic_auth:
-      username: elastic
-      password_file: /run/secrets/es_password
-    static_configs:
-      - targets: ["elasticsearch:9200"]
 
   # redis_exporter: 队列长度 redis_key_size + 连接状态 redis_up
   - job_name: redis-exporter

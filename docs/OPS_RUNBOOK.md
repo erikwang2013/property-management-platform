@@ -60,7 +60,6 @@ bash scripts/backup.sh
 | `HASHIDS_ALT_SALT` | — | ID 加解密备用 |
 | `DB_PASSWORD` | 32 位 hex | 数据库应用用户密码（compose 的 `MYSQL_PASSWORD` 默认派生自此） |
 | `REDIS_PASSWORD` | 32 位 hex | Redis 密码（compose 内 `redis-server --requirepass`） |
-| `ELASTIC_PASSWORD` | 32 位 hex | Elasticsearch `elastic` 用户密码（内嵌于 `SCOUT_HOSTS`/`OPENSEARCH_PASSWORD`，替换时自动同步） |
 | `MYSQL_ROOT_PASSWORD` | 32 位 hex | MySQL root 密码（compose 必填插值） |
 | `GRAFANA_ADMIN_PASSWORD` | 24 位 hex | Grafana 管理员密码（compose 必填插值） |
 
@@ -86,9 +85,7 @@ php scripts/gen_env_keys.php --file=.env --replace-placeholders
 | 值为空 | 不动（可能是有意留空），仅告警 |
 | 真实密钥 | 保留，绝不覆盖 |
 
-> compose 的 `${VAR:?}` 对「未设置」与「空值」都报错：`scripts/deploy.sh` 会硬校验 `MYSQL_ROOT_PASSWORD` / `REDIS_PASSWORD` / `ELASTIC_PASSWORD` / `GRAFANA_ADMIN_PASSWORD` 非空。
->
-> `ELASTIC_PASSWORD` 是例外：它一旦被某个部署沿用（哪怕仍是 `change-me`），替换会断开 ES 连接——脚本只在新 `.env` 中替换，已有 `.env` 中仅告警。
+> compose 的 `${VAR:?}` 对「未设置」与「空值」都报错：`scripts/deploy.sh` 会硬校验 `MYSQL_ROOT_PASSWORD` / `REDIS_PASSWORD` / `GRAFANA_ADMIN_PASSWORD` 非空。
 
 ### 2.2 密钥轮换（encryptable）
 
@@ -136,9 +133,6 @@ docker compose up -d prometheus grafana redis-exporter
 - **告警规则**：`deploy/monitoring/alerts.yml`，覆盖：
   - `AppDown`（应用不可达，等价全站 5xx）— critical
   - `MysqlDown` / `RedisDown`（应用侧探测失败）— critical
-  - `ElasticsearchDown`（ES 原生 `/_prometheus/metrics` 抓取失败）+ `ElasticsearchHealthYellow`（集群非绿色）— critical/warning
-  - `QueueBacklog`（scout 搜索队列 `queues:scout_*` 堆积 >100 条持续 10 分钟）— warning
-- **ES 密码注入**：prometheus 经 compose `secrets` 读取 `ELASTIC_PASSWORD`（需 Docker Compose ≥ 2.24），配置文件不写死密码；未设置时用 change-me 占位，ES 抓取 401 会触发 ElasticsearchDown。
 - **重载规则**：改完 alerts.yml 后 `curl -X POST localhost:9090/-/reload`（prometheus 需加 `--web.enable-lifecycle`，默认未加则重启容器）。
 - **本地验证**：`bash scripts/verify_monitoring.sh` — 校验 admin/service 两侧告警规则 YAML 语法、curl 两端 `/metrics`（admin:8787 / service:8788）指标输出、Prometheus（9090/9091）规则加载；应用/Prometheus 未运行时对应项提示 SKIP 并 exit 0。
 
