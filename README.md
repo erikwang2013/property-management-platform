@@ -407,14 +407,16 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 | 维度 | 开源版 | 商业版 |
 |---|---|---|
-| 定位 | 个人学习、研究、二次开发 | 商业部署与生产运营 |
-| 业务模块 | 22 核心 + 7 扩展 | 22 核心 + 12 扩展 |
-| 商业版独有 | — | 巡检移动端、SLA 自动升级、社区商城、人脸信息采集与审核、数据大屏 |
-| 后端规模 | 75 控制器 / 107 模型 / 169 路由 / 59 表 | 81 控制器 / 123 模型 / 191 路由 / 67 表 |
-| 管理端 | Flutter Web（93 个 Dart 文件） | Flutter Web（99）+ Angular（60 个 TS/HTML 文件）+ React（42 个 TS/TSX）+ HarmonyOS（12 个 ETS） |
-| 业主端 | Flutter（29 个 Dart 文件） | Flutter（33）+ HarmonyOS（14 个 ETS） |
-| 检索 | MySQL LIKE | Elasticsearch + webman-scout |
-| 部署编排 | 12 个 compose 服务 | 15 个 compose 服务（增加 ES 及监控组件） |
+| 功能覆盖 | 22 核心 + 7 扩展；75 控制器 / 107 模型 / 169 路由 / 59 表 | 22 核心 + 12 扩展；81 控制器 / 123 模型 / 191 路由 / 67 表；独有巡检、SLA、商城、人脸、大屏 |
+| 安全防护 | JWT + RBAC、SecurityFilter、RateLimit、OperationLog、PasswordRule、security-php、gitleaks/phpstan；19 层纵深防御 | 后端安全栈与开源版一致（相同 16 个中间件、PasswordRule 与安全插件）；增加 Angular/React/HarmonyOS 前端与 ES，攻击面更大但控制项相同 |
+| 性能与规模 | webman 常驻、Redis 缓存/队列；12 个 compose 服务；MySQL LIKE 检索 | 同栈 + Elasticsearch；15 个 compose 服务；Redis 使用点更多（30 vs 26 个文件），适合更大数据量 |
+| 数据与检索 | 59 张表；MySQL LIKE | 67 张表；Elasticsearch + webman-scout |
+| 测试与质量 | README 标注 471 用例（admin 271/675 断言 + service 200/847 断言）；8 个 Flutter 测试文件；CI 含 php-syntax/admin/service/flutter/phpstan/secrets/monitoring | 测试声明相同（471）；CI 额外 react-build/angular-build；两版当前检出工作区的后端测试源文件均已删除，无法本地复跑 |
+| 部署与运维 | Docker Compose 12 服务、安装向导、health/metrics、Prometheus、备份脚本 | 15 个 compose 服务（+ES/监控）；同样具备安装向导、健康检查、监控与备份，部署面更大 |
+| 多端与国际化 | Flutter 管理端 93 Dart + 业主端 29 Dart；翻译资源 zh_CN/en | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12；业主端 Flutter 33 + HarmonyOS 14；翻译资源仍 zh_CN/en |
+| 扩展性与二次开发 | 22+7 模块、RBAC、`/apidoc`、配置驱动 | 22+12 模块、更多权限种子（约 248 vs 221 条）、三套 Web 管理端可选，但维护面更大 |
+| 授权与商业支持 | 个人学习/研究；商业使用需书面授权 | 商业授权、交付与支持；联系 erik@erik.xyz |
+| 适用场景 | 个人学习、研究、二次开发、小规模自建 | 商业部署、生产运营、多端与大数据量场景 |
 
 商业版独有模块（经代码对比确认）：
 

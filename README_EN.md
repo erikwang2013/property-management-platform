@@ -385,14 +385,16 @@ The open-source edition includes 22 core business modules and 7 extension module
 
 | Dimension | Open Source | Commercial |
 |---|---|---|
-| Positioning | Personal study, research, secondary development | Commercial deployment and production operations |
-| Business modules | 22 core + 7 extensions | 22 core + 12 extensions |
-| Commercial-only | — | Mobile inspection, SLA auto-escalation, community mall, face capture and review, data dashboard |
-| Backend size | 75 controllers / 107 models / 169 routes / 59 tables | 81 controllers / 123 models / 191 routes / 67 tables |
-| Admin frontends | Flutter Web (93 Dart files) | Flutter Web (99) + Angular (60 TS/HTML files) + React (42 TS/TSX) + HarmonyOS (12 ETS) |
-| Owner frontends | Flutter (29 Dart files) | Flutter (33) + HarmonyOS (14 ETS) |
-| Search | MySQL LIKE | Elasticsearch + webman-scout |
-| Compose services | 12 | 15 (adds ES and monitoring components) |
+| Feature coverage | 22 core + 7 extensions; 75 controllers / 107 models / 169 routes / 59 tables | 22 core + 12 extensions; 81 controllers / 123 models / 191 routes / 67 tables; adds inspection, SLA, mall, face, dashboard |
+| Security | JWT + RBAC, SecurityFilter, RateLimit, OperationLog, PasswordRule, security-php, gitleaks/phpstan; 19-layer defense | Same backend security stack (identical 16 middleware, PasswordRule and security plugin); adds Angular/React/HarmonyOS frontends and ES, so a larger attack surface with the same controls |
+| Performance and scale | webman, Redis cache/queue; 12 compose services; MySQL LIKE search | Same stack + Elasticsearch; 15 compose services; more Redis usage (30 vs 26 files), suited to larger data volumes |
+| Data and search | 59 tables; MySQL LIKE | 67 tables; Elasticsearch + webman-scout |
+| Tests and quality | README claims 471 cases (admin 271/675 assertions + service 200/847); 8 Flutter test files; CI runs php-syntax/admin/service/flutter/phpstan/secrets/monitoring | Same test claim (471); CI additionally runs react-build/angular-build; backend test sources are deleted in both current working trees, so they cannot be re-run locally |
+| Deployment and operations | Docker Compose 12 services, installer, health/metrics, Prometheus, backup scripts | 15 compose services (+ES/monitoring); same installer, health checks, monitoring and backups, with a larger deployment surface |
+| Clients and i18n | Flutter admin 93 Dart + owner app 29 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
+| Extensibility | 22+7 modules, RBAC, `/apidoc`, config-driven | 22+12 modules, more permission seeds (about 248 vs 221), three optional web admin frontends, but a larger maintenance surface |
+| Licensing and support | Personal study/research; commercial use requires written authorization | Commercial licensing, delivery and support; contact erik@erik.xyz |
+| Use cases | Personal study, research, secondary development, small self-hosted deployments | Commercial deployment, production operations, multi-client and large-data scenarios |
 
 Commercial-only modules (confirmed by code comparison):
 
