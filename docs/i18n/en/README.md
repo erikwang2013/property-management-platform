@@ -71,7 +71,7 @@ property-management-platform/
 | API routes | 51 | admin 27 + service 24 |
 | Flutter admin panel | 26 pages | admin 26 page modules, 67 files / 5,520 lines |
 | Flutter owner portal | 5 pages | charges / parking, 18 files / 2,099 lines |
-| Tests | 471 | admin 271 (675 assertions) + service 200 (847 assertions) |
+| Tests | 11 | Flutter admin 1 + owner 10; backend test sources are not shipped with this tree |
 
 ## System Architecture & Design Diagrams
 
@@ -123,6 +123,7 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT authentication (HS256) |
 | `erikwang2013/encryption` | AES-256-CBC encryption of sensitive data in API transport |
 | `erikwang2013/encryptable` | Encryption/decryption of sensitive database fields |
+| `illuminate/database` | Eloquent ORM / query builder / pagination |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/security-php` | Security tool detection |
 | `erikwang2013/poster-php` | Random verification codes for sensitive operations |

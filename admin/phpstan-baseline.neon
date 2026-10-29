@@ -181,12 +181,6 @@ parameters:
 			path: app/admin/controller/DashboardController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Room\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/DashboardController.php
-
-		-
 			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 2
@@ -955,18 +949,6 @@ parameters:
 			path: app/admin/controller/ReportController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\Room\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 3
-			path: app/admin/controller/ReportController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Room\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/admin/controller/ReportController.php
-
-		-
 			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -1687,19 +1669,13 @@ parameters:
 			path: app/middleware/SecurityFilter.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$real_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/model/AdminUser.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$username\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/model/AdminUser.php
-
-		-
 			message: '#^Access to an undefined property app\\model\\Community\:\:\$tenant_id\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/model/Community.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\Room\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/admin/controller/ReportController.php

@@ -44,6 +44,7 @@
 | `erikwang2013/jwt-webman` | JWT 认证令牌签发与校验 |
 | `erikwang2013/encryption` | 接口传输层敏感数据加解密 |
 | `erikwang2013/encryptable` | 数据库存储层敏感字段自动加解密 |
+| `illuminate/database` | Eloquent ORM / 查询构造器 / 分页 |
 | `erikwang2013/season` | 国家旗帜数据 |
 | `erikwang2013/poster-php` | 点击验证码生成与校验 + 海报生成 |
 | `phpoffice/phpspreadsheet` | Excel 导出 |

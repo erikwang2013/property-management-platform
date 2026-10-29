@@ -1,5 +1,5 @@
 name: admin_app
-description: "A new Flutter project."
+description: "物业管理系统 · 管理端 Flutter Web 客户端（PC 管理后台风格）"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,21 +30,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   # 状态管理
   get: ^4.6.6
   # 网络请求
   dio: ^5.4.0
-  # 数据表格（PC风格，支持固定列）
-  data_table_2: ^2.5.0
   # 图表
   fl_chart: ^0.68.0
   # PDF导出
   pdf: ^3.10.0
   # 打印/预览
   printing: ^5.12.0
-  # Excel文件操作
-  excel: ^4.0.0
   # 文件保存
   file_saver: ^0.2.0
   # 本地存储

@@ -10,6 +10,7 @@
 /.cursor
 /service/vendor
 /admin/vendor
+/admin/apps/flutter/vendor/
 /service/composer.lock
 /admin/composer.lock
 /.github/*

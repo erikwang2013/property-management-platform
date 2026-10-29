@@ -83,7 +83,7 @@ property-management-platform/
 | API Routes | 51 | admin 27 + service 24 |
 | Flutter Admin | 26 pages | 26 page modules, 67 files/5,520 lines |
 | Flutter Owner | 5 pages | Bills/Parking, 18 files/2,099 lines |
-| Tests | 471 total | admin 271(675 assertions) + service 200(847 assertions), see [test reports](docs/tests/) |
+| Tests | 11 | Flutter admin 1 + owner 10; backend test sources are not shipped with this tree, historical snapshots in [test reports](docs/tests/) |
 
 ## System Architecture & Design Diagrams
 
@@ -136,6 +136,7 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT authentication (HS256) |
 | `erikwang2013/encryption` | API transport AES-256-CBC encryption |
 | `erikwang2013/encryptable` | Database field encryption |
+| `illuminate/database` | Eloquent ORM / query builder / pagination |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/security-php` | Security scanning |
 | `erikwang2013/poster-php` | Sensitive operation verification |
@@ -388,7 +389,7 @@ The open-source edition includes 15 core business modules and 1 extension module
 | Security | JWT + RBAC, SecurityFilter, RateLimit, OperationLog, PasswordRule, security-php, gitleaks/phpstan; 19-layer defense | Same backend security stack (identical 16 middleware, PasswordRule and security plugin); adds Angular/React/HarmonyOS frontends and ES, so a larger attack surface with the same controls |
 | Performance and scale | webman, Redis cache/queue; 12 compose services; MySQL LIKE search | Same stack + Elasticsearch; 15 compose services; more Redis usage (30 vs 26 files), suited to larger data volumes |
 | Data and search | 34 tables; MySQL LIKE | 67 tables; Elasticsearch + webman-scout |
-| Tests and quality | README claims 471 cases (admin 271/675 assertions + service 200/847); 8 Flutter test files; CI runs php-syntax/admin/service/flutter/phpstan/secrets/monitoring | Same test claim (471); CI additionally runs react-build/angular-build; backend test sources are deleted in both current working trees, so they cannot be re-run locally |
+| Tests and quality | Backend test sources are not shipped (CI skips when `tests/` is empty); 11 Flutter tests; CI runs php-syntax/flutter/phpstan/secrets/monitoring | Commercial edition has a different test claim; CI additionally runs react-build/angular-build; backend test sources are delivered separately |
 | Deployment and operations | Docker Compose 12 services, installer, health/metrics, Prometheus, backup scripts | 15 compose services (+ES/monitoring); same installer, health checks, monitoring and backups, with a larger deployment surface |
 | Clients and i18n | Flutter admin 67 Dart + owner app 18 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
 | Extensibility | 15+1 modules, RBAC, `/apidoc`, config-driven | 22+12 modules, more permission seeds (about 248 vs 134), three optional web admin frontends, but a larger maintenance surface |

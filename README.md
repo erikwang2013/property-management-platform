@@ -104,7 +104,7 @@ property-management-platform/
 | API 路由 | 51 | admin 27 + service 24 |
 | Flutter 管理后台 | 26页 | admin 26个页面模块，67文件/5,520行 |
 | Flutter 业主端 | 5页 | 费用/停车，18文件/2,099行 |
-| 测试 | 471个 | admin 271个(675断言) + service 200个(847断言)，详见 [测试报告](docs/tests/) |
+| 测试 | 11个 | Flutter 管理端 1 + 业主端 10；后端测试源未随仓库分发，历史快照见 [测试报告](docs/tests/) |
 
 ## 系统架构与设计图
 
@@ -156,6 +156,7 @@ property-management-platform/
 | `erikwang2013/jwt-webman` | JWT 认证（HS256） |
 | `erikwang2013/encryption` | API 传输敏感数据 AES-256-CBC 加密 |
 | `erikwang2013/encryptable` | 数据库敏感字段加解密 |
+| `illuminate/database` | Eloquent ORM / 查询构造器 / 分页 |
 | `erikwang2013/season` | 国家旗帜数据 |
 | `erikwang2013/security-php` | 安全工具检测 |
 | `erikwang2013/poster-php` | 敏感操作随机验证码 |
@@ -407,7 +408,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 | 安全防护 | JWT + RBAC、SecurityFilter、RateLimit、OperationLog、PasswordRule、security-php、gitleaks/phpstan；19 层纵深防御 | 后端安全栈与开源版一致（相同 16 个中间件、PasswordRule 与安全插件）；增加 Angular/React/HarmonyOS 前端与 ES，攻击面更大但控制项相同 |
 | 性能与规模 | webman 常驻、Redis 缓存/队列；12 个 compose 服务；MySQL LIKE 检索 | 同栈 + Elasticsearch；15 个 compose 服务；Redis 使用点更多（30 vs 26 个文件），适合更大数据量 |
 | 数据与检索 | 34 张表；MySQL LIKE | 67 张表；Elasticsearch + webman-scout |
-| 测试与质量 | README 标注 471 用例（admin 271/675 断言 + service 200/847 断言）；8 个 Flutter 测试文件；CI 含 php-syntax/admin/service/flutter/phpstan/secrets/monitoring | 测试声明相同（471）；CI 额外 react-build/angular-build；两版当前检出工作区的后端测试源文件均已删除，无法本地复跑 |
+| 测试与质量 | 后端测试源未随仓库分发（CI 在 `tests/` 为空时跳过）；Flutter 测试 11 例；CI 含 php-syntax/flutter/phpstan/secrets/monitoring | 商业版测试声明不同；CI 额外 react-build/angular-build；后端测试源需另行交付 |
 | 部署与运维 | Docker Compose 12 服务、安装向导、health/metrics、Prometheus、备份脚本 | 15 个 compose 服务（+ES/监控）；同样具备安装向导、健康检查、监控与备份，部署面更大 |
 | 多端与国际化 | Flutter 管理端 67 Dart + 业主端 18 Dart；翻译资源 zh_CN/en | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12；业主端 Flutter 33 + HarmonyOS 14；翻译资源仍 zh_CN/en |
 | 扩展性与二次开发 | 15+1 模块、RBAC、`/apidoc`、配置驱动 | 22+12 模块、更多权限种子（约 248 vs 134 条）、三套 Web 管理端可选，但维护面更大 |

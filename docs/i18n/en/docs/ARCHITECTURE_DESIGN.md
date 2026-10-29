@@ -296,9 +296,11 @@ REFACTOR: 清理代码，保持测试绿
 
 ### Running Tests
 
+> Backend test sources are not shipped with this tree; CI skips PHPUnit and the coverage gate when `tests/` is empty. Historical snapshots live in `docs/tests/`.
+
 ```bash
-cd admin && php vendor/bin/phpunit    # 管理端: 60 tests, 164 assertions
-cd service && php vendor/bin/phpunit  # 业务端: 18 tests, 45 assertions, 100% pass
+cd apps/flutter && flutter test
+cd admin/apps/flutter && flutter test
 ```
 
 ## 13. Frontend Architecture

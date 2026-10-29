@@ -52,6 +52,7 @@ This copyright notice is permanent, must not be modified, removed, or reversed. 
 | `erikwang2013/jwt-webman` | JWT token issuance and verification |
 | `erikwang2013/encryption` | Transport-layer sensitive data encryption |
 | `erikwang2013/encryptable` | Database-layer sensitive field auto encryption |
+| `illuminate/database` | Eloquent ORM / query builder / pagination |
 | `erikwang2013/season` | Country flag data |
 | `erikwang2013/poster-php` | Click captcha generation/verification + poster generation |
 | `phpoffice/phpspreadsheet` | Excel export |

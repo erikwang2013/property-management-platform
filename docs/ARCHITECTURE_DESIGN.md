@@ -299,9 +299,11 @@ REFACTOR: 清理代码，保持测试绿
 
 ### 运行测试
 
+> 后端测试源未随本仓库分发；`tests/` 为空时 CI 跳过 PHPUnit 与覆盖率门禁。历史快照见 `docs/tests/`。
+
 ```bash
-cd admin && php vendor/bin/phpunit    # 管理端: 60 tests, 164 assertions
-cd service && php vendor/bin/phpunit  # 业务端: 18 tests, 45 assertions, 100% pass
+cd apps/flutter && flutter test
+cd admin/apps/flutter && flutter test
 ```
 
 ## 13. 前端架构

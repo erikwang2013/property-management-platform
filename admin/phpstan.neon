@@ -14,6 +14,5 @@ parameters:
     - app/queue/
   # illuminate 系列包 psr-4 目标为 ""，PHPStan 自动发现会解析失败，需显式扫描
   scanDirectories:
-    - vendor/illuminate/database
     - vendor/illuminate/contracts
     - vendor/illuminate/support

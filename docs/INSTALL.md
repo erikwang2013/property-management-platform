@@ -270,21 +270,14 @@ curl -X POST http://localhost:8787/api/v1/auth/login \
 
 ### 4. 运行测试
 
+> 后端测试源未随本仓库分发；`tests/` 为空时 CI 自动跳过 PHPUnit 与覆盖率门禁。`docs/tests/` 为 2026-08-27 历史测试快照。
+
+Flutter 测试：
+
 ```bash
-# 管理端
-cd admin && php vendor/bin/phpunit
-
-# 业务端
-cd service && php vendor/bin/phpunit
+cd apps/flutter && flutter test
+cd admin/apps/flutter && flutter test
 ```
-
-| 项目 | 测试数 | 断言数 | 通过率 |
-|------|--------|--------|--------|
-| admin | 258 | 619 | 100% (2个DB门控跳过) |
-| service | 201 | 661 | 100% (1个应用缺陷门控跳过) |
-| **合计** | **459** | **1280** | — |
-
-单元测试 / API 自动化 / 端到端测试报告见 [docs/tests/](tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）。
 
 ---
 

@@ -253,12 +253,13 @@ curl -X POST http://localhost:8787/api/v1/auth/login \
 
 ### 4. Run Tests
 
-```bash
-# Admin
-cd admin && php vendor/bin/phpunit
+> Backend test sources are not shipped with this tree; CI skips PHPUnit and the coverage gate when `tests/` is empty. `docs/tests/` contains historical snapshots from 2026-08-27.
 
-# Business service
-cd service && php vendor/bin/phpunit
+Flutter tests:
+
+```bash
+cd apps/flutter && flutter test
+cd admin/apps/flutter && flutter test
 ```
 
 ---
