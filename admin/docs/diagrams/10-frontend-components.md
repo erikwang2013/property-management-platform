@@ -1,5 +1,8 @@
 # 前端组件架构
 
+> **历史文档（2026-10-30）**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除。当前功能与架构以 README.md / docs/ 目录为准。
+
+
 ## Flutter Web 组件树
 
 ```mermaid
@@ -24,31 +27,4 @@ flowchart TD
     style app fill:#1677FF,color:#fff
     style captcha fill:#FA8C16,color:#fff
     style sidebar fill:#722ED1,color:#fff
-```
-
-## HarmonyOS 页面路由
-
-```mermaid
-flowchart LR
-    entry["EntryAbility"]
-    entry -->|"无Token"| loginH["LoginPage"]
-    entry -->|"有Token"| dashH["DashboardPage"]
-
-    loginH -->|"登录成功replaceUrl"| dashH
-
-    dashH -->|"pushUrl"| userList["UserListPage"]
-    dashH -->|"pushUrl"| profile["ProfilePage"]
-
-    userList -->|"pushUrl"| userDetail["UserDetailPage"]
-    userList -->|"router.back"| dashH
-    userDetail -->|"router.back"| userList
-
-    profile -->|"退出确认replaceUrl"| loginH
-    profile -->|"router.back"| dashH
-
-    style loginH fill:#1677FF,color:#fff
-    style dashH fill:#52C41A,color:#fff
-    style userList fill:#FA8C16,color:#fff
-    style userDetail fill:#FA8C16,color:#fff
-    style profile fill:#722ED1,color:#fff
 ```

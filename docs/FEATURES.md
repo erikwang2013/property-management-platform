@@ -14,39 +14,26 @@
 | 6 | 业主管理 | 第1批 | CRUD + 批量导入/启禁用/删除 | 注册/登录/个人信息 | management_owner, management_room_owner |
 | 7 | 租户管理 | 第1批 | CRUD + 按房产筛选 | - | management_tenant |
 | 8 | 费用管理 | 第1批 | 费用类型CRUD + 账单管理 + 批量生成 + 线下收款 | 账单查询 + 在线缴费 + 费用统计 | management_fee_type, management_fee_bill, management_fee_payment |
-| 9 | 报修管理 | 第1批 | 报修列表 + 派单 + 进度更新 | 提交报修 + 查看进度 + 评价 | management_repair_order, management_repair_progress |
-| 10 | 公告通知 | 第1批 | CRUD + 发布/置顶 | 公告列表/详情 | management_announcement |
-| 11 | 停车管理 | 第2批 | 车位/车辆管理 + 停车记录 | 我的车位/车辆 + 停车记录 | management_parking_space, management_parking_vehicle, management_parking_record |
-| 12 | 设备管理 | 第2批 | 设备台账 + 维保记录 | - | management_equipment, management_equipment_maintenance |
-| 13 | 投诉建议 | 第2批 | 投诉列表 + 处理 + 回访 | 提交投诉 + 查看进度 + 评价 | management_complaint |
-| 14 | 访客管理 | 第2批 | 访客审批 + 记录查询 | 访客预约 + 通行码 | management_visitor |
-| 15 | 合同管理 | 第2批 | CRUD + 状态管理 | - | management_contract |
-| 16 | 财务管理 | 第2批 | 收支管理 + 统计报表 | - | management_finance_income, management_finance_expense |
-| 17 | 安保巡逻 | 第3批 | 巡逻路线 + 巡逻记录 | - | management_security_patrol, management_patrol_record |
-| 18 | 保洁管理 | 第3批 | 保洁区域 + 保洁记录 | - | management_cleaning_area, management_cleaning_record |
-| 19 | 绿化管理 | 第3批 | 绿化区域 + 养护记录 | - | management_green_area, management_green_maintenance |
-| 20 | 社区活动 | 第3批 | 活动管理 + 报名查看 | 活动列表 + 报名 | management_community_activity, management_activity_signup |
-| 21 | 能耗管理 | 第3批 | 仪表管理 + 抄表记录 | - | management_energy_meter, management_energy_record |
-| 22 | 员工管理 | 第3批 | CRUD + 状态管理 | - | management_staff |
+| 9 | 公告通知 | 第1批 | CRUD + 发布/置顶 | 公告列表/详情 | management_announcement |
+| 10 | 停车管理 | 第2批 | 车位/车辆管理 + 停车记录 | 我的车位/车辆 + 停车记录 | management_parking_space, management_parking_vehicle, management_parking_record |
+| 11 | 设备管理 | 第2批 | 设备台账 + 维保记录 | - | management_equipment, management_equipment_maintenance |
+| 12 | 安保巡逻 | 第3批 | 巡逻路线 + 巡逻记录 | - | management_security_patrol, management_patrol_record |
+| 13 | 保洁管理 | 第3批 | 保洁区域 + 保洁记录 | - | management_cleaning_area, management_cleaning_record |
+| 14 | 绿化管理 | 第3批 | 绿化区域 + 养护记录 | - | management_green_area, management_green_maintenance |
+| 15 | 员工管理 | 第3批 | CRUD + 状态管理 | - | management_staff |
 
-## 扩展功能（第4批 — 7模块）
+## 扩展功能（第4批 — 1模块）
 
 | 序号 | 模块 | 管理员端 | 业主端 | 数据表 |
 |------|------|---------|--------|--------|
-| 23 | 消息通知 | 模板CRUD + 手动发送 + 列表 | 我的消息 + 标记已读 | management_notification_template, management_notification |
-| 24 | 审批工作流 | 审批类型 + 实例 + 步骤流转 | - | management_approval_type, management_approval, management_approval_record |
-| 25 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
-| 26 | 业主投票 | 投票CRUD + 选项 + 面积加权统计 | 投票列表 + 投票 + 面积加权 | management_vote, management_vote_option, management_vote_record |
-| 27 | 智能催缴 | 策略配置 + 逾期匹配 + 滞纳金 | - | management_collection_strategy, management_collection_record |
-| 28 | 集团管理 | 集团CRUD + 小区关联 + 跨区汇总 | - | management_group, management_group_community |
-| 29 | 智能问答 | 知识库 + 对话记录 + 统计 | 提问 + 关键词匹配 | management_knowledge_base, management_chat_record |
+| 16 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
 
 ## 管理后台模块（admin 已有）
 
 | 模块 | 功能 |
 |------|------|
 | 仪表盘 | 实时统计/趋势/分布/日志（Redis 5m 缓存）|
-| 报表中心 | 日期范围筛选（近30天/近90天/本年）+ 收支趋势 / 收缴率 / 业务分布（缴费方式/报修/投诉/访客状态）/ 欠费排行 TOP10 + PDF 导出（Redis 5m 缓存）|
+| 报表中心 | 日期范围筛选（近30天/近90天/本年）+ 收缴率 / 缴费方式 / 欠费排行 TOP10 + PDF 导出（Redis 5m 缓存）|
 | 用户管理 | 管理员用户 CRUD + 批量删除/启禁用 + Excel 导入 |
 | 角色权限 | CRUD + 权限树 + RBAC method.path 鉴权 |
 | 系统配置 | 键值对 CRUD |
@@ -55,14 +42,14 @@
 | 安全管理 | 19 层纵深防御 + security.txt |
 | 运维监控 | 健康检查 + Prometheus 指标 + API 文档 |
 | 国际化 | 中文/英文双语，PHP symfony/translation + Flutter GetX Translations |
-| API 文档 | `hg/apidoc` 自动生成，admin 10分组 + service 9分组，按功能模块组织 |
+| API 文档 | `hg/apidoc` 自动生成，admin 10分组 + service 6分组，按功能模块组织 |
 
 ## 业主端模块（service 已有）
 
 | 模块 | 功能 |
 |------|------|
-| 起始页统计 | 我的房产 / 待缴费用 / 维修工单 / 待处理投诉 / 进行中活动 / 进行中投票 / 未读消息，Flutter Web 展示 |
-| 核心业务 | 房产绑定、账单查询与在线缴费、报修提交与进度、公告、投诉建议、访客通行、停车、活动报名、投票、智能问答 |
+| 起始页统计 | 我的房产 / 待缴费用 / 最新公告，Flutter Web 展示 |
+| 核心业务 | 房产绑定、账单查询与在线缴费、公告、停车 |
 
 ## 跨功能特性
 
@@ -90,8 +77,8 @@
 - 面板可视化数据导出 PDF
 
 ### 国际化 (i18n)
-- **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，42个翻译键，控制器通过 `__()` 方法获取翻译
-- **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，101个翻译键，页面通过 `.tr` 扩展使用
+- **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，39个翻译键，控制器通过 `__()` 方法获取翻译
+- **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，38个翻译键，页面通过 `.tr` 扩展使用
 - **默认语言**: 简体中文（zh_CN），降级语言英语（en）
 - **请求头**: 支持 `Accept-Language` 控制响应语言
 
@@ -101,6 +88,6 @@
 - **管理端**: 60个测试，164个断言，覆盖基础服务、环境配置、安全验证
 - **业务端**: 18个测试，45个断言，100%通过率
 - **合计**: 78个测试，209个断言
-- **覆盖范围**: Snowflake ID生成唯一性、Hashids编解码往返、统一响应格式、64张表Schema验证、中英文翻译键一致性
+- **覆盖范围**: Snowflake ID生成唯一性、Hashids编解码往返、统一响应格式、34张表Schema验证、中英文翻译键一致性
 - **Flutter**: flutter analyze 零问题
-- **API 文档**: `hg/apidoc` 自动生成，admin(10分组) + service(9分组)，按功能模块组织接口文档
+- **API 文档**: `hg/apidoc` 自动生成，admin(10分组) + service(6分组)，按功能模块组织接口文档

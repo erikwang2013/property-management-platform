@@ -10,22 +10,11 @@ import 'pages/login/login_page.dart';
 import 'pages/home/home_page.dart';
 import 'pages/fee/fee_bills_page.dart';
 import 'pages/fee/fee_bill_detail_page.dart';
-import 'pages/repair/repair_list_page.dart';
-import 'pages/repair/repair_submit_page.dart';
-import 'pages/repair/repair_detail_page.dart';
 import 'pages/profile/profile_page.dart';
 
 import 'pages/parking/parking_vehicles_page.dart';
 import 'pages/parking/parking_spaces_page.dart';
 import 'pages/parking/parking_records_page.dart';
-import 'pages/visitor/visitor_list_page.dart';
-import 'pages/visitor/visitor_create_page.dart';
-import 'pages/activity/activity_list_page.dart';
-import 'pages/activity/activity_detail_page.dart';
-import 'pages/notification/notification_list_page.dart';
-import 'pages/vote/vote_list_page.dart';
-import 'pages/vote/vote_detail_page.dart';
-import 'pages/chat/chat_page.dart';
 
 class PortalApp extends StatelessWidget {
   const PortalApp({super.key});
@@ -45,21 +34,10 @@ class PortalApp extends StatelessWidget {
         GetPage(name: '/home', page: () => const HomePage()),
         GetPage(name: '/fee-bills', page: () => const FeeBillsPage()),
         GetPage(name: '/fee-bill-detail', page: () => const FeeBillDetailPage()),
-        GetPage(name: '/repairs', page: () => const RepairListPage()),
-        GetPage(name: '/repair-submit', page: () => const RepairSubmitPage()),
-        GetPage(name: '/repair-detail', page: () => const RepairDetailPage()),
         GetPage(name: '/profile', page: () => const ProfilePage()),
         GetPage(name: '/parking-vehicles', page: () => const ParkingVehiclesPage()),
         GetPage(name: '/parking-spaces', page: () => const ParkingSpacesPage()),
         GetPage(name: '/parking-records', page: () => const ParkingRecordsPage()),
-        GetPage(name: '/visitors', page: () => const VisitorListPage()),
-        GetPage(name: '/visitor-create', page: () => const VisitorCreatePage()),
-        GetPage(name: '/activities', page: () => const ActivityListPage()),
-        GetPage(name: '/activity-detail', page: () => const ActivityDetailPage()),
-        GetPage(name: '/notifications', page: () => const NotificationListPage()),
-        GetPage(name: '/votes', page: () => const VoteListPage()),
-        GetPage(name: '/vote-detail', page: () => const VoteDetailPage()),
-        GetPage(name: '/chat', page: () => const ChatPage()),
       ],
     );
   }

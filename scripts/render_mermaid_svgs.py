@@ -20,10 +20,7 @@ DIAGRAM_MAP = {
     'docs/FLOWCHART.md': [
         ('flow_auth', '用户认证流程'),
         ('flow_fee', '费用管理'),
-        ('flow_repair', '报修处理流程'),
         ('flow_property', '房产管理流程'),
-        ('flow_complaint', '投诉建议处理流程'),
-        ('flow_visitor', '访客通行流程'),
     ],
     'docs/FUNCTION_DIAGRAM.md': [
         ('function_overview', '功能模块全景'),
@@ -35,7 +32,6 @@ DIAGRAM_MAP = {
         ('lifecycle_request', '请求生命周期'),
         ('lifecycle_owner', '数据实体生命周期 - 业主'),
         ('lifecycle_fee', '数据实体生命周期 - 费用账单'),
-        ('lifecycle_repair', '数据实体生命周期 - 报修工单'),
         ('lifecycle_token', 'JWT Token 生命周期'),
         ('lifecycle_crud', '数据库记录完整生命周期'),
     ],

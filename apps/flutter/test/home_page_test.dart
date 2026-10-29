@@ -11,7 +11,7 @@ void main() {
   setUp(() {
     resetMockRoutes();
     mockRoutes['/service/home'] = (_) => {
-          'data': {'room_count': 2, 'pending_amount': 123.45, 'repairing_count': 1},
+          'data': {'room_count': 2, 'pending_amount': 123.45},
         };
     mockRoutes['/service/announcements'] = (_) => {
           'code': 0,
@@ -39,7 +39,6 @@ void main() {
 
     expect(find.text('2 套'), findsOneWidget);
     expect(find.text('¥123.45'), findsOneWidget);
-    expect(find.text('1 件'), findsOneWidget);
     expect(find.text('1 条'), findsOneWidget);
     expect(find.text('停水通知'), findsOneWidget);
     expect(find.text('费用账单'), findsOneWidget);

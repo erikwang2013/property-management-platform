@@ -21,7 +21,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 | 系统配置 | 键值对 CRUD |
 | 操作审计 | 日志查询 + 8 平台来源端自动检测 |
 | 文件 | 上传 + Excel/PDF 导出（敏感数据脱敏）|
-| 安全 | 18 层纵深防御（XSS/SQL注入/CSRF/限流/CSP...）|
+| 安全 | 19 层纵深防御（XSS/SQL注入/CSRF/限流/CSP...）|
 | 运维 | 健康检查/Prometheus 指标/API 文档/security.txt + Docker + CI/CD |
 
 ## 技术栈
@@ -46,7 +46,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ```
 open-admin/
 ├── app/
-│   ├── admin/controller/       # 管理端控制器 (55 个，列表从略)
+│   ├── admin/controller/       # 管理端控制器 (40 个，列表从略)
 │   │   ├── BaseController.php      # 基础控制器
 │   │   ├── DashboardController.php # 仪表盘（Redis 缓存）
 │   │   ├── UserController.php      # 用户 CRUD + 批量操作
@@ -79,9 +79,9 @@ open-admin/
 │   ├── queue/                  # 队列任务
 │   └── process/                # 进程 (Http, Monitor)
 ├── apps/
-│   ├── flutter/                # Flutter Web 管理后台（42个页面模块，96文件）
+│   ├── flutter/                # Flutter Web 管理后台（26个页面模块，67文件）
 │   │   └── lib/app/
-│   │       ├── pages/          # 42个页面模块
+│   │       ├── pages/          # 26个页面模块
 │   │       │   ├── dashboard/  # 仪表盘
 │   │       │   ├── login/      # 登录
 │   │       │   ├── user/       # 用户管理
@@ -96,27 +96,14 @@ open-admin/
 │   │       │   ├── fee_type/   # 费用类型
 │   │       │   ├── fee_bill/   # 账单管理
 │   │       │   ├── fee_payment/# 缴费记录
-│   │       │   ├── repair/     # 报修管理
 │   │       │   ├── announcement/# 公告管理
 │   │       │   ├── parking/    # 停车管理(3)
 │   │       │   ├── equipment/  # 设备管理
-│   │       │   ├── complaint/  # 投诉管理
-│   │       │   ├── visitor/    # 访客管理
-│   │       │   ├── contract/   # 合同管理
-│   │       │   ├── finance/    # 财务管理(3)
 │   │       │   ├── security/   # 安防巡逻(2)
 │   │       │   ├── cleaning/   # 保洁管理(2)
 │   │       │   ├── green/      # 绿化管理(2)
-│   │       │   ├── activity/   # 社区活动(2)
-│   │       │   ├── energy/     # 能耗管理(2)
 │   │       │   ├── staff/      # 员工管理
-│   │       │   ├── notification/# 通知管理
-│   │       │   ├── approval/   # 审批管理
 │   │       │   ├── payment/    # 支付管理
-│   │       │   ├── vote/       # 投票管理
-│   │       │   ├── collection/ # 催缴管理(2)
-│   │       │   ├── group/      # 集团管理
-│   │       │   ├── knowledge/  # 智能问答(3)
 │   │       │   ├── config/     # 系统配置
 │   │       │   ├── log/        # 操作日志
 │   │       │   └── profile/    # 个人中心
@@ -126,7 +113,7 @@ open-admin/
 ├── config/                     # 配置文件
 │   ├── route.php               # 路由 + API 版本策略
 │   └── middleware.php           # 全局中间件注册
-├── docs/install.sql            # 全量建库 SQL（67 表 + 权限种子，唯一建库入口）
+├── docs/install.sql            # 全量建库 SQL（34 表 + 权限种子，唯一建库入口）
 ├── docs/                       # 文档
 │   ├── ARCHITECTURE.md         # Mermaid 架构图
 │   ├── DESIGN.md               # 设计文档

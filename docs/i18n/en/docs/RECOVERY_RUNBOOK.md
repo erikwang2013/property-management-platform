@@ -79,7 +79,7 @@ Key points:
 |---|---|---|
 | Backup file integrity | `gzip -t <backup>` | No errors |
 | Key table row counts | `SELECT COUNT(*) FROM management_admin_user;` | Matches row counts recorded before the backup |
-| Business table spot checks | `SELECT COUNT(*) FROM management_owner;`, `management_tenant`, `management_fee_bill`, `management_repair_order` | Three or more with reasonable magnitudes (non-zero and matching pre-backup values) |
+| Business table spot checks | `SELECT COUNT(*) FROM management_owner;`, `management_tenant`, `management_fee_bill`, `management_parking_record` | Three or more with reasonable magnitudes (non-zero and matching pre-backup values) |
 | Encrypted fields decryptable | Query a record with encryptable fields (e.g. `management_owner` ID card/phone) | Values correct, no decrypt errors in app logs |
 | Business smoke test | Login and list endpoint once each | 200 / normal responses |
 
@@ -92,7 +92,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
            (SELECT COUNT(*) FROM management_owner) AS owners,
            (SELECT COUNT(*) FROM management_tenant) AS tenants,
            (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
+           (SELECT COUNT(*) FROM management_parking_record) AS parking_records;"'
 ```
 
 > Row-count consistency: record a baseline with the same SQL before the backup and compare after the restore; write the baseline into the drill record during drills.

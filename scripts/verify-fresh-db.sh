@@ -46,7 +46,7 @@ mysql_q() { docker exec -i pmp-mysql mysql -h127.0.0.1 -u"$DB_USERNAME" -p"$DB_P
 fresh_invariants() { # $1=标签
     local tag=$1 T M P G slug U
     T=$(mysql_q "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$VERIFY_DB'")
-    [ "$T" = "60" ] && ok "$tag：表数 60" || bad "$tag：表数 $T（期望 60）"
+    [ "$T" = "34" ] && ok "$tag：表数 34" || bad "$tag：表数 $T（期望 34）"
     # 唯一索引：无 uk_slug 时 INSERT IGNORE 挡不住「同 slug 不同 id」的重复权限行（2026-10-04 撞过）
     U=$(mysql_q "SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema='$VERIFY_DB' AND table_name='management_admin_permission' AND index_name='uk_slug' AND non_unique=0")
     [ "$U" = "1" ] && ok "$tag：permission.slug 唯一索引 uk_slug 存在" || bad "$tag：permission.slug 缺唯一索引（uk_slug=$U）"
@@ -267,54 +267,45 @@ if [ -z "$TOKEN" ]; then bad "向导建号后真登录失败（$(cat "$LOG/login
         || bad "POST /admin/export/property-excel → $C（$(head -c 200 "$LOG/resp-property-excel.xlsx")）"
 fi
 
-# 派单链路（hashid）：建房 → 建单 → assign → 无效 hashid 应 422
+# 房产分页与 hashid：建房 → 列表分页 → 无效 hashid 应 422
 cat > "$LOG/fixture.php" <<'PHP'
 <?php
-// 用法: php fixture.php → 打印 JSON: {room_id, staff_id, bill_id}
-// 注意字段名按 install.sql DDL：unit 无 community_id；staff 无 type，是 department(3=工程)
+// 用法: php fixture.php → 打印 JSON: {room_id, bill_id}
+// 注意字段名按 install.sql DDL：unit 无 community_id
 // bill_id 不落库，只用于超管可达探针（合法 hashid、非零，走到业务校验即 422）
-require '/home/wwwroot/property-management-platform/admin/tests/bootstrap.php';
+require '/home/wwwroot/project/property-management-platform/admin/tests/bootstrap.php';
 use app\common\SnowflakeService as SF;
 use app\common\HashidsService;
-use app\model\Community, app\model\Building, app\model\Unit, app\model\Room, app\model\Staff;
+use app\model\Community, app\model\Building, app\model\Unit, app\model\Room;
 $cid = SF::generate(); Community::create(['id'=>$cid,'name'=>'复验小区','status'=>1]);
 $bid = SF::generate(); Building::create(['id'=>$bid,'community_id'=>$cid,'name'=>'1号楼']);
 $uid = SF::generate(); Unit::create(['id'=>$uid,'building_id'=>$bid,'name'=>'1单元']);
 $rid = SF::generate(); Room::create(['id'=>$rid,'community_id'=>$cid,'building_id'=>$bid,'unit_id'=>$uid,'room_number'=>'101','area_total'=>'88.50','status'=>3]);
-$sid = SF::generate(); Staff::create(['id'=>$sid,'community_id'=>$cid,'name'=>'复验维修工','phone'=>'13800000001','department'=>3,'status'=>1]);
-echo json_encode(['room_id'=>HashidsService::encode($rid), 'staff_id'=>HashidsService::encode($sid), 'bill_id'=>HashidsService::encode(SF::generate())]);
+echo json_encode(['room_id'=>HashidsService::encode($rid), 'bill_id'=>HashidsService::encode(SF::generate())]);
 PHP
 FIX=$(php "$LOG/fixture.php" 2> "$LOG/fixture.err")
-echo "$FIX" | grep -q room_id && ok "夹具（小区/楼栋/单元/房产/员工）就绪" || bad "夹具失败（$(cat "$LOG/fixture.err" | tail -2)）"
+echo "$FIX" | grep -q room_id && ok "夹具（小区/楼栋/单元/房产）就绪" || bad "夹具失败（$(cat "$LOG/fixture.err" | tail -2)）"
 
 if [ -n "$TOKEN" ] && [ -n "$FIX" ]; then
     ROOM=$(echo "$FIX" | php -r '$d=json_decode(file_get_contents("php://stdin"),true);echo $d["room_id"];')
-    STAFF=$(echo "$FIX" | php -r '$d=json_decode(file_get_contents("php://stdin"),true);echo $d["staff_id"];')
     BILL=$(echo "$FIX" | php -r '$d=json_decode(file_get_contents("php://stdin"),true);echo $d["bill_id"];')
-    NEW=$(curl -s -X POST "$B/admin/repair" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-        -d "{\"room_id\":\"$ROOM\",\"contact_phone\":\"13800000002\",\"category\":1,\"description\":\"复验派单\"}")
-    RID=$(echo "$NEW" | php -r '$d=json_decode(file_get_contents("php://stdin"),true);echo $d["data"]["id"] ?? "";')
-    [ -n "$RID" ] && ok "建报修单 → $RID" || bad "建报修单失败：$NEW"
-    # 分页：page_size 必须被 honor，且新单能被计入（LengthAwarePaginator 序列化为 data.{data,total,per_page}）
-    C=$(curl -s -o "$LOG/resp-repair.json" -w '%{http_code}' -H "Authorization: Bearer $TOKEN" "$B/admin/repair?page=1&page_size=5")
+    # 分页：page_size 必须被 honor（LengthAwarePaginator 序列化为 data.{data,total,per_page}）
+    C=$(curl -s -o "$LOG/resp-room.json" -w '%{http_code}' -H "Authorization: Bearer $TOKEN" "$B/admin/room?page=1&page_size=5")
     read -r TOT PER ROWS < <(php -r '$d=json_decode(file_get_contents($argv[1]),true)["data"]??[];
-        echo ($d["total"]??"-")," ",($d["per_page"]??"-")," ",count($d["data"]??[]);' "$LOG/resp-repair.json")
+        echo ($d["total"]??"-")," ",($d["per_page"]??"-")," ",count($d["data"]??[]);' "$LOG/resp-room.json")
     { [ "$C" = "200" ] && [ "$TOT" = "1" ] && [ "$PER" = "5" ] && [ "$ROWS" = "1" ]; } \
-        && ok "GET /admin/repair?page=1&page_size=5 → 200，total=1 per_page=5 rows=1" \
-        || bad "分页异常：HTTP=$C total=$TOT per_page=$PER rows=$ROWS（$LOG/resp-repair.json）"
-    A=$(curl -s -o "$LOG/assign.json" -w '%{http_code}' -X PUT "$B/admin/repair/$RID/assign" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d "{\"staff_id\":\"$STAFF\"}")
-    [ "$A" = "200" ] && ok "派单（hashid）→ 200" || bad "派单 → $A（$(cat "$LOG/assign.json")）"
+        && ok "GET /admin/room?page=1&page_size=5 → 200，total=1 per_page=5 rows=1" \
+        || bad "分页异常：HTTP=$C total=$TOT per_page=$PER rows=$ROWS（$LOG/resp-room.json）"
     # 仓约定：错误响应是「HTTP 200 + body.code」，decodeId 的 422（InvalidResourceIdException）亦然；
     # 断言裸 HTTP 状态码会永远红（实测 HTTP 200），必须解 body。
-    bad_http=$(curl -s -o "$LOG/bad-hashid.json" -w '%{http_code}' -X PUT "$B/admin/repair/$RID/assign" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"staff_id":"not-a-hashid"}')
+    bad_http=$(curl -s -o "$LOG/bad-hashid.json" -w '%{http_code}' -H "Authorization: Bearer $TOKEN" "$B/admin/room/not-a-hashid")
     bad_code=$(php -r '$d=json_decode(file_get_contents($argv[1]),true);echo is_array($d)?($d["code"]??"-"):"-";' "$LOG/bad-hashid.json")
     { [ "$bad_http" = "200" ] && [ "$bad_code" = "422" ]; } \
         && ok "无效 hashid → HTTP 200 + body.code 422（InvalidResourceIdException）" \
         || bad "无效 hashid → HTTP $bad_http code=$bad_code（期望 200 + 422；$LOG/bad-hashid.json）"
 
-    # 带参数段端点超管可达抽查（14 条同类端点挑 5 条代表）
+    # 动作型端点超管可达抽查
     # 判据：AdminPermission 的 403 是「HTTP 外层 200 + body.code=403」；5xx 记 warn（RBAC 已放行但接口异常）。
-    # 前 3 条依赖中间件剥 {…} 段后命中既有种子；后 2 条是本轮新补的精确 slug 种子。
     probe() { # $1=METHOD $2=路径 $3=body(可空；注意 set -u：必须 ${3:-} 取默认)
         local out="$LOG/probe-$(printf '%s' "$1$2" | tr -c 'A-Za-z0-9' '_').json" c code body=${3:-}
         if [ -n "$body" ]; then
@@ -328,9 +319,7 @@ if [ -n "$TOKEN" ] && [ -n "$FIX" ]; then
         else ok "超管 $1 $2 → HTTP $c code=$code"
         fi
     }
-    probe PUT  "/admin/complaint/$ROOM/handle"  '{"handle_result":"复验"}'
-    probe PUT  "/admin/visitor/$ROOM/approve"   '{}'
-    probe PUT  "/admin/face/$ROOM/verify"       '{}'
+    probe GET  "/admin/fee-bill/$BILL"
     # 新种子的 POST 代表用 create：给合法 bill_id+user_id 但缺 channel，在进 service 前即 422（零副作用）。
     # 注意不能传空参：bill_id 缺失时 HashidsService::decode('') 抛异常 → 500（空参应 422 是既有小缺陷，已单独报 lead）
     probe POST "/admin/payment-order/create"    "{\"bill_id\":\"$BILL\",\"user_id\":1}"

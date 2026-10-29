@@ -107,22 +107,7 @@ The property management system is divided into an **admin portal** (used interna
 - Payment record inquiry
 - Offline collection registration (cash/card/bank transfer)
 
-### 9. Repair Management
-
-**Admin:**
-- Repair list (filter by status/category)
-- Repair detail view
-- Dispatch (assign repair personnel)
-- Update repair progress
-
-**Owner:**
-- My repair list
-- Submit repair (select property, category, urgency, description, upload images, appointment time)
-- View repair details and progress
-- Cancel repair (only in pending-dispatch status, requires password confirmation)
-- Rate the repair (1-5 stars + text review)
-
-### 10. Announcements
+### 9. Announcements
 
 **Admin:**
 - Announcement list CRUD
@@ -138,7 +123,7 @@ The property management system is divided into an **admin portal** (used interna
 
 ## Batch 2: Auxiliary Business
 
-### 11. Parking Management
+### 10. Parking Management
 
 **Admin:**
 - Parking space management (number, above/below ground, area, status: vacant/sold/rented/maintenance)
@@ -150,7 +135,7 @@ The property management system is divided into an **admin portal** (used interna
 - My parking spaces list
 - Parking record inquiry
 
-### 12. Equipment Management
+### 11. Equipment Management
 
 **Admin:**
 - Equipment ledger (name, number, category: elevator/fire/gate-access/monitoring/water-supply-drainage/power-supply/HVAC)
@@ -158,91 +143,29 @@ The property management system is divided into an **admin portal** (used interna
 - Maintenance records: routine servicing/periodic maintenance/fault repair/overhaul/replacement
 - Maintenance personnel, cost, maintenance vendor, next maintenance date
 
-### 13. Complaints & Suggestions
-
-**Admin:**
-- Complaint list (filter by type/status)
-- Handle complaints (assign handler, fill in handling notes)
-- Follow-up registration (follow-up notes, satisfaction records)
-
-**Owner:**
-- My complaints/suggestions list
-- Submit complaint/suggestion (type: complaint/suggestion/praise; category: service/environment/security/facilities/noise/illegal construction)
-- Supports anonymous submission and image upload
-- View handling progress
-- Satisfaction rating
-
-### 14. Visitor Management
-
-**Admin:**
-- Visitor appointment approval
-- Visitor record inquiry
-
-**Owner:**
-- Visitor appointment (visitor name, phone, ID card, plate number, companion count, visit reason, expected time)
-- Generate pass code
-- Modify/cancel appointment
-
-### 15. Contract Management
-
-**Admin:**
-- Contract list (filter by type/status)
-- Contract types: property contract/lease contract/maintenance contract/service contract/procurement contract
-- Contract info: number, parties, amount, start/end dates, signing date, attachments
-- Status: draft/in performance/expired/terminated/renewed
-
-### 16. Finance Management
-
-**Admin:**
-- Income management (property fee/parking fee/rent/advertising fee/maintenance fund/other)
-- Expense management (labor/equipment procurement/maintenance/energy/cleaning-greening/office/taxes/other)
-- Income/expense statistics reports (monthly/quarterly/yearly)
-
----
-
 ## Batch 3: Advanced Features
 
-### 17. Security Patrol
+### 12. Security Patrol
 
 **Admin:**
 - Patrol route management (route coordinates, checkpoints)
 - Patrol records (start/end times, duration, exception notes)
 - Patrol completion rate statistics
 
-### 18. Cleaning Management
+### 13. Cleaning Management
 
 **Admin:**
 - Cleaning zone management (location, area, frequency: daily/weekly/biweekly/monthly)
 - Cleaning records (cleaning time, supervisor, servicing notes, on-site photos)
 - Cleaning completion rate statistics
 
-### 19. Greening Management
+### 14. Greening Management
 
 **Admin:**
 - Greening zone management (location, area, main plants)
 - Maintenance records (watering/pruning/fertilizing/pest control/replanting, cost)
 
-### 20. Community Activities
-
-**Admin:**
-- Activity management (title, content, category: sports/festival/charity/lecture/family)
-- Cover image, location, max participants, time, fee
-- Status: signing up/in progress/ended/cancelled
-- Sign-up list view
-
-**Owner:**
-- Activity list (filter: signing up/in progress)
-- Activity details
-- Sign up/cancel sign-up
-
-### 21. Energy Management
-
-**Admin:**
-- Meter management (electricity/water/gas/heating meters, numbers)
-- Meter reading records (current reading, usage, unit price, fee)
-- Associated bill auto-generation
-
-### 22. Staff Management
+### 15. Staff Management
 
 **Admin:**
 - Staff info (name, phone encrypted, ID card encrypted, position, department, hire date)
@@ -259,25 +182,22 @@ The property management system is divided into an **admin portal** (used interna
 - Core metric cards: total receivable, total received, arrears rate, occupancy rate
 - Charge trend line chart (monthly/quarterly)
 - Charge category pie chart
-- Repair statistics (by category, by status)
-- Complaint statistics
 - Recent operation logs
 
 **Owner home page:**
-- My property count, pending payment amount, in-progress repairs count, latest announcements
+- My property count, pending payment amount, latest announcements
 
 ### Excel Export
 
 - Owner list export
 - Bill report export
 - Payment record export
-- Finance report export
 - Sensitive data auto-masked on export
 
 ### PDF Export
 
 - Dashboard panel visualization export
-- Finance report PDF (header copyright + non-removable footer copyright watermark)
+- PDF header copyright + non-removable footer copyright watermark
 - A4 landscape layout
 
 ---
@@ -294,43 +214,14 @@ The property management system is divided into an **admin portal** (used interna
 | Captcha | Click-style Chinese captcha, mandatory on login/register |
 | Soft delete | Owners, communities, properties, announcements support soft delete |
 | Internationalization | Chinese/English bilingual, PHP symfony/translation + Flutter GetX Translations, Chinese default, English fallback |
-| API docs | Auto-generated by `hg/apidoc`; 57 of 58 controllers annotated in 10 groups (Base/Docs/Install ungrouped), `/apidoc/config` provides the config API |
+| API docs | Auto-generated by `hg/apidoc`, admin 10 groups + service 6 groups, `/apidoc/config` provides the config API |
 | Tests | TDD flow, 133 tests / 465 assertions, service 100% pass, flutter analyze zero issues |
-| Flutter Web | 13 pages (login/home/charges/repairs/profile, etc.), PC desktop style, GetX state management |
+| Flutter Web | 5 pages (login/home/charges/parking/profile), PC desktop style, GetX state management |
 
 ## Extension Features (Batch 4)
-
-### Message Notification Center
-- Configurable notification templates (App push/SMS/email)
-- Auto-notify on bill reminders, repair progress, announcement publishing
-- Owner message list + read management
-
-### Approval Workflow Engine
-- Configurable approval types and steps (supervisor→manager→director)
-- Repair dispatch/visitor approval/contract approval follow standardized flows
-- Approval records traceable
 
 ### Payment Integration
 - WeChat/Alipay payment order management
 - Payment callback handling, refunds, reconciliation statistics
 - Associated bills auto-updated
-
-### Owner Voting / Resolution
-- Regular voting + owners' meeting resolutions (area-weighted)
-- Option management, voting records, automatic tallying
-- Participation rate statistics
-
-### Smart Payment Reminders
-- Tiered reminder strategy config (overdue days → action)
-- Auto-match overdue bills and execute reminders (App/SMS/phone/on-site)
-- Late fees auto-calculated
-
-### Multi-Community Group Management
-- Group→community many-to-many association
-- Cross-community data aggregation (unified property/owner/charges view)
-
-### Intelligent Q&A
-- Knowledge base management (categories/articles/keywords)
-- Auto-matching owner questions
-- Chat records + resolution rate statistics
 

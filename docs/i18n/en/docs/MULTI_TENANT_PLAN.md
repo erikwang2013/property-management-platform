@@ -1,6 +1,6 @@
 # Multi-Tenant SaaS Plan Review
 
-> **Historical design (2026-10-27)**: multi-tenant was not implemented; current code is single-tenant. This document is kept as a design record.
+> **Historical design (2026-10-27)**: multi-tenant was not implemented; current code is single-tenant. Group management, notifications, knowledge base and related modules have since been removed; references in this document are kept as a historical record.
 
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz

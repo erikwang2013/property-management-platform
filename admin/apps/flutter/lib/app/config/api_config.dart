@@ -85,11 +85,6 @@ class ApiConfig {
   static const String feePayment = '/admin/fee-payment';
   static const String feePaymentOffline = '/admin/fee-payment/offline';
 
-  // 报修
-  static const String repair = '/admin/repair';
-  static String repairAssign(String hashid) => '/admin/repair/$hashid/assign';
-  static String repairProgress(String hashid) => '/admin/repair/$hashid/progress';
-
   // 公告
   static const String announcement = '/admin/announcement';
 
@@ -101,23 +96,6 @@ class ApiConfig {
   // 设备
   static const String equipment = '/admin/equipment';
   static const String equipmentMaintenance = '/admin/equipment-maintenance';
-
-  // 投诉
-  static const String complaint = '/admin/complaint';
-  static String complaintHandle(String hashid) => '/admin/complaint/$hashid/handle';
-  static String complaintVisit(String hashid) => '/admin/complaint/$hashid/visit';
-
-  // 访客
-  static const String visitor = '/admin/visitor';
-  static String visitorApprove(String hashid) => '/admin/visitor/$hashid/approve';
-
-  // 合同
-  static const String contract = '/admin/contract';
-
-  // 财务
-  static const String financeStatistics = '/admin/finance/statistics';
-  static const String financeIncome = '/admin/finance-income';
-  static const String financeExpense = '/admin/finance-expense';
 
   // 安防巡逻
   static const String securityPatrol = '/admin/security-patrol';
@@ -131,45 +109,10 @@ class ApiConfig {
   static const String greenArea = '/admin/green-area';
   static const String greenMaintenance = '/admin/green-maintenance';
 
-  // 社区活动
-  static const String activity = '/admin/activity';
-  static const String activitySignup = '/admin/activity-signup';
-  static String activitySignupCheckin(String hashid) => '/admin/activity-signup/$hashid/checkin';
-
-  // 能耗
-  static const String energyMeter = '/admin/energy-meter';
-  static const String energyRecord = '/admin/energy-record';
-
   // 员工
   static const String staff = '/admin/staff';
   static const String staffBatchStatus = '/admin/staff/batch/status';
 
-  // 通知
-  static const String notification = '/admin/notification';
-
-  // 审批
-  static const String approval = '/admin/approval';
-
   // 支付
   static const String payment = '/admin/payment-order';
-
-  // 投票
-  static const String vote = '/admin/vote';
-
-  // 催缴
-  static const String collectionStrategy = '/admin/collection-strategy';
-  static const String collectionRecord = '/admin/collection-record';
-  static const String collectionRun = '/admin/collection/run';
-
-  // 集团
-  static const String group = '/admin/group';
-  static String groupCommunities(String hashid) => '/admin/group/$hashid/communities';
-  static String groupAddCommunity(String hashid) => '/admin/group/$hashid/community';
-  static String groupSummary(String hashid) => '/admin/group/$hashid/summary';
-
-  // 智能问答
-  static const String knowledgeCategory = '/admin/knowledge-category';
-  static const String knowledge = '/admin/knowledge';
-  static const String chatRecord = '/admin/chat-record';
-  static const String chatStats = '/admin/chat-stats';
 }

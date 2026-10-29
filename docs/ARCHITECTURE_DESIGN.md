@@ -138,7 +138,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 
 ```
 第1层  点击验证码      → 登录/注册强制人机验证
-第2层  密码二次确认    → 敏感操作（删除/缴费/合同终止）必须输入密码
+第2层  密码二次确认    → 敏感操作（删除/缴费/退款）必须输入密码
 第3层  poster随机验证  → 高频敏感操作随机弹出验证码
 第4层  security-php    → 请求周期内自动安全扫描
 第5层  SecurityFilter  → XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截
@@ -226,7 +226,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ```
 resource/translations/
 ├── zh_CN/
-│   └── messages.php    # 中文语言包（42+翻译键）
+│   └── messages.php    # 中文语言包（39+翻译键）
 └── en/
     └── messages.php    # 英文语言包
 ```
@@ -250,7 +250,7 @@ apps/flutter/lib/i18n/
 └── messages.dart       # AppTranslations extends GetX Translations
 ```
 
-使用 GetX `Translations`，101个翻译键。通过 `.tr` 扩展使用：
+使用 GetX `Translations`，38个翻译键。通过 `.tr` 扩展使用：
 ```dart
 Text('login_btn'.tr)   // 中文: "登 录", 英文: "Login"
 Text('phone_hint'.tr)  // "请输入手机号" / "Enter phone number"
@@ -270,8 +270,6 @@ Get.updateLocale(Locale('en', 'US'));  // 切换英文
 | 认证 | `auth.login_success`, `auth.*` | `login_btn`, `phone_hint` |
 | 小区 | `community.name_required` | - |
 | 费用 | `fee.bill_not_found`, `fee.*` | `fee_management`, `bill_status` |
-| 报修 | `repair.not_found`, `repair.*` | `repair_submit`, `urgency_normal` |
-| 投诉 | `complaint.submit_success` | `complaint_type`, `type_complaint` |
 | 个人 | - | `profile`, `change_password` |
 
 
@@ -322,12 +320,11 @@ apps/flutter/lib/
 │   ├── auth_service.dart        # 登录/登出/Token 持久化
 │   └── storage_service.dart     # shared_preferences 封装
 ├── i18n/
-│   └── messages.dart            # GetX Translations（101键，zh_CN/en）
+│   └── messages.dart            # GetX Translations（38键，zh_CN/en）
 ├── pages/
 │   ├── login/                   # PC 风格登录页（居中 Card + 表单验证）
-│   ├── home/                    # 仪表盘（4个 StatCard + 公告列表）
+│   ├── home/                    # 仪表盘（3个 StatCard + 公告列表）
 │   ├── fee/                     # 账单列表 / 详情 / 缴费弹窗
-│   ├── repair/                  # 报修列表 / 提交 / 详情 + 评价
 │   └── profile/                 # 个人信息 / 修改密码 / 退出
 └── widgets/
     └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
@@ -339,29 +336,14 @@ apps/flutter/lib/
 
 ## 14. 扩展功能架构
 
-### 消息通知中心
-消息模板 → 通知生成 → 多渠道发送（App内/短信/邮件/推送）
-
-### 审批工作流
-审批类型配置 → 实例提交 → 步骤流转（通过/驳回）→ 通知下一审批人
-
 ### 支付流程
 创建支付订单 → 第三方支付 → 异步回调 → 更新账单状态 → 记录支付日志
-
-### 业主投票
-投票发布 → 业主投票（按面积加权）→ 实时计票 → 结果统计
-
-### 智能催缴
-催缴策略匹配 → 逾期检测 → 自动生成催缴任务 → 执行催缴动作
-
-### 集团管理
-集团 → 小区关联 → 跨小区数据汇总（房产/业主/收费/报修）
 
 ## 15. API 文档
 
 使用 `hg/apidoc` 从控制器注解自动生成接口文档，按功能分组。
 
-**管理端** (`http://localhost:8787/apidoc`): 10组 — 55个控制器注入注解（Base/Docs/Install 未分组）
+**管理端** (`http://localhost:8787/apidoc`): 10组 — 40个控制器注入注解（Base/Docs/Install 未分组）
 
 | 分组 | 数量 | 控制器 |
 |------|------|--------|
@@ -371,24 +353,21 @@ apps/flutter/lib/
 | `import` | 1 | Import |
 | `upload` | 1 | Upload |
 | `system` | 6 | User, Role, Permission, Config, Log, Profile |
-| `property-core` | 12 | Community, Building, Unit, RoomType, Room, Owner, Tenant, FeeType, FeeBill, FeePayment, Repair, Announcement |
-| `property-aux` | 9 | Parking(3), Equipment(2), Complaint, Visitor, Contract, Finance |
-| `property-adv` | 11 | Activity(2), Patrol(2), Cleaning(2), Green(2), Energy(2), Staff |
-| `extensions` | 7 | Notification, Approval, Payment, Vote, Collection, Group, Knowledge |
+| `property-core` | 11 | Community, Building, Unit, RoomType, Room, Owner, Tenant, FeeType, FeeBill, FeePayment, Announcement |
+| `property-aux` | 5 | Parking(3), Equipment(2) |
+| `property-adv` | 7 | Patrol(2), Cleaning(2), Green(2), Staff |
+| `extensions` | 1 | Payment |
 
-**业务端** (`http://localhost:8788/apidoc`): 9组 — 17个控制器注入注解
+**业务端** (`http://localhost:8788/apidoc`): 6组 — 10个控制器注入注解
 
 | 分组 | 数量 | 控制器 |
 |------|------|--------|
 | `public` | 2 | Auth, Captcha |
 | `home` | 2 | Home, Room |
 | `fee` | 1 | Fee |
-| `repair` | 1 | Repair |
-| `feedback` | 2 | Complaint, Announcement |
-| `parking` | 2 | Parking, Visitor |
-| `activity` | 1 | Activity |
+| `feedback` | 1 | Announcement |
+| `parking` | 1 | Parking |
 | `profile` | 1 | Profile |
-| `extensions` | 3 | Notification, Vote, Knowledge |
 
 ### 注解规范
 

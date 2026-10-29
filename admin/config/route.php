@@ -50,7 +50,7 @@ Route::group('/admin', function () {
     // array_merge($request->all(), $args)），对不上就抛 MissingInputException → 500。
     // 这里按同样的注册顺序展开，只把 {id} 换成 {hashid}；控制器无需改动。
     $resource = static function (string $name, string $controller): void {
-        $name = trim($name, '/'); // 与 vendor Route::resource 一致：调用方传 '/repair'，需去掉前导斜杠，否则会拼出 /admin//repair
+        $name = trim($name, '/'); // 与 vendor Route::resource 一致：调用方传 '/fee-bill'，需去掉前导斜杠，否则会拼出 /admin//fee-bill
         if (method_exists($controller, 'index')) {
             Route::get("/$name", [$controller, 'index']);
         }
@@ -143,16 +143,11 @@ Route::group('/admin', function () {
     // 缴费记录
     Route::get('/fee-payment', [app\admin\controller\FeePaymentController::class, 'index']);
     Route::post('/fee-payment/offline', [app\admin\controller\FeePaymentController::class, 'offlinePay']);
-    // 报修管理
-    $resource('/repair', app\admin\controller\RepairController::class);
-    // 自定义动作的路由变量同样必须叫 {hashid}（与控制器形参一致，见上方 $resource 说明）
-    Route::put('/repair/{hashid}/assign', [app\admin\controller\RepairController::class, 'assign']);
-    Route::post('/repair/{hashid}/progress', [app\admin\controller\RepairController::class, 'progress']);
     // 公告管理
     $resource('/announcement', app\admin\controller\AnnouncementController::class);
 
     // ============================================================
-    // 停车/设备/投诉/访客/合同/收支
+    // 停车/设备
     // ============================================================
     // 停车管理
     $resource('/parking-space', app\admin\controller\ParkingSpaceController::class);
@@ -161,23 +156,9 @@ Route::group('/admin', function () {
     // 设备管理
     $resource('/equipment', app\admin\controller\EquipmentController::class);
     $resource('/equipment-maintenance', app\admin\controller\EquipmentMaintenanceController::class);
-    // 投诉管理
-    Route::get('/complaint', [app\admin\controller\ComplaintController::class, 'index']);
-    Route::get('/complaint/{hashid}', [app\admin\controller\ComplaintController::class, 'show']);
-    Route::put('/complaint/{hashid}/handle', [app\admin\controller\ComplaintController::class, 'handle']);
-    Route::post('/complaint/{hashid}/visit', [app\admin\controller\ComplaintController::class, 'visit']);
-    // 访客管理
-    Route::get('/visitor', [app\admin\controller\VisitorController::class, 'index']);
-    Route::put('/visitor/{hashid}/approve', [app\admin\controller\VisitorController::class, 'approve']);
-    // 合同管理
-    $resource('/contract', app\admin\controller\ContractController::class);
-    // 财务管理
-    Route::get('/finance/statistics', [app\admin\controller\FinanceController::class, 'statistics']);
-    $resource('/finance-income', app\admin\controller\FinanceController::class);
-    $resource('/finance-expense', app\admin\controller\FinanceController::class);
 
     // ============================================================
-    // 高级模块 + 扩展功能 + 审批/通知/投票/支付
+    // 高级模块
     // ============================================================
     $resource('/security-patrol', app\admin\controller\SecurityPatrolController::class);
     Route::get('/patrol-record', [app\admin\controller\PatrolRecordController::class, 'index']);
@@ -188,79 +169,12 @@ Route::group('/admin', function () {
     $resource('/green-area', app\admin\controller\GreenAreaController::class);
     Route::get('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'index']);
     Route::post('/green-maintenance', [app\admin\controller\GreenMaintenanceController::class, 'store']);
-    $resource('/activity', app\admin\controller\ActivityController::class);
-    Route::get('/activity-signup', [app\admin\controller\ActivitySignupController::class, 'index']);
-    Route::put('/activity-signup/{hashid}/checkin', [app\admin\controller\ActivitySignupController::class, 'checkin']);
-    $resource('/energy-meter', app\admin\controller\EnergyMeterController::class);
-    Route::get('/energy-record', [app\admin\controller\EnergyRecordController::class, 'index']);
-    Route::post('/energy-record', [app\admin\controller\EnergyRecordController::class, 'store']);
     $resource('/staff', app\admin\controller\StaffController::class);
     Route::post('/staff/batch/status', [app\admin\controller\StaffController::class, 'batchStatus']);
 
     // ============================================================
-    // 物业管理 — 第4批扩展功能
+    // 物业管理 — 支付
     // ============================================================
-    // 智能催缴
-    Route::get('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategies']);
-    Route::post('/collection-strategy', [app\admin\controller\CollectionController::class, 'strategyStore']);
-    Route::put('/collection-strategy/{hashid}', [app\admin\controller\CollectionController::class, 'strategyUpdate']);
-    Route::delete('/collection-strategy/{hashid}', [app\admin\controller\CollectionController::class, 'strategyDestroy']);
-    Route::get('/collection-record', [app\admin\controller\CollectionController::class, 'records']);
-    Route::post('/collection/run', [app\admin\controller\CollectionController::class, 'run']);
-    // 集团管理
-    $resource('/group', app\admin\controller\GroupController::class);
-    Route::get('/group/{groupHashid}/communities', [app\admin\controller\GroupController::class, 'communities']);
-    Route::post('/group/{groupHashid}/community', [app\admin\controller\GroupController::class, 'addCommunity']);
-    Route::delete('/group/{groupHashid}/community/{communityHashid}', [app\admin\controller\GroupController::class, 'removeCommunity']);
-    Route::get('/group/{groupHashid}/summary', [app\admin\controller\GroupController::class, 'summary']);
-    // 智能问答
-    Route::get('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categories']);
-    Route::post('/knowledge-category', [app\admin\controller\KnowledgeController::class, 'categoryStore']);
-    Route::put('/knowledge-category/{hashid}', [app\admin\controller\KnowledgeController::class, 'categoryUpdate']);
-    Route::delete('/knowledge-category/{hashid}', [app\admin\controller\KnowledgeController::class, 'categoryDestroy']);
-    Route::get('/knowledge', [app\admin\controller\KnowledgeController::class, 'articles']);
-    Route::post('/knowledge', [app\admin\controller\KnowledgeController::class, 'articleStore']);
-    Route::put('/knowledge/{hashid}', [app\admin\controller\KnowledgeController::class, 'articleUpdate']);
-    Route::delete('/knowledge/{hashid}', [app\admin\controller\KnowledgeController::class, 'articleDestroy']);
-    Route::get('/chat-record', [app\admin\controller\KnowledgeController::class, 'chatRecords']);
-    Route::get('/chat-stats', [app\admin\controller\KnowledgeController::class, 'chatStats']);
-
-    // ============================================================
-    // 物业管理 — 第5批：审批/通知/投票/支付
-    // ============================================================
-    // 审批类型
-    Route::get('/approval-type', [app\admin\controller\ApprovalController::class, 'types']);
-    Route::post('/approval-type', [app\admin\controller\ApprovalController::class, 'typeStore']);
-    Route::put('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeUpdate']);
-    Route::delete('/approval-type/{hashid}', [app\admin\controller\ApprovalController::class, 'typeDestroy']);
-    // 审批实例（静态路由先于变量路由注册，避免 FastRoute 遮蔽异常）
-    Route::get('/approval', [app\admin\controller\ApprovalController::class, 'index']);
-    Route::get('/approval/my-pending', [app\admin\controller\ApprovalController::class, 'myPending']);
-    Route::get('/approval/{hashid}', [app\admin\controller\ApprovalController::class, 'show']);
-    Route::post('/approval', [app\admin\controller\ApprovalController::class, 'submit']);
-    Route::put('/approval/{hashid}/approve', [app\admin\controller\ApprovalController::class, 'approve']);
-    // 通知模板
-    Route::get('/notification-template', [app\admin\controller\NotificationController::class, 'templates']);
-    Route::post('/notification-template', [app\admin\controller\NotificationController::class, 'templateStore']);
-    Route::put('/notification-template/{hashid}', [app\admin\controller\NotificationController::class, 'templateUpdate']);
-    Route::delete('/notification-template/{hashid}', [app\admin\controller\NotificationController::class, 'templateDestroy']);
-    // 通知
-    Route::get('/notification', [app\admin\controller\NotificationController::class, 'index']);
-    Route::post('/notification/send', [app\admin\controller\NotificationController::class, 'send']);
-    // 投票
-    Route::get('/vote', [app\admin\controller\VoteController::class, 'index']);
-    Route::post('/vote', [app\admin\controller\VoteController::class, 'store']);
-    Route::get('/vote/{hashid}', [app\admin\controller\VoteController::class, 'show']);
-    Route::put('/vote/{hashid}', [app\admin\controller\VoteController::class, 'update']);
-    Route::delete('/vote/{hashid}', [app\admin\controller\VoteController::class, 'destroy']);
-    Route::get('/vote/{hashid}/options', [app\admin\controller\VoteController::class, 'options']);
-    Route::post('/vote/{hashid}/option', [app\admin\controller\VoteController::class, 'optionStore']);
-    Route::put('/vote/{hashid}/option/{optionHashid}', [app\admin\controller\VoteController::class, 'optionUpdate']);
-    Route::delete('/vote/{hashid}/option/{optionHashid}', [app\admin\controller\VoteController::class, 'optionDestroy']);
-    Route::get('/vote/{hashid}/records', [app\admin\controller\VoteController::class, 'records']);
-    Route::get('/vote/{hashid}/statistics', [app\admin\controller\VoteController::class, 'statistics']);
-    Route::put('/vote/{hashid}/publish', [app\admin\controller\VoteController::class, 'publish']);
-    Route::put('/vote/{hashid}/end', [app\admin\controller\VoteController::class, 'end']);
     // 支付订单（静态路由先于变量路由注册）
     Route::get('/payment-order', [app\admin\controller\PaymentController::class, 'orders']);
     Route::get('/payment-order/statistics', [app\admin\controller\PaymentController::class, 'statistics']);

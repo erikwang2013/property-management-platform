@@ -6,7 +6,7 @@
 
 ![小筑 · project mascot](../../images/pet_xiaozhu.svg)
 
-A full-stack property management system covering 22 business modules + 7 extension features (message notifications / approval workflow / payments / voting / payment reminders / group management / intelligent Q&A). The admin panel (admin) and owner portal (service) are deployed separately, with frontends built with Flutter Web (PC admin style) and Flutter mobile.
+A full-stack property management system covering 15 business modules + the payment integration extension. The admin panel (admin) and owner portal (service) are deployed separately, with frontends built with Flutter Web (PC admin style) and Flutter mobile.
 
 **Xiaozhu** (小筑) is the project mascot — an anthropomorphic building steward with its lights on, appearing in the install wizard, the error pages, the login page and the architecture diagram.
 
@@ -64,13 +64,13 @@ property-management-platform/
 
 | Layer | Count | Details |
 |----|------|------|
-| Database tables | 60 | All `management_` prefixed, BIGINT non-auto-increment primary keys |
-| PHP models | admin 57 / service 50 | All Eloquent models with encryptable encrypted fields; service 57 is the model file count (including the BaseModel base class) |
-| admin controllers | 55 | General management + 22 property modules + 7 extension features |
-| service controllers | 17 | All owner-side APIs |
-| API routes | 168 | admin 119 + service 49 |
-| Flutter admin panel | 41 pages | admin 41 page modules, 93 files / 6,976 lines |
-| Flutter owner portal | 13 pages | charges / repairs / parking / visitors / activities / notifications / voting / intelligent Q&A, 29 files / 3,506 lines |
+| Database tables | 34 | All `management_` prefixed, BIGINT non-auto-increment primary keys |
+| PHP models | admin 32 / service 25 | All Eloquent models with encryptable encrypted fields; service 25 is the model file count (including the BaseModel base class) |
+| admin controllers | 40 | General management + 15 property modules + 1 extension feature |
+| service controllers | 10 | All owner-side APIs |
+| API routes | 51 | admin 27 + service 24 |
+| Flutter admin panel | 26 pages | admin 26 page modules, 67 files / 5,520 lines |
+| Flutter owner portal | 5 pages | charges / parking, 18 files / 2,099 lines |
 | Tests | 471 | admin 271 (675 assertions) + service 200 (847 assertions) |
 
 ## System Architecture & Design Diagrams
@@ -97,15 +97,15 @@ property-management-platform/
 
 ![19-layer security defense in depth](docs/images/readme_security.svg)
 
-## Function Modules (22 Major Modules + 7 Extensions)
+## Function Modules (15 Major Modules + 1 Extension)
 
 | Batch | Modules | Status |
 |------|------|------|
-| Batch 1 | Community, building, unit, layout, property, owner, tenant, charges, repair, announcements (10 modules) | ✅ All complete |
-| Batch 2 | Parking, equipment, complaints, visitors, contracts, finance (6 modules) + panel visualization + Excel/PDF export (platform features) | ✅ All complete |
-| Batch 3 | Security patrol, cleaning, greening, community activities, energy, staff (6 modules) | ✅ All complete |
-| Extensions | Message notifications, approval workflow, payment integration, owner voting, smart payment reminders, multi-community group management, intelligent Q&A (7 modules) | ✅ All complete |
-| Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home stats (complaints / activities / votes / unread) | ✅ All complete |
+| Batch 1 | Community, building, unit, layout, property, owner, tenant, charges, announcements (9 modules) | ✅ All complete |
+| Batch 2 | Parking, equipment (2 modules) + panel visualization + Excel/PDF export (platform features) | ✅ All complete |
+| Batch 3 | Security patrol, cleaning, greening, staff (4 modules) | ✅ All complete |
+| Extensions | Payment integration (1 module) | ✅ All complete |
+| Platform | Report Center (collection rate, payment methods, arrears ranking, PDF export) + Owner home stats (rooms / pending fees / announcements) | ✅ All complete |
 
 ## Tech Stack
 
@@ -141,7 +141,7 @@ All API endpoints and parameter descriptions are in the standalone [docs/API.md]
 | End | Address | Groups |
 |----|------|------|
 | Admin | `http://localhost:8787/apidoc` | 10 groups (common/dashboard/system/property-core/property-aux/property-adv/extensions/export/import/upload) |
-| Owner | `http://localhost:8788/apidoc` | 9 groups (public/home/charges/repairs/feedback/parking/activities/profile/extensions) |
+| Owner | `http://localhost:8788/apidoc` | 6 groups (public/home/charges/feedback/parking/profile) |
 
 ### Internationalization
 
@@ -274,11 +274,11 @@ Static files: Flutter Web build/
 ### Admin Panel
 1. Open `http://localhost:8787` and sign in with the default admin account.
 2. Set up base data: Community → Building → Unit → Room Type → Room → bind owners.
-3. Daily operations: configure fee types, batch-generate bills, collect; repairs (assign/progress); complaints (handle/visit); Report Center for income & collection overview.
+3. Daily operations: configure fee types, batch-generate bills, collect; Report Center for collection overview.
 4. System: add admins, RBAC roles, config, audit logs.
 
 ### Owner Portal
-Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pending fees, repairs, complaints, activities, votes and unread messages.
+Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pending fees, and announcements.
 
 ## Default Admin Account
 
@@ -295,15 +295,15 @@ Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pendin
 | Document | Description |
 |------|------|
 | [Installation Guide](docs/INSTALL.md) | Step-by-step deployment guide, including database initialization, Docker deployment, and FAQ |
-| [Merged Installation Script](../../install.sql) | All 65 tables + RBAC permission seed data, one-click import |
+| [Merged Installation Script](../../install.sql) | All 34 tables + RBAC permission seed data, one-click import |
 | [Architecture Design Document](docs/ARCHITECTURE_DESIGN.md) | System layered architecture, middleware execution chain, security defense-in-depth design |
 | [Architecture Document](docs/ARCHITECTURE.md) | Mermaid architecture diagrams (system topology, request lifecycle, data encryption, deployment) |
 | [System Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | Overview architecture, layered details, deployment architecture (Mermaid visualization) |
-| [Business Flowchart](docs/FLOWCHART.md) | Authentication flow, charge management, repair handling, property management, complaints, visitors |
-| [Function Module Diagram](docs/FUNCTION_DIAGRAM.md) | 34-module overview, dependencies, admin function tree, owner function map |
+| [Business Flowchart](docs/FLOWCHART.md) | Authentication flow, charge management, property management |
+| [Function Module Diagram](docs/FUNCTION_DIAGRAM.md) | 16-module overview, dependencies, admin function tree, owner function map |
 | [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, Token lifecycle, full CRUD flow |
 | [Security Architecture Diagram](docs/SECURITY_ARCHITECTURE.md) | 19-layer defense-in-depth overview, attack surface defense matrix, full encryption chain, audit trail system |
-| [Feature Design Document](docs/FEATURE_DESIGN.md) | Functional specifications for the 34 modules |
+| [Feature Design Document](docs/FEATURE_DESIGN.md) | Functional specifications for the 16 modules |
 | [Features Document](docs/FEATURES.md) | Feature list and module overview |
 | [API Document](docs/API.md) | All API endpoints and parameter descriptions |
 

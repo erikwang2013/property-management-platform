@@ -43,7 +43,6 @@ class AppTranslations extends Translations {
       'home': '首页',
       'my_rooms': '我的房产',
       'pending_payment': '待缴费',
-      'repairing': '处理中',
       'latest_announcements': '最新公告',
 
       // 房产
@@ -80,40 +79,7 @@ class AppTranslations extends Translations {
       'confirm_pay': '确认支付',
       'password_confirm': '请输入密码确认',
 
-      // 报修
-      'repair': '报修管理',
-      'repair_submit': '提交报修',
-      'repair_list': '报修列表',
-      'repair_detail': '报修详情',
-      'repair_category': '报修分类',
-      'repair_urgency': '紧急程度',
-      'repair_description': '问题描述',
-      'repair_images': '现场图片',
-      'repair_schedule': '预约时间',
-      'repair_progress': '维修进度',
-      'repair_rate': '评价',
-      'repair_rate_hint': '请给本次服务评分',
-      'urgency_normal': '普通',
-      'urgency_urgent': '紧急',
-      'urgency_critical': '非常紧急',
-      'status_pending': '待派单',
-      'status_assigned': '已派单',
-      'status_repairing': '维修中',
-      'status_completed': '已完成',
-      'status_rated': '已评价',
-      'status_cancelled': '已取消',
 
-      // 投诉
-      'complaint': '投诉建议',
-      'complaint_submit': '提交投诉',
-      'complaint_type': '类型',
-      'complaint_category': '分类',
-      'complaint_title': '标题',
-      'complaint_content': '内容',
-      'complaint_anonymous': '匿名提交',
-      'type_complaint': '投诉',
-      'type_suggestion': '建议',
-      'type_praise': '表扬',
 
       // 公告
       'announcement': '公告通知',
@@ -172,7 +138,6 @@ class AppTranslations extends Translations {
       'home': 'Home',
       'my_rooms': 'My Properties',
       'pending_payment': 'Pending Payment',
-      'repairing': 'In Progress',
       'latest_announcements': 'Latest Announcements',
 
       // Room
@@ -209,40 +174,7 @@ class AppTranslations extends Translations {
       'confirm_pay': 'Confirm Payment',
       'password_confirm': 'Enter password to confirm',
 
-      // Repair
-      'repair': 'Repairs',
-      'repair_submit': 'Submit Repair',
-      'repair_list': 'Repair List',
-      'repair_detail': 'Repair Details',
-      'repair_category': 'Category',
-      'repair_urgency': 'Urgency',
-      'repair_description': 'Description',
-      'repair_images': 'Images',
-      'repair_schedule': 'Schedule',
-      'repair_progress': 'Progress',
-      'repair_rate': 'Rate',
-      'repair_rate_hint': 'Please rate this service',
-      'urgency_normal': 'Normal',
-      'urgency_urgent': 'Urgent',
-      'urgency_critical': 'Critical',
-      'status_pending': 'Pending',
-      'status_assigned': 'Assigned',
-      'status_repairing': 'Repairing',
-      'status_completed': 'Completed',
-      'status_rated': 'Rated',
-      'status_cancelled': 'Cancelled',
 
-      // Complaint
-      'complaint': 'Complaints',
-      'complaint_submit': 'Submit Complaint',
-      'complaint_type': 'Type',
-      'complaint_category': 'Category',
-      'complaint_title': 'Title',
-      'complaint_content': 'Content',
-      'complaint_anonymous': 'Submit Anonymously',
-      'type_complaint': 'Complaint',
-      'type_suggestion': 'Suggestion',
-      'type_praise': 'Compliment',
 
       // Announcement
       'announcement': 'Announcements',

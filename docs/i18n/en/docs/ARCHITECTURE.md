@@ -327,13 +327,6 @@ erDiagram
         TINYINT payment_method "1微信2支付宝3现金"
     }
 
-    management_repair_order {
-        BIGINT id PK
-        BIGINT room_id FK
-        BIGINT owner_id FK
-        TINYINT category "1水电2门窗..."
-        TINYINT status "0待派单1已派单2维修中3已完成"
-    }
 
     management_announcement {
         BIGINT id PK
@@ -353,8 +346,6 @@ erDiagram
     management_room ||--o{ management_fee_bill : "room_id"
     management_owner ||--o{ management_fee_bill : "owner_id"
     management_fee_bill ||--o{ management_fee_payment : "bill_id"
-    management_room ||--o{ management_repair_order : "room_id"
-    management_owner ||--o{ management_repair_order : "owner_id"
     management_community ||--o{ management_announcement : "community_id"
 ```
 

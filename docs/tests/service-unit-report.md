@@ -1,5 +1,8 @@
 # service 单元测试补盲报告
 
+> **历史测试报告（2026-08-27）**：以下为当时测试快照。报修、投诉、访客、合同、财务、活动、能耗、通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块及其测试已移除；当前测试范围以仓库代码为准。
+
+
 > 时间：2026-08-27　|　测试目标：`/home/wwwroot/property-management-platform/service`（webman v2 + PHP 8.3 + Eloquent）
 > 验证命令：`cd service && vendor/bin/phpunit --no-coverage`
 

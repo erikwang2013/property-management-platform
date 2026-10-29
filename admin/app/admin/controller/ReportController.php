@@ -10,11 +10,6 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\model\FeeBill;
 use app\model\FeePayment;
-use app\model\FinanceExpense;
-use app\model\FinanceIncome;
-use app\model\RepairOrder;
-use app\model\Complaint;
-use app\model\Visitor;
 use app\model\ParkingRecord;
 use app\model\Room;
 use app\model\Owner;
@@ -32,7 +27,7 @@ class ReportController extends BaseController
     private const PAY_METHOD_NAMES = [1 => '微信', 2 => '支付宝', 3 => '现金', 4 => '银行转账', 5 => '刷卡'];
 
     /**
-     * 报表总览（汇总卡片 + 收支趋势 + 业务分布 + 欠费排行）
+     * 报表总览（汇总卡片 + 缴费方式 + 欠费排行）
      * @Apidoc\Method("GET")
      * @Apidoc\Url("/admin/report")
      * @param string $start_date 开始日期 Y-m-d（默认近 30 天）
@@ -65,13 +60,7 @@ class ReportController extends BaseController
 
         $data = [
             'summary' => $this->getSummary($start, $end, $communityId),
-            'income_trend' => $this->getIncomeTrend($start, $end),
-            'expense_trend' => $this->getExpenseTrend($start, $end),
             'payment_methods' => $this->getPaymentMethods($start, $end, $communityId),
-            'repair_status' => $this->getRepairStatus($start, $end, $communityId),
-            'complaint_status' => $this->getComplaintStatus($start, $end, $communityId),
-            'visitor_status' => $this->getVisitorStatus($start, $end, $communityId),
-            'repair_category' => $this->getRepairCategory($start, $end, $communityId),
             'arrears_ranking' => $this->getArrearsRanking($communityId, 10),
         ];
 
@@ -97,10 +86,6 @@ class ReportController extends BaseController
         $totalRooms = Room::when($communityId, fn($q) => $q->where('community_id', $communityId))->count();
         $occupiedRooms = Room::when($communityId, fn($q) => $q->where('community_id', $communityId))->whereIn('status', [1, 2, 3])->count();
 
-        $pendingRepairs = $this->scopeByCommunity(RepairOrder::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']), $communityId)->whereIn('status', [0, 1, 2])->count();
-        $pendingComplaints = $this->scopeByCommunity(Complaint::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']), $communityId)->where('status', 0)->count();
-        $visitorsToday = Visitor::when($communityId, fn($q) => $q->whereIn('room_id', Room::where('community_id', $communityId)->select('id')))
-            ->whereDate('created_at', date('Y-m-d'))->count();
         $parkingNow = ParkingRecord::whereNull('exit_time')->count();
 
         return [
@@ -111,27 +96,8 @@ class ReportController extends BaseController
             'total_rooms' => $totalRooms,
             'occupied_rooms' => $occupiedRooms,
             'occupancy_rate' => $totalRooms > 0 ? round($occupiedRooms / $totalRooms * 100, 1) : 0,
-            'pending_repairs' => $pendingRepairs,
-            'pending_complaints' => $pendingComplaints,
-            'visitors_today' => $visitorsToday,
             'parking_now' => $parkingNow,
         ];
-    }
-
-    private function getIncomeTrend(string $start, string $end): array
-    {
-        return FinanceIncome::selectRaw("DATE_FORMAT(income_date, '%Y-%m') as month, SUM(amount) as total")
-            ->whereBetween('income_date', [$start, $end])
-            ->groupBy('month')->orderBy('month')->get()
-            ->map(fn($i) => ['month' => $i->month, 'total' => round((float) $i->total, 2)])->toArray();
-    }
-
-    private function getExpenseTrend(string $start, string $end): array
-    {
-        return FinanceExpense::selectRaw("DATE_FORMAT(expense_date, '%Y-%m') as month, SUM(amount) as total")
-            ->whereBetween('expense_date', [$start, $end])
-            ->groupBy('month')->orderBy('month')->get()
-            ->map(fn($i) => ['month' => $i->month, 'total' => round((float) $i->total, 2)])->toArray();
     }
 
     private function getPaymentMethods(string $start, string $end, ?int $communityId): array
@@ -146,40 +112,6 @@ class ReportController extends BaseController
             'count' => (int) $r->count,
             'total' => round((float) $r->total, 2),
         ])->toArray();
-    }
-
-    private function getRepairStatus(string $start, string $end, ?int $communityId): array
-    {
-        return $this->scopeByCommunity(RepairOrder::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']), $communityId)
-            ->selectRaw('status, COUNT(*) as count')->groupBy('status')->get()
-            ->map(fn($r) => ['status' => (int) $r->status, 'count' => (int) $r->count])->toArray();
-    }
-
-    private function getComplaintStatus(string $start, string $end, ?int $communityId): array
-    {
-        $query = Complaint::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
-        if ($communityId) {
-            $query->whereIn('room_id', Room::where('community_id', $communityId)->select('id'));
-        }
-        return $query->selectRaw('status, COUNT(*) as count')->groupBy('status')->get()
-            ->map(fn($r) => ['status' => (int) $r->status, 'count' => (int) $r->count])->toArray();
-    }
-
-    private function getVisitorStatus(string $start, string $end, ?int $communityId): array
-    {
-        $query = Visitor::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
-        if ($communityId) {
-            $query->whereIn('room_id', Room::where('community_id', $communityId)->select('id'));
-        }
-        return $query->selectRaw('status, COUNT(*) as count')->groupBy('status')->get()
-            ->map(fn($r) => ['status' => (int) $r->status, 'count' => (int) $r->count])->toArray();
-    }
-
-    private function getRepairCategory(string $start, string $end, ?int $communityId): array
-    {
-        return $this->scopeByCommunity(RepairOrder::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']), $communityId)
-            ->selectRaw('category, COUNT(*) as count')->groupBy('category')->get()
-            ->map(fn($r) => ['category' => $r->category, 'count' => (int) $r->count])->toArray();
     }
 
     private function getArrearsRanking(?int $communityId, int $limit): array

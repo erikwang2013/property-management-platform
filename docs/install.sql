@@ -2,7 +2,7 @@
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- 迁移: 初始化管理后台核心数据表
 -- 注意: 主键 id 使用 BIGINT 非自增，由 snowflake-php 在应用层生成
--- 注意: 本文件为全量安装入口（60 张表 + RBAC 种子数据），唯一建库入口。
+-- 注意: 本文件为全量安装入口（34 张表 + RBAC 种子数据），唯一建库入口。
 --       幂等口径: 表/列/种子幂等；索引重跑需向导或 mysql --force——
 --       建表走 IF NOT EXISTS，但 ALTER 加索引/列与种子 INSERT 重跑会分别报
 --       1061/1060/1062「已存在」（向导导入循环把这四类 [含 1050] 降级为跳过，直连 mysql 重灌需 --force）。
@@ -296,13 +296,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010035, 0, '更新账单', 'put.admin/fee-bill',    3, '', '', 3, NOW(), NOW()),
 (2100000000010036, 0, '删除账单', 'delete.admin/fee-bill', 3, '', '', 4, NOW(), NOW());
 
--- API 权限 — 报修管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010037, 0, '查看报修', 'get.admin/repair',    3, '', '', 1, NOW(), NOW()),
-(2100000000010038, 0, '创建报修', 'post.admin/repair',   3, '', '', 2, NOW(), NOW()),
-(2100000000010039, 0, '更新报修', 'put.admin/repair',    3, '', '', 3, NOW(), NOW()),
-(2100000000010040, 0, '删除报修', 'delete.admin/repair', 3, '', '', 4, NOW(), NOW());
-
 -- API 权限 — 公告管理
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010041, 0, '查看公告', 'get.admin/announcement',    3, '', '', 1, NOW(), NOW()),
@@ -338,13 +331,6 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010059, 0, '更新维保', 'put.admin/equipment-maintenance',    3, '', '', 3, NOW(), NOW()),
 (2100000000010060, 0, '删除维保', 'delete.admin/equipment-maintenance', 3, '', '', 4, NOW(), NOW());
 
--- API 权限 — 合同管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010061, 0, '查看合同', 'get.admin/contract',    3, '', '', 1, NOW(), NOW()),
-(2100000000010062, 0, '创建合同', 'post.admin/contract',   3, '', '', 2, NOW(), NOW()),
-(2100000000010063, 0, '更新合同', 'put.admin/contract',    3, '', '', 3, NOW(), NOW()),
-(2100000000010064, 0, '删除合同', 'delete.admin/contract', 3, '', '', 4, NOW(), NOW());
-
 -- API 权限 — 安防巡逻
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010065, 0, '查看巡逻', 'get.admin/security-patrol',    3, '', '', 1, NOW(), NOW()),
@@ -366,47 +352,12 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010075, 0, '更新绿化区域', 'put.admin/green-area',    3, '', '', 3, NOW(), NOW()),
 (2100000000010076, 0, '删除绿化区域', 'delete.admin/green-area', 3, '', '', 4, NOW(), NOW());
 
--- API 权限 — 社区活动
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010077, 0, '查看活动', 'get.admin/activity',    3, '', '', 1, NOW(), NOW()),
-(2100000000010078, 0, '创建活动', 'post.admin/activity',   3, '', '', 2, NOW(), NOW()),
-(2100000000010079, 0, '更新活动', 'put.admin/activity',    3, '', '', 3, NOW(), NOW()),
-(2100000000010080, 0, '删除活动', 'delete.admin/activity', 3, '', '', 4, NOW(), NOW());
-
--- API 权限 — 能耗仪表
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010081, 0, '查看仪表', 'get.admin/energy-meter',    3, '', '', 1, NOW(), NOW()),
-(2100000000010082, 0, '创建仪表', 'post.admin/energy-meter',   3, '', '', 2, NOW(), NOW()),
-(2100000000010083, 0, '更新仪表', 'put.admin/energy-meter',    3, '', '', 3, NOW(), NOW()),
-(2100000000010084, 0, '删除仪表', 'delete.admin/energy-meter', 3, '', '', 4, NOW(), NOW());
-
 -- API 权限 — 员工管理
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010085, 0, '查看员工', 'get.admin/staff',    3, '', '', 1, NOW(), NOW()),
 (2100000000010086, 0, '创建员工', 'post.admin/staff',   3, '', '', 2, NOW(), NOW()),
 (2100000000010087, 0, '更新员工', 'put.admin/staff',    3, '', '', 3, NOW(), NOW()),
 (2100000000010088, 0, '删除员工', 'delete.admin/staff', 3, '', '', 4, NOW(), NOW());
-
--- API 权限 — 集团管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010101, 0, '查看集团', 'get.admin/group',    3, '', '', 1, NOW(), NOW()),
-(2100000000010102, 0, '创建集团', 'post.admin/group',   3, '', '', 2, NOW(), NOW()),
-(2100000000010103, 0, '更新集团', 'put.admin/group',    3, '', '', 3, NOW(), NOW()),
-(2100000000010104, 0, '删除集团', 'delete.admin/group', 3, '', '', 4, NOW(), NOW());
-
--- API 权限 — 问答分类
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010105, 0, '查看问答分类', 'get.admin/knowledge-category',    3, '', '', 1, NOW(), NOW()),
-(2100000000010106, 0, '创建问答分类', 'post.admin/knowledge-category',   3, '', '', 2, NOW(), NOW()),
-(2100000000010107, 0, '更新问答分类', 'put.admin/knowledge-category',    3, '', '', 3, NOW(), NOW()),
-(2100000000010108, 0, '删除问答分类', 'delete.admin/knowledge-category', 3, '', '', 4, NOW(), NOW());
-
--- API 权限 — 智能问答
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010109, 0, '查看文章', 'get.admin/knowledge',    3, '', '', 1, NOW(), NOW()),
-(2100000000010110, 0, '创建文章', 'post.admin/knowledge',   3, '', '', 2, NOW(), NOW()),
-(2100000000010111, 0, '更新文章', 'put.admin/knowledge',    3, '', '', 3, NOW(), NOW()),
-(2100000000010112, 0, '删除文章', 'delete.admin/knowledge', 3, '', '', 4, NOW(), NOW());
 
 -- API 权限 — 业务模块特殊端点
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
@@ -416,91 +367,18 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010116, 0, '账单批量生成',     'post.admin/fee-bill/batch/generate', 3, '', '', 4, NOW(), NOW()),
 (2100000000010117, 0, '查看缴费记录',     'get.admin/fee-payment',             3, '', '', 5, NOW(), NOW()),
 (2100000000010118, 0, '线下收款',         'post.admin/fee-payment/offline',    3, '', '', 6, NOW(), NOW()),
-(2100000000010119, 0, '报修派单',         'put.admin/repair/assign',           3, '', '', 7, NOW(), NOW()),
-(2100000000010120, 0, '报修进度更新',     'post.admin/repair/progress',        3, '', '', 8, NOW(), NOW()),
-(2100000000010121, 0, '查看投诉',         'get.admin/complaint',               3, '', '', 9, NOW(), NOW()),
-(2100000000010122, 0, '投诉处理',         'put.admin/complaint/handle',        3, '', '', 10, NOW(), NOW()),
-(2100000000010123, 0, '访客审核',         'put.admin/visitor/approve',         3, '', '', 11, NOW(), NOW()),
-(2100000000010124, 0, '财务统计',         'get.admin/finance/statistics',      3, '', '', 12, NOW(), NOW()),
 (2100000000010125, 0, '查看巡逻记录',     'get.admin/patrol-record',           3, '', '', 13, NOW(), NOW()),
 (2100000000010126, 0, '创建巡逻记录',     'post.admin/patrol-record',          3, '', '', 14, NOW(), NOW()),
 (2100000000010127, 0, '查看保洁记录',     'get.admin/cleaning-record',         3, '', '', 15, NOW(), NOW()),
 (2100000000010128, 0, '创建保洁记录',     'post.admin/cleaning-record',        3, '', '', 16, NOW(), NOW()),
 (2100000000010129, 0, '查看绿化养护',     'get.admin/green-maintenance',       3, '', '', 17, NOW(), NOW()),
 (2100000000010130, 0, '创建绿化养护',     'post.admin/green-maintenance',      3, '', '', 18, NOW(), NOW()),
-(2100000000010131, 0, '查看活动报名',     'get.admin/activity-signup',         3, '', '', 19, NOW(), NOW()),
-(2100000000010132, 0, '活动签到',         'put.admin/activity-signup/checkin', 3, '', '', 20, NOW(), NOW()),
-(2100000000010133, 0, '查看能耗记录',     'get.admin/energy-record',           3, '', '', 21, NOW(), NOW()),
-(2100000000010134, 0, '创建能耗记录',     'post.admin/energy-record',          3, '', '', 22, NOW(), NOW()),
-(2100000000010140, 0, '查看催缴策略',     'get.admin/collection-strategy',     3, '', '', 28, NOW(), NOW()),
-(2100000000010141, 0, '创建催缴策略',     'post.admin/collection-strategy',    3, '', '', 29, NOW(), NOW()),
-(2100000000010142, 0, '更新催缴策略',     'put.admin/collection-strategy',     3, '', '', 30, NOW(), NOW()),
-(2100000000010143, 0, '删除催缴策略',     'delete.admin/collection-strategy',  3, '', '', 31, NOW(), NOW()),
-(2100000000010144, 0, '查看催缴记录',     'get.admin/collection-record',       3, '', '', 32, NOW(), NOW()),
-(2100000000010145, 0, '执行催缴',         'post.admin/collection/run',         3, '', '', 33, NOW(), NOW()),
-(2100000000010152, 0, '集团小区列表',     'get.admin/group/communities',       3, '', '', 40, NOW(), NOW()),
-(2100000000010153, 0, '集团添加小区',     'post.admin/group/community',        3, '', '', 41, NOW(), NOW()),
-(2100000000010154, 0, '集团统计',         'get.admin/group/summary',           3, '', '', 42, NOW(), NOW()),
-(2100000000010155, 0, '查看聊天记录',     'get.admin/chat-record',             3, '', '', 43, NOW(), NOW()),
-(2100000000010156, 0, '聊天统计',         'get.admin/chat-stats',              3, '', '', 44, NOW(), NOW()),
-(2100000000010157, 0, '查看访客',         'get.admin/visitor',                 3, '', '', 45, NOW(), NOW()),
-(2100000000010158, 0, '投诉回访',         'post.admin/complaint/visit',        3, '', '', 46, NOW(), NOW()),
 (2100000000010159, 0, '查看停车记录',     'get.admin/parking-record',          3, '', '', 47, NOW(), NOW()),
 (2100000000010160, 0, '物业仪表盘统计',   'get.admin/dashboard/property',      3, '', '', 48, NOW(), NOW());
-
--- API 权限 — 财务收支
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010161, 0, '查看财务收入', 'get.admin/finance-income',    3, '', '', 1, NOW(), NOW()),
-(2100000000010162, 0, '创建财务收入', 'post.admin/finance-income',   3, '', '', 2, NOW(), NOW()),
-(2100000000010163, 0, '更新财务收入', 'put.admin/finance-income',    3, '', '', 3, NOW(), NOW()),
-(2100000000010164, 0, '删除财务收入', 'delete.admin/finance-income', 3, '', '', 4, NOW(), NOW()),
-(2100000000010165, 0, '查看财务支出', 'get.admin/finance-expense',    3, '', '', 5, NOW(), NOW()),
-(2100000000010166, 0, '创建财务支出', 'post.admin/finance-expense',   3, '', '', 6, NOW(), NOW()),
-(2100000000010167, 0, '更新财务支出', 'put.admin/finance-expense',    3, '', '', 7, NOW(), NOW()),
-(2100000000010168, 0, '删除财务支出', 'delete.admin/finance-expense', 3, '', '', 8, NOW(), NOW());
 
 -- API 权限 — 员工批量状态
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
 (2100000000010169, 0, '员工批量启禁用', 'post.admin/staff/batch/status', 3, '', '', 1, NOW(), NOW());
-
--- API 权限 — 集团移除小区
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010174, 0, '集团移除小区', 'delete.admin/group/community', 3, '', '', 1, NOW(), NOW());
-
--- API 权限 — 审批管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010175, 0, '查看审批类型', 'get.admin/approval-type',     3, '', '', 1, NOW(), NOW()),
-(2100000000010176, 0, '创建审批类型', 'post.admin/approval-type',    3, '', '', 2, NOW(), NOW()),
-(2100000000010177, 0, '更新审批类型', 'put.admin/approval-type',     3, '', '', 3, NOW(), NOW()),
-(2100000000010178, 0, '删除审批类型', 'delete.admin/approval-type',  3, '', '', 4, NOW(), NOW()),
-(2100000000010179, 0, '查看审批',     'get.admin/approval',          3, '', '', 5, NOW(), NOW()),
-(2100000000010180, 0, '提交审批',     'post.admin/approval',         3, '', '', 6, NOW(), NOW()),
-(2100000000010181, 0, '审批处理',     'put.admin/approval/approve',  3, '', '', 7, NOW(), NOW()),
-(2100000000010182, 0, '我的待办审批', 'get.admin/approval/my-pending', 3, '', '', 8, NOW(), NOW());
-
--- API 权限 — 通知管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010183, 0, '查看通知模板', 'get.admin/notification-template',   3, '', '', 1, NOW(), NOW()),
-(2100000000010184, 0, '创建通知模板', 'post.admin/notification-template',  3, '', '', 2, NOW(), NOW()),
-(2100000000010185, 0, '更新通知模板', 'put.admin/notification-template',   3, '', '', 3, NOW(), NOW()),
-(2100000000010186, 0, '删除通知模板', 'delete.admin/notification-template', 3, '', '', 4, NOW(), NOW()),
-(2100000000010187, 0, '查看通知',     'get.admin/notification',            3, '', '', 5, NOW(), NOW()),
-(2100000000010188, 0, '发送通知',     'post.admin/notification/send',      3, '', '', 6, NOW(), NOW());
-
--- API 权限 — 投票管理
-INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
-(2100000000010189, 0, '查看投票',     'get.admin/vote',           3, '', '', 1, NOW(), NOW()),
-(2100000000010190, 0, '创建投票',     'post.admin/vote',          3, '', '', 2, NOW(), NOW()),
-(2100000000010191, 0, '更新投票',     'put.admin/vote',           3, '', '', 3, NOW(), NOW()),
-(2100000000010192, 0, '删除投票',     'delete.admin/vote',        3, '', '', 4, NOW(), NOW()),
-(2100000000010193, 0, '查看投票选项', 'get.admin/vote/options',   3, '', '', 5, NOW(), NOW()),
-(2100000000010194, 0, '创建投票选项', 'post.admin/vote/option',   3, '', '', 6, NOW(), NOW()),
-(2100000000010195, 0, '更新投票选项', 'put.admin/vote/option',    3, '', '', 7, NOW(), NOW()),
-(2100000000010196, 0, '删除投票选项', 'delete.admin/vote/option', 3, '', '', 8, NOW(), NOW()),
-(2100000000010197, 0, '投票记录',     'get.admin/vote/records',   3, '', '', 9, NOW(), NOW()),
-(2100000000010198, 0, '投票统计',     'get.admin/vote/statistics', 3, '', '', 10, NOW(), NOW()),
-(2100000000010199, 0, '发布投票',     'put.admin/vote/publish',   3, '', '', 11, NOW(), NOW()),
-(2100000000010200, 0, '结束投票',     'put.admin/vote/end',       3, '', '', 12, NOW(), NOW());
 
 -- API 权限 — 支付管理
 INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `type`, `icon`, `path`, `sort`, `created_at`, `updated_at`) VALUES
@@ -522,7 +400,7 @@ INSERT INTO `management_admin_permission` (`id`, `parent_id`, `name`, `slug`, `t
 (2100000000010205, 0, '导出物业数据',       'post.admin/export/property-excel',  3, '', '', 3, NOW(), NOW());
 
 -- API 权限 — 动作型端点补种（无任何祖先 slug 可命中者，必须显式登记）
--- 背景：另外 11 条动作型端点的种子写成了不带参数的逻辑路径（如 put.admin/complaint/handle），
+-- 背景：部分动作型端点的种子写成了不带参数的逻辑路径（如 put.admin/xxx/{hashid}），
 -- 而路由带 {hashid}；待 AdminPermission 先剥离 `{...}` 段再回退即可命中，无需在此重复登记。
 -- 以下 3 条在两种匹配方式下都没有祖先可命中，故在此补条：
 --   POST /admin/payment-order/create、POST /admin/payment-order/reconcile → PaymentController
@@ -790,47 +668,6 @@ CREATE TABLE IF NOT EXISTS `management_fee_payment` (
     KEY `idx_paid_at` (`paid_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='缴费记录表';
 
--- 12. 报修单表
-CREATE TABLE IF NOT EXISTS `management_repair_order` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `order_number` VARCHAR(32) NOT NULL COMMENT '报修编号',
-    `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '报修人ID',
-    `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话（加密存储）',
-    `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '分类: 1=水电 2=门窗 3=墙面地面 4=管道 5=家电 6=电梯 7=公共设施 8=其他',
-    `urgency` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '紧急程度: 1=普通 2=紧急 3=非常紧急',
-    `description` TEXT COMMENT '问题描述',
-    `images` TEXT COMMENT '图片URL (JSON数组)',
-    `scheduled_at` DATETIME DEFAULT NULL COMMENT '预约维修时间',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=待派单 1=已派单 2=维修中 3=已完成 4=已评价 5=已取消',
-    `staff_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '维修人员ID',
-    `completed_at` DATETIME DEFAULT NULL COMMENT '完成时间',
-    `rating` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '评分 1-5',
-    `feedback` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '评价内容',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_room_id` (`room_id`),
-    KEY `idx_owner_id` (`owner_id`),
-    KEY `idx_status` (`status`),
-    KEY `idx_order_number` (`order_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修单表';
-
--- 13. 报修进度表
-CREATE TABLE IF NOT EXISTS `management_repair_progress` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `repair_order_id` BIGINT UNSIGNED NOT NULL COMMENT '报修单ID',
-    `staff_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作人员ID',
-    `status_from` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '变更前状态',
-    `status_to` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '变更后状态',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '进度说明',
-    `images` TEXT COMMENT '现场图片 (JSON数组)',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_repair_order_id` (`repair_order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='报修进度表';
-
 -- 14. 公告通知表
 CREATE TABLE IF NOT EXISTS `management_announcement` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
@@ -952,129 +789,6 @@ CREATE TABLE IF NOT EXISTS `management_equipment_maintenance` (
     KEY `idx_next_at` (`next_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='设备维保表';
 
--- 20. 投诉建议表
-CREATE TABLE IF NOT EXISTS `management_complaint` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '投诉人ID',
-    `room_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '房产ID',
-    `type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=投诉 2=建议 3=表扬',
-    `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '分类: 1=服务态度 2=环境卫生 3=安全管理 4=设施维护 5=噪音 6=违建 7=其他',
-    `title` VARCHAR(200) NOT NULL COMMENT '标题',
-    `content` TEXT COMMENT '内容',
-    `images` TEXT COMMENT '图片 (JSON数组)',
-    `is_anonymous` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否匿名: 0=实名 1=匿名',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=待处理 1=处理中 2=已处理 3=已回访 4=已关闭',
-    `handler_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '处理人ID',
-    `handler_remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '处理备注',
-    `handled_at` DATETIME DEFAULT NULL COMMENT '处理时间',
-    `visitor_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '回访人ID',
-    `visitor_remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '回访备注',
-    `visitor_at` DATETIME DEFAULT NULL COMMENT '回访时间',
-    `satisfaction` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '满意度 1-5',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_owner_id` (`owner_id`),
-    KEY `idx_room_id` (`room_id`),
-    KEY `idx_type` (`type`),
-    KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投诉建议表';
-
--- 21. 访客表
-CREATE TABLE IF NOT EXISTS `management_visitor` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `room_id` BIGINT UNSIGNED NOT NULL COMMENT '到访房产ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '被访业主ID',
-    `visitor_name` VARCHAR(50) NOT NULL COMMENT '访客姓名',
-    `visitor_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '访客电话（加密存储）',
-    `visitor_id_card` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '访客身份证（加密存储）',
-    `plate_number` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '来访车牌（加密存储）',
-    `visitor_count` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '同行人数',
-    `purpose` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '来访事由',
-    `expected_start` DATETIME DEFAULT NULL COMMENT '预计到访时间',
-    `expected_end` DATETIME DEFAULT NULL COMMENT '预计离开时间',
-    `actual_start` DATETIME DEFAULT NULL COMMENT '实际到访时间',
-    `actual_end` DATETIME DEFAULT NULL COMMENT '实际离开时间',
-    `pass_code` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '通行码',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=已预约 1=已到访 2=已离开 3=已取消',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_room_id` (`room_id`),
-    KEY `idx_owner_id` (`owner_id`),
-    KEY `idx_status` (`status`),
-    KEY `idx_pass_code` (`pass_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='访客表';
-
--- 22. 合同表
-CREATE TABLE IF NOT EXISTS `management_contract` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `contract_number` VARCHAR(50) NOT NULL COMMENT '合同编号',
-    `contract_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=物业合同 2=租赁合同 3=维保合同 4=服务合同 5=采购合同',
-    `party_a_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '甲方类型: 1=业主 2=物业 3=供应商',
-    `party_a_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '甲方ID',
-    `party_b_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '乙方类型',
-    `party_b_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '乙方ID',
-    `title` VARCHAR(200) NOT NULL COMMENT '合同标题',
-    `amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '合同金额',
-    `start_date` DATE DEFAULT NULL COMMENT '合同起始',
-    `end_date` DATE DEFAULT NULL COMMENT '合同截止',
-    `sign_date` DATE DEFAULT NULL COMMENT '签订日期',
-    `content` TEXT COMMENT '合同内容 (JSON)',
-    `attachments` TEXT COMMENT '附件 (JSON)',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=草稿 1=履行中 2=已到期 3=已终止 4=续签',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_contract_type` (`contract_type`),
-    KEY `idx_status` (`status`),
-    KEY `idx_start_date` (`start_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='合同表';
-
--- 23. 财务收入表
-CREATE TABLE IF NOT EXISTS `management_finance_income` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `income_number` VARCHAR(32) NOT NULL COMMENT '收入单号',
-    `income_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=物业费 2=停车费 3=租金 4=广告费 5=维修基金 6=其他',
-    `amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '金额',
-    `payer_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '付款方类型: 1=业主 2=租户 3=商户 4=其他',
-    `payer_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '付款方ID',
-    `payment_method` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '支付方式: 1=微信 2=支付宝 3=现金 4=银行转账',
-    `income_date` DATE NOT NULL COMMENT '收入日期',
-    `operator_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '经手人ID',
-    `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_income_type` (`income_type`),
-    KEY `idx_income_date` (`income_date`),
-    KEY `idx_income_number` (`income_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='财务收入表';
-
--- 24. 财务支出表
-CREATE TABLE IF NOT EXISTS `management_finance_expense` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `expense_number` VARCHAR(32) NOT NULL COMMENT '支出单号',
-    `expense_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=人力成本 2=设备采购 3=维保维修 4=水电能耗 5=保洁绿化 6=办公费用 7=税金 8=其他',
-    `amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '金额',
-    `payee` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '收款方',
-    `expense_date` DATE NOT NULL COMMENT '支出日期',
-    `operator_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '经手人ID',
-    `receipt_url` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '凭证URL',
-    `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_expense_type` (`expense_type`),
-    KEY `idx_expense_date` (`expense_date`),
-    KEY `idx_expense_number` (`expense_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='财务支出表';
--- ============================================================
--- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
--- 迁移: 物业管理系统 — 第3批高级功能表（10张）
--- 主键 id 使用 BIGINT UNSIGNED NOT NULL，由 snowflake-php 应用层生成
--- ============================================================
-
 -- 25. 安保巡逻路线表
 CREATE TABLE IF NOT EXISTS `management_security_patrol` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
@@ -1166,79 +880,6 @@ CREATE TABLE IF NOT EXISTS `management_green_maintenance` (
     PRIMARY KEY (`id`), KEY `idx_area_id` (`area_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='绿化养护记录表';
 
--- 31. 社区活动表
-CREATE TABLE IF NOT EXISTS `management_community_activity` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
-    `title` VARCHAR(200) NOT NULL COMMENT '活动标题',
-    `content` TEXT COMMENT '活动内容',
-    `category` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '分类: 1=文体 2=节日 3=公益 4=讲座 5=亲子 6=其他',
-    `cover_image` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '封面图URL',
-    `location` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '活动地点',
-    `max_participants` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '最大参与人数,0不限',
-    `start_time` DATETIME DEFAULT NULL COMMENT '活动开始时间',
-    `end_time` DATETIME DEFAULT NULL COMMENT '活动结束时间',
-    `signup_start` DATETIME DEFAULT NULL COMMENT '报名开始时间',
-    `signup_end` DATETIME DEFAULT NULL COMMENT '报名截止时间',
-    `is_free` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否免费: 0=收费 1=免费',
-    `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '费用',
-    `organizer` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '组织者',
-    `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话（加密存储）',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=草稿 1=报名中 2=进行中 3=已结束 4=已取消',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), KEY `idx_community_id` (`community_id`), KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='社区活动表';
-
--- 32. 活动报名表
-CREATE TABLE IF NOT EXISTS `management_activity_signup` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `activity_id` BIGINT UNSIGNED NOT NULL COMMENT '活动ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '报名人ID',
-    `participant_count` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '参与人数',
-    `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话（加密存储）',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '备注',
-    `signup_status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=已报名 1=已签到 2=已取消',
-    `signup_at` DATETIME DEFAULT NULL COMMENT '报名时间',
-    `checkin_at` DATETIME DEFAULT NULL COMMENT '签到时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`), KEY `idx_activity_id` (`activity_id`), KEY `idx_owner_id` (`owner_id`),
-    UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='活动报名表';
-
--- 33. 能耗仪表表
-CREATE TABLE IF NOT EXISTS `management_energy_meter` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
-    `meter_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=电表 2=水表 3=燃气表 4=暖气表',
-    `meter_number` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '仪表编号',
-    `install_reading` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '安装读数',
-    `install_date` DATE DEFAULT NULL COMMENT '安装日期',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态: 0=停用 1=正常',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), KEY `idx_room_id` (`room_id`), KEY `idx_meter_number` (`meter_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗仪表表';
-
--- 34. 能耗记录表
-CREATE TABLE IF NOT EXISTS `management_energy_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `meter_id` BIGINT UNSIGNED NOT NULL COMMENT '仪表ID',
-    `room_id` BIGINT UNSIGNED NOT NULL COMMENT '房产ID',
-    `reading` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '本次读数',
-    `previous_reading` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '上次读数',
-    `usage_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '用量',
-    `unit_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '单价',
-    `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '费用',
-    `record_date` DATE NOT NULL COMMENT '记录日期',
-    `reader_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '抄表人ID',
-    `bill_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联账单ID',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`), KEY `idx_meter_id` (`meter_id`), KEY `idx_meter_date` (`meter_id`, `record_date`), KEY `idx_room_id` (`room_id`), KEY `idx_record_date` (`record_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='能耗记录表';
-
 -- 35. 员工表
 CREATE TABLE IF NOT EXISTS `management_staff` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
@@ -1257,103 +898,8 @@ CREATE TABLE IF NOT EXISTS `management_staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工表';
 -- ============================================================
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
--- 迁移: 功能扩展（消息通知/审批工作流/支付/ES搜索/投票/SLA/催缴/巡检/集团/智能问答）
+-- 迁移: 功能扩展（支付）
 -- ============================================================
-
--- ============================================================
--- 1. 消息通知中心
--- ============================================================
-
--- 消息模板表
-CREATE TABLE IF NOT EXISTS `management_notification_template` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `code` VARCHAR(50) NOT NULL COMMENT '模板代码: bill_remind/repair_update/announcement',
-    `name` VARCHAR(100) NOT NULL COMMENT '模板名称',
-    `title_template` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '标题模板: 您的账单{amount}元已逾期',
-    `content_template` TEXT COMMENT '内容模板',
-    `channels` VARCHAR(100) NOT NULL DEFAULT '["in_app"]' COMMENT '渠道: in_app/sms/email/push (JSON)',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '0=停用 1=启用',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), UNIQUE KEY `uk_code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='消息模板表';
-
--- 通知消息表
-CREATE TABLE IF NOT EXISTS `management_notification` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `user_id` BIGINT UNSIGNED NOT NULL COMMENT '接收人ID',
-    `user_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '用户类型: 1=业主 2=管理员',
-    `template_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '模板ID',
-    `title` VARCHAR(200) NOT NULL COMMENT '消息标题',
-    `content` TEXT COMMENT '消息内容',
-    `type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=系统通知 2=账单提醒 3=报修进度 4=公告 5=活动 6=审批',
-    `channel` VARCHAR(20) NOT NULL DEFAULT 'in_app' COMMENT '发送渠道: in_app/sms/email/push',
-    `is_read` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '已读: 0=未读 1=已读',
-    `read_at` DATETIME DEFAULT NULL COMMENT '阅读时间',
-    `ref_type` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '关联类型: bill/repair/announcement/activity',
-    `ref_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联ID',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_user` (`user_id`, `user_type`),
-    KEY `idx_is_read` (`is_read`),
-    KEY `idx_created_at` (`created_at`),
-    KEY `idx_type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='通知消息表';
-
--- ============================================================
--- 2. 审批工作流引擎
--- ============================================================
-
--- 审批类型表
-CREATE TABLE IF NOT EXISTS `management_approval_type` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `code` VARCHAR(50) NOT NULL COMMENT '类型代码: repair_assign/visitor_approve/contract_approve',
-    `name` VARCHAR(100) NOT NULL COMMENT '类型名称',
-    `steps` TEXT COMMENT '审批步骤配置 (JSON): [{"step":1,"name":"主管审批","role":"manager"},...]',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`), UNIQUE KEY `uk_code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批类型表';
-
--- 审批实例表
-CREATE TABLE IF NOT EXISTS `management_approval` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `approval_type_id` BIGINT UNSIGNED NOT NULL COMMENT '审批类型ID',
-    `title` VARCHAR(200) NOT NULL COMMENT '审批标题',
-    `applicant_id` BIGINT UNSIGNED NOT NULL COMMENT '申请人ID',
-    `applicant_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1=业主 2=管理员',
-    `ref_type` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '关联业务类型',
-    `ref_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联业务ID',
-    `current_step` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '当前步骤',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=审批中 1=已通过 2=已驳回 3=已撤回',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '申请备注',
-    `completed_at` DATETIME DEFAULT NULL COMMENT '审批完成时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_approval_type` (`approval_type_id`),
-    KEY `idx_applicant` (`applicant_id`, `applicant_type`),
-    KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批实例表';
-
--- 审批记录表
-CREATE TABLE IF NOT EXISTS `management_approval_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `approval_id` BIGINT UNSIGNED NOT NULL COMMENT '审批实例ID',
-    `step` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '步骤',
-    `approver_id` BIGINT UNSIGNED NOT NULL COMMENT '审批人ID',
-    `action` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作: 0=待审批 1=通过 2=驳回',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '审批意见',
-    `acted_at` DATETIME DEFAULT NULL COMMENT '操作时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_approval_id` (`approval_id`),
-    KEY `idx_approver` (`approver_id`),
-    KEY `idx_approver_action` (`approver_id`, `action`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审批记录表';
 
 -- ============================================================
 -- 3. 支付集成
@@ -1385,165 +931,6 @@ CREATE TABLE IF NOT EXISTS `management_payment_order` (
     KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='支付订单表';
 
--- ============================================================
--- 5. 业主投票/表决
--- ============================================================
-
--- 投票表
-CREATE TABLE IF NOT EXISTS `management_vote` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `community_id` BIGINT UNSIGNED NOT NULL COMMENT '所属小区ID',
-    `title` VARCHAR(200) NOT NULL COMMENT '投票标题',
-    `description` TEXT COMMENT '投票说明',
-    `vote_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型: 1=普通投票 2=业主大会表决(按面积加权)',
-    `start_time` DATETIME NOT NULL COMMENT '开始时间',
-    `end_time` DATETIME NOT NULL COMMENT '结束时间',
-    `is_anonymous` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否匿名: 0=实名 1=匿名',
-    `min_participation_rate` DECIMAL(5,2) NOT NULL DEFAULT 0.00 COMMENT '最低参与率(%)',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=草稿 1=进行中 2=已结束 3=已取消',
-    `publisher_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '发布人',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_community_id` (`community_id`),
-    KEY `idx_community_status_end` (`community_id`, `status`, `end_time`),
-    KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票表';
-
--- 投票选项表
-CREATE TABLE IF NOT EXISTS `management_vote_option` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `vote_id` BIGINT UNSIGNED NOT NULL COMMENT '投票ID',
-    `content` VARCHAR(200) NOT NULL COMMENT '选项内容',
-    `sort` INT UNSIGNED NOT NULL DEFAULT 0,
-    `vote_count` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '得票数',
-    `area_weighted_count` DECIMAL(15,2) NOT NULL DEFAULT 0.00 COMMENT '面积加权得票',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_vote_id` (`vote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票选项表';
-
--- 投票记录表
-CREATE TABLE IF NOT EXISTS `management_vote_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `vote_id` BIGINT UNSIGNED NOT NULL COMMENT '投票ID',
-    `option_id` BIGINT UNSIGNED NOT NULL COMMENT '选项ID',
-    `owner_id` BIGINT UNSIGNED NOT NULL COMMENT '投票人ID',
-    `room_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '关联房产',
-    `area_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 COMMENT '面积占比(%)',
-    `voted_at` DATETIME NOT NULL COMMENT '投票时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_vote_owner` (`vote_id`, `owner_id`),
-    KEY `idx_vote_id` (`vote_id`),
-    KEY `idx_option_id` (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='投票记录表';
-
--- ============================================================
--- 8. 智能催缴
--- ============================================================
-
--- 催缴策略表
-CREATE TABLE IF NOT EXISTS `management_collection_strategy` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `name` VARCHAR(100) NOT NULL COMMENT '策略名称',
-    `overdue_days` INT UNSIGNED NOT NULL DEFAULT 7 COMMENT '逾期天数触发',
-    `action` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '动作: 1=App推送 2=短信 3=电话 4=上门 5=律师函',
-    `template_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '消息模板ID',
-    `late_fee_rate` DECIMAL(5,3) NOT NULL DEFAULT 0.001 COMMENT '日滞纳金率(千分比)',
-    `sort` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '执行顺序',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴策略表';
-
--- 催缴记录表
-CREATE TABLE IF NOT EXISTS `management_collection_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `bill_id` BIGINT UNSIGNED NOT NULL COMMENT '账单ID',
-    `strategy_id` BIGINT UNSIGNED NOT NULL COMMENT '策略ID',
-    `action` TINYINT UNSIGNED NOT NULL COMMENT '执行动作',
-    `executed_by` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '执行人(0=系统)',
-    `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '催缴备注',
-    `executed_at` DATETIME NOT NULL COMMENT '执行时间',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_bill_id` (`bill_id`),
-    KEY `idx_executed_at` (`executed_at`),
-    UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催缴记录表';
-
--- ============================================================
--- 14. 多小区集团管理
--- ============================================================
-
--- 集团表
-CREATE TABLE IF NOT EXISTS `management_group` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `name` VARCHAR(100) NOT NULL COMMENT '集团名称',
-    `contact_person` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '联系人',
-    `contact_phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '联系电话(加密)',
-    `description` TEXT COMMENT '集团简介',
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='集团表';
-
--- 集团公司关联表（集团→小区 多对多）
-CREATE TABLE IF NOT EXISTS `management_group_community` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `group_id` BIGINT UNSIGNED NOT NULL COMMENT '集团ID',
-    `community_id` BIGINT UNSIGNED NOT NULL COMMENT '小区ID',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_group_community` (`group_id`, `community_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='集团小区关联表';
-
--- ============================================================
--- 15. 智能问答
--- ============================================================
-
--- 知识库表
-CREATE TABLE IF NOT EXISTS `management_knowledge_base` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `category_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '分类ID(自引用)',
-    `question` VARCHAR(500) NOT NULL COMMENT '问题',
-    `answer` TEXT COMMENT '答案',
-    `keywords` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '关键词(逗号分隔)',
-    `view_count` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '查看次数',
-    `helpful_count` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '有用次数',
-    `sort` INT UNSIGNED NOT NULL DEFAULT 0,
-    `status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '0=停用 1=启用',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `idx_category` (`category_id`),
-    KEY `idx_keywords` (`keywords`(100))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识库表';
-
--- 对话记录表
-CREATE TABLE IF NOT EXISTS `management_chat_record` (
-    `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
-    `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
-    `user_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1=业主 2=管理员',
-    `question` TEXT COMMENT '用户问题',
-    `answer` TEXT COMMENT '回答',
-    `match_type` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '匹配方式: 0=关键词 1=AI 2=转人工',
-    `matched_kb_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '匹配知识库ID',
-    `is_helpful` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否解决: 0=未评价 1=已解决 2=未解决',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_user` (`user_id`, `user_type`),
-    KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='对话记录表';
-
 -- 开放 API Key 表（service 端入站对外接口鉴权，X-API-Key 头）
 CREATE TABLE IF NOT EXISTS `management_api_key` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
@@ -1564,27 +951,9 @@ CREATE TABLE IF NOT EXISTS `management_api_key` (
 -- Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 -- ============================================================
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_vote' AND index_name = 'idx_community_status_end');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_vote` ADD INDEX `idx_community_status_end` (`community_id`, `status`, `end_time`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_approval_record' AND index_name = 'idx_approver_action');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_approval_record` ADD INDEX `idx_approver_action` (`approver_id`, `action`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_energy_record' AND index_name = 'idx_meter_date');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_energy_record` ADD INDEX `idx_meter_date` (`meter_id`, `record_date`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_equipment' AND index_name = 'idx_community_status');
 SET @sql := IF(@ix = 0, 'ALTER TABLE `management_equipment` ADD INDEX `idx_community_status` (`community_id`, `status`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
-
--- P13 审计补充：唯一键兜底（活动报名重复 / 催缴重复），旧库幂等追加
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_activity_signup' AND index_name = 'uk_activity_signup_owner');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_activity_signup` ADD UNIQUE KEY `uk_activity_signup_owner` (`activity_id`, `owner_id`)', 'DO 0');
-PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
-
-SET @ix := (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'management_collection_record' AND index_name = 'uk_collection_bill_strategy');
-SET @sql := IF(@ix = 0, 'ALTER TABLE `management_collection_record` ADD UNIQUE KEY `uk_collection_bill_strategy` (`bill_id`, `strategy_id`)', 'DO 0');
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;

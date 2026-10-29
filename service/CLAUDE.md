@@ -39,7 +39,6 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 - Session: Cookie secure + SameSite=Strict
 - 加密: AES-256-CBC 传输 + 数据库字段级
 - ID: Hashids 混淆
-- ES: xpack.security 密码认证
 - Redis: requirepass 密码认证
 - Docker: 非 root 用户运行
 

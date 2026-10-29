@@ -9,11 +9,11 @@ declare(strict_types=1);
  * 注册 Webhook 配置（幂等，写入 management_system_config group=webhook key=webhook_config）
  *
  * 用法: cd admin && php scripts/register_webhook.php <url> <secret> [events] [enabled]
- *   events  : 逗号分隔，默认 fee_paid,repair_created,announcement_published
+ *   events  : 逗号分隔，默认 fee_paid,announcement_published
  *   enabled : 1/0，默认 1
  * 示例:
  *   php scripts/register_webhook.php https://example.com/hook my-secret
- *   php scripts/register_webhook.php https://example.com/hook my-secret fee_paid,repair_created 0
+ *   php scripts/register_webhook.php https://example.com/hook my-secret fee_paid 0
  *
  * 也可走管理端「系统配置」UI 直接增改同一行（type=json）。
  * 接收方校验: header X-Signature = sha256=<HMAC-SHA256(原始JSON载荷, secret)>
@@ -39,7 +39,7 @@ if (count($argv) < 4) {
     exit(1);
 }
 
-$events = $argv[3] ?? 'fee_paid,repair_created,announcement_published';
+$events = $argv[3] ?? 'fee_paid,announcement_published';
 $enabled = (int) ($argv[4] ?? 1);
 
 $value = json_encode([

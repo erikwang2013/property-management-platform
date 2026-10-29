@@ -7,7 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'report_controller.dart';
 import '../../widgets/pet_mark.dart';
 
-/// 报表中心：汇总卡片 + 收支趋势 + 缴费方式 + 业务分布 + 欠费排行
+/// 报表中心：汇总卡片 + 缴费方式 + 欠费排行
 class ReportPage extends GetView<ReportController> {
   const ReportPage({super.key});
 
@@ -41,25 +41,7 @@ class ReportPage extends GetView<ReportController> {
             const SizedBox(height: 24),
             _buildSummaryCards(context, s),
             const SizedBox(height: 24),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 3, child: _buildTrendCard(context)),
-                const SizedBox(width: 24),
-                Expanded(flex: 2, child: _buildPaymentCard(context)),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: _buildStatusCard(context, '报修状态', controller.data['repair_status'], ReportController.repairStatusLabels)),
-                const SizedBox(width: 24),
-                Expanded(child: _buildStatusCard(context, '投诉状态', controller.data['complaint_status'], ReportController.complaintStatusLabels)),
-                const SizedBox(width: 24),
-                Expanded(child: _buildStatusCard(context, '访客状态', controller.data['visitor_status'], ReportController.visitorStatusLabels)),
-              ],
-            ),
+            _buildPaymentCard(context),
             const SizedBox(height: 24),
             _buildArrearsCard(context),
           ],
@@ -91,9 +73,6 @@ class ReportPage extends GetView<ReportController> {
       ('欠费金额', '¥${s['arrears'] ?? 0}', Icons.warning_amber, Color(0xFFFA8C16)),
       ('收缴率', '${s['collection_rate'] ?? 0}%', Icons.percent, Color(0xFF722ED1)),
       ('入住率', '${s['occupancy_rate'] ?? 0}%', Icons.home, Color(0xFF13A8A8)),
-      ('待处理报修', '${s['pending_repairs'] ?? 0}', Icons.build, Color(0xFF2F54EB)),
-      ('待处理投诉', '${s['pending_complaints'] ?? 0}', Icons.feedback, Color(0xFFD4380D)),
-      ('今日访客', '${s['visitors_today'] ?? 0}', Icons.how_to_reg, Color(0xFF8C6D1F)),
     ];
     return LayoutBuilder(builder: (context, c) {
       final width = (c.maxWidth - 48) / 4;
@@ -126,89 +105,6 @@ class ReportPage extends GetView<ReportController> {
         ],
       );
     });
-  }
-
-  Widget _buildTrendCard(BuildContext context) {
-    final income = List<Map<String, dynamic>>.from(controller.data['income_trend'] ?? []);
-    final expense = List<Map<String, dynamic>>.from(controller.data['expense_trend'] ?? []);
-    final months = <String>{
-      ...income.map((e) => e['month'] as String? ?? ''),
-      ...expense.map((e) => e['month'] as String? ?? ''),
-    }.toList()..sort();
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('收支趋势', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            if (months.isEmpty)
-              const SizedBox(height: 200, child: PetEmpty())
-            else
-              SizedBox(
-                height: 240,
-                child: BarChart(
-                  BarChartData(
-                    barGroups: [
-                      for (var i = 0; i < months.length; i++)
-                        BarChartGroupData(x: i, barRods: [
-                          BarChartRodData(
-                            toY: _val(income, months[i]),
-                            color: const Color(0xFF1677FF),
-                            width: 10,
-                          ),
-                          BarChartRodData(
-                            toY: _val(expense, months[i]),
-                            color: const Color(0xFFFA8C16),
-                            width: 10,
-                          ),
-                        ]),
-                    ],
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (v, meta) {
-                            final i = v.toInt();
-                            if (i < 0 || i >= months.length) return const SizedBox.shrink();
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(months[i].substring(5), style: const TextStyle(fontSize: 10)),
-                            );
-                          },
-                        ),
-                      ),
-                      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 44)),
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    ),
-                    gridData: const FlGridData(show: true),
-                    borderData: FlBorderData(show: false),
-                  ),
-                ),
-              ),
-            const SizedBox(height: 8),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _LegendDot(color: Color(0xFF1677FF), label: '收入'),
-                SizedBox(width: 16),
-                _LegendDot(color: Color(0xFFFA8C16), label: '支出'),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  double _val(List<Map<String, dynamic>> list, String month) {
-    for (final e in list) {
-      if (e['month'] == month) return (e['total'] as num?)?.toDouble() ?? 0;
-    }
-    return 0;
   }
 
   Widget _buildPaymentCard(BuildContext context) {
@@ -262,46 +158,6 @@ class ReportPage extends GetView<ReportController> {
     );
   }
 
-  Widget _buildStatusCard(BuildContext context, String title, dynamic raw, Map<int, String> labels) {
-    final rows = List<Map<String, dynamic>>.from(raw ?? []);
-    final total = rows.fold<int>(0, (sum, e) => sum + ((e['count'] as num?)?.toInt() ?? 0));
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            if (rows.isEmpty)
-              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: PetEmpty())
-            else
-              for (final e in rows)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 60, child: Text(labels[(e['status'] as num?)?.toInt() ?? -1] ?? '未知', style: const TextStyle(fontSize: 13))),
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: total > 0 ? ((e['count'] as num?) ?? 0) / total : 0,
-                            minHeight: 8,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('${e['count']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildArrearsCard(BuildContext context) {
     final rows = List<Map<String, dynamic>>.from(controller.data['arrears_ranking'] ?? []);
     return Card(
@@ -313,7 +169,10 @@ class ReportPage extends GetView<ReportController> {
             const Text('欠费排行 TOP 10', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             if (rows.isEmpty)
-              const Padding(padding: EdgeInsets.symmetric(vertical: 24), child: PetEmpty(message: '暂无欠费数据'))
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: PetEmpty(message: '暂无欠费数据'),
+              )
             else
               DataTable(
                 columns: const [
@@ -337,23 +196,6 @@ class ReportPage extends GetView<ReportController> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _LegendDot extends StatelessWidget {
-  final Color color;
-  final String label;
-  const _LegendDot({required this.color, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 12)),
-      ],
     );
   }
 }

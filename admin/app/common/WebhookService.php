@@ -23,7 +23,7 @@ use Webman\RedisQueue\Redis as QueueRedis;
  */
 class WebhookService
 {
-    public const EVENTS = ['fee_paid', 'repair_created', 'announcement_published'];
+    public const EVENTS = ['fee_paid', 'announcement_published'];
 
     /** 可测注入点：返回配置数组（默认读 management_system_config），null 表示未配置 */
     public static $configResolver = null;

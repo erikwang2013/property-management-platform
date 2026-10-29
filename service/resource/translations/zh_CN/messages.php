@@ -53,25 +53,6 @@ return [
     'fee.pay_success' => '缴费成功',
     'fee.invalid_bill' => '账单信息无效',
 
-    // 报修管理
-    'repair.not_found' => '报修单不存在',
-    'repair.description_required' => '请描述问题',
-    'repair.submit_success' => '报修提交成功',
-    'repair.cancelled' => '已取消',
-    'repair.cancel_forbidden' => '只有待派单状态的报修可以取消',
-    'repair.room_invalid' => '房产信息无效',
-    'repair.rating_range' => '评分范围为1-5',
-    'repair.rate_forbidden' => '只有已完成的报修可以评价',
-    'repair.rate_success' => '评价成功',
-    'repair.no_permission' => '房产不存在或无权操作',
-
-    // 投诉管理
-    'complaint.not_found' => '投诉不存在',
-    'complaint.title_content_required' => '标题和内容不能为空',
-    'complaint.submit_success' => '提交成功',
-    'complaint.rate_forbidden' => '只能评价已处理的投诉',
-    'complaint.satisfaction_success' => '评价成功',
-
     // 文件
     'file.upload_success' => '上传成功',
     'file.upload_failed' => '上传失败',

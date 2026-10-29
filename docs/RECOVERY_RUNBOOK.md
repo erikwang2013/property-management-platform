@@ -79,7 +79,7 @@ docker compose -f admin/docker-compose.yml exec -T \
 |---|---|---|
 | 备份文件完整性 | `gzip -t <备份>` | 无报错 |
 | 关键表行数 | `SELECT COUNT(*) FROM management_admin_user;` | 与备份前记录的行数一致 |
-| 业务表抽查 | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_repair_order` | 三张以上数量级合理（非 0 且与备份前一致） |
+| 业务表抽查 | `SELECT COUNT(*) FROM management_owner;`、`management_tenant`、`management_fee_bill`、`management_parking_record` | 三张以上数量级合理（非 0 且与备份前一致） |
 | 加密字段可解密 | 查一条含 encryptable 字段的记录（如 `management_owner` 身份证/手机号） | 值正确、应用日志无 decrypt 报错 |
 | 业务冒烟 | 登录、拉取列表接口各 1 次 | 200 / 正常返回 |
 
@@ -92,7 +92,7 @@ docker compose -f admin/docker-compose.yml exec -T -e MYSQL_PWD=root mysql \
            (SELECT COUNT(*) FROM management_owner) AS owners,
            (SELECT COUNT(*) FROM management_tenant) AS tenants,
            (SELECT COUNT(*) FROM management_fee_bill) AS fee_bills,
-           (SELECT COUNT(*) FROM management_repair_order) AS repair_orders;"'
+           (SELECT COUNT(*) FROM management_parking_record) AS parking_records;"'
 ```
 
 > 行数一致性：备份前用同一条 SQL 记录基线，恢复后对比；演练时把基线写入演练记录。

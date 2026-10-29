@@ -6,7 +6,7 @@
 
 ![Xiaozhu · project mascot](docs/images/pet_xiaozhu.svg)
 
-A full-stack property management system covering 22 business modules + 7 extension features (notifications, approval workflow, payments, voting, collections, group management, AI Q&A). The admin panel and owner service are independently deployed, with a Flutter Web PC-style dashboard.
+A full-stack property management system covering 15 business modules + the payment integration extension. The admin panel and owner service are independently deployed, with a Flutter Web PC-style dashboard.
 
 **Xiaozhu** (小筑) is the project mascot — a building steward: an apartment block with its lights on, wearing a steward's cap and carrying a work-order clipboard. It appears in the install wizard, error pages, the login page and the architecture diagram, standing for "every building under management has someone looking after it".
 
@@ -76,13 +76,13 @@ property-management-platform/
 
 | Layer | Count | Details |
 |-------|-------|---------|
-| Database Tables | 60 | All `management_` prefix, BIGINT non-auto-increment PK |
-| PHP Models | 57 | With encryptable field encryption |
-| Admin Controllers | 55 | General admin + 22 modules + 7 extensions |
-| Service Controllers | 17 | Complete owner-facing API |
-| API Routes | 168 | admin 119 + service 49 |
-| Flutter Admin | 41 pages | 41 page modules, 93 files/6,976 lines |
-| Flutter Owner | 13 pages | Bills/Repairs/Parking/Visitors/Activities/Notifications/Votes/Chat, 29 files/3,506 lines |
+| Database Tables | 34 | All `management_` prefix, BIGINT non-auto-increment PK |
+| PHP Models | 32 admin / 25 service | With encryptable field encryption |
+| Admin Controllers | 40 | General admin + 15 modules + 1 extension |
+| Service Controllers | 10 | Complete owner-facing API |
+| API Routes | 51 | admin 27 + service 24 |
+| Flutter Admin | 26 pages | 26 page modules, 67 files/5,520 lines |
+| Flutter Owner | 5 pages | Bills/Parking, 18 files/2,099 lines |
 | Tests | 471 total | admin 271(675 assertions) + service 200(847 assertions), see [test reports](docs/tests/) |
 
 ## System Architecture & Design Diagrams
@@ -109,15 +109,15 @@ property-management-platform/
 
 ![19-Layer Defense-in-Depth Security](docs/images/readme_en_security.svg)
 
-## Feature Modules (22 Modules)
+## Feature Modules (15 Modules)
 
 | Batch | Modules | Status |
 |-------|---------|--------|
-| Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Repair, Announcement (10) | ✅ Complete |
-| Batch 2 | Parking, Equipment, Complaint, Visitor, Contract, Finance (6) + Dashboard/Export (platform features) | ✅ Complete |
-| Batch 3 | Patrol, Cleaning, Green, Activity, Energy, Staff (6) | ✅ Complete |
-| Extensions | Notifications, Approval, Payment, Voting, Collection, Group, Knowledge (7) | ✅ Complete |
-| Platform | Report Center (income/expense trends, collection rate, business distribution, arrears ranking, PDF export) + Owner home page stats (complaints / activities / votes / unread) | ✅ Complete |
+| Batch 1 | Community, Building, Unit, RoomType, Room, Owner, Tenant, Fee, Announcement (9) | ✅ Complete |
+| Batch 2 | Parking, Equipment (2) + Dashboard/Export (platform features) | ✅ Complete |
+| Batch 3 | Patrol, Cleaning, Green, Staff (4) | ✅ Complete |
+| Extensions | Payment (1) | ✅ Complete |
+| Platform | Report Center (collection rate, payment methods, arrears ranking, PDF export) + Owner home page stats (rooms / pending fees / announcements) | ✅ Complete |
 
 ## Tech Stack
 
@@ -153,7 +153,7 @@ Start the services and access the auto-generated apidoc:
 | Side | URL | Groups |
 |------|-----|--------|
 | Admin | `http://localhost:8787/apidoc` | 10 groups (common/dashboard/system/property-core/property-aux/property-adv/extensions/export/import/upload) |
-| Service | `http://localhost:8788/apidoc` | 9 groups (Public/Home/Fee/Repair/Feedback/Parking/Activity/Profile/Extensions) |
+| Service | `http://localhost:8788/apidoc` | 6 groups (Public/Home/Fee/Feedback/Parking/Profile) |
 
 ### Internationalization (i18n)
 - **PHP Backend**: symfony/translation, language files in `resource/translations/{zh_CN,en}/messages.php`
@@ -227,7 +227,7 @@ See [Installation Guide](docs/INSTALL.md) for details.
 # Create database
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS management DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Import merged install script (all 60 tables + RBAC seed data)
+# Import merged install script (all 34 tables + RBAC seed data)
 mysql -u root management < docs/install.sql
 ```
 
@@ -311,7 +311,7 @@ docker compose up -d
 | Prometheus / Grafana | 9090 / 3000 | 9091 / 3001 |
 | Nginx | 80 / 443 | 8080 / 8443 recommended (`NGINX_PORT`/`NGINX_SSL_PORT`) |
 
-> On first boot the MySQL volume is empty and `docs/install.sql` (60 tables + RBAC seed) is imported automatically via the compose initdb mount; existing volumes are left untouched.
+> On first boot the MySQL volume is empty and `docs/install.sql` (34 tables + RBAC seed) is imported automatically via the compose initdb mount; existing volumes are left untouched.
 >
 > ⚠️ After a Docker deployment do not use the Web Installer (`/install`) to change DB settings — it rewrites `DB_*` in `.env` and breaks the container's `DB_HOST=mysql` connection.
 
@@ -330,15 +330,14 @@ Static files: Flutter Web build/
 2. **Set up base data**: enter Community → Building → Unit → Room Type → Room, then bind owners under Owner Management.
 3. **Daily operations**:
    - Fees: configure fee types → batch-generate bills → owners pay online/offline;
-   - Repairs: owner submits → admin assigns → progress updates → completion review;
-   - Report Center: view income/expense trends, collection rate, business distribution and arrears ranking by date range, export to PDF.
+   - Report Center: view collection rate, payment methods and arrears ranking by date range, export to PDF.
 4. **System**: User Management (admins), Roles & Permissions (RBAC), System Config (key-values), Audit Logs.
 
 ### Owner Portal (service)
 
 1. Open `http://localhost:8788` (or Flutter Web), register or sign in.
-2. Home page stats: my rooms, pending fees, active repairs, pending complaints, ongoing activities/votes, unread messages.
-3. Common actions: pay fees, submit repairs, visitor appointments, parking lookup, activity signup, voting, AI Q&A.
+2. Home page stats: my rooms, pending fees, latest announcements.
+3. Common actions: pay fees, parking lookup.
 
 ### Frontend
 
@@ -359,15 +358,15 @@ Static files: Flutter Web build/
 | Document | Description |
 |----------|-------------|
 | [Installation Guide](docs/INSTALL.md) | Deployment guide: database init, Docker, FAQ |
-| [Install SQL](docs/install.sql) | All 60 tables + RBAC seed data, single import |
+| [Install SQL](docs/install.sql) | All 34 tables + RBAC seed data, single import |
 | [Architecture Design](docs/ARCHITECTURE_DESIGN.md) | Layered architecture, middleware chain, security defense-in-depth |
 | [Architecture Diagrams](docs/ARCHITECTURE.md) | Mermaid diagrams (topology, request lifecycle, data encryption, deployment) |
 | [Architecture Diagram](docs/ARCHITECTURE_DIAGRAM.md) | System architecture, layered detail, deployment (Mermaid visualization) |
-| [Business Flowchart](docs/FLOWCHART.md) | Auth flow, fee management, repair handling, property, complaint, visitor |
-| [Function Diagram](docs/FUNCTION_DIAGRAM.md) | 34 modules overview, dependencies, admin feature tree, owner portal map |
+| [Business Flowchart](docs/FLOWCHART.md) | Auth flow, fee management, property |
+| [Function Diagram](docs/FUNCTION_DIAGRAM.md) | 16 modules overview, dependencies, admin feature tree, owner portal map |
 | [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, token lifecycle, CRUD flow |
 | [Security Architecture](docs/SECURITY_ARCHITECTURE.md) | 18-layer defense-in-depth, attack surface matrix, encryption chain, audit system |
-| [Feature Design](docs/FEATURE_DESIGN.md) | 34 module feature specifications |
+| [Feature Design](docs/FEATURE_DESIGN.md) | 16 module feature specifications |
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
 
@@ -381,30 +380,43 @@ Thank you for your support!
 
 ## Open Source vs Commercial Edition
 
-The open-source edition includes 22 core business modules and 7 extension modules for personal study, research, and secondary development. The commercial edition adds 5 extension modules, three additional frontends, and an Elasticsearch search stack on top of the same core. Code comparison found no open-source-only business modules: the open-source edition is a subset of the commercial edition.
+The open-source edition includes 15 core business modules and 1 extension module (payment integration) for personal study, research, and secondary development. The commercial edition adds 7 core business modules, 11 extension modules, three additional frontends, and an Elasticsearch search stack on top of the same core. Code comparison found no open-source-only business modules: the open-source edition is a subset of the commercial edition.
 
 | Dimension | Open Source | Commercial |
 |---|---|---|
-| Feature coverage | 22 core + 7 extensions; 75 controllers / 107 models / 169 routes / 59 tables | 22 core + 12 extensions; 81 controllers / 123 models / 191 routes / 67 tables; adds inspection, SLA, mall, face, dashboard |
+| Feature coverage | 15 core + 1 extension; 50 controllers / 57 models / 51 routes / 34 tables | 22 core + 12 extensions; 81 controllers / 123 models / 191 routes / 67 tables; adds repairs, complaints, visitors, contracts, finance, activities, energy, notifications, approval, voting, collection, group, knowledge, inspection, SLA, mall, face, dashboard |
 | Security | JWT + RBAC, SecurityFilter, RateLimit, OperationLog, PasswordRule, security-php, gitleaks/phpstan; 19-layer defense | Same backend security stack (identical 16 middleware, PasswordRule and security plugin); adds Angular/React/HarmonyOS frontends and ES, so a larger attack surface with the same controls |
 | Performance and scale | webman, Redis cache/queue; 12 compose services; MySQL LIKE search | Same stack + Elasticsearch; 15 compose services; more Redis usage (30 vs 26 files), suited to larger data volumes |
-| Data and search | 59 tables; MySQL LIKE | 67 tables; Elasticsearch + webman-scout |
+| Data and search | 34 tables; MySQL LIKE | 67 tables; Elasticsearch + webman-scout |
 | Tests and quality | README claims 471 cases (admin 271/675 assertions + service 200/847); 8 Flutter test files; CI runs php-syntax/admin/service/flutter/phpstan/secrets/monitoring | Same test claim (471); CI additionally runs react-build/angular-build; backend test sources are deleted in both current working trees, so they cannot be re-run locally |
 | Deployment and operations | Docker Compose 12 services, installer, health/metrics, Prometheus, backup scripts | 15 compose services (+ES/monitoring); same installer, health checks, monitoring and backups, with a larger deployment surface |
-| Clients and i18n | Flutter admin 93 Dart + owner app 29 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
-| Extensibility | 22+7 modules, RBAC, `/apidoc`, config-driven | 22+12 modules, more permission seeds (about 248 vs 221), three optional web admin frontends, but a larger maintenance surface |
+| Clients and i18n | Flutter admin 67 Dart + owner app 18 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
+| Extensibility | 15+1 modules, RBAC, `/apidoc`, config-driven | 22+12 modules, more permission seeds (about 248 vs 134), three optional web admin frontends, but a larger maintenance surface |
 | Licensing and support | Personal study/research; commercial use requires written authorization | Commercial licensing, delivery and support; contact erik@erik.xyz |
 | Use cases | Personal study, research, secondary development, small self-hosted deployments | Commercial deployment, production operations, multi-client and large-data scenarios |
 
 Commercial-only modules (confirmed by code comparison):
 
+- **Repairs**: repair orders/progress with dispatch and rating, 2 tables.
+- **Complaints**: intake, follow-up and satisfaction, 1 table.
+- **Visitors**: visitor appointments, approval and pass codes, 1 table.
+- **Contracts**: property/lease/maintenance/service/procurement contracts, 1 table.
+- **Finance**: income/expense records and statistics, 2 tables.
+- **Community activities**: activities with signup and check-in, 2 tables.
+- **Energy**: energy meters and meter readings, 2 tables.
+- **Notifications**: notification templates and message center, 2 tables.
+- **Approval workflow**: approval types/instances/records, 3 tables.
+- **Owner voting**: votes/options/records with area-weighted tally, 3 tables.
+- **Smart collection**: collection strategies/records and late fees, 2 tables.
+- **Group management**: groups/community links and cross-community summary, 2 tables.
+- **Knowledge Q&A**: knowledge base/chat records, 2 tables.
 - **Mobile inspection**: inspection tasks/checkpoints and pages, 2 tables.
 - **SLA auto-escalation**: SLA rules/records and admin pages, 2 tables.
 - **Community mall**: products/categories/orders and owner mall pages, 3 tables.
 - **Face capture and manual review**: upload, approve, reject, 1 table (marketed as "face recognition").
 - **Data dashboard**: listed as an extension in the commercial README; no dedicated big-screen controller/page was found in code — it is dashboard visualization.
 
-The open-source edition retains all 22 core modules, 7 extensions (notifications, approval workflow, payment integration, owner voting, smart collection, multi-community group management, smart Q&A), the Flutter admin and owner apps, and the 19-layer security architecture.
+The open-source edition retains 15 core modules, the payment integration extension, the Flutter admin and owner apps, and the 19-layer security architecture.
 
 > For commercial licensing and delivery terms, contact **erik@erik.xyz**.
 

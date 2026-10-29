@@ -17,9 +17,6 @@ class ReportController extends GetxController {
   final data = <String, dynamic>{}.obs;
 
   static const payMethodColors = [Color(0xFF1677FF), Color(0xFF52C41A), Color(0xFFFA8C16), Color(0xFF722ED1), Color(0xFF13A8A8)];
-  static const repairStatusLabels = {0: '待处理', 1: '已分配', 2: '维修中', 3: '已完成', 4: '已评价', 5: '已取消'};
-  static const complaintStatusLabels = {0: '待处理', 1: '已处理', 2: '已回访'};
-  static const visitorStatusLabels = {0: '待审批', 1: '已通过', 2: '已拒绝'};
 
   @override
   void onInit() {

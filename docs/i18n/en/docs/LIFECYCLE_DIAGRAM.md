@@ -29,18 +29,12 @@
 
 ---
 
-## 4. Data Entity Lifecycle — Repair Order
-
-<img src="images/lifecycle_repair.svg" alt="Repair order lifecycle" width="706.057100">
-
----
-
-## 5. JWT Token Lifecycle
+## 4. JWT Token Lifecycle
 
 <img src="images/lifecycle_token.svg" alt="JWT Token lifecycle" width="557.608200">
 
 ---
 
-## 6. Complete Database Record Lifecycle
+## 5. Complete Database Record Lifecycle
 
 <img src="images/lifecycle_crud.svg" alt="Database record lifecycle" width="860">

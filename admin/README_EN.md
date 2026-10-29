@@ -16,14 +16,14 @@ A full-stack admin dashboard built with webman v2 + Flutter.
 | | Account lockout | 5 failures → 15 min lock |
 | | Concurrent session limit | Max 3 active tokens per user |
 | 📊 Dashboard | Real-time stats/trends/distribution/logs | Redis cached 5 min |
-| 📈 Report Center | Date-range filter + income/expense trends/collection rate/business distribution/arrears ranking + PDF export | Redis cached 5 min |
+| 📈 Report Center | Date-range filter + collection rate/payment methods/arrears ranking + PDF export | Redis cached 5 min |
 | 👥 Users | CRUD + batch delete/toggle status | Soft delete + password confirmation |
 | | Excel batch import | Row-level validation + error report |
 | 🔒 Roles & Perms | Role CRUD + permission tree | RBAC method.path granularity |
 | ⚙ Config | Key-value CRUD | Grouped management |
 | 📋 Audit | Log query + source detection | 8 platforms auto-detected |
 | 📁 Files | Upload/Excel export/PDF export | Sensitive data auto-masked |
-| 🛡 Security | 18-layer defense-in-depth | XSS/SQLi/path traversal/cmd injection/CSRF/rate limit/CSP... |
+| 🛡 Security | 19-layer defense-in-depth | XSS/SQLi/path traversal/cmd injection/CSRF/rate limit/CSP... |
 | 🏥 Ops | Health check/metrics/API docs/security.txt | Prometheus + OpenAPI 3.0 |
 
 ## Copyright
@@ -90,7 +90,7 @@ open-admin/
 ├── apps/
 │   └── flutter/                # Flutter Web admin panel
 ├── config/                     # Config files
-└── docs/install.sql            # Full install SQL (60 tables + permission seeds, single entry)
+└── docs/install.sql            # Full install SQL (34 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
 ```
 
@@ -137,7 +137,7 @@ Key environment variables:
 
 ### 3. Initialize Database
 
-Run the consolidated install script at repo root (60 tables + RBAC permission seeds, idempotent):
+Run the consolidated install script at repo root (34 tables + RBAC permission seeds, idempotent):
 
 ```bash
 mysql -u root -p < ../docs/install.sql
@@ -369,7 +369,7 @@ Authorization: Bearer <token>
 - **Pages**: Login, Dashboard, Report Center, User Management, Roles & Permissions, System Config, Operation Logs, Profile
 - **State**: GetX (`ApiService` singleton + `AuthService` token persistence)
 - **Dashboard**: Stats cards, trend line chart (fl_chart), pie chart, recent activity log
-- **Report Center**: date-range filter, income/expense bar chart, payment-method pie, status bars, arrears ranking, PDF export
+- **Report Center**: date-range filter, payment-method pie, arrears ranking, PDF export
 - **Export**: Excel/PDF with non-removable copyright info
 - **Batch Ops**: Multi-select batch delete, batch enable/disable
 - **Theme**: Material 3 light/dark dual theme
@@ -386,7 +386,7 @@ Authorization: Bearer <token>
 
 1. **Sign in**: default account `admin / Admin@123456` (created automatically by the one-click deploy; with the web wizard, use what you set in step 2) — change the password immediately.
 2. **Base data**: Community → Building → Unit → Room Type → Room → Owner binding.
-3. **Operations**: fee types → batch-generate bills → offline collection; repair assignment/progress; complaint handling/visit; Report Center for income & collection overview.
+3. **Operations**: fee types → batch-generate bills → offline collection; Report Center for collection rate, payment methods and arrears ranking.
 4. **System**: add admins, RBAC roles, system config, audit logs.
 
 ## Development Rules

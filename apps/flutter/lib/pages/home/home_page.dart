@@ -21,15 +21,9 @@ class _FunctionEntry {
 
 const List<_FunctionEntry> _entries = [
   _FunctionEntry('费用账单', Icons.receipt_long, AppTheme.primary, '/fee-bills'),
-  _FunctionEntry('报修管理', Icons.build_circle_outlined, AppTheme.warning, '/repairs'),
   _FunctionEntry('我的车辆', Icons.directions_car, Color(0xFF5470C6), '/parking-vehicles'),
   _FunctionEntry('车位查询', Icons.local_parking, Color(0xFF13A8A8), '/parking-spaces'),
   _FunctionEntry('停车记录', Icons.history, Color(0xFF2F54EB), '/parking-records'),
-  _FunctionEntry('访客通行', Icons.person_pin, AppTheme.success, '/visitors'),
-  _FunctionEntry('社区活动', Icons.celebration, Color(0xFF722ED1), '/activities'),
-  _FunctionEntry('消息通知', Icons.notifications, Color(0xFFFA8C16), '/notifications'),
-  _FunctionEntry('社区投票', Icons.how_to_vote, Color(0xFFD4380D), '/votes'),
-  _FunctionEntry('智能问答', Icons.chat_bubble_outline, Color(0xFF1677FF), '/chat'),
   _FunctionEntry('个人中心', Icons.person, AppTheme.danger, '/profile'),
 ];
 
@@ -80,11 +74,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final roomCount = _homeData?['room_count'] ?? 0;
     final pendingAmount = _homeData?['pending_amount'] ?? 0;
-    final repairingCount = _homeData?['repairing_count'] ?? 0;
-    final pendingComplaints = _homeData?['pending_complaint_count'] ?? 0;
-    final activeActivities = _homeData?['active_activity_count'] ?? 0;
-    final openVotes = _homeData?['open_vote_count'] ?? 0;
-    final unreadCount = _homeData?['unread_count'] ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   // 统计卡片行
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: 3,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     mainAxisSpacing: 16,
@@ -131,70 +120,11 @@ class _HomePageState extends State<HomePage> {
                           subtitle: '去缴费',
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/repairs'),
-                        child: StatCard(
-                          title: 'repairing'.tr,
-                          value: '$repairingCount 件',
-                          icon: Icons.build,
-                          color: AppTheme.danger,
-                          subtitle: '查看',
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/notifications'),
-                        child: StatCard(
-                          title: 'latest_announcements'.tr,
-                          value: '${_announcements.length} 条',
-                          icon: Icons.campaign,
-                          color: AppTheme.success,
-                          subtitle: '查看全部',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // 第二行统计卡片（投诉/活动/投票/未读）
-                  GridView.count(
-                    crossAxisCount: 4,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 2.2,
-                    children: [
                       StatCard(
-                        title: '待处理投诉',
-                        value: '$pendingComplaints 件',
-                        icon: Icons.feedback,
-                        color: const Color(0xFFD4380D),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/activities'),
-                        child: StatCard(
-                          title: '进行中活动',
-                          value: '$activeActivities 场',
-                          icon: Icons.celebration,
-                          color: const Color(0xFF722ED1),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/votes'),
-                        child: StatCard(
-                          title: '进行中投票',
-                          value: '$openVotes 个',
-                          icon: Icons.how_to_vote,
-                          color: const Color(0xFF13A8A8),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/notifications'),
-                        child: StatCard(
-                          title: '未读消息',
-                          value: '$unreadCount 条',
-                          icon: Icons.notifications,
-                          color: const Color(0xFFFA8C16),
-                        ),
+                        title: 'latest_announcements'.tr,
+                        value: '${_announcements.length} 条',
+                        icon: Icons.campaign,
+                        color: AppTheme.success,
                       ),
                     ],
                   ),
@@ -236,13 +166,7 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('latest_announcements'.tr, style: Theme.of(context).textTheme.titleMedium),
-                              TextButton(onPressed: () => Get.toNamed('/notifications'), child: Text('查看全部')),
-                            ],
-                          ),
+                          Text('latest_announcements'.tr, style: Theme.of(context).textTheme.titleMedium),
                           const SizedBox(height: 8),
                           if (_announcements.isEmpty)
                             const Padding(
@@ -254,8 +178,6 @@ class _HomePageState extends State<HomePage> {
                                   leading: const Icon(Icons.circle, size: 8, color: AppTheme.primary),
                                   title: Text(a['title'] ?? ''),
                                   subtitle: Text(a['published_at'] ?? ''),
-                                  trailing: const Icon(Icons.chevron_right),
-                                  onTap: () => Get.toNamed('/notifications'),
                                 )),
                         ],
                       ),

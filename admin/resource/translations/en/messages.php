@@ -53,25 +53,6 @@ return [
     'fee.pay_success' => 'Payment successful',
     'fee.invalid_bill' => 'Invalid bill information',
 
-    // Repair
-    'repair.not_found' => 'Repair order not found',
-    'repair.description_required' => 'Please describe the issue',
-    'repair.submit_success' => 'Repair request submitted',
-    'repair.cancelled' => 'Cancelled',
-    'repair.cancel_forbidden' => 'Only pending repairs can be cancelled',
-    'repair.room_invalid' => 'Invalid property information',
-    'repair.rating_range' => 'Rating must be between 1 and 5',
-    'repair.rate_forbidden' => 'Only completed repairs can be rated',
-    'repair.rate_success' => 'Rating submitted',
-    'repair.no_permission' => 'Property not found or access denied',
-
-    // Complaint
-    'complaint.not_found' => 'Complaint not found',
-    'complaint.title_content_required' => 'Title and content are required',
-    'complaint.submit_success' => 'Submitted successfully',
-    'complaint.rate_forbidden' => 'Only resolved complaints can be rated',
-    'complaint.satisfaction_success' => 'Rating submitted',
-
     // File
     'file.upload_success' => 'Upload successful',
     'file.upload_failed' => 'Upload failed',

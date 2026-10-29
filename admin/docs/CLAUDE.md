@@ -21,7 +21,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 | 系统配置 | 键值对 CRUD |
 | 操作审计 | 日志查询 + 8 平台来源端自动检测 |
 | 文件 | 上传 + Excel/PDF 导出（敏感数据脱敏）|
-| 安全 | 18 层纵深防御（XSS/SQL注入/CSRF/限流/CSP...）|
+| 安全 | 19 层纵深防御（XSS/SQL注入/CSRF/限流/CSP...）|
 | 运维 | 健康检查/Prometheus 指标/API 文档/security.txt + Docker + CI/CD |
 
 ## 技术栈
@@ -46,7 +46,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 ```
 open-admin/
 ├── app/
-│   ├── admin/controller/       # 管理端控制器 (58 个，列表从略)
+│   ├── admin/controller/       # 管理端控制器 (40 个，列表从略)
 │   │   ├── BaseController.php      # 基础控制器
 │   │   ├── DashboardController.php # 仪表盘（Redis 缓存）
 │   │   ├── UserController.php      # 用户 CRUD + 批量操作
@@ -81,7 +81,7 @@ open-admin/
 ├── apps/
 │   ├── flutter/                # Flutter Web 管理后台
 │   │   └── lib/app/
-│   │       ├── pages/          # 6 个完整页面
+│   │       ├── pages/          # 26 个页面模块
 │   │       │   ├── dashboard/  # 仪表盘
 │   │       │   ├── login/      # 登录
 │   │       │   ├── user/       # 用户管理

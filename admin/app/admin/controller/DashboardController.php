@@ -192,44 +192,9 @@ class DashboardController extends BaseController
         $occupiedRooms = \app\model\Room::when($communityId, fn($q) => $q->where('community_id', $communityId))->whereIn('status', [1, 2, 3])->count();
         $occupancyRate = $totalRooms > 0 ? round($occupiedRooms / $totalRooms * 100, 1) : 0;
 
-        // 报修统计（按分类）
-        $repairStats = \app\model\RepairOrder::query()
-            ->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))
-            ->selectRaw('category, COUNT(*) as count')
-            ->groupBy('category')->get();
-
-        // 报修状态统计
-        $repairStatusStats = \app\model\RepairOrder::query()
-            ->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))
-            ->selectRaw('status, COUNT(*) as count')
-            ->groupBy('status')->get();
-
-        // 投诉统计（按小区过滤：投诉通过 room_id 关联小区）
-        $complaintStats = \app\model\Complaint::query()
-            ->when($communityId, fn($q) => $q->whereIn('room_id', \app\model\Room::where('community_id', $communityId)->select('id')))
-            ->selectRaw('type, status, COUNT(*) as count')
-            ->groupBy('type', 'status')->get();
-
-        // 月度收入趋势（近12个月）
-        $monthlyIncome = \app\model\FinanceIncome::query()
-            ->selectRaw("DATE_FORMAT(income_date, '%Y-%m') as month, SUM(amount) as total")
-            ->where('income_date', '>=', date('Y-m-d', strtotime('-11 months')))
-            ->groupBy('month')->orderBy('month')->get();
-
-        // 月度支出趋势
-        $monthlyExpense = \app\model\FinanceExpense::query()
-            ->selectRaw("DATE_FORMAT(expense_date, '%Y-%m') as month, SUM(amount) as total")
-            ->where('expense_date', '>=', date('Y-m-d', strtotime('-11 months')))
-            ->groupBy('month')->orderBy('month')->get();
-
         $data = [
             'billing' => ['total_billed' => $totalBilled, 'total_paid' => $totalPaid, 'arrears_rate' => $totalBilled > 0 ? round(($totalBilled - $totalPaid) / $totalBilled * 100, 1) : 0],
             'occupancy' => ['total_rooms' => $totalRooms, 'occupied_rooms' => $occupiedRooms, 'rate' => $occupancyRate],
-            'repair_by_category' => $repairStats,
-            'repair_by_status' => $repairStatusStats,
-            'complaint_stats' => $complaintStats,
-            'monthly_income' => $monthlyIncome,
-            'monthly_expense' => $monthlyExpense,
         ];
 
         Redis::setex($cacheKey, 300, json_encode($data, JSON_UNESCAPED_UNICODE));

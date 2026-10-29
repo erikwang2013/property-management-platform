@@ -66,7 +66,7 @@ Future<void> setupServices() async {
 }
 
 /// 注册全部路由的应用实例（初始路由 /login）
-/// 默认测试视口 800x600 放不下登录页（含 300px 验证码图）与首页 4 列统计卡，调大避免溢出
+/// 默认测试视口 800x600 放不下登录页（含 300px 验证码图）与首页 3 列统计卡，调大避免溢出
 Future<void> pumpApp(WidgetTester tester) async {
   tester.view.physicalSize = const Size(1600, 1400);
   tester.view.devicePixelRatio = 1.0;

@@ -10,7 +10,6 @@ namespace app\api\v1\controller;
 use app\common\BaseController;
 use app\model\Announcement;
 use app\model\FeeBill;
-use app\model\RepairOrder;
 use support\Request;
 use support\Response;
 
@@ -83,44 +82,6 @@ class OpenApiController extends BaseController
             'fee_type_name' => $bill->feeType->name ?? '',
             'start_date'    => $bill->start_date ? $bill->start_date->format('Y-m-d') : '',
             'end_date'      => $bill->end_date ? $bill->end_date->format('Y-m-d') : '',
-        ]);
-    }
-
-    /**
-     * 报修状态查询（?order_number=，复用 RepairController 查询形状）
-     */
-    public function repairs(Request $request): Response
-    {
-        $orderNumber = (string) $request->input('order_number', '');
-
-        if ($orderNumber === '') {
-            return $this->fail('缺少 order_number 参数', 400)->withStatus(400);
-        }
-
-        $repair = RepairOrder::with(['progress'])
-            ->where('order_number', $orderNumber)
-            ->first();
-
-        if (!$repair) {
-            return $this->fail('报修单不存在', 404)->withStatus(404);
-        }
-
-        $progress = $repair->progress->map(function ($p) {
-            return [
-                'status_to' => $p->status_to,
-                'remark'    => $p->remark,
-                'created_at' => $p->created_at ? $p->created_at->format('Y-m-d H:i') : '',
-            ];
-        });
-
-        return $this->success([
-            'id'           => $this->encodeId($repair->id),
-            'order_number' => $repair->order_number,
-            'category'     => $repair->category,
-            'urgency'      => $repair->urgency,
-            'status'       => $repair->status,
-            'created_at'   => $repair->created_at ? $repair->created_at->format('Y-m-d H:i') : '',
-            'progress'     => $progress,
         ]);
     }
 }

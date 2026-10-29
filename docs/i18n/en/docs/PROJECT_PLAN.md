@@ -1,13 +1,13 @@
 # Property Management System — Comprehensive Project Plan
 
-> **Historical document (2026-10-27)**: some features described here have since been removed. Current features follow README.md / docs/FEATURES.md.
+> **Historical document (2026-10-27)**: some features described here have since been removed (repairs, complaints, visitors, contracts, finance, community activities, energy, notifications, approval workflow, owner voting, smart collection, group management, knowledge Q&A, inspection, SLA, Elasticsearch/Scout, Angular/React/HarmonyOS frontends, community mall, face recognition, data dashboard). Current features follow README.md / docs/FEATURES.md.
 
 
 > Generated: 2026-08-16 · Source: pmp-team audit (auditor / security-auditor / planner)
 
 ## 1. Current-State Audit Conclusions
 
-**Feature surface:** current code keeps the core business modules and 7 extension features; the schema in docs/install.sql has 60 tables, the Flutter admin panel has 41 pages and the owner portal 13 pages.
+**Feature surface:** current code keeps the 15 core business modules and the payment integration; the schema in docs/install.sql has 34 tables, the Flutter admin panel has 26 pages and the owner portal 5 pages.
 
 **Tests: all green (as of 2026-08-17).** admin 193 tests / 452 assertions, service 101 tests / 385 assertions (7 skips are environment-dependent), Flutter widget tests 9 (login/home/bills pages).
 

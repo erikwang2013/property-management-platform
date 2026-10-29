@@ -1,6 +1,6 @@
 # 扩容预案 (Scaling Plan)
 
-> **历史文档（2026-10-27）**：部分功能已移除（巡检、SLA、Elasticsearch/Scout、Angular/React/HarmonyOS 前端、社区商城、人脸识别、数据大屏）。本文仅作历史记录，当前功能以 README.md / docs/FEATURES.md 为准。
+> **历史文档（2026-10-27）**：部分功能已移除（报修、投诉、访客、合同、财务、活动、能耗、巡检、SLA、Elasticsearch/Scout、Angular/React/HarmonyOS 前端、社区商城、人脸识别、数据大屏）。本文仅作历史记录，当前功能以 README.md / docs/FEATURES.md 为准。
 
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz

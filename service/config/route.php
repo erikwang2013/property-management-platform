@@ -52,19 +52,6 @@ Route::group('/service/v1', function () {
     Route::post('/fees/pay', [app\api\v1\controller\FeeController::class, 'pay']);
     Route::get('/fees/statistics', [app\api\v1\controller\FeeController::class, 'statistics']);
 
-    // 报修
-    Route::get('/repairs', [app\api\v1\controller\RepairController::class, 'index']);
-    Route::get('/repair/{hashid}', [app\api\v1\controller\RepairController::class, 'show']);
-    Route::post('/repair', [app\api\v1\controller\RepairController::class, 'store']);
-    Route::delete('/repair/{hashid}', [app\api\v1\controller\RepairController::class, 'destroy']);
-    Route::post('/repair/{hashid}/rate', [app\api\v1\controller\RepairController::class, 'rate']);
-
-    // 投诉建议
-    Route::get('/complaints', [app\api\v1\controller\ComplaintController::class, 'index']);
-    Route::get('/complaint/{hashid}', [app\api\v1\controller\ComplaintController::class, 'show']);
-    Route::post('/complaint', [app\api\v1\controller\ComplaintController::class, 'store']);
-    Route::post('/complaint/{hashid}/satisfaction', [app\api\v1\controller\ComplaintController::class, 'satisfaction']);
-
     // 公告
     Route::get('/announcements', [app\api\v1\controller\AnnouncementController::class, 'index']);
     Route::get('/announcement/{hashid}', [app\api\v1\controller\AnnouncementController::class, 'show']);
@@ -76,37 +63,11 @@ Route::group('/service/v1', function () {
     Route::post('/profile/logout', [app\api\v1\controller\ProfileController::class, 'logout']);
 
     // ============================================================
-    // 停车/访客
+    // 停车
     // ============================================================
-    // 停车管理
     Route::get('/parking/vehicles', [app\api\v1\controller\ParkingController::class, 'vehicles']);
     Route::get('/parking/spaces', [app\api\v1\controller\ParkingController::class, 'spaces']);
     Route::get('/parking/records', [app\api\v1\controller\ParkingController::class, 'records']);
-    // 访客管理
-    Route::get('/visitors', [app\api\v1\controller\VisitorController::class, 'index']);
-    Route::post('/visitor', [app\api\v1\controller\VisitorController::class, 'store']);
-    Route::put('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'update']);
-    Route::delete('/visitor/{hashid}', [app\api\v1\controller\VisitorController::class, 'destroy']);
-
-    // ============================================================
-    // 活动/通知/投票/商城/问答/人脸
-    // ============================================================
-    // 社区活动
-    Route::get('/activities', [app\api\v1\controller\ActivityController::class, 'index']);
-    Route::get('/activity/{hashid}', [app\api\v1\controller\ActivityController::class, 'show']);
-    Route::post('/activity/{hashid}/signup', [app\api\v1\controller\ActivityController::class, 'signup']);
-    Route::post('/activity/{hashid}/cancel', [app\api\v1\controller\ActivityController::class, 'cancel']);
-
-    // 消息通知
-    Route::get('/notifications', [app\api\v1\controller\NotificationController::class, 'index']);
-    Route::put('/notification/{hashid}/read', [app\api\v1\controller\NotificationController::class, 'markRead']);
-    Route::put('/notifications/read-all', [app\api\v1\controller\NotificationController::class, 'markAllRead']);
-    // 投票
-    Route::get('/votes', [app\api\v1\controller\VoteController::class, 'index']);
-    Route::get('/vote/{hashid}', [app\api\v1\controller\VoteController::class, 'show']);
-    Route::post('/vote/{hashid}/cast', [app\api\v1\controller\VoteController::class, 'cast']);
-    // 智能问答
-    Route::post('/chat/ask', [app\api\v1\controller\KnowledgeController::class, 'ask']);
 })->middleware([
     app\middleware\ServiceAuth::class,
     app\middleware\OperationLog::class,
@@ -116,7 +77,6 @@ Route::group('/service/v1', function () {
 Route::group('/open/v1', function () {
     Route::get('/announcements', [app\api\v1\controller\OpenApiController::class, 'announcements']);
     Route::get('/bills', [app\api\v1\controller\OpenApiController::class, 'bills']);
-    Route::get('/repairs', [app\api\v1\controller\OpenApiController::class, 'repairs']);
 })->middleware([
     app\middleware\ApiKeyAuth::class,
 ]);

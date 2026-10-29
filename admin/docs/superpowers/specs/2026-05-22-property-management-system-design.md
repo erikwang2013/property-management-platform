@@ -1,5 +1,8 @@
 # 物业管理系统 — 完整设计规范
 
+> **历史文档（2026-10-30）**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除。当前功能与架构以 README.md / docs/ 目录为准。
+
+
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ## 项目概述
@@ -316,7 +319,7 @@ ArkTS + @ohos.net.http + Preference 持久化
 
 ## 第6章：安全与部署
 
-### 18层纵深防御
+### 19层纵深防御
 
 1. 点击验证码 → 2. 二次密码确认 → 3. poster随机验证 → 4. security-php安全扫描 → 5. SecurityFilter攻击拦截 → 6. HTTPS+AES传输 → 7. JWT HS256 → 8. 并发Token限制 → 9. 账号锁定 → 10. RBAC权限 → 11. 限流 → 12. Hashids ID保护 → 13. 请求体加密 → 14. 存储加密 → 15. 展示脱敏 → 16. 审计日志 → 17. CSP头 → 18. PDF版权水印
 

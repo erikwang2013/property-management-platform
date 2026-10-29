@@ -50,7 +50,7 @@ Visit **`http://localhost:8787/install`** in a browser and complete the three-st
 The installation process automatically completes:
 1. Tests the database connection
 2. Writes the `.env` config file
-3. Imports all 67 tables + permission seeds
+3. Imports all 34 tables + permission seeds
 4. Creates the admin account with the super admin role
 5. Creates the installation lock file `public/.installed`
 
@@ -102,13 +102,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` contains all 67 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
+`docs/install.sql` contains all 34 tables + RBAC permission seed data, using `CREATE TABLE IF NOT EXISTS` to ensure re-runnability.
 
 Verify after execution:
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# Should output: 68 (67 tables + 1 header line)
+# Should output: 35 (34 tables + 1 header line)
 ```
 
 ---
@@ -309,4 +309,4 @@ For production, an Nginx reverse proxy terminating TLS is recommended. See `admi
 
 - [Architecture Design Document](ARCHITECTURE_DESIGN.md) — system layered architecture and middleware execution chain
 - [API Document](API.md) — complete endpoint reference
-- [Feature Design Document](FEATURE_DESIGN.md) — 34-module functional specifications
+- [Feature Design Document](FEATURE_DESIGN.md) — 16-module functional specifications

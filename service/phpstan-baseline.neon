@@ -1,72 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$activity_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$contact_phone\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$owner_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$participant_count\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$remark\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$signup_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\ActivitySignup\:\:\$signup_status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\ActivitySignup\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 4
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:find\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:withCount\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/ActivityController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\Announcement\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 2
@@ -181,31 +115,7 @@ parameters:
 			path: app/api/v1/controller/HomeController.php
 
 		-
-			message: '#^Call to an undefined static method app\\model\\CommunityActivity\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/HomeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Complaint\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/HomeController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/HomeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Notification\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/HomeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/HomeController.php
@@ -215,24 +125,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/HomeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Vote\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/HomeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\ChatRecord\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/KnowledgeController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\KnowledgeBase\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/KnowledgeController.php
 
 		-
 			message: '#^Call to an undefined static method support\\Db\:\:select\(\)\.$#'
@@ -251,12 +143,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/MetricsController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Notification\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 3
-			path: app/api/v1/controller/NotificationController.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$amount\.$#'
@@ -313,48 +199,6 @@ parameters:
 			path: app/api/v1/controller/OpenApiController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$category\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$created_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$order_number\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$progress\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\RepairOrder\:\:\$urgency\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/OpenApiController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\Announcement\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -395,24 +239,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/ProfileController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/RepairController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\RepairOrder\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 4
-			path: app/api/v1/controller/RepairController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Room\:\:whereHas\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/RepairController.php
 
 		-
 			message: '#^Access to an undefined property app\\model\\Room\:\:\$area_indoor\.$#'
@@ -497,60 +323,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/api/v1/controller/RoomController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Visitor\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/VisitorController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Visitor\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 3
-			path: app/api/v1/controller/VisitorController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\RoomOwner\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Vote\:\:find\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\Vote\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\VoteOption\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:create\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:where\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 2
-			path: app/api/v1/controller/VoteController.php
-
-		-
-			message: '#^Call to an undefined static method app\\model\\VoteRecord\:\:whereIn\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/api/v1/controller/VoteController.php
 
 		-
 			message: '#^Call to an undefined static method app\\model\\Owner\:\:find\(\)\.$#'

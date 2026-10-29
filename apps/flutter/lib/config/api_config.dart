@@ -22,14 +22,6 @@ class ApiConfig {
   static const String feePayments = '/service/fees/payments';
   static const String feePay = '/service/fees/pay';
   static const String feeStatistics = '/service/fees/statistics';
-  static const String repairs = '/service/repairs';
-  static String repairDetail(String hashid) => '/service/repair/$hashid';
-  static const String repairStore = '/service/repair';
-  static String repairDelete(String hashid) => '/service/repair/$hashid';
-  static String repairRate(String hashid) => '/service/repair/$hashid/rate';
-  static const String complaints = '/service/complaints';
-  static String complaintDetail(String hashid) => '/service/complaint/$hashid';
-  static const String complaintStore = '/service/complaint';
   static const String announcements = '/service/announcements';
   static String announcementDetail(String hashid) => '/service/announcement/$hashid';
   static const String profile = '/service/profile';
@@ -40,26 +32,4 @@ class ApiConfig {
   static const String parkingVehicles = '/service/parking/vehicles';
   static const String parkingSpaces = '/service/parking/spaces';
   static const String parkingRecords = '/service/parking/records';
-
-  // 访客
-  static const String visitors = '/service/visitors';
-  static const String visitorStore = '/service/visitor';
-
-  // 活动
-  static const String activities = '/service/activities';
-  static String activityDetail(String hid) => '/service/activity/$hid';
-  static const String activitySignup = '/service/activity/signup';
-
-  // 通知
-  static const String notifications = '/service/notifications';
-  static String notificationRead(String hid) => '/service/notification/$hid/read';
-  static const String notificationReadAll = '/service/notifications/read-all';
-
-  // 投票
-  static const String votes = '/service/votes';
-  static String voteDetail(String hid) => '/service/vote/$hid';
-  static const String voteCast = '/service/vote/cast';
-
-  // 智能问答
-  static const String chatAsk = '/service/chat/ask';
 }

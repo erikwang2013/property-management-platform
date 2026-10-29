@@ -52,7 +52,7 @@ php start.php start -d
 安装过程会自动完成：
 1. 测试数据库连接
 2. 写入 `.env` 配置文件
-3. 导入全部 60 张数据表 + 权限种子
+3. 导入全部 34 张数据表 + 权限种子
 4. 创建管理员账户并授予超级管理员角色
 5. 创建安装锁定文件 `public/.installed`
 
@@ -104,13 +104,13 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` 包含全部 60 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS` 确保可重复执行。
+`docs/install.sql` 包含全部 34 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS` 确保可重复执行。
 
 执行后验证：
 
 ```bash
 mysql -u root -p management -e "SHOW TABLES;" | wc -l
-# 应输出: 61（60张表 + 1行表头）
+# 应输出: 35（34张表 + 1行表头）
 ```
 
 ---
@@ -209,7 +209,7 @@ docker compose up -d
 | 加密密钥轮换 | `bash scripts/rotate_keys.sh`（旧 key 自动写入 `ENCRYPTION_PREVIOUS_KEYS`） |
 | MySQL 密码 | 容器库名/用户/密码默认派生自 `DB_DATABASE/DB_USERNAME/DB_PASSWORD`，无需配置 `MYSQL_*` |
 
-> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（60 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
+> 首次启动时 MySQL 数据卷为空，`docs/install.sql`（34 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
 >
 > ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
 
@@ -343,4 +343,4 @@ error_page 500 502 503 504 /504.html;
 
 - [架构设计文档](ARCHITECTURE_DESIGN.md) — 系统分层架构与中间件执行链
 - [API 文档](API.md) — 完整接口参考
-- [功能设计文档](FEATURE_DESIGN.md) — 34 模块功能规格
+- [功能设计文档](FEATURE_DESIGN.md) — 16 模块功能规格

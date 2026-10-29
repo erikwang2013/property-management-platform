@@ -16,24 +16,8 @@
 
 ---
 
-## 3. Repair Request Handling Flow
-
-<img src="images/flow_repair.svg" alt="Repair request handling flow" width="672.497400">
-
----
-
-## 4. Property Management Flow
+## 3. Property Management Flow
 
 <img src="images/flow_property.svg" alt="Property management flow" width="860">
 
 ---
-
-## 5. Complaint & Suggestion Handling Flow
-
-<img src="images/flow_complaint.svg" alt="Complaint and suggestion handling flow" width="860">
-
----
-
-## 6. Visitor Access Flow
-
-<img src="images/flow_visitor.svg" alt="Visitor access flow" width="435.172200">

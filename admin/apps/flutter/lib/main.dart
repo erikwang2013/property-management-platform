@@ -22,29 +22,16 @@ import 'app/pages/tenant/tenant_list_page.dart';
 import 'app/pages/fee_type/fee_type_list_page.dart';
 import 'app/pages/fee_bill/fee_bill_list_page.dart';
 import 'app/pages/fee_payment/fee_payment_list_page.dart';
-import 'app/pages/repair/repair_list_page.dart';
 import 'app/pages/announcement/announcement_list_page.dart';
 import 'app/pages/parking/parking_space_list_page.dart';
 import 'app/pages/parking/parking_vehicle_list_page.dart';
 import 'app/pages/parking/parking_record_list_page.dart';
 import 'app/pages/equipment/equipment_list_page.dart';
-import 'app/pages/complaint/complaint_list_page.dart';
-import 'app/pages/visitor/visitor_list_page.dart';
-import 'app/pages/contract/contract_list_page.dart';
-import 'app/pages/finance/finance_list_page.dart';
 import 'app/pages/security/security_list_page.dart';
 import 'app/pages/cleaning/cleaning_list_page.dart';
 import 'app/pages/green/green_list_page.dart';
-import 'app/pages/activity/activity_list_page.dart';
-import 'app/pages/energy/energy_list_page.dart';
 import 'app/pages/staff/staff_list_page.dart';
-import 'app/pages/notification/notification_list_page.dart';
-import 'app/pages/approval/approval_list_page.dart';
 import 'app/pages/payment/payment_list_page.dart';
-import 'app/pages/vote/vote_list_page.dart';
-import 'app/pages/collection/collection_list_page.dart';
-import 'app/pages/group/group_list_page.dart';
-import 'app/pages/knowledge/knowledge_list_page.dart';
 
 void main() {
   runApp(const AdminApp());
@@ -87,39 +74,19 @@ class AdminApp extends StatelessWidget {
         GetPage(name: '/fee-types', page: () => const AdminLayout(child: FeeTypeListPage())),
         GetPage(name: '/fee-bills', page: () => const AdminLayout(child: FeeBillListPage())),
         GetPage(name: '/fee-payments', page: () => const AdminLayout(child: FeePaymentListPage())),
-        GetPage(name: '/repairs', page: () => const AdminLayout(child: RepairListPage())),
         GetPage(name: '/announcements', page: () => const AdminLayout(child: AnnouncementListPage())),
         GetPage(name: '/parking-spaces', page: () => const AdminLayout(child: ParkingSpaceListPage())),
         GetPage(name: '/parking-vehicles', page: () => const AdminLayout(child: ParkingVehicleListPage())),
         GetPage(name: '/parking-records', page: () => const AdminLayout(child: ParkingRecordListPage())),
         GetPage(name: '/equipment', page: () => const AdminLayout(child: EquipmentListPage())),
-        GetPage(name: '/complaints', page: () => const AdminLayout(child: ComplaintListPage())),
-        GetPage(name: '/visitors', page: () => const AdminLayout(child: VisitorListPage())),
-        GetPage(name: '/contracts', page: () => const AdminLayout(child: ContractListPage())),
-        GetPage(name: '/finance-statistics', page: () => const AdminLayout(child: FinanceStatisticsPage())),
-        GetPage(name: '/finance-income', page: () => const AdminLayout(child: FinanceIncomeListPage())),
-        GetPage(name: '/finance-expense', page: () => const AdminLayout(child: FinanceExpenseListPage())),
         GetPage(name: '/security-patrols', page: () => const AdminLayout(child: SecurityPatrolListPage())),
         GetPage(name: '/patrol-records', page: () => const AdminLayout(child: PatrolRecordListPage())),
         GetPage(name: '/cleaning-areas', page: () => const AdminLayout(child: CleaningAreaListPage())),
         GetPage(name: '/cleaning-records', page: () => const AdminLayout(child: CleaningRecordListPage())),
         GetPage(name: '/green-areas', page: () => const AdminLayout(child: GreenAreaListPage())),
         GetPage(name: '/green-maintenance', page: () => const AdminLayout(child: GreenMaintenanceListPage())),
-        GetPage(name: '/activities', page: () => const AdminLayout(child: ActivityListPage())),
-        GetPage(name: '/activity-signups', page: () => const AdminLayout(child: ActivitySignupListPage())),
-        GetPage(name: '/energy-meters', page: () => const AdminLayout(child: EnergyMeterListPage())),
-        GetPage(name: '/energy-records', page: () => const AdminLayout(child: EnergyRecordListPage())),
         GetPage(name: '/staff', page: () => const AdminLayout(child: StaffListPage())),
-        GetPage(name: '/notifications', page: () => const AdminLayout(child: NotificationListPage())),
-        GetPage(name: '/approvals', page: () => const AdminLayout(child: ApprovalListPage())),
         GetPage(name: '/payments', page: () => const AdminLayout(child: PaymentListPage())),
-        GetPage(name: '/votes', page: () => const AdminLayout(child: VoteListPage())),
-        GetPage(name: '/collection-strategies', page: () => const AdminLayout(child: CollectionStrategyListPage())),
-        GetPage(name: '/collection-records', page: () => const AdminLayout(child: CollectionRecordListPage())),
-        GetPage(name: '/groups', page: () => const AdminLayout(child: GroupListPage())),
-        GetPage(name: '/knowledge-categories', page: () => const AdminLayout(child: KnowledgeCategoryListPage())),
-        GetPage(name: '/knowledge-articles', page: () => const AdminLayout(child: KnowledgeArticleListPage())),
-        GetPage(name: '/chat-records', page: () => const AdminLayout(child: ChatRecordListPage())),
       ],
       initialRoute: '/login',
     );

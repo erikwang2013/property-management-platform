@@ -1,5 +1,8 @@
 # 部署拓扑
 
+> **历史文档（2026-10-30）**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除。当前功能与架构以 README.md / docs/ 目录为准。
+
+
 ```mermaid
 flowchart TB
     subgraph dns["DNS/CDN"]
@@ -19,7 +22,6 @@ flowchart TB
 
     subgraph data["数据层"]
         mysql[("MySQL 8.0<br/>主从复制<br/>management_前缀")]
-        es[("Elasticsearch 8.x<br/>3节点集群<br/>management_前缀")]
         redis[("Redis 7.x<br/>哨兵模式<br/>poster:captcha:*")]
     end
 
@@ -33,7 +35,6 @@ flowchart TB
     nginx --> wm2
     nginx --> wm3
     wm1 & wm2 & wm3 --> mysql
-    wm1 & wm2 & wm3 --> es
     wm1 & wm2 & wm3 --> redis
     wm1 & wm2 & wm3 --> grafana
 
@@ -42,6 +43,5 @@ flowchart TB
     style wm2 fill:#1677FF,color:#fff
     style wm3 fill:#1677FF,color:#fff
     style mysql fill:#1890FF,color:#fff
-    style es fill:#1890FF,color:#fff
     style redis fill:#1890FF,color:#fff
 ```

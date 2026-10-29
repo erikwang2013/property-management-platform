@@ -18,7 +18,7 @@
 | 端 | 地址 | 分组数 |
 |----|------|--------|
 | 管理端 | `http://localhost:8787/apidoc` | 10组（common/dashboard/system/property-core/property-aux/property-adv/extensions/export/import/upload） |
-| 业主端 | `http://localhost:8788/apidoc` | 9组（公开接口/首页/费用/报修/反馈/停车/活动/个人/扩展） |
+| 业主端 | `http://localhost:8788/apidoc` | 6组（公开接口/首页/费用/反馈/停车/个人） |
 
 ---
 
@@ -283,18 +283,6 @@ OpenAPI 文档。
 | GET | /admin/fee-payment | 列表 (?bill_id=&payment_method=&date_start=&date_end=) |
 | POST | /admin/fee-payment/offline | 线下收款登记 |
 
-#### 报修管理
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/repair | 列表 (?status=&category=) |
-| POST | /admin/repair | 创建 |
-| GET | /admin/repair/{hashid} | 详情（含进度记录） |
-| PUT | /admin/repair/{hashid} | 更新 |
-| DELETE | /admin/repair/{hashid} | 删除 |
-| PUT | /admin/repair/{id}/assign | 派单（{ staff_id }） |
-| POST | /admin/repair/{id}/progress | 更新进度（{ status_to, remark }） |
-
 #### 公告管理
 
 | 方法 | 路径 | 说明 |
@@ -330,46 +318,11 @@ OpenAPI 文档。
 | GET | /admin/equipment-maintenance | 维保记录 (?equipment_id=) |
 | POST | /admin/equipment-maintenance | 创建维保 |
 
-#### 投诉处理
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/complaint | 列表 (?type=&status=) |
-| GET | /admin/complaint/{hashid} | 详情 |
-| PUT | /admin/complaint/{id}/handle | 处理（{ handler_remark }） |
-| POST | /admin/complaint/{id}/visit | 回访（{ visitor_remark }） |
-
-#### 访客审批
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/visitor | 列表 (?status=) |
-| PUT | /admin/visitor/{id}/approve | 审批通过 |
-
-#### 合同管理
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/contract | 列表 (?contract_type=&status=) |
-| POST | /admin/contract | 创建 |
-| PUT | /admin/contract/{hashid} | 更新 |
-| DELETE | /admin/contract/{hashid} | 删除 |
-
-#### 财务管理
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/finance-income | 收入列表 (?income_type=&date_start=&date_end=) |
-| POST | /admin/finance-income | 登记收入 |
-| GET | /admin/finance-expense | 支出列表 |
-| POST | /admin/finance-expense | 登记支出 |
-| GET | /admin/finance/statistics | 月度收支统计 (?year=) |
-
 #### 物业面板
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /admin/dashboard/property | 物业统计（应收/入住率/报修/投诉/收支趋势） |
+| GET | /admin/dashboard/property | 物业统计（应收/入住率） |
 | POST | /admin/export/property-excel | 物业数据 Excel 导出（{ type: owners|bills }） |
 
 #### 安保巡逻
@@ -399,26 +352,6 @@ OpenAPI 文档。
 | GET | /admin/green-maintenance | 养护记录 (?area_id=) |
 | POST | /admin/green-maintenance | 创建记录 |
 
-#### 社区活动
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/activity | 列表 (?status=) |
-| POST | /admin/activity | 创建活动 |
-| PUT | /admin/activity/{hashid} | 更新 |
-| DELETE | /admin/activity/{hashid} | 删除 |
-| GET | /admin/activity-signup | 报名列表 (?activity_id=) |
-| PUT | /admin/activity-signup/{id}/checkin | 签到 |
-
-#### 能耗管理
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/energy-meter | 仪表列表 (?room_id=&meter_type=) |
-| POST | /admin/energy-meter | 创建仪表 |
-| GET | /admin/energy-record | 抄表记录 (?meter_id=&date_start=&date_end=) |
-| POST | /admin/energy-record | 创建记录 |
-
 #### 员工管理
 
 | 方法 | 路径 | 说明 |
@@ -429,28 +362,6 @@ OpenAPI 文档。
 | DELETE | /admin/staff/{hashid} | 删除 |
 | POST | /admin/staff/batch/status | 批量启禁用 |
 
-#### 消息通知
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/notification-template | 模板列表 |
-| POST | /admin/notification-template | 创建模板 |
-| PUT | /admin/notification-template/{hashid} | 更新模板 |
-| DELETE | /admin/notification-template/{hashid} | 删除模板 |
-| GET | /admin/notification | 消息列表 (?type=&is_read=) |
-| POST | /admin/notification/send | 手动发送通知 |
-
-#### 审批工作流
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/approval-type | 审批类型列表 |
-| POST | /admin/approval-type | 创建审批类型 |
-| GET | /admin/approval | 审批列表 (?status=) |
-| GET | /admin/approval/{hashid} | 审批详情 |
-| POST | /admin/approval | 提交审批 |
-| PUT | /admin/approval/{hashid}/approve | 审批（通过/驳回） |
-
 #### 支付管理
 
 | 方法 | 路径 | 说明 |
@@ -459,20 +370,6 @@ OpenAPI 文档。
 | GET | /admin/payment-order/{hashid} | 订单详情 |
 | POST | /admin/payment-order/{hashid}/refund | 退款 |
 | GET | /admin/payment/statistics | 支付统计 |
-
-#### 业主投票
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /admin/vote | 投票列表 (?status=) |
-| POST | /admin/vote | 创建投票 |
-| GET | /admin/vote/{hashid}/statistics | 计票统计 |
-| PUT | /admin/vote/{hashid}/publish | 发布投票 |
-| PUT | /admin/vote/{hashid}/end | 结束投票 |
-
-#### 智能催缴 · 集团管理 · 知识库
-
-（完整端点参见 `docs/API.md` 文件）
 
 ---
 
@@ -544,7 +441,6 @@ OpenAPI 文档。
     "room_count": 2,
     "pending_amount": "1250.00",
     "pending_bill_count": 3,
-    "repairing_count": 1,
     "announcements": [{ "id": "xB9k...", "title": "停水通知", "published_at": "2026-05-20 09:00" }]
   }
 }
@@ -567,25 +463,6 @@ OpenAPI 文档。
 | POST | /service/v1/fees/pay | 在线缴费（{ bill_id, payment_method, password }） |
 | GET | /service/v1/fees/statistics | 费用统计 (?year=2026) |
 
-#### 报修
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /service/v1/repairs | 报修列表 (?status=) |
-| GET | /service/v1/repair/{hashid} | 报修详情（含进度时间线） |
-| POST | /service/v1/repair | 提交报修（{ room_id, category, urgency, description, images[], scheduled_at }） |
-| DELETE | /service/v1/repair/{hashid} | 取消（需密码，{ password }） |
-| POST | /service/v1/repair/{hashid}/rate | 评价（{ rating: 1-5, feedback }） |
-
-#### 投诉建议
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /service/v1/complaints | 投诉列表 |
-| GET | /service/v1/complaint/{hashid} | 投诉详情（含处理进度） |
-| POST | /service/v1/complaint | 提交投诉（{ type, category, title, content, is_anonymous, images[] }） |
-| POST | /service/v1/complaint/{hashid}/satisfaction | 满意度评价（{ satisfaction: 1-5 }） |
-
 #### 公告
 
 | 方法 | 路径 | 说明 |
@@ -600,24 +477,6 @@ OpenAPI 文档。
 | GET | /service/v1/parking/vehicles | 我的车辆 |
 | GET | /service/v1/parking/spaces | 我的车位 |
 | GET | /service/v1/parking/records | 停车记录 |
-
-#### 访客
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /service/v1/visitors | 我的访客预约 |
-| POST | /service/v1/visitor | 创建预约（生成通行码） |
-| PUT | /service/v1/visitor/{hashid} | 修改预约 |
-| DELETE | /service/v1/visitor/{hashid} | 取消预约 |
-
-#### 社区活动
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /service/v1/activities | 活动列表 (?status=) |
-| GET | /service/v1/activity/{hashid} | 活动详情 |
-| POST | /service/v1/activity/{hashid}/signup | 报名参加 |
-| POST | /service/v1/activity/{hashid}/cancel | 取消报名 |
 
 #### 个人信息
 
@@ -661,14 +520,6 @@ curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/announcements?pa
 
 ```bash
 curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/bills?bill_number=B202608160001"
-```
-
-#### GET /open/v1/repairs — 报修状态查询
-
-参数：`order_number`（必填，报修单号）。返回报修单当前状态及进度时间线（`progress` 数组）。不存在返回 404。
-
-```bash
-curl -H "X-API-Key: <你的Key>" "http://localhost:8788/open/v1/repairs?order_number=R202608160001"
 ```
 
 ---
