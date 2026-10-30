@@ -8,6 +8,7 @@
 - Owner API runs on `http://localhost:8788`
 - Unified response format: `{"code": 0, "message": "success", "data": {...}}`
 - All ID fields are transmitted hashids-encoded
+- List endpoints cap `page_size` at 100 (larger values are treated as 100)
 - API version is expressed in the route itself (currently `/api/v1/*`), not via a request header
 - Language is controlled via the `Accept-Language` request header (`zh-CN` / `en-US`, default `zh-CN`)
 
@@ -86,7 +87,7 @@ Response:
 ```
 
 #### POST /api/v1/auth/refresh
-Refresh Token.
+Refresh Token. Only tokens with `token_type=refresh` are accepted; an access token cannot be used to refresh. Each refresh rotates the refresh token, and the old refresh token is invalidated immediately (Redis blacklist).
 
 Request parameters:
 | Parameter | Type | Description |
@@ -97,7 +98,7 @@ Response:
 ```json
 {
   "code": 0,
-  "data": { "access_token": "eyJ..." }
+  "data": { "access_token": "eyJ...", "refresh_token": "eyJ..." }
 }
 ```
 
@@ -169,7 +170,7 @@ Get dashboard statistics.
 |------|------|------|
 | PUT | /admin/profile | Update personal info |
 | PUT | /admin/profile/password | Change password |
-| POST | /admin/profile/logout | Log out |
+| POST | /admin/profile/logout | Log out (optional `refresh_token` is revoked too) |
 
 #### Export
 
@@ -276,6 +277,8 @@ Get dashboard statistics.
 | DELETE | /admin/fee-bill/{hashid} | Delete |
 | POST | /admin/fee-bill/batch/generate | Batch generate bills |
 
+Bill status: `0` unpaid, `1` partially paid, `2` paid, `3` overdue, `4` waived.
+
 #### Payment Records
 
 | Method | Path | Description |
@@ -366,10 +369,18 @@ Get dashboard statistics.
 
 | Method | Path | Description |
 |------|------|------|
-| GET | /admin/payment-order | Order list |
-| GET | /admin/payment-order/{hashid} | Order details |
-| POST | /admin/payment-order/{hashid}/refund | Refund |
-| GET | /admin/payment/statistics | Payment statistics |
+| GET | /admin/payment-order | Order list (?status=&channel=) |
+| GET | /admin/payment-order/{hashid} | Order details (including bill info) |
+| POST | /admin/payment-order/create | Create payment order ({ bill_id, user_id, channel: wechat\|alipay, subject }); returns order_number / pay_params / expire_at |
+| POST | /admin/payment-order/reconcile | Reconcile ({ days=7 }, 1–30 days); fills missed payments and re-enqueues unrefunded overpayments |
+| POST | /admin/payment-order/{hashid}/refund | Refund ({ amount, request_id }); `request_id` is an idempotency key, required, max 64 chars |
+| GET | /admin/payment-order/statistics | Payment statistics |
+
+Refunds support partial refunds; `refund_amount` in the response is the cumulative refunded amount. Orders expose `credited_amount` (amount actually credited) and `overpaid_amount` (overpayment pending refund); the table also stores `refund_request_id` (idempotency key of the latest refund).
+
+Callbacks: `POST /payment/wechat/callback`, `POST /payment/alipay/callback` (gateway signature verification + idempotent handling).
+
+Settlement rules: online credit is capped at the bill's current unpaid amount, and any excess is queued for automatic refund (`payment_overpay_refund`). Offline collection is rejected while an unexpired online payment order exists for the bill.
 
 ---
 
@@ -413,7 +424,7 @@ Request parameters:
 | Parameter | Type | Description |
 |------|------|------|
 | phone | string | Phone number |
-| password | string | Password (at least 6 characters) |
+| password | string | Password (8-32 chars, upper/lowercase letters, digit and a special char `@$!%*?&`) |
 | name | string | Name |
 | captcha_key | string | Captcha key |
 | clicks | array | Click coordinates |
@@ -421,7 +432,7 @@ Request parameters:
 | id_card_last4 | string | (Optional) last 4 digits of ID card |
 
 #### POST /api/v1/auth/refresh
-Refresh Token.
+Refresh Token. Only refresh-type tokens are accepted; after rotation the old refresh token is invalidated immediately, and an access token cannot be used to refresh.
 
 ---
 
@@ -457,10 +468,10 @@ Response:
 
 | Method | Path | Description |
 |------|------|------|
-| GET | /service/v1/fees/bills | Bill list (?status=0 unpaid/1 partially paid/2 paid/3 overdue) |
+| GET | /service/v1/fees/bills | Bill list (?status=0 unpaid/1 partially paid/2 paid/3 overdue/4 waived) |
 | GET | /service/v1/fees/bill/{hashid} | Bill details (fee type, payment records) |
 | GET | /service/v1/fees/payments | Payment records |
-| POST | /service/v1/fees/pay | Online payment ({ bill_id, payment_method, password }) |
+| POST | /service/v1/fees/pay | Online payment is not connected to a gateway (always returns 503; use an admin-created payment order or offline payment) |
 | GET | /service/v1/fees/statistics | Fee statistics (?year=2026) |
 
 #### Announcements
@@ -485,7 +496,7 @@ Response:
 | GET | /service/v1/profile | Personal info |
 | PUT | /service/v1/profile | Update ({ name, email, gender, birthday }) |
 | PUT | /service/v1/profile/password | Change password ({ old_password, new_password }) |
-| POST | /service/v1/profile/logout | Log out |
+| POST | /service/v1/profile/logout | Log out (optional `refresh_token` is revoked too) |
 
 ---
 

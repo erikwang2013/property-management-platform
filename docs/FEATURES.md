@@ -13,7 +13,7 @@
 | 5 | 房产管理 | 第1批 | CRUD + 房屋树 + 批量绑定业主 | 我的房产列表/详情 | management_room |
 | 6 | 业主管理 | 第1批 | CRUD + 批量导入/启禁用/删除 | 注册/登录/个人信息 | management_owner, management_room_owner |
 | 7 | 租户管理 | 第1批 | CRUD + 按房产筛选 | - | management_tenant |
-| 8 | 费用管理 | 第1批 | 费用类型CRUD + 账单管理 + 批量生成 + 线下收款 | 账单查询 + 在线缴费 + 费用统计 | management_fee_type, management_fee_bill, management_fee_payment |
+| 8 | 费用管理 | 第1批 | 费用类型CRUD + 账单管理 + 批量生成 + 线下收款 | 账单查询 + 费用统计（在线缴费未接入网关） | management_fee_type, management_fee_bill, management_fee_payment |
 | 9 | 公告通知 | 第1批 | CRUD + 发布/置顶 | 公告列表/详情 | management_announcement |
 | 10 | 停车管理 | 第2批 | 车位/车辆管理 + 停车记录 | 我的车位/车辆 + 停车记录 | management_parking_space, management_parking_vehicle, management_parking_record |
 | 11 | 设备管理 | 第2批 | 设备台账 + 维保记录 | - | management_equipment, management_equipment_maintenance |
@@ -26,7 +26,7 @@
 
 | 序号 | 模块 | 管理员端 | 业主端 | 数据表 |
 |------|------|---------|--------|--------|
-| 16 | 支付集成 | 订单管理 + 退款 + 微信/支付宝回调 | - | management_payment_order |
+| 16 | 支付集成 | 创建订单 + 订单管理 + 退款（幂等）+ 对账 + 微信/支付宝回调 | -（业主端在线缴费未接入） | management_payment_order |
 
 ## 管理后台模块（admin 已有）
 
@@ -49,7 +49,7 @@
 | 模块 | 功能 |
 |------|------|
 | 起始页统计 | 我的房产 / 待缴费用 / 最新公告，Flutter Web 展示 |
-| 核心业务 | 房产绑定、账单查询与在线缴费、公告、停车 |
+| 核心业务 | 房产绑定、账单查询、公告、停车；在线缴费接口固定返回 503，缴费走管理端支付订单或线下 |
 
 ## 跨功能特性
 
@@ -78,12 +78,12 @@
 
 ### 国际化 (i18n)
 - **PHP 后端**: symfony/translation — `resource/translations/{zh_CN,en}/messages.php`，39个翻译键，控制器通过 `__()` 方法获取翻译
-- **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，38个翻译键，页面通过 `.tr` 扩展使用
+- **Flutter Web**: GetX `Translations` — `lib/i18n/messages.dart`，79个翻译键（zh_CN/en 各一份），页面通过 `.tr` 扩展使用
 - **默认语言**: 简体中文（zh_CN），降级语言英语（en）
 - **请求头**: 支持 `Accept-Language` 控制响应语言
 
 ### 测试覆盖
-- **后端**: 测试源未随仓库分发；CI 在 `tests/` 为空时跳过 PHPUnit 与覆盖率门禁
-- **Flutter**: 管理端 1 例 + 业主端 10 例，`flutter test` 全部通过；`flutter analyze` 零问题
+- **后端**: 单元测试随仓库分发 — admin 43 例/103 断言，service 22 例/42 断言；CI 运行 PHPUnit，覆盖率门槛 admin 1.7%、service 3%，两端 PHPStan 均通过
+- **Flutter**: 管理端 1 例 + 业主端 10 例，共 11 例，`flutter test` 全部通过；`flutter analyze` 零问题
 - **历史报告**: `docs/tests/` 为 2026-08-27 快照，已标记历史
 - **API 文档**: `hg/apidoc` 自动生成，admin(10分组) + service(6分组)，按功能模块组织接口文档

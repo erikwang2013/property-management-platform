@@ -37,6 +37,10 @@ class ExportController extends BaseController
     public function excel(Request $request): Response
     {
         $table = $request->input('table', 'admin_user');
+        // 表名会拼进导出文件名，按支持列表白名单校验，杜绝路径穿越
+        if (!in_array($table, ['admin_user', 'operation_log', 'admin_role', 'system_config'], true)) {
+            return $this->fail('不支持的导出表', 422);
+        }
         $columns = $request->input('columns', []);
         $conditions = $request->input('conditions', []);
         $title = $request->input('title', '数据导出');
@@ -73,7 +77,7 @@ class ExportController extends BaseController
         foreach ($columns as $col) {
             $label = $exportColumns[$col] ?? $col;
             $cell = $sheet->getCell($colIndex . '1');
-            $cell->setValue($label);
+            $cell->setValue($this->sanitizeCell($label));
             $sheet->getStyle($colIndex . '1')->applyFromArray($headerStyle);
             $sheet->getColumnDimension($colIndex)->setAutoSize(true);
             $colIndex++;
@@ -96,7 +100,7 @@ class ExportController extends BaseController
                         $value = str_repeat('*', 8); // id_card等彻底隐藏
                     }
                 }
-                $sheet->getCell($colIndex . $row)->setValue($value);
+                $sheet->getCell($colIndex . $row)->setValue($this->sanitizeCell($value));
                 $sheet->getStyle($colIndex . $row)->applyFromArray($dataStyle);
                 $colIndex++;
             }
@@ -140,7 +144,8 @@ class ExportController extends BaseController
         $dompdf->loadHtml($html);
         $dompdf->render();
 
-        $filename = sprintf('export_%s_%s.pdf', $type, date('YmdHis'));
+        $safeType = preg_replace('/[^A-Za-z0-9_-]/', '_', $type);
+        $filename = sprintf('export_%s_%s.pdf', $safeType, date('YmdHis'));
         $tmpFile = runtime_path() . '/tmp/' . $filename;
 
         $dir = dirname($tmpFile);
@@ -335,13 +340,17 @@ class ExportController extends BaseController
 
     /**
      * 物业数据 Excel 导出
-     * Body: { type: 'owners'|'bills'|'payments', community_id?, conditions? }
+     * Body: { type: 'owners'|'bills', community_id?, conditions? }
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/admin/export/property-excel")
      */
     public function propertyExcel(Request $request): Response
     {
         $type = $request->input('type', 'owners');
+        // 类型同时决定导出内容与文件名，先白名单校验再拼接
+        if (!in_array($type, ['owners', 'bills'], true)) {
+            return $this->fail('不支持的导出类型', 422);
+        }
         // 小区筛选收 hashid（与列表接口一致），空值表示不筛选
         $communityId = $request->input('community_id')
             ? $this->decodeId((string) $request->input('community_id'))
@@ -353,17 +362,17 @@ class ExportController extends BaseController
         if ($type === 'owners') {
             $sheet->setTitle('业主列表');
             $sheet->fromArray(['姓名', '手机号', '性别', '入住日期', '绑定房产', '状态'], null, 'A1');
-            $owners = \app\model\Owner::with('rooms')->when($communityId, fn($q) => $q->whereHas('rooms', fn($r) => $r->where('community_id', $communityId)))->get();
+            $owners = \app\model\Owner::with('rooms')->when($communityId, fn($q) => $q->whereHas('rooms', fn($r) => $r->where('community_id', $communityId)))->limit(10000)->get();
             $row = 2;
             foreach ($owners as $owner) {
-                $sheet->fromArray([
+                $sheet->fromArray(array_map(fn ($value) => $this->sanitizeCell($value), [
                     $owner->name,
                     $this->maskPhone($owner->phone ?? ''),
                     ['未知', '男', '女'][$owner->gender] ?? '未知',
                     $owner->check_in_date ? $owner->check_in_date->format('Y-m-d') : '',
                     $owner->rooms->pluck('room_number')->implode(', '),
                     $owner->status === 1 ? '入住' : '迁出',
-                ], null, "A{$row}");
+                ]), null, "A{$row}");
                 $row++;
             }
             $this->styleHeader($sheet, 'A1:F1');
@@ -373,7 +382,7 @@ class ExportController extends BaseController
             $bills = \app\model\FeeBill::with(['room', 'feeType'])->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))->orderBy('created_at', 'desc')->limit(10000)->get();
             $row = 2;
             foreach ($bills as $bill) {
-                $sheet->fromArray([
+                $sheet->fromArray(array_map(fn ($value) => $this->sanitizeCell($value), [
                     $bill->bill_number,
                     $bill->room->room_number ?? '',
                     $bill->feeType->name ?? '',
@@ -381,14 +390,15 @@ class ExportController extends BaseController
                     $bill->paid_amount,
                     ['未缴', '部分缴', '已缴', '逾期', '豁免'][$bill->status] ?? '未知',
                     $bill->due_date ? $bill->due_date->format('Y-m-d') : '',
-                ], null, "A{$row}");
+                ]), null, "A{$row}");
                 $row++;
             }
             $this->styleHeader($sheet, 'A1:G1');
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'export_' . $type . '_' . date('YmdHis') . '.xlsx';
+        $safeType = preg_replace('/[^A-Za-z0-9_-]/', '_', $type);
+        $filename = 'export_' . $safeType . '_' . date('YmdHis') . '.xlsx';
         $filepath = runtime_path() . '/tmp/' . $filename;
 
         $dir = dirname($filepath);
@@ -422,5 +432,21 @@ class ExportController extends BaseController
             'admin_user' => ['phone', 'email', 'id_card'],
         ];
         return $maps[$table] ?? [];
+    }
+
+    /**
+     * 防 Excel 公式注入：以 = + @ 制表符或回车开头的字符串前置单引号；
+     * 前导减号仅在其后不是数值时处理，负数金额（如 -100.00）保持数值。
+     * 让表格软件按文本处理而不是执行公式（只处理字符串，数值类型保持原样）
+     */
+    private function sanitizeCell(mixed $value): mixed
+    {
+        if (is_string($value) && (
+            preg_match('/^[=+@\t\r]/', $value)
+            || (str_starts_with($value, '-') && !is_numeric($value))
+        )) {
+            return "'" . $value;
+        }
+        return $value;
     }
 }

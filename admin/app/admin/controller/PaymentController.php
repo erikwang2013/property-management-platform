@@ -47,6 +47,8 @@ class PaymentController extends BaseController
                 'user_id'       => $i->user_id,
                 'user_type'     => $i->user_type,
                 'amount'        => $i->amount,
+                'credited_amount' => $i->credited_amount,
+                'overpaid_amount' => $this->overpaidAmount($i),
                 'channel'       => $i->channel,
                 'trade_no'      => $i->trade_no,
                 'status'        => $i->status,
@@ -71,7 +73,7 @@ class PaymentController extends BaseController
 
         $bill = null;
         if ($order->bill_id) {
-            $bill = FeeBill::with(['feeType:id,name', 'room:id,room_name'])->find($order->bill_id);
+            $bill = FeeBill::with(['feeType:id,name', 'room:id,room_number'])->find($order->bill_id);
         }
 
         $data = [
@@ -81,6 +83,8 @@ class PaymentController extends BaseController
             'user_id'       => $order->user_id,
             'user_type'     => $order->user_type,
             'amount'        => $order->amount,
+            'credited_amount' => $order->credited_amount,
+            'overpaid_amount' => $this->overpaidAmount($order),
             'channel'       => $order->channel,
             'trade_no'      => $order->trade_no,
             'status'        => $order->status,
@@ -96,7 +100,7 @@ class PaymentController extends BaseController
                 'paid_amount' => $bill->paid_amount,
                 'status'      => $bill->status,
                 'fee_type'    => $bill->feeType->name ?? '',
-                'room_name'   => $bill->room->room_name ?? '',
+                'room_name'   => $bill->room->room_number ?? '',
             ] : null,
         ];
 
@@ -136,14 +140,20 @@ class PaymentController extends BaseController
      * 退款（先调渠道退款，成功后再更新本地）
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/admin/payment-order/{hashid}/refund")
+     * @Apidoc\Param("request_id", type="string", require=true, desc="调用方退款幂等键（UUID），同一次退款重试必须相同")
      */
     public function refund(Request $request, string $hashid): Response
     {
         $id = $this->decodeId($hashid);
         $amount = (float) $request->input('amount', 0);
+        // 退款必须带幂等键：响应丢失重试时复用渠道退款单号，本地也按 request_id 去重
+        $requestId = (string) $request->input('request_id', '');
+        if ($requestId === '' || strlen($requestId) > 64) {
+            return $this->fail('request_id 必填且不能超过 64 字符', 422);
+        }
 
         try {
-            $result = (new PaymentService())->refund($id, $amount);
+            $result = (new PaymentService())->refund($id, $amount, $requestId);
             return $this->success($result, '退款成功');
         } catch (RuntimeException $e) {
             return $this->fail($e->getMessage(), 422);
@@ -205,8 +215,9 @@ class PaymentController extends BaseController
      */
     public function statistics(Request $request): Response
     {
-        $totalAmount = PaymentOrder::where('status', 1)->sum('amount');
-        $totalRefund = PaymentOrder::where('status', 3)->sum('refund_amount');
+        // 已支付(1)与已退款(3)都计入总额，退款额含部分退款，避免部分退款从统计消失
+        $totalAmount = PaymentOrder::query()->whereIn('status', [1, 3])->sum('amount');
+        $totalRefund = PaymentOrder::query()->whereIn('status', [1, 3])->sum('refund_amount');
         $totalOrders = PaymentOrder::count();
         $paidOrders  = PaymentOrder::where('status', 1)->count();
 
@@ -243,5 +254,22 @@ class PaymentController extends BaseController
             'by_channel'   => $byChannel,
             'by_date'      => $byDate,
         ]);
+    }
+
+    /** 尚待退还的溢缴金额 = 订单金额 - 已入账金额 - 已退金额（下限 0；历史订单按全额入账处理） */
+    private function overpaidAmount(PaymentOrder $order): string
+    {
+        // 未支付/已关闭订单没有溢缴，只有已支付/已退款订单才计算
+        if (!in_array((int) $order->status, [1, 3], true)) {
+            return '0.00';
+        }
+        $credited = (string) $order->credited_amount;
+        if ($credited === '') {
+            $credited = (string) $order->amount;
+        }
+        $excess = bcsub((string) $order->amount, $credited, 2);
+        $refunded = (string) ($order->refund_amount ?: '0.00');
+        $remaining = bcsub($excess, $refunded, 2);
+        return bccomp($remaining, '0.00', 2) > 0 ? $remaining : '0.00';
     }
 }

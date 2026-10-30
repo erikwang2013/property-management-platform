@@ -53,10 +53,12 @@ class AuthService extends GetxService {
   }
 
   Future<void> logout() async {
-    try {
-      await _api.dio.post(ApiConfig.profileLogout);
-    } catch (_) {}
     final prefs = await SharedPreferences.getInstance();
+    try {
+      await _api.dio.post(ApiConfig.profileLogout, data: {
+        'refresh_token': prefs.getString('refresh_token'),
+      });
+    } catch (_) {}
     await prefs.clear();
     isLoggedIn = false;
     Get.offAllNamed('/login');

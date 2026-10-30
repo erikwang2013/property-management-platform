@@ -35,9 +35,9 @@ class HomeController extends BaseController
         })->count();
 
         $pendingBills = FeeBill::where('owner_id', $ownerId)
-            ->whereIn('status', [0, 3])->get();
+            ->whereIn('status', [FeeBill::STATUS_UNPAID, FeeBill::STATUS_PARTIAL, FeeBill::STATUS_OVERDUE])->get();
         $pendingAmount = $pendingBills->sum(function ($bill) {
-            return $bill->amount - $bill->paid_amount + $bill->late_fee;
+            return (float) $bill->unpaidAmount();
         });
 
         $announcements = Announcement::where('is_published', 1)

@@ -69,6 +69,19 @@ class RoleListPage extends GetView<RoleController> {
     );
   }
 
+  /// 权限树展平为「层级 + 节点」，子节点按层级缩进渲染
+  List<MapEntry<int, dynamic>> _flattenPermissions(List<dynamic> nodes, [int depth = 0]) {
+    final flat = <MapEntry<int, dynamic>>[];
+    for (final node in nodes) {
+      flat.add(MapEntry(depth, node));
+      final children = node['children'];
+      if (children is List) {
+        flat.addAll(_flattenPermissions(children, depth + 1));
+      }
+    }
+    return flat;
+  }
+
   void _showRoleDialog(BuildContext context, RoleController ctrl, {dynamic role}) {
     final nameCtrl = TextEditingController(text: role?['name'] ?? '');
     final slugCtrl = TextEditingController(text: role?['slug'] ?? '');
@@ -86,14 +99,20 @@ class RoleListPage extends GetView<RoleController> {
             TextField(controller: descCtrl, decoration: const InputDecoration(labelText: '描述')),
             const SizedBox(height: 12),
             const Text('权限分配:', style: TextStyle(fontWeight: FontWeight.bold)),
-            ...ctrl.permissions.map((perm) => CheckboxListTile(
-              title: Text(perm['name'] ?? ''),
-              subtitle: Text(perm['slug'] ?? ''),
-              value: selectedPerms.contains(perm['id'].toString()),
-              onChanged: (v) {
-                setDialogState(() { if (v == true) { selectedPerms.add(perm['id'].toString()); } else { selectedPerms.remove(perm['id'].toString()); } });
-              },
-            )),
+            ..._flattenPermissions(ctrl.permissions).map((entry) {
+              final perm = entry.value;
+              return Padding(
+                padding: EdgeInsets.only(left: entry.key * 16.0),
+                child: CheckboxListTile(
+                  title: Text(perm['name'] ?? ''),
+                  subtitle: Text(perm['slug'] ?? ''),
+                  value: selectedPerms.contains(perm['id'].toString()),
+                  onChanged: (v) {
+                    setDialogState(() { if (v == true) { selectedPerms.add(perm['id'].toString()); } else { selectedPerms.remove(perm['id'].toString()); } });
+                  },
+                ),
+              );
+            }),
           ]))),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),

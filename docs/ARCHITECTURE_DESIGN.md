@@ -109,6 +109,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### 存储层（encryptable）
 - Model `$casts` 机制自动加解密
 - 敏感字段：phone, email, id_card, emergency_contact, emergency_phone
+- 手机号检索：`management_owner.phone_hash`（SHA-256 盲索引），旧数据需运行 `scripts/backfill_owner_phone_hash.php` 回填
 - 独立密钥 `ENCRYPTABLE_KEY`
 - 写入自动加密为密文，读取自动解密为明文
 
@@ -124,6 +125,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 - 算法: HS256
 - access_token: 2小时有效期
 - refresh_token: 14天有效期
+- 刷新轮换: 仅接受 refresh 类型令牌，刷新后旧 refresh token 立即失效（Redis 黑名单）；access token 不能用于刷新
+- 登出: 支持同时传入 refresh_token 一并吊销
 - 并发限制: 同一用户最多3个有效 Token，超出时最旧 Token 加入黑名单
 - 账号锁定: 连续5次登录失败锁定15分钟
 
@@ -137,11 +140,11 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ## 7. 安全纵深防御（19层）
 
 ```
-第1层  点击验证码      → 登录/注册强制人机验证
+第1层  点击验证码      → 登录强制人机验证（业主端含注册）
 第2层  密码二次确认    → 敏感操作（删除/缴费/退款）必须输入密码
 第3层  poster随机验证  → 高频敏感操作随机弹出验证码
 第4层  security-php    → 请求周期内自动安全扫描
-第5层  SecurityFilter  → XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截
+第5层  SecurityFilter  → XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截（递归扫描嵌套 JSON）
 第6层  传输安全        → HTTPS + AES-256-CBC
 第7层  JWT 认证        → HS256，2h过期 + refresh token
 第8层  并发控制        → 同一用户最多3个Token，超出黑名单
@@ -155,7 +158,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 第16层 展示脱敏        → 手机号/邮箱/身份证脱敏
 第17层 审计追溯        → OperationLog 全量记录（含来源端 source 自动检测）
 第18层 HTTP 头防护     → CSP + X-Permitted-Cross-Domain-Policies
-第19层 出口保护        → PDF 版权水印（不可移除）+ Excel 敏感数据脱敏
+第19层 出口保护        → PDF 版权水印（不可移除）+ Excel 敏感数据脱敏与公式注入清洗
 ```
 
 ## 8. 限流策略
@@ -166,7 +169,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 |------|------|
 | 默认 | 60次/分钟/IP/路由 |
 | POST /api/v1/auth/login | 10次/分钟 |
-| POST /api/v1/auth/register | 5次/分钟 |
+| POST /api/v1/auth/register（仅业务端业主注册） | 5次/分钟 |
 
 超限返回 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` 响应头。
 
@@ -215,6 +218,9 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 | service | Dockerfile构建 | PHP 8.3 + OPcache |
 | mysql | mysql:8.0 | 数据卷持久化 |
 | redis | redis:7-alpine | 缓存/限流/Session |
+| prometheus / grafana / redis-exporter | 官方镜像 | 监控与指标采集 |
+
+> 每端 compose 共 7 个服务。Nginx 完整配置位于 `admin/deploy/nginx/default.conf` 与 `service/deploy/nginx/default.conf`，容器内挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787` / `app:8788`；`admin/docs/nginx-security.conf` 与 `service/docs/nginx-security.conf` 仅是宿主机 Nginx 的安全响应头/片段参考，不能直接作为容器配置。
 
 ## 11. 国际化设计 (i18n)
 
@@ -250,7 +256,7 @@ apps/flutter/lib/i18n/
 └── messages.dart       # AppTranslations extends GetX Translations
 ```
 
-使用 GetX `Translations`，38个翻译键。通过 `.tr` 扩展使用：
+使用 GetX `Translations`，79个翻译键（zh_CN/en 各一份）。通过 `.tr` 扩展使用：
 ```dart
 Text('login_btn'.tr)   // 中文: "登 录", 英文: "Login"
 Text('phone_hint'.tr)  // "请输入手机号" / "Enter phone number"
@@ -299,9 +305,11 @@ REFACTOR: 清理代码，保持测试绿
 
 ### 运行测试
 
-> 后端测试源未随本仓库分发；`tests/` 为空时 CI 跳过 PHPUnit 与覆盖率门禁。历史快照见 `docs/tests/`。
+> 后端单元测试随仓库分发：admin 43 例/103 断言，service 22 例/42 断言；Flutter 11 例（admin 1 + owner 10）。CI 运行 PHPUnit（admin 覆盖率门槛 1.7%，service 3%）与 Flutter 测试，两端 PHPStan 均通过。历史快照见 `docs/tests/`。
 
 ```bash
+cd admin && php vendor/bin/phpunit
+cd service && php vendor/bin/phpunit
 cd apps/flutter && flutter test
 cd admin/apps/flutter && flutter test
 ```
@@ -322,11 +330,11 @@ apps/flutter/lib/
 │   ├── auth_service.dart        # 登录/登出/Token 持久化
 │   └── storage_service.dart     # shared_preferences 封装
 ├── i18n/
-│   └── messages.dart            # GetX Translations（38键，zh_CN/en）
+│   └── messages.dart            # GetX Translations（79键，zh_CN/en）
 ├── pages/
 │   ├── login/                   # PC 风格登录页（居中 Card + 表单验证）
 │   ├── home/                    # 仪表盘（3个 StatCard + 公告列表）
-│   ├── fee/                     # 账单列表 / 详情 / 缴费弹窗
+│   ├── fee/                     # 账单列表 / 详情（在线缴费未接入，支付走管理端订单）
 │   └── profile/                 # 个人信息 / 修改密码 / 退出
 └── widgets/
     └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
@@ -340,6 +348,11 @@ apps/flutter/lib/
 
 ### 支付流程
 创建支付订单 → 第三方支付 → 异步回调 → 更新账单状态 → 记录支付日志
+
+- 入账上限：在线支付只按账单当前未缴金额入账（`credited_amount`），超出部分记为溢缴并进入自动退款队列 `payment_overpay_refund`
+- 对账：`POST /admin/payment-order/reconcile` 回溯已支付订单，重新入队未退的溢缴款
+- 退款：`POST /admin/payment-order/{hashid}/refund` 必须携带幂等键 `request_id`（≤64 字符），支持部分退款，响应返回累计退款金额；库表记录 `refund_request_id`
+- 线下收款：账单存在未过期的在线支付订单时拒绝登记，避免重复收款
 
 ## 15. API 文档
 

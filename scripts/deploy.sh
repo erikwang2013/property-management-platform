@@ -119,6 +119,26 @@ init_db() {
     fi
 }
 
+# 存量库结构迁移：脚本内部先查 information_schema 再改，缺失才执行（幂等，可重复跑）
+migrate_schema() {
+    local dir="$1" name="$2" db root_pw
+    step "$name: 数据库 schema 迁移"
+    db="$(env_value "$dir" DB_DATABASE management)"
+    root_pw="$(env_value "$dir" MYSQL_ROOT_PASSWORD change-me-root-password)"
+    ( cd "$dir" && docker compose exec -T -e "MYSQL_PWD=$root_pw" mysql mysql -uroot "$db" \
+        < "$ROOT/docs/migrations/2026-10-30-audit-fix-schema.sql" )
+    say OK "$name: schema 迁移完成 ($db)"
+}
+
+# 业主手机号盲索引回填：只填 phone_hash 为空/不一致的行（幂等）
+backfill_phone_hash() {
+    local dir="$1" name="$2"
+    step "$name: 业主手机号盲索引回填"
+    ( cd "$dir" && docker compose exec -T -e APP_BASE_PATH=/app app php \
+        < "$ROOT/scripts/backfill_owner_phone_hash.php" )
+    say OK "$name: 手机号盲索引回填完成"
+}
+
 # 默认管理员：install.sql 不含管理员种子（由安装向导建号），一键部署在此补齐
 # 文档承诺的默认账号——密码可用 .env 的 ADMIN_INITIAL_PASSWORD 覆盖；已存在则跳过（幂等）
 init_default_admin() {
@@ -141,15 +161,26 @@ git -C "$ROOT" pull --ff-only
 prepare_env "$ADMIN_DIR" "admin"
 prepare_env "$SERVICE_DIR" "service"
 
-step "admin: docker compose 校验并启动"
-( cd "$ADMIN_DIR" && docker compose config -q && docker compose up -d )
-
-step "service: docker compose 校验并启动"
-( cd "$SERVICE_DIR" && docker compose config -q && docker compose up -d )
-
+step "admin: docker compose 校验并启动数据服务"
+( cd "$ADMIN_DIR" && docker compose config -q && docker compose up -d mysql redis )
 init_db "$ADMIN_DIR" "admin"
+migrate_schema "$ADMIN_DIR" "admin"
+step "admin: 启动应用并回填手机号索引"
+( cd "$ADMIN_DIR" && docker compose up -d app )
+backfill_phone_hash "$ADMIN_DIR" "admin"
 init_default_admin "$ADMIN_DIR"
+step "admin: 启动 nginx（对外提供服务）"
+( cd "$ADMIN_DIR" && docker compose up -d )
+
+step "service: docker compose 校验并启动数据服务"
+( cd "$SERVICE_DIR" && docker compose config -q && docker compose up -d mysql redis )
 init_db "$SERVICE_DIR" "service"
+migrate_schema "$SERVICE_DIR" "service"
+step "service: 启动应用并回填手机号索引"
+( cd "$SERVICE_DIR" && docker compose up -d app )
+backfill_phone_hash "$SERVICE_DIR" "service"
+step "service: 启动 nginx（对外提供服务）"
+( cd "$SERVICE_DIR" && docker compose up -d )
 
 step "监控冒烟验证 (scripts/verify_monitoring.sh)"
 if bash "$ROOT/scripts/verify_monitoring.sh"; then

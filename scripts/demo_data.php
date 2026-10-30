@@ -109,10 +109,11 @@ $mark('room', $rooms[0]);
 
 $owners = [];
 foreach ([['张三', '13800000001'], ['李四', '13800000002']] as [$name, $phone]) {
-    // phone 字段为加密存储（随机 IV），无法按明文查询，改用 name 作幂等键
+    // phone 字段为加密存储（随机 IV），无法按明文查询，改用 name 作幂等键；phone_hash 供等值查询
     $owners[] = Owner::firstOrCreate(
         ['name' => $name],
-        ['name' => $name, 'password' => password_hash('Demo@123456', PASSWORD_BCRYPT), 'phone' => $phone, 'email' => '',
+        ['name' => $name, 'password' => password_hash('Demo@123456', PASSWORD_BCRYPT), 'phone' => $phone,
+         'phone_hash' => Owner::phoneHash($phone), 'email' => '',
          'id_card' => '', 'gender' => 1, 'check_in_date' => date('Y-m-d', strtotime('-2 years')),
          'remark' => 'demo', 'status' => 1]
     );

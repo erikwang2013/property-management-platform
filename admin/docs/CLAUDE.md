@@ -14,7 +14,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 | 域 | 功能 |
 |----|------|
-| 认证 | 登录/注册/刷新/登出 + 验证码 + 账号锁定 + 会话限制 |
+| 认证 | 登录/刷新/登出 + 验证码 + 账号锁定 + 会话限制 + 刷新轮换（管理端无公开注册） |
 | 仪表盘 | 实时统计/趋势/分布/日志（Redis 5m 缓存）|
 | 用户 | CRUD + 批量删除/启禁用 + Excel 导入 |
 | 角色权限 | CRUD + 权限树 + RBAC method.path 鉴权 |
@@ -100,7 +100,7 @@ open-admin/
 │   ├── DESIGN.md               # 设计文档
 │   ├── SECURITY.md             # 安全架构设计
 │   ├── API.md                  # API 参考文档
-│   ├── nginx-security.conf     # Nginx 安全参考配置
+│   ├── nginx-security.conf     # 宿主机 Nginx 安全头/片段参考（非容器配置）
 │   ├── diagrams/               # 分解架构图
 │   └── superpowers/            # 规范与计划
 │       ├── specs/              # 设计规范
@@ -120,7 +120,7 @@ open-admin/
 ├── docker-compose.yml          # Docker 编排
 └── .github/
     └── workflows/
-        └── ci.yml              # CI/CD 流水线（PHP语法+PHPUnit+Flutter analyze）
+        └── ci.yml              # CI/CD 流水线（PHP语法+PHPUnit覆盖率+PHPStan+Flutter analyze/test）
 ```
 
 ## 中间件执行链
@@ -139,7 +139,10 @@ open-admin/
 - **账号锁定**：连续 5 次登录失败，账号锁定 15 分钟
 - **并发会话限制**：同一用户最多 3 个有效 Token，超出时最旧 Token 加入黑名单
 - **security.txt**：`/.well-known/security.txt` RFC 9116 端点
-- **Nginx 安全配置**：`docs/nginx-security.conf` 反向代理安全加固参考
+- **刷新轮换**：仅接受 refresh 类型令牌，刷新后旧 refresh token 进入黑名单；登出可同时吊销 refresh_token
+- **嵌套 JSON 扫描**：SecurityFilter 递归展开请求载荷，避免嵌套 JSON 绕过攻击检测
+- **导出防护**：Excel 导出清洗 `= + @` 等公式注入前缀；列表接口 page_size 上限 100
+- **Nginx 安全配置**：Docker 完整配置为 `deploy/nginx/default.conf`（挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`）；`docs/nginx-security.conf` 仅是宿主机 Nginx 的安全头/片段参考
 
 ## API 版本策略
 
@@ -155,7 +158,7 @@ curl http://localhost:8787/api/v1/auth/login
 
 Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 - 登录: 10 次/分钟
-- 注册: 5 次/分钟
+- 业主注册: 5 次/分钟（仅业务端；管理端无公开注册）
 - 响应头: `X-RateLimit-Limit/Remaining/Reset`，超限附加 `Retry-After`
 
 ## 代码规范
@@ -181,7 +184,7 @@ Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 
 ### Docker Compose（推荐生产环境）
 
-项目根目录 `docker-compose.yml` 编排 5 个服务：
+本目录 `docker-compose.yml` 编排 7 个服务（service 端同样 7 个，端口已偏移）：
 
 | 服务 | 说明 |
 |------|------|
@@ -189,10 +192,11 @@ Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 | `app` | webman PHP 8.3 应用，`Dockerfile` 构建（含 OPcache） |
 | `mysql` | MySQL 8.0，数据卷持久化 |
 | `redis` | Redis 7 Alpine，缓存/限流/Session |
+| `prometheus` / `grafana` / `redis-exporter` | 监控与指标采集 |
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+docker compose up -d
 ```
 
 ### CI/CD
@@ -200,8 +204,9 @@ docker-compose up -d
 `.github/workflows/ci.yml` 定义 GitHub Actions 流水线：
 
 - PHP 语法检查 (`php -l`)
-- PHPUnit 单元测试
-- Flutter 静态分析 (`flutter analyze`)
+- PHPUnit 单元测试（admin 43 例/103 断言，覆盖率门槛 1.7%；service 22 例/42 断言，门槛 3%）
+- PHPStan 静态分析
+- Flutter 静态分析 (`flutter analyze`) + 测试（admin 1 例 + owner 10 例）
 
 ### 数据库备份
 

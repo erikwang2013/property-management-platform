@@ -42,7 +42,7 @@ class ParkingRecordController extends BaseController
         }
 
         $list = $query->orderBy('entry_time', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 return [
                     'id'           => $this->encodeId($item->id),

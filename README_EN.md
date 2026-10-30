@@ -81,9 +81,9 @@ property-management-platform/
 | Admin Controllers | 40 | General admin + 15 modules + 1 extension |
 | Service Controllers | 10 | Complete owner-facing API |
 | API Routes | 51 | admin 27 + service 24 |
-| Flutter Admin | 26 pages | 26 page modules, 67 files/5,520 lines |
-| Flutter Owner | 5 pages | Bills/Parking, 18 files/2,099 lines |
-| Tests | 11 | Flutter admin 1 + owner 10; backend test sources are not shipped with this tree, historical snapshots in [test reports](docs/tests/) |
+| Flutter Admin | 26 pages | 26 page modules, 67 files/5,532 lines |
+| Flutter Owner | 5 pages | Bills/Parking, 17 files/1,942 lines |
+| Tests | 76 | Backend 65 (admin 43 + service 22) + Flutter 11 (admin 1 + owner 10); shipped with the source |
 
 ## System Architecture & Design Diagrams
 
@@ -274,12 +274,12 @@ cd service && php vendor/bin/phpunit
 
 | Project | Tests | Assertions | Pass Rate |
 |---------|-------|------------|-----------|
-| admin | 260 | 622 | 100% (2 DB-gated skips) |
-| service | 201 | 744 | 100% (8 DB-gated skips) |
-| **Total** | **461** | **1366** | — |
+| admin | 43 | 103 | 100% |
+| service | 22 | 42 | 100% |
+| **Total** | **65** | **145** | — |
 
-Service test coverage: all 19 API controllers, 6 middleware, models/common services, security & feature regression
-Full unit/API/E2E test reports: [docs/tests/](docs/tests/) (admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report)
+Backend unit tests cover: payment pure functions/WeChat callback decryption/bill status & late fee/password rule/Validator/pagination; Flutter has 11 tests.
+Historical full-suite snapshots: [docs/tests/](docs/tests/) (admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report).
 
 ### Docker Deployment
 
@@ -316,6 +316,10 @@ docker compose up -d
 >
 > ⚠️ After a Docker deployment do not use the Web Installer (`/install`) to change DB settings — it rewrites `DB_*` in `.env` and breaks the container's `DB_HOST=mysql` connection.
 
+**Upgrading an existing database**
+
+Run `docs/migrations/2026-10-30-audit-fix-schema.sql`, then `scripts/backfill_owner_phone_hash.php`. `scripts/deploy.sh` does both automatically in the order mysql/redis → schema migration → app → backfill → nginx. Fresh installs use `docs/install.sql`. If duplicate non-NULL `(room_id, fee_type_id, start_date)` fee-period rows exist, deduplicate them manually first — otherwise the unique index is skipped.
+
 ## Deployment Topology
 
 ```
@@ -330,7 +334,7 @@ Static files: Flutter Web build/
 1. Open `http://localhost:8787` in a browser and sign in with the default admin account (see below).
 2. **Set up base data**: enter Community → Building → Unit → Room Type → Room, then bind owners under Owner Management.
 3. **Daily operations**:
-   - Fees: configure fee types → batch-generate bills → owners pay online/offline;
+   - Fees: configure fee types → batch-generate bills → collect via an admin-created payment order or offline;
    - Report Center: view collection rate, payment methods and arrears ranking by date range, export to PDF.
 4. **System**: User Management (admins), Roles & Permissions (RBAC), System Config (key-values), Audit Logs.
 
@@ -338,7 +342,7 @@ Static files: Flutter Web build/
 
 1. Open `http://localhost:8788` (or Flutter Web), register or sign in.
 2. Home page stats: my rooms, pending fees, latest announcements.
-3. Common actions: pay fees, parking lookup.
+3. Common actions: bill lookup, parking lookup. Online payment from the owner app is not connected to a gateway (`POST /service/v1/fees/pay` always returns 503); pay via an admin-created payment order or offline.
 
 ### Frontend
 
@@ -366,7 +370,7 @@ Static files: Flutter Web build/
 | [Business Flowchart](docs/FLOWCHART.md) | Auth flow, fee management, property |
 | [Function Diagram](docs/FUNCTION_DIAGRAM.md) | 16 modules overview, dependencies, admin feature tree, owner portal map |
 | [Lifecycle Diagram](docs/LIFECYCLE_DIAGRAM.md) | Request lifecycle, entity lifecycle, token lifecycle, CRUD flow |
-| [Security Architecture](docs/SECURITY_ARCHITECTURE.md) | 18-layer defense-in-depth, attack surface matrix, encryption chain, audit system |
+| [Security Architecture](docs/SECURITY_ARCHITECTURE.md) | 19-layer defense-in-depth, attack surface matrix, encryption chain, audit system |
 | [Feature Design](docs/FEATURE_DESIGN.md) | 16 module feature specifications |
 | [Features](docs/FEATURES.md) | Feature checklist and module overview |
 | [API Reference](docs/API.md) | Complete API endpoints and parameters |
@@ -387,11 +391,11 @@ The open-source edition includes 15 core business modules and 1 extension module
 |---|---|---|
 | Feature coverage | 15 core + 1 extension; 50 controllers / 57 models / 51 routes / 34 tables | 22 core + 12 extensions; 81 controllers / 123 models / 191 routes / 67 tables; adds repairs, complaints, visitors, contracts, finance, activities, energy, notifications, approval, voting, collection, group, knowledge, inspection, SLA, mall, face, dashboard |
 | Security | JWT + RBAC, SecurityFilter, RateLimit, OperationLog, PasswordRule, security-php, gitleaks/phpstan; 19-layer defense | Same backend security stack (identical 16 middleware, PasswordRule and security plugin); adds Angular/React/HarmonyOS frontends and ES, so a larger attack surface with the same controls |
-| Performance and scale | webman, Redis cache/queue; 12 compose services; MySQL LIKE search | Same stack + Elasticsearch; 15 compose services; more Redis usage (30 vs 26 files), suited to larger data volumes |
+| Performance and scale | webman, Redis cache/queue; 14 compose services (7 per stack); MySQL LIKE search | Same stack + Elasticsearch; 15 compose services; more Redis usage (30 vs 26 files), suited to larger data volumes |
 | Data and search | 34 tables; MySQL LIKE | 67 tables; Elasticsearch + webman-scout |
-| Tests and quality | Backend test sources are not shipped (CI skips when `tests/` is empty); 11 Flutter tests; CI runs php-syntax/flutter/phpstan/secrets/monitoring | Commercial edition has a different test claim; CI additionally runs react-build/angular-build; backend test sources are delivered separately |
-| Deployment and operations | Docker Compose 12 services, installer, health/metrics, Prometheus, backup scripts | 15 compose services (+ES/monitoring); same installer, health checks, monitoring and backups, with a larger deployment surface |
-| Clients and i18n | Flutter admin 67 Dart + owner app 18 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
+| Tests and quality | 65 backend unit tests shipped with the tree (CI enforced, coverage gate); 11 Flutter tests; CI runs php-syntax/flutter/phpstan/secrets/monitoring | Commercial edition has a different test claim; CI additionally runs react-build/angular-build; backend test sources are delivered separately |
+| Deployment and operations | Docker Compose 14 services (7 per stack), installer, health/metrics, Prometheus, backup scripts | 15 compose services (+ES/monitoring); same installer, health checks, monitoring and backups, with a larger deployment surface |
+| Clients and i18n | Flutter admin 67 Dart + owner app 17 Dart; zh_CN/en resources | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12; owner Flutter 33 + HarmonyOS 14; still zh_CN/en resources |
 | Extensibility | 15+1 modules, RBAC, `/apidoc`, config-driven | 22+12 modules, more permission seeds (about 248 vs 134), three optional web admin frontends, but a larger maintenance surface |
 | Licensing and support | Personal study/research; commercial use requires written authorization | Commercial licensing, delivery and support; contact erik@erik.xyz |
 | Use cases | Personal study, research, secondary development, small self-hosted deployments | Commercial deployment, production operations, multi-client and large-data scenarios |

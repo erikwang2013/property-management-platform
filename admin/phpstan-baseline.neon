@@ -319,36 +319,6 @@ parameters:
 			path: app/admin/controller/EquipmentMaintenanceController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$check_in_date\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/ExportController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$gender\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/ExportController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/ExportController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$rooms\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/ExportController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\Owner\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/ExportController.php
-
-		-
 			message: '#^Access to an undefined property app\\model\\FeeType\:\:\$unit_price\.$#'
 			identifier: property.notFound
 			count: 2
@@ -781,36 +751,6 @@ parameters:
 			path: app/admin/controller/PatrolRecordController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\|Illuminate\\Database\\Eloquent\\Collection\<int, app\\model\\FeeBill\>\:\:\$amount\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/PaymentController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\|Illuminate\\Database\\Eloquent\\Collection\<int, app\\model\\FeeBill\>\:\:\$bill_number\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/PaymentController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\|Illuminate\\Database\\Eloquent\\Collection\<int, app\\model\\FeeBill\>\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/PaymentController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\|Illuminate\\Database\\Eloquent\\Collection\<int, app\\model\\FeeBill\>\:\:\$paid_amount\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/PaymentController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\|Illuminate\\Database\\Eloquent\\Collection\<int, app\\model\\FeeBill\>\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/admin/controller/PaymentController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:count\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -831,7 +771,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 3
+			count: 1
 			path: app/admin/controller/PaymentController.php
 
 		-
@@ -909,7 +849,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method support\\Redis\:\:setex\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
+			count: 2
 			path: app/admin/controller/ProfileController.php
 
 		-
@@ -1243,48 +1183,6 @@ parameters:
 			path: app/admin/controller/UserController.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$email\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$password\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$phone\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$real_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\AdminUser\:\:\$username\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/api/v1/controller/AuthController.php
-
-		-
 			message: '#^Call to an undefined static method app\\model\\AdminUser\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -1293,7 +1191,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\AdminUser\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 1
 			path: app/api/v1/controller/AuthController.php
 
 		-
@@ -1311,7 +1209,7 @@ parameters:
 		-
 			message: '#^Call to an undefined static method support\\Redis\:\:get\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
+			count: 2
 			path: app/api/v1/controller/AuthController.php
 
 		-
@@ -1393,55 +1291,7 @@ parameters:
 			path: app/common/LockService.php
 
 		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$paid_amount\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\FeeBill\:\:\$paid_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$amount\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$bill_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$channel\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/common/PaymentService.php
-
-		-
 			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$expire_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$order_number\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/common/PaymentService.php
-
-		-
-			message: '#^Access to an undefined property app\\model\\PaymentOrder\:\:\$status\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/common/PaymentService.php
@@ -1461,25 +1311,25 @@ parameters:
 		-
 			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 4
+			count: 1
 			path: app/common/PaymentService.php
 
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:find\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
+			count: 3
 			path: app/common/PaymentService.php
 
 		-
 			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:where\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 6
+			count: 7
 			path: app/common/PaymentService.php
 
 		-
 			message: '#^Call to an undefined static method support\\Db\:\:transaction\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 2
+			count: 3
 			path: app/common/PaymentService.php
 
 		-
@@ -1679,3 +1529,21 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: app/admin/controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\FeeBill\:\:lockForUpdate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method app\\model\\PaymentOrder\:\:lockForUpdate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/common/PaymentService.php
+
+		-
+			message: '#^Call to an undefined static method support\\Redis\:\:set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/api/v1/controller/AuthController.php

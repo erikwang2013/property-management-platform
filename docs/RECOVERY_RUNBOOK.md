@@ -44,6 +44,8 @@ docker compose -f admin/docker-compose.yml exec -T \
 ```
 
 > 凭据提示：`MYSQL_PWD` 取 `admin/.env` 的 `DB_PASSWORD`；生产上禁止明文出现在 shell 历史，建议改用 `--env-file admin/.env` 或注入环境变量。本手册示例为演练环境约定值。
+>
+> 若备份早于 2026-10-30 结构变更，恢复后需补跑 `docs/migrations/2026-10-30-audit-fix-schema.sql` 与 `scripts/backfill_owner_phone_hash.php`，否则应用会缺 `phone_hash` / `credited_amount` / `refund_request_id` 等列。
 
 ## 2. 场景 B：恢复到指定时间点（binlog 回放）
 

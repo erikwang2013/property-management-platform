@@ -12,7 +12,7 @@
 
 | 业务域 | 功能 | 说明 |
 |--------|------|------|
-| 🔐 认证 | 登录/注册/刷新令牌/登出 | 点击验证码 + JWT + 黑名单 |
+| 🔐 认证 | 登录/刷新令牌/登出 | 点击验证码 + JWT + 黑名单 + 刷新轮换（管理端无公开注册） |
 | | 账号锁定 | 5 次失败锁定 15 分钟 |
 | | 并发会话限制 | 同一用户最多 3 个有效 Token |
 | 📊 仪表盘 | 实时统计/趋势图/分布图/最近操作 | Redis 缓存 5 分钟 |
@@ -72,7 +72,7 @@ open-admin/
 │   ├── api/
 │   │   └── v1/controller/          # API v1 控制器（版本在路由 /api/v1/*）
 │   │       ├── CaptchaController.php # 点击验证码
-│   │       └── AuthController.php    # 登录/注册/刷新令牌
+│   │       └── AuthController.php    # 登录/刷新令牌
 │   ├── common/                 # 公共工具类
 │   │   ├── HashidsService.php  # ID 编解码
 │   │   ├── SnowflakeService.php# Snowflake ID 生成
@@ -88,14 +88,14 @@ open-admin/
 ├── apps/
 │   ├── flutter/                # Flutter Web 管理后台（PC 风格）
 │   │   └── lib/app/
-│   │       ├── pages/          # 5 个完整页面（仪表盘/用户/角色/配置/日志/个人中心）
+│   │       ├── pages/          # 26 个页面模块（67 个 Dart 文件）
 │   │       ├── services/       # ApiService（JWT 拦截器）+ AuthService（Token 持久化）
 │   │       └── layouts/        # 响应式管理后台布局（侧边栏+顶栏+内容区）
 ├── config/                     # 配置文件（含中文注释）
 │   ├── route.php               # 路由 + API 版本策略
 │   ├── middleware.php           # 全局中间件注册
 │   └── ...                     # 各组件配置
-├── docs/install.sql            # 全量建库 SQL（60 表 + 权限种子数据，唯一建库入口）
+├── ../docs/install.sql         # 全量建库 SQL（34 表 + 权限种子数据，唯一建库入口）
 ├── public/                     # 公共入口
 ├── runtime/                    # 运行时文件
 └── vendor/                     # Composer 依赖
@@ -146,7 +146,7 @@ cp .env.example .env
 
 ### 3. 初始化数据库
 
-执行仓库根目录的合并安装脚本（34 张表 + RBAC 权限种子，可重复执行）：
+执行仓库根目录的合并安装脚本（34 张表 + RBAC 权限种子；可对**全新库**重复执行，存量库升级请用 `../docs/migrations/2026-10-30-audit-fix-schema.sql` + 手机号回填）：
 
 ```bash
 mysql -u root -p < ../docs/install.sql
@@ -172,17 +172,17 @@ flutter run -d chrome    # Web 端（PC 管理后台风格）
 
 ### 6. Docker Compose 一键部署（推荐生产环境）
 
-项目提供完整的 Docker 编排方案，包含 4 个服务：Nginx、PHP (webman app)、MySQL、Redis。
+项目提供完整的 Docker 编排方案，单端包含 7 个服务：Nginx、PHP (webman app)、MySQL、Redis、Prometheus、Grafana、redis-exporter（service 端同样 7 个，端口已偏移）。
 
 ```bash
 # 1. 配置 Docker 环境变量
 cp .env.docker .env
 
 # 2. 启动所有服务
-docker-compose up -d
+docker compose up -d
 
 # 3. 初始化数据库（进入 app 容器执行）
-docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
+docker compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 # 4. 访问
 # http://localhost:8787  (webman)
@@ -190,7 +190,7 @@ docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 ```
 
 - `Dockerfile`: PHP 8.3 + OPcache + Composer，基于 `php:8.3-cli`
-- `docker-compose.yml`: 5 个服务编排，网络隔离，数据卷持久化
+- `docker-compose.yml`: 7 个服务编排，网络隔离，数据卷持久化
 - `.env.docker`: Docker 环境专用环境变量
 
 
@@ -252,7 +252,7 @@ POST /api/v1/auth/login
 
 基于 Redis 滑动窗口算法，默认 60 次/分钟/IP/路由。敏感接口更严格：
 - 登录：10 次/分钟
-- 注册：5 次/分钟
+- 业主注册：5 次/分钟（仅业务端；管理端无公开注册接口）
 
 响应头包含 `X-RateLimit-Limit`、`X-RateLimit-Remaining`、`X-RateLimit-Reset`。超限返回 429 并附带 `Retry-After`。
 
@@ -275,11 +275,11 @@ Cors（跨域预处理 + 响应头）
 - **账号锁定**：连续 5 次登录失败，账号自动锁定 15 分钟，期间登录返回 429
 - **并发会话限制**：同一用户最多 3 个有效 Token，超出时最旧 Token 自动加入黑名单
 - **security.txt**：`GET /.well-known/security.txt` 提供 RFC 9116 标准安全联系信息
-- **Nginx 安全配置**：参考 `docs/nginx-security.conf` 提供完整的反向代理安全加固示例
+- **Nginx 安全配置**：Docker 完整配置为 `deploy/nginx/default.conf`（挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`）；`docs/nginx-security.conf` 仅是宿主机 Nginx 的安全头/片段参考，不能直接作为容器配置
 
 ### 认证
 
-登录与注册需要先通过**点击验证码**校验：
+登录需要先通过**点击验证码**校验（管理端无公开注册）：
 
 1. 客户端请求 `POST /api/v1/captcha/generate` 获取验证码图片（base64 PNG）和文字目标列表
 2. 用户按顺序点击图中对应文字位置，收集点击坐标 `[{x, y}, ...]`
@@ -303,9 +303,9 @@ Content-Type: application/json
 Authorization: Bearer <token>
 ```
 
-登录成功后返回 access_token，有效期 2 小时；另返回 refresh_token，有效期 14 天。
+登录成功后返回 access_token，有效期 2 小时；另返回 refresh_token，有效期 14 天。刷新时仅接受 refresh 类型令牌，且会轮换 refresh_token（旧 token 立即加入黑名单）；access token 不能用于刷新。
 
-登出时 Token 加入 Redis 黑名单，有效期内不可复用。POST /admin/profile/logout
+登出时 Token 加入 Redis 黑名单，有效期内不可复用；可选传入 `refresh_token` 一并吊销。POST /admin/profile/logout
 
 ### 敏感操作二次确认
 
@@ -332,8 +332,7 @@ Authorization: Bearer <token>
 | `POST` | `/api/v1/captcha/generate` | 生成点击验证码 |
 | `POST` | `/api/v1/captcha/verify` | 校验点击验证码 |
 | `POST` | `/api/v1/auth/login` | 登录（需 captcha） |
-| `POST` | `/api/v1/auth/register` | 注册（需 captcha） |
-| `POST` | `/api/v1/auth/refresh` | 刷新令牌 |
+| `POST` | `/api/v1/auth/refresh` | 刷新令牌（仅 refresh 类型；刷新轮换，旧 refresh 失效） |
 | `GET` | `/metrics` | Prometheus 监控指标 |
 
 ### 管理端接口（需 JWT + RBAC）
@@ -363,7 +362,7 @@ Authorization: Bearer <token>
 | `GET` | `/admin/log` | 操作日志（分页 + 筛选） |
 | `PUT` | `/admin/profile` | 更新个人信息 |
 | `PUT` | `/admin/profile/password` | 修改密码 |
-| `POST` | `/admin/profile/logout` | 登出（JWT 黑名单） |
+| `POST` | `/admin/profile/logout` | 登出（JWT 黑名单；可传 refresh_token 一并吊销） |
 | `POST` | `/admin/export/excel` | 导出 Excel |
 | `POST` | `/admin/export/pdf` | 导出 PDF |
 | `POST` | `/admin/import/users` | Excel 导入用户 |
@@ -385,7 +384,7 @@ Authorization: Bearer <token>
 
 1. **登录**：默认账号 `admin / Admin@123456`（一键部署自动创建；向导部署以第 2 步设置为准），登录后请立即修改密码。
 2. **基础数据**：小区 → 楼栋 → 单元 → 户型 → 房产 → 业主绑定，逐步录入。
-3. **业务运营**：费用类型 → 批量生成账单 → 线下收款；报表中心查看收缴率、缴费方式与欠费排行。
+3. **业务运营**：费用类型 → 批量生成账单（API；Flutter 账单页的创建/批量生成按钮已移除）→ 管理端创建支付订单或线下收款；报表中心查看收缴率、缴费方式与欠费排行。
 4. **系统管理**：新增管理员、角色授权（RBAC）、系统配置、操作日志审计。
 
 ## 开发规范
@@ -405,17 +404,19 @@ Authorization: Bearer <token>
 
 | 服务 | 镜像 | 端口 |
 |------|------|------|
-| `nginx` | nginx:alpine | 80, 443 |
+| `nginx` | nginx:1.27-alpine | 80, 443 |
 | `app` | 本地 `Dockerfile` 构建 | 8787 |
-| `mysql` | mysql:8.0 | 3306 |
-| `redis` | redis:7-alpine | 6379 |
-| `elasticsearch` | elasticsearch:8.x | 9200 |
+| `mysql` | mysql:8.0.36 | 3306 |
+| `redis` | redis:7.2-alpine | 6379 |
+| `prometheus` | prom/prometheus:v2.53.0 | 9090 |
+| `grafana` | grafana/grafana:11.1.0 | 3000 |
+| `redis-exporter` | oliver006/redis_exporter:v0.69.1-alpine | 9121 |
 
 PHP 镜像通过 `Dockerfile` 构建，基础镜像 `php:8.3-cli`，启用 OPcache。
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+docker compose up -d
 ```
 
 ### CI/CD
@@ -423,8 +424,9 @@ docker-compose up -d
 GitHub Actions 持续集成流水线：`.github/workflows/ci.yml`
 
 - PHP 语法检查 (`php -l`)
-- PHPUnit 单元测试
-- Flutter 静态分析 (`flutter analyze`)
+- PHPUnit 单元测试（admin 43 例/103 断言，覆盖率门槛 1.7%；service 22 例/42 断言，门槛 3%）
+- PHPStan 静态分析
+- Flutter 静态分析 (`flutter analyze`) + 测试（admin 1 例 + owner 10 例）
 
 ### 数据库备份
 
@@ -432,7 +434,7 @@ GitHub Actions 持续集成流水线：`.github/workflows/ci.yml`
 
 ### Nginx 安全配置
 
-生产部署请参考 `docs/nginx-security.conf` 配置反向代理安全加固。
+Docker 部署使用 `deploy/nginx/default.conf`（挂载到 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`，覆盖 `X-Forwarded-For` 为 `$remote_addr`，健康检查 `/health`）；宿主机 Nginx 的安全响应头/片段参考 `docs/nginx-security.conf`，两者用途不同，不能混用。
 
 ## 开源不易，欢迎支持
 

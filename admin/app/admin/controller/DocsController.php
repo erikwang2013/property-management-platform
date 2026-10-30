@@ -121,7 +121,6 @@ class DocsController
                 '/api/v1/captcha/generate' => $this->path('生成点击验证码', 'POST', ['公开接口（版本在路由）'], 'object', ['difficulty' => 'string: easy|medium|hard']),
                 '/api/v1/captcha/verify'   => $this->path('校验点击验证码', 'POST', ['公开接口（版本在路由）']),
                 '/api/v1/auth/login'       => $this->path('登录', 'POST', ['公开接口（版本在路由）'], 'object', ['username' => 'string', 'password' => 'string', 'captcha_key' => 'string', 'clicks' => 'array']),
-                '/api/v1/auth/register'    => $this->path('注册', 'POST', ['公开接口（版本在路由）'], 'object', ['username' => 'string', 'password' => 'string', 'real_name' => 'string', 'captcha_key' => 'string', 'clicks' => 'array']),
                 '/api/v1/auth/refresh'     => $this->path('刷新令牌', 'POST', ['公开接口（版本在路由）'], 'object', ['refresh_token' => 'string']),
 
                 '/admin/dashboard' => $this->path('仪表盘数据', 'GET', ['JWT 认证']),

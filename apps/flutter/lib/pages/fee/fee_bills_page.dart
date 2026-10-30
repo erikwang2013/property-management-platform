@@ -45,33 +45,35 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
     }
   }
 
-  Color _statusColor(String? status) {
+  Color _statusColor(int? status) {
     switch (status) {
-      case 'unpaid':
+      case 0:
         return AppTheme.warning;
-      case 'paid':
+      case 2:
         return AppTheme.success;
-      case 'overdue':
+      case 3:
         return AppTheme.danger;
-      case 'partial':
+      case 1:
         return Colors.blue;
       default:
         return Colors.grey;
     }
   }
 
-  String _statusLabel(String? status) {
+  String _statusLabel(int? status) {
     switch (status) {
-      case 'unpaid':
+      case 0:
         return 'bill_unpaid'.tr;
-      case 'paid':
+      case 2:
         return 'bill_paid'.tr;
-      case 'overdue':
+      case 3:
         return 'bill_overdue'.tr;
-      case 'partial':
+      case 1:
         return 'bill_partial'.tr;
+      case 4:
+        return '豁免';
       default:
-        return status ?? '';
+        return '';
     }
   }
 
@@ -80,9 +82,6 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('fee_bills'.tr),
-        actions: [
-          IconButton(icon: const Icon(Icons.payment), tooltip: 'fee_pay'.tr, onPressed: () {}),
-        ],
       ),
       body: Column(
         children: [
@@ -97,11 +96,13 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
                 children: [
                   _buildFilterChip('全部', ''),
                   const SizedBox(width: 8),
-                  _buildFilterChip('bill_unpaid'.tr, 'unpaid'),
+                  _buildFilterChip('bill_unpaid'.tr, '0'),
                   const SizedBox(width: 8),
-                  _buildFilterChip('bill_paid'.tr, 'paid'),
+                  _buildFilterChip('bill_partial'.tr, '1'),
                   const SizedBox(width: 8),
-                  _buildFilterChip('bill_overdue'.tr, 'overdue'),
+                  _buildFilterChip('bill_paid'.tr, '2'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('bill_overdue'.tr, '3'),
                 ],
               ),
             ),
@@ -142,7 +143,7 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
   }
 
   Widget _buildBillCard(Map<String, dynamic> bill) {
-    final status = bill['status'] as String?;
+    final status = bill['status'] as int?;
     final amount = double.tryParse(bill['amount']?.toString() ?? '0') ?? 0;
     final paidAmount = double.tryParse(bill['paid_amount']?.toString() ?? '0') ?? 0;
 
@@ -175,7 +176,7 @@ class _FeeBillsPageState extends State<FeeBillsPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      bill['fee_type'] ?? '',
+                      bill['fee_type_name'] ?? bill['fee_type'] ?? '',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
                     ),
                   ],

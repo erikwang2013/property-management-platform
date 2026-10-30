@@ -1,6 +1,8 @@
 # 测试报告索引
 
 > **历史测试报告（2026-08-27）**：以下为当时测试快照。报修、投诉、访客、合同、财务、活动、能耗、通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块及其测试已移除；当前测试范围以仓库代码为准。
+>
+> 当前测试规模：后端 65 例（admin 43 例/103 断言，service 22 例/42 断言）+ Flutter 11 例（admin 1 + owner 10），随仓库分发；CI 覆盖率门槛 admin 1.7%、service 3%。下表数字仅用于历史对照。
 
 
 - 日期：2026-08-27
@@ -37,8 +39,8 @@
 ## 运行方式
 
 ```bash
-cd admin && vendor/bin/phpunit --no-coverage    # admin 258 用例
-cd service && vendor/bin/phpunit --no-coverage  # service 201 用例
+cd admin && vendor/bin/phpunit --no-coverage    # 当前 admin 43 用例（历史快照为 258）
+cd service && vendor/bin/phpunit --no-coverage  # 当前 service 22 用例（历史快照为 201）
 bash scripts/e2e/run.sh                          # UI 端到端
 cd apps/flutter && flutter test                  # Flutter widget 测试
 ```

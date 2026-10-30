@@ -54,7 +54,7 @@ flowchart TD
     end
 
     subgraph "控制器层 Controller"
-        CT["Dashboard / User / Role / Permission<br/>Community / Room / Owner / Fee<br/>Repair / Complaint / Announcement"]
+        CT["Dashboard / User / Role / Permission<br/>Community / Room / Owner / Fee<br/>Payment / Announcement"]
     end
 
     subgraph "服务层 Service"
@@ -299,6 +299,7 @@ erDiagram
         BIGINT id PK
         VARCHAR name "姓名"
         VARCHAR phone "手机号加密"
+        VARCHAR phone_hash "手机号盲索引(SHA-256)"
         VARCHAR password "bcrypt"
         TINYINT status "0迁出1入住"
     }
@@ -316,7 +317,7 @@ erDiagram
         BIGINT owner_id FK
         BIGINT fee_type_id FK
         DECIMAL amount "账单金额"
-        TINYINT status "0未缴1部分缴2已缴3逾期"
+        TINYINT status "0未缴1部分缴2已缴3逾期4豁免"
     }
 
     management_fee_payment {
@@ -389,13 +390,13 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    L1["第1层: 点击验证码<br/>登录/注册强制"] --> L2
+    L1["第1层: 点击验证码<br/>登录强制（业主端含注册）"] --> L2
     L2["第2层: 密码二次确认<br/>删除/缴费敏感操作"] --> L3
     L3["第3层: poster 随机验证<br/>高频敏感操作"] --> L4
     L4["第4层: security-php 扫描<br/>请求周期安全检测"] --> L5
     L5["第5层: SecurityFilter<br/>XSS/SQL注入/CSRF拦截"] --> L6
     L6["第6层: HTTPS + AES-256-CBC"] --> L7
-    L7["第7层: JWT HS256<br/>2h过期 + 14d刷新"] --> L8
+    L7["第7层: JWT HS256<br/>2h过期 + 14d刷新（刷新轮换）"] --> L8
     L8["第8层: 并发会话限制<br/>最多3个Token"] --> L9
     L9["第9层: 账号锁定<br/>5次失败15分钟"] --> L10
     L10["第10层: RBAC 鉴权<br/>method.path 粒度"] --> L11

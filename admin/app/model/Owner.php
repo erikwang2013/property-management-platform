@@ -17,7 +17,7 @@ class Owner extends BaseModel
     protected $table = 'management_owner';
 
     protected $fillable = [
-        'id', 'name', 'phone', 'email', 'id_card', 'password',
+        'id', 'name', 'phone', 'phone_hash', 'email', 'id_card', 'password',
         'gender', 'birthday', 'emergency_contact', 'emergency_phone',
         'check_in_date', 'remark', 'status',
         'last_login_at', 'last_login_ip', 'login_failures', 'locked_until',
@@ -42,6 +42,12 @@ class Owner extends BaseModel
         'updated_at'         => 'datetime',
         'deleted_at'         => 'datetime',
     ];
+
+    /** 手机号盲索引：供等值查询，不是加密（SHA-256 摘要） */
+    public static function phoneHash(string $phone): string
+    {
+        return hash('sha256', $phone);
+    }
 
     public function rooms()
     {

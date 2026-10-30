@@ -1,6 +1,6 @@
 # 开放管理后台 — 设计文档
 
-> **历史文档（2026-10-30）**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除。当前功能与架构以 README.md / docs/ 目录为准。
+> **说明**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除；本文仅描述当前开源版。
 
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
@@ -9,20 +9,19 @@
 
 ## 1. 系统架构
 
-> **功能清单**：认证(login/register/refresh/logout + 账号锁定 + 会话限制) | 仪表盘(Redis缓存) | 用户CRUD+批量+导入 | 角色权限(RBAC) | 系统配置 | 操作审计(8平台来源端) | 文件(上传+导出+脱敏) | 安全(19层防御) | 运维(health/metrics/docs/Docker/CI)
+> **功能清单**：认证(login/refresh/logout + 刷新轮换 + 账号锁定 + 会话限制，无公开注册) | 仪表盘(Redis缓存) | 用户CRUD+批量+导入 | 角色权限(RBAC) | 系统配置 | 操作审计(8平台来源端) | 文件(上传+导出+脱敏) | 安全(19层防御) | 运维(health/metrics/docs/Docker/CI)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                        客户端层                               │
-│  ┌──────────────────────┐  ┌──────────────────────────────┐  │
-│  │  Flutter Web (PC)    │  │  HarmonyOS ArkTS (Mobile)    │  │
-│  │  管理后台 (桌面风格)   │  │  客户端 (手机/平板/2in1)      │  │
-│  └──────────┬───────────┘  └──────────────┬───────────────┘  │
-└─────────────┼──────────────────────────────┼─────────────────┘
-              │        HTTPS / JSON          │
-              │   Authorization: Bearer JWT  │
-┌─────────────┼──────────────────────────────┼─────────────────┐
-│             ▼                              ▼                  │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Flutter Web (PC) 管理后台 (桌面风格)                  │    │
+│  └──────────────────────────┬───────────────────────────┘    │
+└─────────────────────────────┼────────────────────────────────┘
+                              │        HTTPS / JSON
+                              │   Authorization: Bearer JWT
+┌─────────────────────────────┼────────────────────────────────┐
+│                             ▼                                  │
 │  ┌──────────────────────────────────────────────────────┐    │
 │  │                   API 网关层                          │    │
 │  │  AdminAuth(认证) → AdminPermission(授权) → Controller │    │
@@ -47,10 +46,10 @@
 │                             │                                  │
 │  ┌──────────────────────────┼───────────────────────────┐    │
 │  │              数据存储层                                │    │
-│  │  ┌──────────┐  ┌──────────────┐  ┌──────────┐        │    │
-│  │  │  MySQL   │  │ Elasticsearch│  │  Redis   │        │    │
-│  │  │ (主存储)  │  │ (全文检索)    │  │ (缓存)   │        │    │
-│  │  └──────────┘  └──────────────┘  └──────────┘        │    │
+│  │  ┌──────────┐                ┌──────────┐            │    │
+│  │  │  MySQL   │                │  Redis   │            │    │
+│  │  │ (主存储)  │                │ (缓存)   │            │    │
+│  │  └──────────┘                └──────────┘            │    │
 │  └──────────────────────────────────────────────────────┘    │
 │                       webman v2                               │
 └──────────────────────────────────────────────────────────────┘
@@ -64,7 +63,7 @@
 |---|------|------|
 | 路由 | `config/route.php` | URL 到控制器的映射，中间件绑定，版本化路由 |
 | 中间件 | `app/middleware/` | 攻击拦截(SecurityFilter)、限流(RateLimit)、认证(JWT)、授权(RBAC) |
-| 控制器 | 14 个：Dashboard/User/Role/Permission/Config/Log/Profile/Export/Import/Upload/Health/Docs (管理端) + Captcha/Auth (API v1) | 请求参数校验、调用业务逻辑、响应格式化 |
+| 控制器 | 42 个：管理端 40 个（Dashboard/User/Role/Permission/Config/Log/Profile/Export/Import/Upload/Health/Docs 等）+ Captcha/Auth (API v1) | 请求参数校验、调用业务逻辑、响应格式化 |
 | 业务服务 | `app/service/` | 可复用的业务逻辑（预留） |
 | 数据模型 | `app/model/` | ORM 映射、关联关系、字段加解密 |
 | 公共工具 | `app/common/` | Hashids、Snowflake、Encryption 服务 |
@@ -121,7 +120,7 @@ Controller::method()
 
 ```
 传输层 (encryption)     — AES-256-CBC，独立密钥
-存储层 (encryptable)    — AES-128-ECB，独立密钥，Model $casts 自动处理
+存储层 (encryptable)    — AES-256-CBC，独立密钥，Model $casts 自动处理
 展示层 (mask)           — 手机号: 138****1234，邮箱: a***@example.com
 ```
 
@@ -172,7 +171,7 @@ management_system_config (系统配置) — 独立表
 
 ```
 公开接口:  /api/v1/captcha/{generate|verify}
-           /api/v1/auth/{login|register|refresh}
+           /api/v1/auth/{login|refresh}
 
 管理端:   /admin/{resource}[/{hashid}]
           /admin/export/{excel|pdf}
@@ -226,7 +225,6 @@ curl /api/v2/auth/login   # 使用 v2
 |------|------|
 | 默认 | 60 次/分钟/IP/路由 |
 | POST /api/v1/auth/login | 10 次/分钟 |
-| POST /api/v1/auth/register | 5 次/分钟 |
 
 超限返回 429，响应头包含 X-RateLimit-Limit / Remaining / Reset / Retry-After。
 
@@ -330,20 +328,6 @@ curl /api/v2/auth/login   # 使用 v2
 
 特性: 侧边栏可折叠、Material 3 双主题、数据表格高密度、弹窗 Dialog、鼠标悬停交互
 
-### 5.2 HarmonyOS 移动端
-
-页面路由:
-
-| 页面 | 路由 | 说明 |
-|------|------|------|
-| LoginPage | `pages/LoginPage` | 用户名密码 + 点击验证码登录 |
-| DashboardPage | `pages/DashboardPage` | 统计卡片 + 最近操作 |
-| UserListPage | `pages/UserListPage` | 用户列表，搜索 + 下拉刷新 + 上滑加载 |
-| UserDetailPage | `pages/UserDetailPage` | 新增/编辑/查看/删除（AlertDialog 确认） |
-| ProfilePage | `pages/ProfilePage` | 个人中心，退出登录（AlertDialog 确认） |
-
-数据流: Page ← DataService ← ApiService (JWT Bearer) ← HTTP ← webman
-
 ## 6. 安全设计
 
 ### 6.1 纵深防御
@@ -351,10 +335,11 @@ curl /api/v2/auth/login   # 使用 v2
 | 层面 | 措施 |
 |------|------|
 | 方法限制 | SecurityFilter HTTP 方法白名单，仅允许 GET/POST/PUT/DELETE/OPTIONS/HEAD，非标准方法返回 405 |
-| 攻击拦截 | SecurityFilter 中间件，XSS/SQL注入/路径遍历/命令注入/CSRF 检测拦截 |
-| 人机验证 | 点击验证码（Click Captcha），登录/注册强制校验 |
+| 攻击拦截 | SecurityFilter 中间件，XSS/SQL注入/路径遍历/命令注入/CSRF 检测拦截；嵌套 JSON 递归展开扫描 |
+| 人机验证 | 点击验证码（Click Captcha），登录强制校验（管理端无公开注册） |
 | 账号锁定 | 连续 5 次登录失败锁定账号 15 分钟，锁定期间返回 429 |
 | 会话限制 | 同一用户最多 3 个并发 Token，超出时最旧 Token 自动黑名单 |
+| 刷新轮换 | 仅接受 refresh 类型令牌；刷新后旧 refresh 立即失效，access token 不可当 refresh 使用 |
 | 限流 | RateLimit 中间件，Redis 滑动窗口，Lua 原子化 |
 | CSP | Content-Security-Policy 头限制资源来源，防 XSS 与数据注入 |
 | 操作确认 | 删除等敏感操作需输入当前用户密码二次确认 |
@@ -362,9 +347,10 @@ curl /api/v2/auth/login   # 使用 v2
 | 接口ID | Hashids 加密，外部不可逆推真实 ID |
 | 请求体 | AES-256-CBC 敏感字段加密 |
 | 数据库 | BIGINT 主键（不暴露自增量） |
-| 数据库 | AES-128-ECB 敏感字段加密存储 |
-| 认证 | JWT HS256，2h 过期 + refresh token |
+| 数据库 | AES-256-CBC 敏感字段加密存储 |
+| 认证 | JWT HS256，2h 过期 + 14d refresh（刷新轮换） |
 | 授权 | RBAC，method.path 粒度权限控制 |
+| 导出防护 | Excel 导出清洗 `= + @` 等公式注入前缀；列表接口 page_size 上限 100 |
 | 审计 | OperationLog 记录所有操作（含来源端 source 自动检测） |
 
 ### 6.2 密钥管理
@@ -374,7 +360,6 @@ JWT_SECRET          → 环境变量注入，64位随机字符串
 HASHIDS_SALT        → 唯一盐值，泄漏后需全局更换
 ENCRYPTION_KEY      → API 传输加密密钥，32字节
 ENCRYPTABLE_KEY     → DB 存储加密密钥，与传输密钥独立
-SCOUT_HOSTS         → ES 地址，内网部署
 ```
 
 ### 6.3 敏感数据保护
@@ -387,6 +372,7 @@ SCOUT_HOSTS         → ES 地址，内网部署
 | 导出Excel | phone/email | 脱敏后导出 |
 | 导出PDF | 全字段 | 脱敏 + 不可移除版权水印 |
 | 存储 | phone/email/id_card | encryptable 加密为密文 |
+| 手机号检索 | phone/phone_hash | 走 SHA-256 盲索引 `phone_hash`，不扫描明文；存量业主需执行回填脚本 |
 
 ## 7. 导出设计
 
@@ -414,35 +400,39 @@ SCOUT_HOSTS         → ES 地址，内网部署
 ### 8.1 推荐拓扑
 
 ```
-Nginx (:443 HTTPS) → webman worker × N (:8787) → MySQL + ES + Redis
+Nginx (:443 HTTPS) → webman worker × N (:8787) → MySQL + Redis
                     静态文件: Flutter Web build/
 ```
 
 ### 8.2 Docker Compose（推荐生产环境）
 
-项目根目录的 `docker-compose.yml` 编排了上述拓扑的全部服务：
+本目录 `docker-compose.yml` 编排 7 个服务（service 端同样 7 个，端口相对偏移）：
 
-| 服务 | 镜像/构建 | 端口 | 说明 |
+| 服务 | 镜像/构建 | 容器端口 | 说明 |
 |------|----------|------|------|
-| `nginx` | nginx:alpine | 80, 443 | 反向代理 + 静态文件 + Gzip |
+| `nginx` | nginx:1.27-alpine | 80, 443 | 反向代理 + 静态文件 + Gzip |
 | `app` | 本地 `Dockerfile` 构建 | 8787 | PHP 8.3 + OPcache + webman |
-| `mysql` | mysql:8.0 | 3306 | 主数据库，数据卷持久化 |
-| `redis` | redis:7-alpine | 6379 | 缓存 / 限流 / 验证码 |
-| `elasticsearch` | elasticsearch:8.x | 9200 | 全文检索 |
+| `mysql` | mysql:8.0.36 | 3306 | 主数据库，数据卷持久化 |
+| `redis` | redis:7.2-alpine | 6379 | 缓存 / 限流 / 验证码 |
+| `prometheus` | prom/prometheus:v2.53.0 | 9090 | 指标采集 |
+| `grafana` | grafana/grafana:11.1.0 | 3000 | 监控面板 |
+| `redis-exporter` | oliver006/redis_exporter:v0.69.1-alpine | 9121 | Redis 指标导出 |
 
-启动前将 `docker-compose.yml` 中的 `JWT_SECRET`、`HASHIDS_SALT`、`ENCRYPTION_KEY` 等密钥替换为随机字符串。
+启动前用 `php ../scripts/gen_env_keys.php --file=.env --replace-placeholders` 生成占位密钥。生产升级已有数据库时使用根目录 `scripts/deploy.sh`，依次执行 mysql/redis → 结构迁移 → app → phone_hash 回填 → nginx；新库由 mysql 容器首启导入 `docs/install.sql`。
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 8.3 CI/CD
 
 GitHub Actions 持续集成定义在 `.github/workflows/ci.yml`：
 - PHP 语法检查 (`php -l`)
-- PHPUnit 单元测试
-- Flutter 静态分析 (`flutter analyze`)
+- Composer 依赖安全审计 (`composer audit`)
+- PHPUnit 单元测试（admin 43 例/103 断言，覆盖率门槛 1.7%；service 22 例/42 断言，门槛 3%）
+- PHPStan 静态分析
+- Flutter 静态分析 (`flutter analyze`) + 测试（admin 1 例 + owner 10 例）
 
 ### 8.4 数据库备份
 
@@ -458,8 +448,6 @@ GitHub Actions 持续集成定义在 `.github/workflows/ci.yml`：
 |------|---------|---------|
 | PHP | 8.3+ | 8.3+ OPcache enabled |
 | MySQL | 8.0+ | 8.0+ 主从复制 |
-| Elasticsearch | 7.x | 8.x 3节点集群 |
 | Redis | 6.x | 7.x 哨兵模式 |
 | Nginx | 1.20+ | 反向代理 + gzip + SSL |
 | Flutter SDK | 3.41+ | 最新稳定版 |
-| HarmonyOS | API 12 | DevEco Studio 5.x |

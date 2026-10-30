@@ -69,9 +69,9 @@ property-management-platform/
 | admin controllers | 40 | General management + 15 property modules + 1 extension feature |
 | service controllers | 10 | All owner-side APIs |
 | API routes | 51 | admin 27 + service 24 |
-| Flutter admin panel | 26 pages | admin 26 page modules, 67 files / 5,520 lines |
-| Flutter owner portal | 5 pages | charges / parking, 18 files / 2,099 lines |
-| Tests | 11 | Flutter admin 1 + owner 10; backend test sources are not shipped with this tree |
+| Flutter admin panel | 26 pages | admin 26 page modules, 67 files / 5,532 lines |
+| Flutter owner portal | 5 pages | charges / parking, 17 files / 1,942 lines |
+| Tests | 76 | Backend 65 (admin 43/103 assertions + service 22/42) + Flutter 11 (admin 1 + owner 10); shipped with the source |
 
 ## System Architecture & Design Diagrams
 
@@ -91,11 +91,11 @@ property-management-platform/
 
 ### Core Business Flow
 
-![Core business flow](docs/images/readme_business_flow.svg)
+![Core business flow](../../images/readme_en_business_flow.svg)
 
 ### 19-Layer Security Defense in Depth
 
-![19-layer security defense in depth](docs/images/readme_security.svg)
+![19-layer security defense in depth](../../images/readme_en_security.svg)
 
 ## Function Modules (15 Major Modules + 1 Extension)
 
@@ -168,7 +168,7 @@ All API endpoints and parameter descriptions are in the standalone [docs/API.md]
 
 ```bash
 bash scripts/deploy.sh
-# Automatically: git pull → generate .env + keys → Docker Compose up → DB init (idempotent) → monitoring smoke test
+# Automatically: git pull → generate .env + keys → mysql/redis → schema migration → app → phone_hash backfill → nginx → DB init (idempotent) → monitoring smoke test
 # Admin http://localhost:8787 · Service http://localhost:8788
 ```
 
@@ -248,20 +248,22 @@ cd service && php vendor/bin/phpunit
 
 | Project | Tests | Assertions | Pass Rate |
 |------|--------|--------|--------|
-| admin | 90 | 217 | 100% |
-| service | 43 | 248 | 100% (1 skipped) |
-| **Total** | **133** | **465** | — |
+| admin | 43 | 103 | 100% |
+| service | 22 | 42 | 100% |
+| **Total** | **65** | **145** | — |
 
-service tests cover: Snowflake ID, Hashids encode/decode, response format, database schema, i18n translation files
+Backend tests cover payment pure functions / WeChat callback decryption / bill status and late fees / password rules / Validator / pagination; Flutter has 11 tests (admin 1 + owner 10). CI runs PHPUnit with coverage floors of 1.7% (admin) and 3% (service); both stacks pass PHPStan. Historical full-suite snapshots live in [docs/tests/](docs/tests/).
 
 ### Docker Deployment
 
 ```bash
 cd admin
 cp .env.docker .env
-docker-compose up -d
-# Includes Nginx + PHP + MySQL + Redis
+docker compose up -d
+# 7 services per stack: Nginx + PHP + MySQL + Redis + Prometheus + Grafana + redis-exporter
 ```
+
+**Upgrading an existing database**: run `docs/migrations/2026-10-30-audit-fix-schema.sql`, then `scripts/backfill_owner_phone_hash.php`. `scripts/deploy.sh` does both automatically in the order mysql/redis → schema migration → app → backfill → nginx. Fresh installs use `docs/install.sql`. Deduplicate any non-NULL duplicate `(room_id, fee_type_id, start_date)` fee-period rows first, or the unique index is skipped.
 
 ## Deployment Topology
 
@@ -275,11 +277,11 @@ Static files: Flutter Web build/
 ### Admin Panel
 1. Open `http://localhost:8787` and sign in with the default admin account.
 2. Set up base data: Community → Building → Unit → Room Type → Room → bind owners.
-3. Daily operations: configure fee types, batch-generate bills, collect; Report Center for collection overview.
+3. Daily operations: configure fee types, batch-generate bills, collect via an admin-created payment order or offline; Report Center for collection overview.
 4. System: add admins, RBAC roles, config, audit logs.
 
 ### Owner Portal
-Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pending fees, and announcements.
+Open `http://localhost:8788` (or Flutter Web): the home page shows rooms, pending fees, and announcements. Online payment from the owner app is not connected to a gateway (`POST /service/v1/fees/pay` always returns 503); pay via an admin-created payment order or offline.
 
 ## Default Admin Account
 

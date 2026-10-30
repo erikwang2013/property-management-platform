@@ -34,16 +34,19 @@ class AlipayChannel
         $this->client = new Client(['timeout' => $timeout]);
     }
 
-    /** 当面付预下单，返回收款二维码内容 */
-    public function prepay(string $orderNumber, string $subject, float $amount): array
+    /** 当面付预下单，返回收款二维码内容；notify_url 为公共参数（参与签名） */
+    public function prepay(string $orderNumber, string $subject, float $amount, string $notifyUrl = '', string $expireAt = ''): array
     {
+        $minutes = $expireAt !== ''
+            ? max(1, (int) ceil((strtotime($expireAt) - time()) / 60))
+            : 15;
         $bizContent = [
             'out_trade_no' => $orderNumber,
             'total_amount' => number_format($amount, 2, '.', ''),
             'subject'      => $subject,
-            'timeout_express' => '15m',
+            'timeout_express' => $minutes . 'm',
         ];
-        $resp = $this->call('alipay.trade.precreate', $bizContent);
+        $resp = $this->call('alipay.trade.precreate', $bizContent, $notifyUrl);
         if (empty($resp['qr_code'])) {
             throw new RuntimeException('支付宝下单失败：缺少 qr_code');
         }
@@ -99,10 +102,12 @@ class AlipayChannel
             'order_number' => $params['out_trade_no'],
             'trade_no'     => $params['trade_no'] ?? '',
             'paid'         => in_array($tradeStatus, ['TRADE_SUCCESS', 'TRADE_FINISHED'], true),
+            // 渠道可信金额（验签覆盖），供上层核对订单金额
+            'amount'       => bcadd((string) ($params['total_amount'] ?? '0'), '0', 2),
         ];
     }
 
-    private function call(string $method, array $bizContent): array
+    private function call(string $method, array $bizContent, string $notifyUrl = ''): array
     {
         $params = [
             'app_id'      => $this->cfg['app_id'],
@@ -114,6 +119,10 @@ class AlipayChannel
             'version'     => '1.0',
             'biz_content' => json_encode($bizContent, JSON_UNESCAPED_UNICODE),
         ];
+        // notify_url 是支付宝公共请求参数，必须在 biz_content 之外并参与签名
+        if ($notifyUrl !== '') {
+            $params['notify_url'] = $notifyUrl;
+        }
         $params['sign'] = self::sign(self::buildParamString($params), $this->cfg['private_key']);
 
         try {

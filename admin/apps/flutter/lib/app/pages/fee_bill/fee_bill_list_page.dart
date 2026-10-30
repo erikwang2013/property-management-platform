@@ -17,10 +17,6 @@ class FeeBillListPage extends GetView<FeeBillController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         const Text('账单管理', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        const Spacer(),
-        ElevatedButton.icon(onPressed: () => ctrl.batchGenerate(), icon: const Icon(Icons.auto_awesome), label: const Text('批量生成')),
-        const SizedBox(width: 8),
-        ElevatedButton.icon(onPressed: () => _showForm(context, ctrl), icon: const Icon(Icons.add), label: const Text('新增账单')),
       ]),
       const SizedBox(height: 12),
       Expanded(child: Obx(() {
@@ -33,7 +29,7 @@ class FeeBillListPage extends GetView<FeeBillController> {
           return DataRow(cells: [
             DataCell(Text(b['fee_type_name'] ?? b['fee_type_id']?.toString() ?? '-')),
             DataCell(Text('${b['amount'] ?? '-'}')), DataCell(Text('${b['paid_amount'] ?? '0'}')),
-            DataCell(StatusChip(status: b['status'] as int?, labels: const {0: '待缴', 1: '已缴', 2: '逾期', 3: '部分缴纳'})),
+            DataCell(StatusChip(status: b['status'] as int?, labels: const {0: '未缴', 1: '部分缴', 2: '已缴', 3: '逾期', 4: '豁免'})),
             DataCell(Text(b['due_date'] ?? '-')),
             DataCell(Row(mainAxisSize: MainAxisSize.min, children: [
               IconButton(icon: const Icon(Icons.edit, size: 18), onPressed: () => _showForm(context, ctrl, data: b)),

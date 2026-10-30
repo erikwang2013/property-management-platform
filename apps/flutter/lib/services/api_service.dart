@@ -41,8 +41,13 @@ class ApiService extends GetxService {
               )).post(ApiConfig.authRefresh, data: {
                 'refresh_token': refreshToken,
               });
-              final newToken = response.data['data']['access_token'];
+              final data = response.data['data'];
+              final newToken = data['access_token'];
               await prefs.setString('access_token', newToken);
+              final rotatedRefreshToken = data['refresh_token'];
+              if (rotatedRefreshToken is String && rotatedRefreshToken.isNotEmpty) {
+                await prefs.setString('refresh_token', rotatedRefreshToken);
+              }
               error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
               final retryResponse = await dio.fetch(error.requestOptions);
               return handler.resolve(retryResponse);

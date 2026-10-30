@@ -12,7 +12,7 @@ A full-stack admin dashboard built with webman v2 + Flutter.
 
 | Domain | Feature | Notes |
 |--------|---------|-------|
-| 🔐 Auth | Login/Register/Refresh/Logout | Click captcha + JWT + blacklist |
+| 🔐 Auth | Login/Refresh/Logout | Click captcha + JWT + blacklist + refresh rotation (no public admin registration) |
 | | Account lockout | 5 failures → 15 min lock |
 | | Concurrent session limit | Max 3 active tokens per user |
 | 📊 Dashboard | Real-time stats/trends/distribution/logs | Redis cached 5 min |
@@ -91,7 +91,7 @@ open-admin/
 ├── apps/
 │   └── flutter/                # Flutter Web admin panel
 ├── config/                     # Config files
-└── docs/install.sql            # Full install SQL (34 tables + permission seeds, single entry)
+└── ../docs/install.sql         # Full install SQL (34 tables + permission seeds, single entry)
 └── vendor/                     # Composer dependencies
 ```
 
@@ -138,7 +138,7 @@ Key environment variables:
 
 ### 3. Initialize Database
 
-Run the consolidated install script at repo root (34 tables + RBAC permission seeds, idempotent):
+Run the consolidated install script at repo root (34 tables + RBAC permission seeds; repeatable on a **fresh** database only — for an existing database use `../docs/migrations/2026-10-30-audit-fix-schema.sql` plus the phone-hash backfill):
 
 ```bash
 mysql -u root -p < ../docs/install.sql
@@ -164,17 +164,17 @@ flutter run -d chrome    # Web (desktop admin panel style)
 
 ### 6. Docker Compose (Recommended for Production)
 
-Full Docker orchestration with 4 services: Nginx, PHP (webman app), MySQL, Redis.
+Full Docker orchestration with 7 services per stack: Nginx, PHP (webman app), MySQL, Redis, Prometheus, Grafana, redis-exporter (the service stack has the same 7 with offset ports).
 
 ```bash
 # 1. Configure Docker environment variables
 cp .env.docker .env
 
 # 2. Start all services
-docker-compose up -d
+docker compose up -d
 
 # 3. Initialize database (run inside the app container)
-docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
+docker compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 
 # 4. Access
 # http://localhost:8787  (webman)
@@ -182,7 +182,7 @@ docker-compose exec app mysql -h mysql -u root -p < ../docs/install.sql
 ```
 
 - `Dockerfile`: PHP 8.3 + OPcache + Composer, based on `php:8.3-cli`
-- `docker-compose.yml`: 5 services, isolated network, persistent volumes
+- `docker-compose.yml`: 7 services, isolated network, persistent volumes
 - `.env.docker`: Docker-specific environment variables
 
 ## Database Conventions
@@ -243,7 +243,7 @@ POST /api/v1/auth/login
 
 Redis sliding-window algorithm, default 60 req/min/IP/route. Stricter limits for auth:
 - Login: 10 req/min
-- Register: 5 req/min
+- Owner registration: 5 req/min (service side only; the admin side has no public registration endpoint)
 
 Responses include `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` headers. 429 responses include `Retry-After`.
 
@@ -266,11 +266,11 @@ Security enhancements:
 - **Account lockout**: 5 consecutive failed login attempts lock the account for 15 minutes; login returns 429 during lockout
 - **Concurrent session limit**: Max 3 active tokens per user; exceeding this blacklists the oldest token automatically
 - **security.txt**: `GET /.well-known/security.txt` provides RFC 9116 standard security contact information
-- **Nginx security config**: See `docs/nginx-security.conf` for a complete reverse-proxy security hardening reference
+- **Nginx security config**: The full Docker config is `deploy/nginx/default.conf` (mounted at `/etc/nginx/conf.d/default.conf`, proxying to `app:8787`); `docs/nginx-security.conf` is only a host-Nginx security header/fragment reference, not a container config
 
 ### Authentication
 
-Login and registration require **click captcha** verification:
+Login requires **click captcha** verification (there is no public admin registration):
 
 1. Client requests `POST /api/v1/captcha/generate` to get a captcha image (base64 PNG) and target word list
 2. User clicks the corresponding word positions on the image in order
@@ -294,9 +294,9 @@ All admin endpoints require a JWT token:
 Authorization: Bearer <token>
 ```
 
-Login returns an `access_token` (2h TTL) and a `refresh_token` (14d TTL).
+Login returns an `access_token` (2h TTL) and a `refresh_token` (14d TTL). Refreshing accepts only refresh-type tokens and rotates the refresh token (the old one is blacklisted immediately); an access token cannot be used to refresh.
 
-Logout blacklists the token in Redis for its remaining TTL: `POST /admin/profile/logout`
+Logout blacklists the token in Redis for its remaining TTL; an optional `refresh_token` is revoked too: `POST /admin/profile/logout`
 
 ### Sensitive Operation Confirmation
 
@@ -323,8 +323,7 @@ Authorization: Bearer <token>
 | `POST` | `/api/v1/captcha/generate` | Generate click captcha |
 | `POST` | `/api/v1/captcha/verify` | Verify click positions |
 | `POST` | `/api/v1/auth/login` | Login (requires captcha) |
-| `POST` | `/api/v1/auth/register` | Register (requires captcha) |
-| `POST` | `/api/v1/auth/refresh` | Refresh token |
+| `POST` | `/api/v1/auth/refresh` | Refresh token (refresh type only; rotation invalidates the old refresh token) |
 | `GET` | `/metrics` | Prometheus metrics |
 
 ### Admin Endpoints (requires JWT + RBAC)
@@ -356,7 +355,7 @@ Authorization: Bearer <token>
 | `GET` | `/admin/log` | Operation log list (paginated) |
 | `PUT` | `/admin/profile` | Update profile |
 | `PUT` | `/admin/profile/password` | Change password |
-| `POST` | `/admin/profile/logout` | Logout (blacklist token) |
+| `POST` | `/admin/profile/logout` | Logout (blacklist token; optional refresh_token revoked too) |
 | `POST` | `/admin/export/excel` | Export to Excel |
 | `POST` | `/admin/export/pdf` | Export to PDF |
 | `POST` | `/admin/import/users` | Import users from Excel |
@@ -379,7 +378,7 @@ Authorization: Bearer <token>
 
 - **Stack**: Flutter 3.x + GetX + Dio + fl_chart + flutter_svg
 - **Layout**: PC-style sidebar + header + content, responsive breakpoints for mobile
-- **Pages**: 42 page modules covering all admin business domains
+- **Pages**: 26 page modules (67 Dart files) covering all admin business domains
 - **Mascot**: login page, sidebar mark, dashboard, empty states, 404 page, `public/favicon.svg`
 - **Storage**: Token managed via AppStorage
 
@@ -387,7 +386,7 @@ Authorization: Bearer <token>
 
 1. **Sign in**: default account `admin / Admin@123456` (created automatically by the one-click deploy; with the web wizard, use what you set in step 2) — change the password immediately.
 2. **Base data**: Community → Building → Unit → Room Type → Room → Owner binding.
-3. **Operations**: fee types → batch-generate bills → offline collection; Report Center for collection rate, payment methods and arrears ranking.
+3. **Operations**: fee types → batch-generate bills (API; the Flutter bill page's create/batch buttons were removed) → collect via an admin-created payment order or offline; Report Center for collection rate, payment methods and arrears ranking.
 4. **System**: add admins, RBAC roles, system config, audit logs.
 
 ## Development Rules
@@ -403,21 +402,23 @@ Authorization: Bearer <token>
 
 ### Docker Compose (Recommended)
 
-`docker-compose.yml` in the project root orchestrates 5 services:
+`docker-compose.yml` in the admin directory orchestrates 7 services:
 
 | Service | Image | Port |
 |------|------|------|
-| `nginx` | nginx:alpine | 80, 443 |
+| `nginx` | nginx:1.27-alpine | 80, 443 |
 | `app` | Local `Dockerfile` build | 8787 |
-| `mysql` | mysql:8.0 | 3306 |
-| `redis` | redis:7-alpine | 6379 |
-| `elasticsearch` | elasticsearch:8.x | 9200 |
+| `mysql` | mysql:8.0.36 | 3306 |
+| `redis` | redis:7.2-alpine | 6379 |
+| `prometheus` | prom/prometheus:v2.53.0 | 9090 |
+| `grafana` | grafana/grafana:11.1.0 | 3000 |
+| `redis-exporter` | oliver006/redis_exporter:v0.69.1-alpine | 9121 |
 
 The PHP image is built from `Dockerfile`, based on `php:8.3-cli` with OPcache enabled.
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+docker compose up -d
 ```
 
 ### CI/CD
@@ -425,8 +426,9 @@ docker-compose up -d
 GitHub Actions CI pipeline: `.github/workflows/ci.yml`
 
 - PHP syntax check (`php -l`)
-- PHPUnit tests
-- Flutter static analysis (`flutter analyze`)
+- PHPUnit tests (admin 43 tests/103 assertions with a 1.7% coverage floor; service 22/42 with 3%)
+- PHPStan static analysis
+- Flutter static analysis (`flutter analyze`) + tests (admin 1 + owner 10)
 
 ### Database Backup
 
@@ -434,7 +436,7 @@ Backups use the repo-root `scripts/backup.sh` (reads connection from `admin/.env
 
 ### Nginx Security
 
-See `docs/nginx-security.conf` for production reverse-proxy security hardening.
+For Docker, use `deploy/nginx/default.conf` (mounted at `/etc/nginx/conf.d/default.conf`, proxying to `app:8787`, overwriting `X-Forwarded-For` with `$remote_addr`, health check `/health`). The host-Nginx security header/fragment reference is `docs/nginx-security.conf`; the two serve different purposes and are not interchangeable.
 
 ## 开源不易，欢迎支持
 

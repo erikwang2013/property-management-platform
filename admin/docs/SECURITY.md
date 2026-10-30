@@ -1,13 +1,13 @@
 # 安全架构设计文档
 
-> **历史文档（2026-10-30）**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除。当前功能与架构以 README.md / docs/ 目录为准。
+> **说明**：ES/Scout、HarmonyOS、Angular/React 前端，以及报修、投诉、访客、合同、财务、社区活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、商城、人脸、大屏等模块已移除；本文仅描述当前开源版。
 
 
 > Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 ## 1. 纵深防御全景
 
-系统采用 7 层纵深防御模型，从外到内层层过滤恶意请求，确保任意单层失效时仍有后续防线兜底。
+系统采用 19 层纵深防御模型，其中核心中间件链按 7 层执行，从外到内层层过滤恶意请求，确保任意单层失效时仍有后续防线兜底。
 
 整个中间件链按以下顺序执行（见 `config/middleware.php`）：
 
@@ -48,6 +48,8 @@ GET, POST, PUT, DELETE, OPTIONS, HEAD
 - 自动化扫描器的 HTTP 方法枚举
 
 ### 2.1 XSS 跨站脚本
+
+SecurityFilter 会递归展开嵌套 JSON（对象/数组）后逐层检测，嵌套载荷无法绕过匹配。
 
 所有正则来自 `SecurityFilter::PATTERNS['XSS']`，大小写不敏感匹配。
 
@@ -231,7 +233,6 @@ Lua 脚本在 Redis 服务端单线程执行，**天然原子化**，消除 TOCT
 |------|------|------|------|
 | 默认（所有路由） | 60 次/分钟 | 60s | 通用 API |
 | `/api/v1/auth/login` | 10 次/分钟 | 60s | 登录（防暴力破解） |
-| `/api/v1/auth/register` | 5 次/分钟 | 60s | 注册（防批量注册） |
 
 ### 响应头
 
@@ -320,6 +321,8 @@ AdminAuth 中间件实现，挂载在需要认证的路由组上。
 
 **黑名单机制**：用户登出时，将 `md5(token)` 写入 Redis，TTL 设为 JWT 剩余有效期。Redis 故障时黑名单检查被跳过（fail-open），此时已登出的 Token 仍可短期使用，但 JWT 本身的短期有效期（2h）作为兜底保护。
 
+**刷新轮换**：`POST /api/v1/auth/refresh` 仅接受 `token_type=refresh` 的令牌；刷新成功后旧 refresh token 立即加入黑名单，access token 不能当作 refresh token 使用。登出时可在请求体传入 `refresh_token`，一并吊销。
+
 ### 6.2 并发会话限制
 
 为防止 Token 泄露后被多设备滥用，系统限制同一用户同时持有的有效 Token 数量。
@@ -374,6 +377,8 @@ API 权限标识格式：`{method}.{path}`
 - `delete.admin/user` — 删除用户
 - `get.admin/user` — 查看用户列表
 
+权限 ID 在接口与前端之间全程使用 hashid（不暴露原始 BIGINT）；角色编辑弹窗只展示叶子权限，父级仅用于分组。
+
 **鉴权流程**：
 1. `$request->adminId` 为空 → 放行（路由未配置认证前置）
 2. 获取用户 → 角色（跳过 `status=0` 的禁用角色）→ 权限列表
@@ -385,14 +390,14 @@ API 权限标识格式：`{method}.{path}`
 
 ### 6.4 密码复杂度要求
 
-所有密码（注册、修改密码）需满足以下复杂度要求：
+所有密码（业主注册、修改密码）需满足以下复杂度要求：
 
 - **长度**：8-32 位
 - **字符组成**：必须包含大写字母、小写字母、数字和特殊字符（`@$!%*?&`）
 - **密码哈希**：使用 `password_hash()` + bcrypt 算法存储
 
 **实现位置**：
-- 管理端注册/登录：`AuthController` 使用 webman validator 的 `regex` 规则
+- 管理端登录：`AuthController` 使用 webman validator 的 `regex` 规则（管理端无公开注册）
 - 管理端修改密码：`ProfileController::updatePassword()` 使用 `preg_match` 校验
 - 业务端注册：`AuthController` 使用 `preg_match` 校验
 
@@ -491,6 +496,8 @@ OperationLog 中间件对 POST / PUT / DELETE 请求自动记录操作日志。G
 
 **密钥体系**：与传输层加密（`ENCRYPTION_KEY`）独立使用 `ENCRYPTABLE_KEY`，一个密钥泄露不会导致另一层失效。
 
+**手机号检索盲索引**：手机号查询使用 SHA-256 盲索引 `phone_hash`，不扫描加密列；存量业主数据需执行 `scripts/backfill_owner_phone_hash.php` 回填。
+
 密钥轮换：`ENCRYPTION_PREVIOUS_KEYS` 环境变量支持历史密钥列表（逗号分隔），读取旧数据时尝试历史密钥解密，写回时使用当前密钥重新加密。
 
 ### 8.3 展示层 — ID 混淆与脱敏
@@ -507,6 +514,8 @@ OperationLog 中间件对 POST / PUT / DELETE 请求自动记录操作日志。G
 - 手机号：`138****1234`
 - 邮箱：`a***@example.com`
 - 身份证：完全遮盖为 `********`
+
+Excel 导出还会清洗以 `= + @`、制表符/回车或非数字 `-` 开头的单元格，防止公式注入。列表接口 `page_size` 上限为 100。
 
 ---
 
@@ -576,7 +585,7 @@ Policy: https://erik.xyz/security-policy
 
 ## 11. Nginx 安全配置
 
-项目提供 `docs/nginx-security.conf` 作为生产环境 Nginx 反向代理的安全加固参考配置。
+Docker 完整 Nginx 配置为 `deploy/nginx/default.conf`（容器内挂载为 `/etc/nginx/conf.d/default.conf`，反向代理 `app:8787`，`X-Forwarded-For` 以 `$remote_addr` 覆盖）。`docs/nginx-security.conf` 仅是宿主机 Nginx 的安全头/片段参考，需合并到宿主机的 server 块中使用。
 
 **包含的安全措施**：
 

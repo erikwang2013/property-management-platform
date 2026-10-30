@@ -10,10 +10,10 @@ import 'helpers/mock_api.dart';
 void main() {
   setUp(() {
     resetMockRoutes();
-    mockRoutes['/service/home'] = (_) => {
+    mockRoutes['/service/v1/home'] = (_) => {
           'data': {'room_count': 2, 'pending_amount': 123.45},
         };
-    mockRoutes['/service/announcements'] = (_) => {
+    mockRoutes['/service/v1/announcements'] = (_) => {
           'code': 0,
           'message': 'success',
           'data': {
@@ -47,8 +47,8 @@ void main() {
 
   testWidgets('接口失败时首页回退默认值', (tester) async {
     mockRoutes
-      ..remove('/service/home')
-      ..remove('/service/announcements');
+      ..remove('/service/v1/home')
+      ..remove('/service/v1/announcements');
     await openHome(tester);
 
     expect(find.text('0 套'), findsOneWidget);

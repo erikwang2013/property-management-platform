@@ -45,7 +45,7 @@ class SecurityPatrolController extends BaseController
 
         $list = $query->orderBy('sort', 'asc')
             ->orderBy('created_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 $recordCount = PatrolRecord::where('patrol_id', $item->id)->count();
                 return [

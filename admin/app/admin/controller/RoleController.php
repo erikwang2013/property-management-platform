@@ -26,15 +26,25 @@ class RoleController extends BaseController
     public function index(Request $request): Response
     {
         $page = (int) $request->input('page', 1);
-        $limit = (int) $request->input('limit', 15);
+        $limit = $this->pageSize($request, 'limit', 15);
 
-        $query = AdminRole::withCount('users');
+        $query = AdminRole::withCount('users')->with('permissions');
         $total = $query->count();
         $list = $query->offset(($page - 1) * $limit)
                       ->limit($limit)
                       ->orderBy('id', 'asc')
                       ->get()
-                      ->map(fn($role) => $this->encodeIds($role->toArray()));
+                      ->map(function ($role) {
+                          $data = $this->encodeIds($role->toArray());
+                          // 权限树节点 ID 是 hashid，角色也按同一格式返回，前端才能与树节点对齐勾选
+                          $data['permissions'] = array_map(fn ($perm) => [
+                              'id'   => $this->encodeId((int) $perm['id']),
+                              'name' => $perm['name'] ?? '',
+                              'slug' => $perm['slug'] ?? '',
+                          ], $data['permissions'] ?? []);
+
+                          return $data;
+                      });
 
         return $this->success([
             'list' => $list,
@@ -68,9 +78,13 @@ class RoleController extends BaseController
         $role->status = (int) $request->input('status', 1);
         $role->save();
 
-        // 同步权限
+        // 同步权限：客户端送权限树 hashid，中间表存原始 BIGINT；非法 ID 由 decodeId 抛 422
         if ($request->input('permission_ids') !== null) {
-            $role->permissions()->sync($request->input('permission_ids', []));
+            $permissionIds = array_map(
+                fn ($id) => $this->decodeId((string) $id),
+                (array) $request->input('permission_ids', [])
+            );
+            $role->permissions()->sync($permissionIds);
         }
 
         return $this->success($this->encodeIds($role->toArray()), '创建成功');
@@ -95,7 +109,12 @@ class RoleController extends BaseController
         $role->save();
 
         if ($request->input('permission_ids') !== null) {
-            $role->permissions()->sync($request->input('permission_ids', []));
+            // 客户端送权限树 hashid，中间表存原始 BIGINT；非法 ID 由 decodeId 抛 422
+            $permissionIds = array_map(
+                fn ($id) => $this->decodeId((string) $id),
+                (array) $request->input('permission_ids', [])
+            );
+            $role->permissions()->sync($permissionIds);
         }
 
         return $this->success($this->encodeIds($role->toArray()), '更新成功');

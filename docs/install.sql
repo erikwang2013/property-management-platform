@@ -545,6 +545,7 @@ CREATE TABLE IF NOT EXISTS `management_owner` (
     `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
     `name` VARCHAR(50) NOT NULL COMMENT '姓名',
     `phone` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '手机号（加密存储）',
+    `phone_hash` CHAR(64) NOT NULL DEFAULT '' COMMENT '手机号盲索引(SHA-256)',
     `email` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '邮箱（加密存储）',
     `id_card` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '身份证号（加密存储）',
     `password` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '登录密码（bcrypt哈希）',
@@ -564,6 +565,7 @@ CREATE TABLE IF NOT EXISTS `management_owner` (
     `deleted_at` DATETIME DEFAULT NULL COMMENT '软删除',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_phone` (`phone`),
+    KEY `idx_phone_hash` (`phone_hash`),
     KEY `idx_status` (`status`),
     KEY `idx_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='业主表';
@@ -643,7 +645,8 @@ CREATE TABLE IF NOT EXISTS `management_fee_bill` (
     KEY `idx_fee_type_id` (`fee_type_id`),
     KEY `idx_status` (`status`),
     KEY `idx_due_date` (`due_date`),
-    KEY `idx_bill_number` (`bill_number`)
+    KEY `idx_bill_number` (`bill_number`),
+    UNIQUE KEY `uk_room_fee_period` (`room_id`,`fee_type_id`,`start_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='费用账单表';
 
 -- 11. 缴费记录表
@@ -913,12 +916,14 @@ CREATE TABLE IF NOT EXISTS `management_payment_order` (
     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '支付人ID',
     `user_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1=业主 2=租户',
     `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '支付金额(元)',
+    `credited_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '实际入账到账单的金额',
     `channel` VARCHAR(20) NOT NULL DEFAULT 'wechat' COMMENT '支付渠道: wechat/alipay/cash/bank_transfer',
     `trade_no` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '第三方交易号',
     `status` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态: 0=待支付 1=支付成功 2=支付失败 3=已退款 4=已关闭',
     `paid_at` DATETIME DEFAULT NULL COMMENT '支付时间',
     `refund_at` DATETIME DEFAULT NULL COMMENT '退款时间',
     `refund_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '退款金额',
+    `refund_request_id` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '最近一次退款的调用方幂等键',
     `notify_data` TEXT COMMENT '回调原始数据 (JSON)',
     `expire_at` DATETIME DEFAULT NULL COMMENT '过期时间',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

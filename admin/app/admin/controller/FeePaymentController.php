@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
+use app\common\LockService;
 use app\common\SnowflakeService;
 use app\model\FeeBill;
 use app\model\FeePayment;
+use app\model\PaymentOrder;
 use support\Db;
 use support\Request;
 
@@ -57,7 +59,7 @@ class FeePaymentController extends BaseController
         }
 
         $list = $query->orderBy('paid_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 return [
                     'id'              => $this->encodeId($item->id),
@@ -106,16 +108,35 @@ class FeePaymentController extends BaseController
         if ($amount <= 0) {
             return $this->fail('收款金额必须大于0', 422);
         }
-        if ($bill->status == 2) {
-            return $this->fail('账单已缴清，无需再次收款', 422);
+        if (in_array($bill->status, [FeeBill::STATUS_PAID, FeeBill::STATUS_WAIVED], true)) {
+            return $this->fail('账单已结清或已豁免，无需再次收款', 422);
+        }
+
+        // 与 PaymentService::createOrder 共用同一 Redis 锁，串行化线下收款与在线建单
+        $lockKey = "lock:payment_create:{$bill->id}";
+        $lock = LockService::acquire($lockKey, 15);
+        if ($lock === null) {
+            return $this->fail('该账单正在处理支付，请稍后再试', 429);
         }
 
         try {
             $payment = Db::transaction(function () use ($bill, $amount, $request) {
                 // 行锁防止并发重复收款
                 $locked = FeeBill::lockForUpdate()->find($bill->id);
-                $unpaid = bcsub((string) $locked->amount, (string) $locked->paid_amount, 2);
-                if ($amount > (float) $unpaid) {
+                // 锁内复核，避免与并发收款/豁免竞态
+                if (in_array($locked->status, [FeeBill::STATUS_PAID, FeeBill::STATUS_WAIVED], true)) {
+                    throw new \RuntimeException('账单已结清或已豁免，无需再次收款');
+                }
+                // 与在线支付互斥：待支付订单未过期时禁止线下重复收款
+                $pending = PaymentOrder::query()->where('bill_id', $locked->id)
+                    ->where('status', 0)
+                    ->where('expire_at', '>', date('Y-m-d H:i:s'))
+                    ->exists();
+                if ($pending) {
+                    throw new \RuntimeException('该账单有待支付的在线订单，请等待支付结果或订单过期后再收款');
+                }
+                $unpaid = $locked->unpaidAmount();
+                if (bccomp((string) $amount, $unpaid, 2) > 0) {
                     throw new \RuntimeException('收款金额超过未缴金额');
                 }
 
@@ -134,10 +155,11 @@ class FeePaymentController extends BaseController
                 $payment->remark          = (string) $request->input('remark', '');
                 $payment->save();
 
-                // 更新账单：累计已缴金额与状态
-                $locked->paid_amount = bcadd((string) $locked->paid_amount, (string) $amount, 2);
-                $locked->status      = $locked->paid_amount >= $locked->amount ? 2 : 1;
-                if ($locked->status == 2) {
+                // 更新账单：累计已缴金额与状态（缴足含滞纳金才算已缴）
+                $newPaid = bcadd((string) $locked->paid_amount, (string) $amount, 2);
+                $locked->paid_amount = $newPaid;
+                $locked->status      = FeeBill::statusAfterPayment($newPaid, (string) $locked->amount, (string) $locked->late_fee);
+                if ($locked->status === FeeBill::STATUS_PAID) {
                     $locked->paid_at = date('Y-m-d H:i:s');
                 }
                 $locked->save();
@@ -148,6 +170,8 @@ class FeePaymentController extends BaseController
             return $this->fail($e->getMessage(), 422);
         } catch (\Throwable) {
             return $this->fail('收款失败，请稍后重试', 500);
+        } finally {
+            LockService::release($lockKey, $lock);
         }
 
         return $this->success([

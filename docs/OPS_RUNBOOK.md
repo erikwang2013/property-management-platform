@@ -114,7 +114,7 @@ bash scripts/rotate_keys.sh /path/to/service/.env
 
 **日常操作清单**：
 
-1. 部署新环境：`cp .env.example .env` → `php scripts/gen_env_keys.php --file=.env --replace-placeholders` → 启动服务确认无密钥报错。（Docker 部署直接跑 `bash scripts/deploy.sh`：自动补密钥并启动双端）
+1. 部署新环境：`cp .env.example .env` → `php scripts/gen_env_keys.php --file=.env --replace-placeholders` → 启动服务确认无密钥报错。（Docker 部署直接跑 `bash scripts/deploy.sh`：自动补密钥、执行结构迁移与 `phone_hash` 回填后启动双端，顺序为 mysql/redis → 迁移 → app → 回填 → nginx）
 2. 例行轮换：按 2.2 执行，季度一次即可（无强制周期，泄漏时立即轮换）。
 3. 备份的 `.env.bak.*` 含明文密钥，与数据库备份同等对待（权限 600、异地存放）。
 

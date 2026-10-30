@@ -1,5 +1,47 @@
 # Changelog
 
+## v1.10.0 (2026-10-31)
+
+> **注意（行为变更）**：① 业主端 `POST /service/v1/fees/pay` 不再自助记账，固定返回 503（未接入支付网关）；业主缴费走管理端支付订单或线下/管理端收款。② 管理端公开注册 `POST /api/v1/auth/register` 已删除；仅保留业主端注册。③ 退款接口强制 `request_id`（≤64 的幂等键），并支持部分退款与溢缴自动退。④ 账单状态统一为 0=未缴 / 1=部分缴 / 2=已缴 / 3=逾期 / 4=豁免；旧库状态由迁移按金额一次性归一化。⑤ 新增 `phone_hash` / `credited_amount` / `refund_request_id` 列与账单周期唯一索引，存量库升级需先跑 `docs/migrations/2026-10-30-audit-fix-schema.sql`，再跑 `scripts/backfill_owner_phone_hash.php`；`scripts/deploy.sh` 已自动完成。
+
+### 新增
+- **支付入账上限模型**：线上订单最多抵扣账单当前待缴金额（含滞纳金），实际入账写入 `management_payment_order.credited_amount`；超出部分进入 `payment_overpay_refund` 队列自动退款，退款按“先退溢缴、再回退账单”计算；`reconcile` 会扫描已支付但未退足溢缴的订单重新入队。
+- **部分退款与幂等**：退款调用保持渠道请求在 DB 事务外，订单/账单在事务内 `lockForUpdate`；退款接口新增必填 `request_id`，同一次重试复用渠道退款单号与本地 `refund_request_id`；部分退款累计金额、状态与统计正确。
+- **微信/支付宝回调修复**：微信 v3 `resource.ciphertext` AES-256-GCM 解密、查询补 `mchid`、下单补 `time_expire`；支付宝补 `notify_url`、按剩余时间设置 `timeout_express`；两端回调金额逐分核对，不一致只记日志不 credit。
+- **手机号盲索引**：`management_owner.phone_hash`（SHA-256，非加密）批量为空/不一致回填；后台新增/修改、业主注册、批量导入写入该列；管理端搜索与业主登录改走等值查询；注册/后台新增/修改用 Redis 锁串行化查重。
+- **测试与 CI**：恢复 PHPUnit 引导与 63 个后端单元测试（admin 43 tests/103 assertions，service 22/42）；CI 在测试存在时真正执行，admin 覆盖率门禁 1.7%、service 3%。
+- **前端契约**：两套 Flutter 全面使用 `/api/v1/*`、`/service/v1/*`；费用状态改整数、费用类型/房间字段对齐；管理端角色权限树递归展开，叶子权限可分配；业主端 401 刷新会保存轮换后的 refresh token。
+- **部署**：Docker nginx 改为完整 `deploy/nginx/default.conf` 并挂载到 `conf.d/default.conf`，代理 `app:8787/8788`，健康检查 `/health`；`deploy.sh` 改为 mysql/redis → 迁移 → app → 手机号回填 → nginx，避免新代码跑旧 schema。
+
+### 修复
+- **账单状态/金额**：PHP 与 Flutter 统一 0–4 语义；线上/线下入账均含滞纳金；豁免账单 `unpaid_amount=0`；退款不把豁免账单改回欠费；账单编辑金额/滞纳金后重算状态，拒绝“已缴但金额不足”等矛盾值。
+- **唯一键与周期**：`management_fee_bill` 增加 `UNIQUE(room_id, fee_type_id, start_date)`；单张创建/修改强制 `start_date`，1062 转 422；存量重复周期需人工去重，否则迁移跳过索引并提示。
+- **未传 owner_id**：单张账单创建从房产绑定业主回填，仍无绑定则 422，避免 NOT NULL 列 500。
+- **认证安全**：刷新接口只接受 `token_type=refresh`；admin/service 均轮换 refresh token 并用 Redis `SET NX` 原子拉黑旧令牌；登出可拉黑当前 refresh；被删除/禁用账号的旧 refresh 立即失效。
+- **并发/双收**：线下收款与在线下单共用同一 Redis 锁；存在未过期在线订单时拒绝线下收款；已关闭（status=4）订单的晚到回调/对账仍可入账并按上限退款。
+- **管理端角色**：角色列表返回权限并以 hashid 对齐权限树；提交权限 ID 反解后写 pivot，修正“编辑角色清空权限/勾选错位”。
+- **安全与导出**：WAF 递归扫描嵌套 JSON；Excel 导出对 `= + @ -` 等公式前缀做文本化；列表 `page_size/limit` 统一夹紧到 1–100；导出表名/类型白名单，文件名安全化；nginx XFF 改为 `$remote_addr`。
+- **业主费用 UI**：账单详情费用类型对象、列表 `fee_type_name`、房间对象、按 `bill_id` 过滤缴费记录；移除未接网关的支付弹窗/按钮。
+- **管理端订单详情**：`room_name` 列名改为 `room_number`，避免订单详情 SQL 1054。
+- **管理端 Flutter 账单**：移除“新增账单/批量生成”按钮（表单字段不足以满足后端必填参数，原操作必然 422）；后端接口保留，待补完整表单。
+
+### 变更
+- 测试数量、注册端点、在线缴费状态、API 路径、退款字段、迁移/回填步骤同步到 README 中英、docs 中英、admin/service 文档与 i18n；图片中的旧 API 路径与“在线缴费”文案已校正。
+- `docs/INSTALL.md` 明确 `install.sql` 只保证全新库可重复执行，存量库升级必须用迁移；`deploy.sh` 已内置迁移与回填。
+- README 测试口径：后端 65（admin 43 + service 22）+ Flutter 11。
+
+### 测试
+- admin PHPUnit 43 tests / 103 assertions；service 22 / 42，全部通过。
+- 两端 PHPStan 0 error；Flutter `analyze` 无问题，业主端 10 tests、管理端 1 test 通过；66 个 PHP 文件 `php -l` 通过；`bash -n scripts/deploy.sh` 通过；nginx 配置容器内 `nginx -t` 通过。
+
+### 边界（如实）
+- 未对真实 MySQL 执行迁移/回填，未做微信/支付宝网关、Redis/队列故障注入与并发集成测试；迁移/队列/退款事务为静态与单元验证。
+- 退款本地只记录最近一次 `request_id`；API 已要求每次退款使用新的唯一值，旧 request 重放仍建议客户端避免。
+- 溢缴退款为异步队列；消费者停摆时依赖 `reconcile` 重新入队，建议给 failed 队列加告警。
+- `phone_hash` 为无盐 SHA-256、索引非唯一；批量导入与服务注册并发仍可能绕过应用锁。
+- 管理端 Flutter 暂无新增/批量生成账单表单；系统仍无自动把到期未缴账单置为逾期的定时任务。
+- 约 1200 行两端重复代码合并（结构性重构）未纳入本版本。
+
 ## v1.9.0 (2026-10-16)
 
 > **注意（行为变更）**：① **一键部署**（`bash scripts/deploy.sh`）现**自动创建默认管理员** `admin / Admin@123456`（可用 `.env` 的 `ADMIN_INITIAL_PASSWORD` 覆盖）——此前 README/INSTALL 承诺的默认账号从未被任何安装路径创建（`install.sql` 无管理员种子），且其口令 `admin123` 过不了登录复杂度校验，照文档登录必报「密码错误」；② 建用户/改用户/Excel 导入/业主改密的密码强度校验**统一为登录口同款规则**（8-32 位 + 大小写字母 + 数字 + 特殊字符 `@$!%*?&`）——此前这些入口更宽松，可造出「能建号、永远登不上」的账号；③ 安装向导确认页现**携带可选支付/ES 配置**（此前在确认环节被静默丢弃）。

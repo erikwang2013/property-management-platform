@@ -4,13 +4,12 @@ class ApiConfig {
   ApiConfig._();
 
   // 认证
-  static const String authLogin = '/api/auth/login';
-  static const String authRegister = '/api/auth/register';
-  static const String authRefresh = '/api/auth/refresh';
+  static const String authLogin = '/api/v1/auth/login';
+  static const String authRefresh = '/api/v1/auth/refresh';
 
   // 验证码
-  static const String captchaGenerate = '/api/captcha/generate';
-  static const String captchaVerify = '/api/captcha/verify';
+  static const String captchaGenerate = '/api/v1/captcha/generate';
+  static const String captchaVerify = '/api/v1/captcha/verify';
 
   // 仪表盘
   static const String dashboard = '/admin/dashboard';
@@ -79,7 +78,6 @@ class ApiConfig {
 
   // 账单
   static const String feeBill = '/admin/fee-bill';
-  static const String feeBillBatchGenerate = '/admin/fee-bill/batch/generate';
 
   // 缴费
   static const String feePayment = '/admin/fee-payment';

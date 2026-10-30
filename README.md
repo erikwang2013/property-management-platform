@@ -102,9 +102,9 @@ property-management-platform/
 | admin 控制器 | 40个 | 通用管理 + 15个物业模块 + 1个扩展功能 |
 | service 控制器 | 10个 | 业主端全部 API |
 | API 路由 | 51 | admin 27 + service 24 |
-| Flutter 管理后台 | 26页 | admin 26个页面模块，67文件/5,520行 |
-| Flutter 业主端 | 5页 | 费用/停车，18文件/2,099行 |
-| 测试 | 11个 | Flutter 管理端 1 + 业主端 10；后端测试源未随仓库分发，历史快照见 [测试报告](docs/tests/) |
+| Flutter 管理后台 | 26页 | admin 26个页面模块，67文件/5,532行 |
+| Flutter 业主端 | 8页 | 首页/费用/停车/个人中心，17文件/1,942行 |
+| 测试 | 76个 | 后端 65（admin 43 + service 22）+ Flutter 11（管理端 1 + 业主端 10）；随源码一同分发 |
 
 ## 系统架构与设计图
 
@@ -137,7 +137,7 @@ property-management-platform/
 | 第1批 | 小区、楼栋、单元、户型、房产、业主、租户、费用、公告（9模块） | ✅ 全部完成 |
 | 第2批 | 停车、设备（2模块）+ 面板可视化 + Excel/PDF导出（平台功能） | ✅ 全部完成 |
 | 第3批 | 安保巡逻、保洁、绿化、员工（4模块） | ✅ 全部完成 |
-| 扩展 | 支付集成（1模块） | ✅ 全部完成 |
+| 扩展 | 支付集成（1模块：管理端支付订单/回调/退款） | ✅ 后端完成（业主端在线支付未接入） |
 | 平台功能 | 报表中心（收缴率 / 缴费方式 / 欠费排行 / PDF导出）+ 业主起始页统计（我的房产 / 待缴费用 / 公告） | ✅ 全部完成 |
 
 ## 技术栈
@@ -293,12 +293,12 @@ cd service && php vendor/bin/phpunit
 
 | 项目 | 测试数 | 断言数 | 通过率 |
 |------|--------|--------|--------|
-| admin | 260 | 622 | 100% (2个DB门控跳过) |
-| service | 201 | 744 | 100% (8个DB门控跳过) |
-| **合计** | **461** | **1366** | — |
+| admin | 43 | 103 | 100% |
+| service | 22 | 42 | 100% |
+| **合计** | **65** | **145** | — |
 
-service 测试覆盖: 全部 19 个 API 控制器、6 个中间件、模型/公共服务类、安全与特性回归
-全部模块单元测试 + API 自动化 + 端到端测试报告见 [docs/tests/](docs/tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）
+后端单元测试覆盖: 支付纯函数/微信回调解密/账单状态与滞纳金/密码规则/Validator/分页；Flutter 测试 11 例。
+历史全量测试快照见 [docs/tests/](docs/tests/)（admin-unit-report / service-unit-report / api-report / e2e-report / go-unit-report / rust-unit-report）。
 
 ### Docker 部署
 
@@ -335,6 +335,8 @@ docker compose up -d
 >
 > ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
 
+**存量库升级**：已有数据卷时，按顺序执行结构迁移（`docs/migrations/2026-10-30-audit-fix-schema.sql`）和业主手机号盲索引回填（`scripts/backfill_owner_phone_hash.php`，容器内执行时设 `APP_BASE_PATH=/app`）；两步均幂等，`bash scripts/deploy.sh` 会自动执行（启动顺序：mysql/redis → 结构迁移 → app → 回填 → nginx），首次空库无需操作。若库中存在重复的非空 `(room_id, fee_type_id, start_date)` 账单周期行，需先人工去重，否则唯一索引会被跳过。手工命令见 [安装指南](docs/INSTALL.md#存量数据库升级)。
+
 ## 部署拓扑
 
 ```
@@ -349,7 +351,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 1. 浏览器访问 `http://localhost:8787`，使用默认管理员账号登录（见下表）。
 2. **初始化基础数据**：依次录入 小区 → 楼栋 → 单元 → 户型 → 房产，再通过 业主管理 绑定业主。
 3. **日常运营**：
-   - 费用管理：配置费用类型 → 账单管理批量生成账单 → 业主线上/线下缴费；
+   - 费用管理：配置费用类型 → 通过接口创建/批量生成账单（Flutter 账单页的创建/批量按钮已移除）→ 通过管理端创建支付订单收款，或线下收款；
    - 报表中心：按日期范围查看 收缴率 / 缴费方式 / 欠费排行，一键导出 PDF。
 4. **系统管理**：用户管理（新增管理员）、角色权限（RBAC 授权）、系统配置（键值对）、操作日志（审计追溯）。
 
@@ -357,7 +359,7 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 
 1. 访问 `http://localhost:8788`（或 Flutter Web），注册/登录业主账号。
 2. 起始页查看：我的房产、待缴费用、最新公告。
-3. 常用操作：在线缴费、停车查询。
+3. 常用操作：账单查询、停车查询。业主端在线缴费暂未接入支付网关（`POST /service/v1/fees/pay` 固定返回 503），缴费请走管理端支付订单或线下办理。
 
 ### 前端运行
 
@@ -406,11 +408,11 @@ Nginx (:443) → admin webman (:8787) + service webman (:8788) → MySQL + Redis
 |---|---|---|
 | 功能覆盖 | 15 核心 + 1 扩展；50 控制器 / 57 模型 / 51 路由 / 34 表 | 22 核心 + 12 扩展；81 控制器 / 123 模型 / 191 路由 / 67 表；独有报修、投诉、访客、合同、财务、活动、能耗、消息通知、审批、投票、催缴、集团、问答、巡检、SLA、商城、人脸、大屏 |
 | 安全防护 | JWT + RBAC、SecurityFilter、RateLimit、OperationLog、PasswordRule、security-php、gitleaks/phpstan；19 层纵深防御 | 后端安全栈与开源版一致（相同 16 个中间件、PasswordRule 与安全插件）；增加 Angular/React/HarmonyOS 前端与 ES，攻击面更大但控制项相同 |
-| 性能与规模 | webman 常驻、Redis 缓存/队列；12 个 compose 服务；MySQL LIKE 检索 | 同栈 + Elasticsearch；15 个 compose 服务；Redis 使用点更多（30 vs 26 个文件），适合更大数据量 |
+| 性能与规模 | webman 常驻、Redis 缓存/队列；14 个 compose 服务（两端各 7）；MySQL LIKE 检索 | 同栈 + Elasticsearch；15 个 compose 服务；Redis 使用点更多（30 vs 26 个文件），适合更大数据量 |
 | 数据与检索 | 34 张表；MySQL LIKE | 67 张表；Elasticsearch + webman-scout |
-| 测试与质量 | 后端测试源未随仓库分发（CI 在 `tests/` 为空时跳过）；Flutter 测试 11 例；CI 含 php-syntax/flutter/phpstan/secrets/monitoring | 商业版测试声明不同；CI 额外 react-build/angular-build；后端测试源需另行交付 |
-| 部署与运维 | Docker Compose 12 服务、安装向导、health/metrics、Prometheus、备份脚本 | 15 个 compose 服务（+ES/监控）；同样具备安装向导、健康检查、监控与备份，部署面更大 |
-| 多端与国际化 | Flutter 管理端 67 Dart + 业主端 18 Dart；翻译资源 zh_CN/en | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12；业主端 Flutter 33 + HarmonyOS 14；翻译资源仍 zh_CN/en |
+| 测试与质量 | 后端单元测试 65 例随仓库分发（CI 执行，含覆盖率门禁）；Flutter 测试 11 例；CI 含 php-syntax/flutter/phpstan/secrets/monitoring | 商业版测试声明不同；CI 额外 react-build/angular-build；后端测试源需另行交付 |
+| 部署与运维 | Docker Compose 14 服务（两端各 7）、安装向导、health/metrics、Prometheus、备份脚本 | 15 个 compose 服务（+ES/监控）；同样具备安装向导、健康检查、监控与备份，部署面更大 |
+| 多端与国际化 | Flutter 管理端 67 Dart + 业主端 17 Dart；翻译资源 zh_CN/en | Flutter 99 + Angular 60 + React 42 + HarmonyOS 12；业主端 Flutter 33 + HarmonyOS 14；翻译资源仍 zh_CN/en |
 | 扩展性与二次开发 | 15+1 模块、RBAC、`/apidoc`、配置驱动 | 22+12 模块、更多权限种子（约 248 vs 134 条）、三套 Web 管理端可选，但维护面更大 |
 | 授权与商业支持 | 个人学习/研究；商业使用需书面授权 | 商业授权、交付与支持；联系 erik@erik.xyz |
 | 适用场景 | 个人学习、研究、二次开发、小规模自建 | 商业部署、生产运营、多端与大数据量场景 |

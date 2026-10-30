@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dio/dio.dart';
+import '../../config/api_config.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import '../../services/captcha_service.dart';
@@ -90,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => _loading = true);
 
     try {
-      final resp = await _dio.post('/api/auth/login', data: {
+      final resp = await _dio.post(ApiConfig.authLogin, data: {
         'username': username,
         'password': password,
         'captcha_key': _captchaData!.key,

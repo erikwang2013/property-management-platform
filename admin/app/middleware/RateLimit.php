@@ -20,7 +20,6 @@ class RateLimit implements MiddlewareInterface
 
     private array $sensitive = [
         '/api/v1/auth/login'    => ['limit' => 10, 'window' => 60],
-        '/api/v1/auth/register' => ['limit' => 5,  'window' => 60],
     ];
 
     public function process(Request $request, callable $handler): Response

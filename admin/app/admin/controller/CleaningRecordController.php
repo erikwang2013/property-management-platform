@@ -51,7 +51,7 @@ class CleaningRecordController extends BaseController
         }
 
         $list = $query->orderBy('cleaned_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 return [
                     'id'                => $this->encodeId($item->id),

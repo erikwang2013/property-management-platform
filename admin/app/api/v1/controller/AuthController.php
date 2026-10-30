@@ -10,7 +10,6 @@ use hg\apidoc\annotation as Apidoc;
 
 use app\admin\validate\PasswordRule;
 use app\model\AdminUser;
-use app\common\SnowflakeService;
 use support\Container;
 use support\Log;
 use support\Redis;
@@ -152,69 +151,6 @@ class AuthController
     }
 
     /**
-     * 注册（需先通过点击验证码）
-     * @Apidoc\Method("POST")
-     * @Apidoc\Url("/api/v1/auth/register")
-     */
-    public function register(Request $request): Response
-    {
-        $validator = validator($request->all(), [
-            'username'    => 'required|string|min:3|max:50',
-            'password'    => PasswordRule::ruleString(),
-            'real_name'   => 'required|string|max:50',
-            'captcha_key' => 'required|string',
-            'clicks'      => 'required|array|min:2',
-        ]);
-
-        if ($validator->fails()) {
-            return json(['code' => 422, 'message' => $validator->errors()->first(), 'data' => []]);
-        }
-
-        if (!captcha_verify($request->input('captcha_key'), 'click', $this->normalizeClicks($request->input('clicks')))) {
-            return json(['code' => 422, 'message' => '验证码错误，请重试', 'data' => []]);
-        }
-
-        $username = $request->input('username');
-        if (AdminUser::where('username', $username)->exists()) {
-            return json(['code' => 422, 'message' => '用户名已存在', 'data' => []]);
-        }
-
-        $user = new AdminUser();
-        $user->id = SnowflakeService::generate();
-        $user->username = $username;
-        $user->password = password_hash($request->input('password'), PASSWORD_BCRYPT);
-        $user->real_name = $request->input('real_name');
-        $user->phone = $request->input('phone', '');
-        $user->email = $request->input('email', '');
-        $user->status = 1;
-        $user->save();
-
-        $jwt = self::getJWT();
-        $tokenExpire = (int)(config('plugin.erikwang2013.jwt.jwt.default_expire') ?: 7200);
-        $token = $jwt->encode(['sub' => $user->id, 'username' => $user->username]);
-        $refreshToken = $jwt->encode(['sub' => $user->id, 'token_type' => 'refresh'],
-            (int)(config('plugin.erikwang2013.jwt.jwt.refresh_expire') ?: 1209600)
-        );
-
-        $this->trackSession($user->id, $token, $tokenExpire);
-
-        return json([
-            'code'    => 0,
-            'message' => '注册成功',
-            'data'    => [
-                'access_token'  => $token,
-                'refresh_token' => $refreshToken,
-                'expires_in'    => (int)(config('plugin.erikwang2013.jwt.jwt.default_expire') ?: 7200),
-                'user'          => [
-                    'id'        => Container::get('hashids')->encode($user->id),
-                    'username'  => $user->username,
-                    'real_name' => $user->real_name,
-                ],
-            ],
-        ]);
-    }
-
-    /**
      * 刷新令牌
      * @Apidoc\Method("POST")
      * @Apidoc\Url("/api/v1/auth/refresh")
@@ -229,18 +165,44 @@ class AuthController
 
         try {
             $jwt = self::getJWT();
-            $payload = $jwt->decode($refreshToken);
+            // 登出时拉黑的 refresh_token 不得再换发；Redis 故障沿用 AdminAuth 的 fail-open
+            try {
+                if (Redis::get('jwt_blacklist:' . md5($refreshToken))) {
+                    return json(['code' => 401, 'message' => '刷新令牌已失效', 'data' => []]);
+                }
+            } catch (\Throwable $e) {
+                Log::error('auth_refresh_blacklist_failed', ['error' => $e->getMessage()]);
+            }
 
-            // 刷新时更新最后登录时间和IP
-            $userId = $payload['sub'] ?? 0;
-            if ($userId) {
-                $user = AdminUser::find($userId);
-                if ($user) {
-                    $user->last_login_at = date('Y-m-d H:i:s');
-                    $user->last_login_ip = $request->getRealIp();
-                    $user->save();
+            // 刷新令牌默认被 decode() 拒绝，需显式放行
+            $payload = $jwt->decode($refreshToken, true);
+
+            // 只接受 refresh 类型：access token 无 token_type，不能用来换发新令牌
+            if (($payload['token_type'] ?? '') !== 'refresh') {
+                return json(['code' => 401, 'message' => '刷新令牌无效或已过期', 'data' => []]);
+            }
+
+            // 刷新时更新最后登录时间和IP；账号被删/禁用后旧刷新令牌立即失效
+            $userId = (int) ($payload['sub'] ?? 0);
+            $user = $userId > 0 ? AdminUser::find($userId) : null;
+            if (!$user || (int) $user->status !== 1) {
+                return json(['code' => 401, 'message' => '账号不存在或已被禁用', 'data' => []]);
+            }
+            // 原子占用旧刷新令牌：并发刷新只有一个请求能成功，另一个 401
+            $oldTtl = max((int) ($payload['exp'] ?? 0) - time(), 0);
+            if ($oldTtl > 0) {
+                try {
+                    if (!Redis::set('jwt_blacklist:' . md5($refreshToken), '1', ['NX', 'EX' => $oldTtl])) {
+                        return json(['code' => 401, 'message' => '刷新令牌已使用', 'data' => []]);
+                    }
+                } catch (\Throwable $e) {
+                    Log::error('auth_refresh_blacklist_failed', ['error' => $e->getMessage()]);
                 }
             }
+
+            $user->last_login_at = date('Y-m-d H:i:s');
+            $user->last_login_ip = $request->getRealIp();
+            $user->save();
 
             $tokenExpire = (int)(config('plugin.erikwang2013.jwt.jwt.default_expire') ?: 7200);
             // 租户声明随刷新延续，防止刷新后降级为平台(0)越权

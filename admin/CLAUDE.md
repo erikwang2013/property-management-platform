@@ -14,7 +14,7 @@ Copyright (c) 2026 erik <erik@erik.xyz> — https://erik.xyz
 
 | 域 | 功能 |
 |----|------|
-| 认证 | 登录/注册/刷新/登出 + 验证码 + 账号锁定 + 会话限制 |
+| 认证 | 登录/刷新/登出 + 验证码 + 账号锁定 + 会话限制 + 刷新轮换（管理端无公开注册） |
 | 仪表盘 | 实时统计/趋势/分布/日志（Redis 5m 缓存）|
 | 用户 | CRUD + 批量删除/启禁用 + Excel 导入 |
 | 角色权限 | CRUD + 权限树 + RBAC method.path 鉴权 |
@@ -163,7 +163,10 @@ open-admin/
 - **并发会话限制**：同一用户最多 3 个有效 Token，超出时最旧 Token 加入黑名单
 - **MySQL 专用用户**：Docker 编排使用非 root 应用账户
 - **security.txt**：`/.well-known/security.txt` RFC 9116 端点
-- **Nginx 安全配置**：`docs/nginx-security.conf` 反向代理安全加固参考
+- **刷新轮换**：仅接受 refresh 类型令牌，刷新后旧 refresh token 立即失效；登出可同时吊销 refresh_token
+- **嵌套 JSON 扫描**：SecurityFilter 递归展开请求载荷，避免嵌套 JSON 绕过攻击检测
+- **导出防护**：Excel 导出清洗 `= + @` 等公式注入前缀；列表接口 page_size 上限 100
+- **Nginx 安全配置**：Docker 完整配置为 `deploy/nginx/default.conf`（挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`）；`docs/nginx-security.conf` 仅是宿主机 Nginx 安全头/片段参考
 
 ## API 版本策略
 
@@ -179,7 +182,6 @@ curl http://localhost:8787/api/v1/auth/login
 
 Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 - 登录: 10 次/分钟
-- 注册: 5 次/分钟
 - 响应头: `X-RateLimit-Limit/Remaining/Reset`，超限附加 `Retry-After`
 
 ## 代码规范
@@ -205,7 +207,7 @@ Redis 滑动窗口（Lua 原子化），默认 60 次/分钟/IP/路由：
 
 ### Docker Compose（推荐生产环境）
 
-本目录 `docker-compose.yml` 编排 9 个服务（admin 与 service 各自独立一套，端口已错开）：
+本目录 `docker-compose.yml` 编排 7 个服务（admin 与 service 各自独立一套，端口已错开）：
 
 | 服务 | 说明 |
 |------|------|
@@ -230,8 +232,9 @@ docker compose up -d
 
 - PHP 语法检查 (`php -l`)
 - Composer 依赖安全审计 (`composer audit`)
-- PHPUnit 单元测试
-- Flutter 静态分析 (`flutter analyze`)
+- PHPUnit 单元测试（admin 43 例/103 断言，覆盖率门槛 1.7%；service 22 例/42 断言，门槛 3%）
+- PHPStan 静态分析
+- Flutter 静态分析 (`flutter analyze`) + 测试（admin 1 例 + owner 10 例）
 
 ### 数据库备份
 

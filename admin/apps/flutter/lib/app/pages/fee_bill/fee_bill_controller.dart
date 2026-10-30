@@ -14,12 +14,4 @@ class FeeBillController extends BaseCrudController {
     bills.value = List<Map<String, dynamic>>.from(data['data'] ?? []);
     total.value = data['total'] as int? ?? 0;
   }
-
-  Future<void> batchGenerate() async {
-    try {
-      await api.post(ApiConfig.feeBillBatchGenerate);
-      await loadItems(reset: true);
-      Get.snackbar('成功', '批量生成账单完成');
-    } catch (e) { Get.snackbar('错误', '批量生成失败: $e'); }
-  }
 }

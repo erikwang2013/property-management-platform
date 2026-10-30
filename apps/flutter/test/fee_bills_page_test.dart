@@ -12,9 +12,9 @@ void main() {
   setUp(() {
     resetMockRoutes();
     // 真实分页器形状：{code,message,data:{current_page,per_page,total,data:[...]}}
-    mockRoutes['/service/fees/bills'] = (options) {
+    mockRoutes['/service/v1/fees/bills'] = (options) {
       final status = options.queryParameters['status'];
-      if (status == 'paid') {
+      if (status == '2') {
         return {
           'code': 0,
           'message': 'success',
@@ -28,7 +28,7 @@ void main() {
                 'fee_type': '物业费',
                 'amount': '200.00',
                 'paid_amount': '200.00',
-                'status': 'paid',
+                'status': 2,
               },
             ],
           },
@@ -47,7 +47,7 @@ void main() {
               'fee_type': '物业费',
               'amount': '100.00',
               'paid_amount': '0',
-              'status': 'unpaid',
+              'status': 0,
             },
           ],
         },
@@ -82,7 +82,7 @@ void main() {
   });
 
   testWidgets('无账单时展示空状态', (tester) async {
-    mockRoutes['/service/fees/bills'] = (_) => {
+    mockRoutes['/service/v1/fees/bills'] = (_) => {
           'code': 0,
           'message': 'success',
           'data': {'current_page': 1, 'per_page': 20, 'total': 0, 'data': []},

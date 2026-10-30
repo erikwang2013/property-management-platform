@@ -34,7 +34,7 @@ class WechatPayChannel
     }
 
     /** Native 下单，返回支付二维码内容 */
-    public function prepay(string $orderNumber, string $subject, float $amount, string $notifyUrl): array
+    public function prepay(string $orderNumber, string $subject, float $amount, string $notifyUrl, string $expireAt = ''): array
     {
         $body = [
             'appid'        => $this->cfg['app_id'],
@@ -44,6 +44,10 @@ class WechatPayChannel
             'notify_url'   => $notifyUrl,
             'amount'       => ['total' => self::toCents($amount), 'currency' => 'CNY'],
         ];
+        // 让渠道侧二维码与本地 expire_at 同时失效，避免本地关闭后旧码仍可支付
+        if ($expireAt !== '') {
+            $body['time_expire'] = date('c', strtotime($expireAt));
+        }
         $resp = $this->request('POST', '/v3/pay/transactions/native', $body);
         if (empty($resp['code_url'])) {
             throw new RuntimeException('微信下单失败：缺少 code_url');
@@ -69,7 +73,10 @@ class WechatPayChannel
     /** 查询订单支付状态，返回 ['paid' => bool, 'trade_no' => string, 'amount' => float] */
     public function queryOrder(string $orderNumber): array
     {
-        $resp = $this->request('GET', '/v3/pay/transactions/out-trade-no/' . $orderNumber);
+        // v3 查询接口要求携带 mchid；查询串也参与签名，request() 按完整 $path 拼签名消息
+        $path = '/v3/pay/transactions/out-trade-no/' . rawurlencode($orderNumber)
+            . '?mchid=' . rawurlencode((string) $this->cfg['mch_id']);
+        $resp = $this->request('GET', $path);
         return [
             'paid'     => ($resp['trade_state'] ?? '') === 'SUCCESS',
             'trade_no' => $resp['transaction_id'] ?? '',
@@ -77,7 +84,7 @@ class WechatPayChannel
         ];
     }
 
-    /** 回调验签：返回 ['order_number','trade_no','paid']，失败抛异常 */
+    /** 回调验签 + 解密：返回 ['order_number','trade_no','paid','amount']，失败抛异常 */
     public function verifyNotify(string $body, array $headers): array
     {
         $timestamp = $headers['wechatpay-timestamp'] ?? '';
@@ -100,15 +107,51 @@ class WechatPayChannel
         }
         // 退款等非支付事件通知：直接应答成功，不处理
         if (isset($data['event_type']) && $data['event_type'] !== 'TRANSACTION.SUCCESS') {
-            return ['order_number' => '', 'trade_no' => '', 'paid' => false];
+            return ['order_number' => '', 'trade_no' => '', 'paid' => false, 'amount' => '0.00'];
         }
-        $tradeState = $data['trade_state'] ?? '';
+
+        // 交易字段在 resource.ciphertext 中（AES-256-GCM），不能读顶层字段
+        $resource = is_array($data['resource'] ?? null) ? $data['resource'] : [];
+        $plain = self::decryptResource($resource, (string) ($this->cfg['api_v3_key'] ?? ''));
+        $tx = json_decode($plain, true);
+        if (!is_array($tx)) {
+            throw new RuntimeException('微信回调解密数据非法');
+        }
+        $cents = (int) ($tx['amount']['total'] ?? 0);
         return [
-            'order_number' => $data['out_trade_no'] ?? '',
-            'trade_no'     => $data['transaction_id'] ?? '',
+            'order_number' => (string) ($tx['out_trade_no'] ?? ''),
+            'trade_no'     => (string) ($tx['transaction_id'] ?? ''),
             // 空/未知交易状态视为未支付：宁可等渠道重试，不可把未付款挂起回调当已支付入账
-            'paid'         => $tradeState === 'SUCCESS',
+            'paid'         => ($tx['trade_state'] ?? '') === 'SUCCESS',
+            // 渠道可信金额（分 → 元字符串），供上层核对订单金额
+            'amount'       => bcdiv((string) $cents, '100', 2),
         ];
+    }
+
+    /**
+     * 解密回调 resource：AEAD_AES_256_GCM，密文末 16 字节为 GCM tag。
+     * 纯静态函数便于独立测试。
+     */
+    public static function decryptResource(array $resource, string $key): string
+    {
+        if (($resource['algorithm'] ?? '') !== 'AEAD_AES_256_GCM') {
+            throw new RuntimeException('微信回调加密算法不支持');
+        }
+        if (strlen($key) !== 32) {
+            throw new RuntimeException('微信 API v3 密钥必须为 32 字节');
+        }
+        $nonce = (string) ($resource['nonce'] ?? '');
+        $aad   = (string) ($resource['associated_data'] ?? '');
+        $cipher = base64_decode((string) ($resource['ciphertext'] ?? ''), true);
+        if ($cipher === false || strlen($cipher) <= 16) {
+            throw new RuntimeException('微信回调密文非法');
+        }
+        $tag = substr($cipher, -16);
+        $plain = openssl_decrypt(substr($cipher, 0, -16), 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $nonce, $tag, $aad);
+        if ($plain === false) {
+            throw new RuntimeException('微信回调解密失败');
+        }
+        return $plain;
     }
 
     private function request(string $method, string $path, array $body = []): array

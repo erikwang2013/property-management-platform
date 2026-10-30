@@ -43,6 +43,15 @@ class BaseController
     }
 
     /**
+     * 分页大小：请求值夹紧到 [1, $max]，防止 ?limit=1000000 拖垮查询
+     */
+    protected function pageSize(Request $request, string $key = 'page_size', int $default = 20, int $max = 100): int
+    {
+        $value = $request->input($key, $default);
+        return min(max((int) $value, 1), $max);
+    }
+
+    /**
      * 将 BIGINT ID 编码为 hashid 字符串
      */
     protected function encodeId(int $id): string

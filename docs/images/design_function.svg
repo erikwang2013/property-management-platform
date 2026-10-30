@@ -72,7 +72,7 @@
 <rect x="844.0" y="454" width="150.0" height="34" rx="7" fill="#CFFAFE" stroke="#CFFAFE" stroke-width="1"/>
 <text x="919.0" y="472" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">费用账单</text>
 <rect x="686.0" y="496" width="150.0" height="34" rx="7" fill="#CFFAFE" stroke="#CFFAFE" stroke-width="1"/>
-<text x="761.0" y="514" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">在线缴费</text>
+<text x="761.0" y="514" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">缴费（管理端/线下）</text>
 <rect x="844.0" y="496" width="150.0" height="34" rx="7" fill="#CFFAFE" stroke="#CFFAFE" stroke-width="1"/>
 <text x="919.0" y="514" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB','Noto Sans SC','Source Han Sans SC',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="9.8" fill="#0891B2" text-anchor="middle" font-weight="600">停车查询</text>
 <rect x="686.0" y="538" width="150.0" height="34" rx="7" fill="#CFFAFE" stroke="#CFFAFE" stroke-width="1"/>

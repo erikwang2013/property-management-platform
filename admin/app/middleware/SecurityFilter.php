@@ -98,17 +98,15 @@ class SecurityFilter implements MiddlewareInterface
             }
         }
 
-        // 4. 输入扫描
+        // 4. 输入扫描（递归展开，避免嵌套 JSON 载荷绕过）
         $inputs = $this->collectInputs($request);
         foreach ($inputs as $source => $values) {
-            if (!is_array($values) && !is_string($values)) continue;
-            if (is_string($values)) $values = [$values];
+            if (!is_array($values)) $values = [$values];
 
-            foreach ($values as $key => $value) {
-                if (!is_string($value) || empty($value)) continue;
+            foreach ($this->flatten($values) as $field => $value) {
                 $blocked = $this->scan($value);
                 if ($blocked !== null) {
-                    $this->logBlock($request, $blocked, (string) $key, $source, substr($value, 0, 200));
+                    $this->logBlock($request, $blocked, (string) $field, $source, substr($value, 0, 200));
                     // 攻击升级：计入 Redis，超阈值封禁
                     $this->escalate($ip);
                     return response('<h1>403 Forbidden</h1>', self::BLOCK_CODE);
@@ -185,6 +183,21 @@ class SecurityFilter implements MiddlewareInterface
             'headers.Cookie'    => $request->header('Cookie', ''),
             'headers.X-Forwarded-For' => $request->header('X-Forwarded-For', ''),
         ];
+    }
+
+    /**
+     * 递归展开嵌套数组为 [字段路径 => 字符串值]；非字符串标量和空字符串不参与正则扫描。
+     */
+    private function flatten(mixed $value, string $path = ''): array
+    {
+        if (!is_array($value)) {
+            return is_string($value) && $value !== '' ? [$path => $value] : [];
+        }
+        $flat = [];
+        foreach ($value as $key => $child) {
+            $flat += $this->flatten($child, $path === '' ? (string) $key : "{$path}.{$key}");
+        }
+        return $flat;
     }
 
     private function scan(string $value): ?string

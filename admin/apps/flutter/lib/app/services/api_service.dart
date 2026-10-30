@@ -107,7 +107,7 @@ class ApiService {
     final refreshToken = await AuthService.getRefreshToken();
     if (refreshToken == null) return false;
     try {
-      final resp = await dio.post('/api/auth/refresh', data: {'refresh_token': refreshToken});
+      final resp = await dio.post(ApiConfig.authRefresh, data: {'refresh_token': refreshToken});
       final data = resp.data['data'];
       if (resp.data['code'] == 0) {
         await AuthService.saveLogin(

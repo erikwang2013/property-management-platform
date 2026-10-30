@@ -76,7 +76,7 @@ class OpenApiController extends BaseController
             'amount'        => $bill->amount,
             'paid_amount'   => $bill->paid_amount,
             'late_fee'      => $bill->late_fee,
-            'unpaid_amount' => max($bill->amount - $bill->paid_amount + $bill->late_fee, 0),
+            'unpaid_amount' => $bill->unpaidAmount(),
             'status'        => $bill->status,
             'due_date'      => $bill->due_date ? $bill->due_date->format('Y-m-d') : '',
             'fee_type_name' => $bill->feeType->name ?? '',

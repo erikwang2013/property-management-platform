@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import '../../services/api_service.dart';
 import '../../config/api_config.dart';
 import '../../config/theme.dart';
-import 'fee_pay_dialog.dart';
 import '../../widgets/pet_mark.dart';
 
 class FeeBillDetailPage extends StatefulWidget {
@@ -63,16 +62,6 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
     }
   }
 
-  Future<void> _pay() async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => FeePayDialog(bill: billData ?? {}),
-    );
-    if (result == true) {
-      _loadDetail();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final bd = _bill ?? billData;
@@ -80,8 +69,7 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
 
     final amount = double.tryParse(bd['amount']?.toString() ?? '0') ?? 0;
     final paidAmount = double.tryParse(bd['paid_amount']?.toString() ?? '0') ?? 0;
-    final status = bd['status'] as String? ?? '';
-    final canPay = status == 'unpaid' || status == 'overdue' || status == 'partial';
+    final status = bd['status'] as int?;
 
     return Scaffold(
       appBar: AppBar(title: Text('bill_detail'.tr)),
@@ -107,14 +95,30 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
                           ),
                           const Divider(height: 32),
                           _buildInfoRow('bill_number'.tr, bd['bill_number'] ?? '-'),
-                          _buildInfoRow('fee_type'.tr, bd['fee_type'] ?? '-'),
+                          _buildInfoRow('fee_type'.tr, bd['fee_type']?['name'] ?? ''),
                           _buildInfoRow('bill_amount'.tr, '¥${amount.toStringAsFixed(2)}'),
                           _buildInfoRow('已缴金额', '¥${paidAmount.toStringAsFixed(2)}'),
                           _buildInfoRow('bill_due_date'.tr, bd['due_date'] ?? '-'),
-                          if (bd['room_number'] != null)
-                            _buildInfoRow('room_number'.tr, bd['room_number']),
+                          if (bd['room']?['room_number'] != null)
+                            _buildInfoRow('room_number'.tr, bd['room']['room_number']),
                         ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.warning.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.info_outline, color: AppTheme.warning, size: 20),
+                        SizedBox(width: 8),
+                        Expanded(child: Text('在线支付暂未开通，请通过管理端支付或到物业前台缴费')),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -147,45 +151,39 @@ class _FeeBillDetailPageState extends State<FeeBillDetailPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 80),
                 ],
               ),
             ),
-      floatingActionButton: canPay
-          ? FloatingActionButton.extended(
-              onPressed: _pay,
-              icon: const Icon(Icons.payment),
-              label: Text('fee_pay'.tr),
-              backgroundColor: AppTheme.primary,
-              foregroundColor: Colors.white,
-            )
-          : null,
     );
   }
 
-  Widget _buildStatusBadge(String status) {
+  Widget _buildStatusBadge(int? status) {
     Color color;
     String label;
     switch (status) {
-      case 'unpaid':
+      case 0:
         color = AppTheme.warning;
         label = 'bill_unpaid'.tr;
         break;
-      case 'paid':
+      case 2:
         color = AppTheme.success;
         label = 'bill_paid'.tr;
         break;
-      case 'overdue':
+      case 3:
         color = AppTheme.danger;
         label = 'bill_overdue'.tr;
         break;
-      case 'partial':
+      case 1:
         color = Colors.blue;
         label = 'bill_partial'.tr;
         break;
+      case 4:
+        color = Colors.grey;
+        label = '豁免';
+        break;
       default:
         color = Colors.grey;
-        label = status;
+        label = '';
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

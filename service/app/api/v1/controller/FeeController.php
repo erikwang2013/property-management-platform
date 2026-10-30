@@ -50,7 +50,7 @@ class FeeController extends BaseController
                     'amount'        => $bill->amount,
                     'paid_amount'   => $bill->paid_amount,
                     'late_fee'      => $bill->late_fee,
-                    'unpaid_amount' => max($bill->amount - $bill->paid_amount + $bill->late_fee, 0),
+                    'unpaid_amount' => $bill->unpaidAmount(),
                     'status'        => $bill->status,
                     'due_date'      => $bill->due_date ? $bill->due_date->format('Y-m-d') : '',
                     'fee_type_name' => $bill->feeType->name ?? '',
@@ -93,7 +93,7 @@ class FeeController extends BaseController
             'amount'        => $bill->amount,
             'paid_amount'   => $bill->paid_amount,
             'late_fee'      => $bill->late_fee,
-            'unpaid_amount' => max($bill->amount - $bill->paid_amount + $bill->late_fee, 0),
+            'unpaid_amount' => $bill->unpaidAmount(),
             'status'        => $bill->status,
             'start_date'    => $bill->start_date ? $bill->start_date->format('Y-m-d') : '',
             'end_date'      => $bill->end_date ? $bill->end_date->format('Y-m-d') : '',
@@ -133,8 +133,18 @@ class FeeController extends BaseController
     {
         $ownerId = $this->getOwnerId($request);
         $page    = (int) $request->input('page', 1);
+        $billHashid = $request->input('bill_id');
 
-        $payments = FeePayment::where('owner_id', $ownerId)
+        $query = FeePayment::where('owner_id', $ownerId);
+        if ($billHashid !== null && $billHashid !== '') {
+            try {
+                $query->where('bill_id', $this->decodeId((string) $billHashid));
+            } catch (InvalidArgumentException) {
+                return $this->fail('无效的账单ID', 404);
+            }
+        }
+
+        $payments = $query
             ->with(['bill.feeType', 'bill.room'])
             ->orderBy('created_at', 'desc')
             ->paginate(20, ['*'], 'page', $page)
@@ -162,100 +172,8 @@ class FeeController extends BaseController
      */
     public function pay(Request $request): Response
     {
-        $ownerId = $this->getOwnerId($request);
-        $billHashid = $request->input('bill_id', '');
-        $amount     = (float) $request->input('amount', 0);
-        $paymentMethod = $request->input('payment_method', 'online');
-        $paymentChannel = $request->input('payment_channel', '');
-        $password   = $request->input('password', '');
-
-        // 密码确认
-        $confirmError = $this->confirmPassword($ownerId, $password);
-        if ($confirmError !== null) {
-            return $this->fail($confirmError, 422);
-        }
-
-        if (empty($billHashid)) {
-            return $this->fail('缺少账单ID', 422);
-        }
-
-        if ($amount <= 0) {
-            return $this->fail('金额必须大于0', 422);
-        }
-
-        try {
-            $billId = $this->decodeId($billHashid);
-        } catch (InvalidArgumentException) {
-            return $this->fail('无效的账单ID', 404);
-        }
-
-        $bill = FeeBill::where('owner_id', $ownerId)->find($billId);
-        if (!$bill) {
-            return $this->fail('账单不存在或无权操作', 404);
-        }
-
-        if ($bill->status === 1) {
-            return $this->fail('该账单已缴清', 422);
-        }
-
-        $unpaidAmount = $bill->amount - $bill->paid_amount + $bill->late_fee;
-        if ($amount > $unpaidAmount) {
-            return $this->fail('支付金额不能超过待缴金额', 422);
-        }
-
-        // 幂等：30 秒内同一账单同金额的重复请求直接返回既有支付记录，避免重复扣费
-        $recent = FeePayment::where('bill_id', $billId)
-            ->where('owner_id', $ownerId)
-            ->where('amount', $amount)
-            ->where('paid_at', '>=', date('Y-m-d H:i:s', time() - 30))
-            ->first();
-        if ($recent) {
-            return $this->success([
-                'payment_number' => $recent->payment_number,
-                'amount'         => $amount,
-                'paid_amount'    => $bill->paid_amount,
-                'bill_status'    => $bill->status,
-            ], '缴费成功');
-        }
-
-        // 支付流水与账单更新放入同一事务，避免创建成功但账单未更新的不一致状态
-        try {
-            [$paymentNumber, $newPaidAmount, $newStatus] = Db::transaction(function () use ($ownerId, $bill, $amount, $paymentMethod, $paymentChannel) {
-                $paymentId = $this->generateId();
-                $paymentNumber = 'PAY' . date('YmdHis') . mt_rand(100, 999);
-
-                FeePayment::create([
-                    'id'              => $paymentId,
-                    'bill_id'         => $bill->id,
-                    'owner_id'        => $ownerId,
-                    'payment_number'  => $paymentNumber,
-                    'amount'          => $amount,
-                    'payment_method'  => $paymentMethod,
-                    'payment_channel' => $paymentChannel,
-                    'paid_at'         => date('Y-m-d H:i:s'),
-                ]);
-
-                $newPaidAmount = $bill->paid_amount + $amount;
-                $newStatus = ($newPaidAmount >= $bill->amount + $bill->late_fee) ? 1 : 3;
-                $bill->paid_amount = $newPaidAmount;
-                $bill->status = $newStatus;
-                if ($newStatus === 1) {
-                    $bill->paid_at = date('Y-m-d H:i:s');
-                }
-                $bill->save();
-
-                return [$paymentNumber, $newPaidAmount, $newStatus];
-            });
-        } catch (\Throwable) {
-            return $this->fail('支付失败，请稍后重试', 500);
-        }
-
-        return $this->success([
-            'payment_number' => $paymentNumber,
-            'amount'         => $amount,
-            'paid_amount'    => $newPaidAmount,
-            'bill_status'    => $newStatus,
-        ], '缴费成功');
+        // 业务端未接入支付网关，禁止自助记账：避免无实际扣款却将账单标记为已缴
+        return $this->fail('在线支付暂未开通，请通过管理端支付订单或到物业前台缴费', 503);
     }
 
     /**

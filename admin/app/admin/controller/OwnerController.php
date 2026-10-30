@@ -9,6 +9,7 @@ namespace app\admin\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\EncryptionService;
+use app\common\LockService;
 use app\common\SnowflakeService;
 use app\model\Owner;
 use support\Request;
@@ -40,9 +41,10 @@ class OwnerController extends BaseController
 
         $query = Owner::query();
         if (!empty($keyword)) {
+            // phone 是随机 IV 加密列，模糊搜索不可用；手机号走盲索引精确匹配
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', "%{$keyword}%")
-                  ->orWhere('phone', 'like', "%{$keyword}%");
+                  ->orWhere('phone_hash', Owner::phoneHash((string) $keyword));
             });
         }
         if ($status !== null && $status !== '') {
@@ -50,7 +52,7 @@ class OwnerController extends BaseController
         }
 
         $list = $query->orderBy('created_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 return [
                     'id'           => $this->encodeId($item->id),
@@ -129,10 +131,22 @@ class OwnerController extends BaseController
             return $this->fail('手机号不能为空', 422);
         }
 
-        $data['id']     = SnowflakeService::generate();
-        $data['status'] = (int) $request->input('status', 1);
-
-        Owner::create($data);
+        $phoneHash = Owner::phoneHash((string) $data['phone']);
+        $lock = LockService::acquire('owner_phone:' . $phoneHash, 10);
+        if ($lock === null) {
+            return $this->fail('该手机号正在处理，请稍后再试', 429);
+        }
+        try {
+            if (Owner::query()->where('phone_hash', $phoneHash)->exists()) {
+                return $this->fail('该手机号已存在', 422);
+            }
+            $data['id']         = SnowflakeService::generate();
+            $data['status']     = (int) $request->input('status', 1);
+            $data['phone_hash'] = $phoneHash;
+            Owner::create($data);
+        } finally {
+            LockService::release('owner_phone:' . $phoneHash, $lock);
+        }
 
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
@@ -149,12 +163,32 @@ class OwnerController extends BaseController
             return $this->fail('业主不存在', 404);
         }
 
-        $item->fill($request->only([
+        $data = $request->only([
             'name', 'phone', 'email', 'gender', 'birthday',
             'emergency_contact', 'emergency_phone',
             'check_in_date', 'remark', 'status',
-        ]));
-        $item->save();
+        ]);
+        $lock = null;
+        if (array_key_exists('phone', $data)) {
+            $phoneHash = Owner::phoneHash((string) $data['phone']);
+            $lock = LockService::acquire('owner_phone:' . $phoneHash, 10);
+            if ($lock === null) {
+                return $this->fail('该手机号正在处理，请稍后再试', 429);
+            }
+            if (Owner::query()->where('phone_hash', $phoneHash)->where('id', '!=', $item->id)->exists()) {
+                LockService::release('owner_phone:' . $phoneHash, $lock);
+                return $this->fail('该手机号已存在', 422);
+            }
+            $data['phone_hash'] = $phoneHash;
+        }
+        try {
+            $item->fill($data);
+            $item->save();
+        } finally {
+            if ($lock !== null) {
+                LockService::release('owner_phone:' . (string) $data['phone_hash'], $lock);
+            }
+        }
 
         return $this->success([], '更新成功');
     }
@@ -198,13 +232,18 @@ class OwnerController extends BaseController
             return $this->fail('请提供待导入的业主数据', 422);
         }
 
-        // 手机号是 Encryptable（随机 IV，同一明文每次密文都不同），拿明文做 where('phone', ...) 等值查询
-        // 恒不命中，导入会静默插入重复号。只取 id+phone 两列、游标遍历逐行解密比对，先把库内已有号码
-        // 收进集合（整表只扫一次，而不是每行一次查询）。
-        // ponytail: 全表游标扫描，业主上万后改成盲索引列（phone_hash 唯一）或走 ES，接口不变。
+        // 手机号是随机 IV 加密列，等值查询走盲索引 phone_hash；先批量取回本批次已存在的号码
+        $phoneHashes = [];
+        foreach ($items as $item) {
+            if (!empty($item['phone'])) {
+                $phoneHashes[] = Owner::phoneHash((string) $item['phone']);
+            }
+        }
         $existing = [];
-        foreach (Owner::query()->select(['id', 'phone'])->cursor() as $row) {
-            $existing[(string) $row->phone] = true;
+        if ($phoneHashes !== []) {
+            foreach (Owner::query()->whereIn('phone_hash', array_unique($phoneHashes))->pluck('phone_hash') as $hash) {
+                $existing[(string) $hash] = true;
+            }
         }
 
         $created = 0;
@@ -214,8 +253,9 @@ class OwnerController extends BaseController
                 $failed++;
                 continue;
             }
+            $phoneHash = Owner::phoneHash((string) $item['phone']);
             // 集合里也包含本批次刚插入的号码，同一批次内的重复同样拦下
-            if (isset($existing[$item['phone']])) {
+            if (isset($existing[$phoneHash])) {
                 $failed++;
                 continue;
             }
@@ -223,6 +263,7 @@ class OwnerController extends BaseController
                 'id'                => SnowflakeService::generate(),
                 'name'              => $item['name'],
                 'phone'             => $item['phone'],
+                'phone_hash'        => $phoneHash,
                 'email'             => $item['email'] ?? '',
                 'id_card'           => $item['id_card'] ?? '',
                 'gender'            => (int) ($item['gender'] ?? 0),
@@ -233,7 +274,7 @@ class OwnerController extends BaseController
                 'remark'            => $item['remark'] ?? '',
                 'status'            => (int) ($item['status'] ?? 1),
             ]);
-            $existing[$item['phone']] = true;
+            $existing[$phoneHash] = true;
             $created++;
         }
 

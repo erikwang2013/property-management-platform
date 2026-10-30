@@ -25,7 +25,7 @@ class LogController extends BaseController
     public function index(Request $request): Response
     {
         $page      = (int) $request->input('page', 1);
-        $limit     = (int) $request->input('limit', 15);
+        $limit     = $this->pageSize($request, 'limit', 15);
         $userId    = $request->input('user_id');
         $action    = $request->input('action');
         $path      = $request->input('path');

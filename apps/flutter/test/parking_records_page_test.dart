@@ -11,7 +11,7 @@ void main() {
   setUp(() {
     resetMockRoutes();
     // 真实分页器形状（service ParkingController::records -> paginate）
-    mockRoutes['/service/parking/records'] = (_) => {
+    mockRoutes['/service/v1/parking/records'] = (_) => {
           'code': 0,
           'message': 'success',
           'data': {

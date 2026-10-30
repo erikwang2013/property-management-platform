@@ -9,27 +9,26 @@ class ApiConfig {
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 
-  static const String captchaGenerate = '/api/captcha/generate';
-  static const String authLogin = '/api/auth/login';
-  static const String authRegister = '/api/auth/register';
-  static const String authRefresh = '/api/auth/refresh';
+  static const String captchaGenerate = '/api/v1/captcha/generate';
+  static const String authLogin = '/api/v1/auth/login';
+  static const String authRegister = '/api/v1/auth/register';
+  static const String authRefresh = '/api/v1/auth/refresh';
 
-  static const String home = '/service/home';
-  static const String rooms = '/service/rooms';
-  static String roomDetail(String hashid) => '/service/room/$hashid';
-  static const String feeBills = '/service/fees/bills';
-  static String feeBillDetail(String hashid) => '/service/fees/bill/$hashid';
-  static const String feePayments = '/service/fees/payments';
-  static const String feePay = '/service/fees/pay';
-  static const String feeStatistics = '/service/fees/statistics';
-  static const String announcements = '/service/announcements';
-  static String announcementDetail(String hashid) => '/service/announcement/$hashid';
-  static const String profile = '/service/profile';
-  static const String profilePassword = '/service/profile/password';
-  static const String profileLogout = '/service/profile/logout';
+  static const String home = '/service/v1/home';
+  static const String rooms = '/service/v1/rooms';
+  static String roomDetail(String hashid) => '/service/v1/room/$hashid';
+  static const String feeBills = '/service/v1/fees/bills';
+  static String feeBillDetail(String hashid) => '/service/v1/fees/bill/$hashid';
+  static const String feePayments = '/service/v1/fees/payments';
+  static const String feeStatistics = '/service/v1/fees/statistics';
+  static const String announcements = '/service/v1/announcements';
+  static String announcementDetail(String hashid) => '/service/v1/announcement/$hashid';
+  static const String profile = '/service/v1/profile';
+  static const String profilePassword = '/service/v1/profile/password';
+  static const String profileLogout = '/service/v1/profile/logout';
 
   // 停车
-  static const String parkingVehicles = '/service/parking/vehicles';
-  static const String parkingSpaces = '/service/parking/spaces';
-  static const String parkingRecords = '/service/parking/records';
+  static const String parkingVehicles = '/service/v1/parking/vehicles';
+  static const String parkingSpaces = '/service/v1/parking/spaces';
+  static const String parkingRecords = '/service/v1/parking/records';
 }

@@ -14,6 +14,7 @@ use app\model\FeeBill;
 use app\model\FeeType;
 use app\model\Room;
 use app\model\RoomOwner;
+use Illuminate\Database\QueryException;
 use support\Request;
 
 /**
@@ -60,7 +61,7 @@ class FeeBillController extends BaseController
         }
 
         $list = $query->orderBy('created_at', 'desc')
-            ->paginate((int) $request->input('page_size', 20))
+            ->paginate($this->pageSize($request))
             ->through(function ($item) {
                 return [
                     'id'          => $this->encodeId($item->id),
@@ -125,7 +126,7 @@ class FeeBillController extends BaseController
      * @Apidoc\Param("fee_type_id", type="string", require=true, desc="费用类型hashid")
      * @Apidoc\Param("amount", type="float", require=true, desc="账单金额")
      * @Apidoc\Param("owner_id", type="string", require=false, desc="业主hashid")
-     * @Apidoc\Param("start_date", type="string", require=false, desc="费用周期起始")
+     * @Apidoc\Param("start_date", type="string", require=true, desc="费用周期起始（唯一键组成部分，不能为空）")
      * @Apidoc\Param("end_date", type="string", require=false, desc="费用周期截止")
      * @Apidoc\Param("due_date", type="string", require=false, desc="截止日期")
      * @Apidoc\Param("remark", type="string", require=false, desc="备注")
@@ -147,17 +148,32 @@ class FeeBillController extends BaseController
         if ((float) ($data['amount'] ?? 0) <= 0) {
             return $this->fail('账单金额必须大于0', 422);
         }
+        // UNIQUE(room_id, fee_type_id, start_date) 不含 NULL，起始日期必须落值
+        if (empty($data['start_date'])) {
+            return $this->fail('请填写费用周期起始', 422);
+        }
 
         $data['room_id']     = $this->decodeId($data['room_id']);
         $data['fee_type_id'] = $this->decodeId($data['fee_type_id']);
-        if (!empty($data['owner_id'])) {
-            $data['owner_id'] = $this->decodeId($data['owner_id']);
+        // owner_id 列 NOT NULL：未指定时按房产绑定业主回填，避免空值插入 500
+        $data['owner_id'] = !empty($data['owner_id'])
+            ? $this->decodeId((string) $data['owner_id'])
+            : (int) (RoomOwner::query()->where('room_id', $data['room_id'])->value('owner_id') ?? 0);
+        if ((int) $data['owner_id'] <= 0) {
+            return $this->fail('该房产未绑定业主，请先绑定或指定业主', 422);
         }
         $data['id']          = SnowflakeService::generate();
         $data['bill_number'] = 'FB' . date('YmdHis') . rand(1000, 9999);
-        $data['status']      = 0;
+        $data['status']      = FeeBill::STATUS_UNPAID;
 
-        FeeBill::create($data);
+        try {
+            FeeBill::create($data);
+        } catch (QueryException $e) {
+            if ((int) ($e->errorInfo[1] ?? 0) === 1062) {
+                return $this->fail('该房产/费用项/周期已存在账单', 422);
+            }
+            throw $e;
+        }
 
         return $this->success(['id' => $this->encodeId($data['id'])], '创建成功');
     }
@@ -178,11 +194,51 @@ class FeeBillController extends BaseController
             'amount', 'late_fee', 'start_date', 'end_date',
             'due_date', 'remark',
         ]);
+        if (array_key_exists('start_date', $data) && (string) $data['start_date'] === '') {
+            return $this->fail('请填写费用周期起始', 422);
+        }
         if ($request->input('status') !== null) {
-            $data['status'] = (int) $request->input('status');
+            $status = (int) $request->input('status');
+            if (!in_array($status, [
+                FeeBill::STATUS_UNPAID, FeeBill::STATUS_PARTIAL, FeeBill::STATUS_PAID,
+                FeeBill::STATUS_OVERDUE, FeeBill::STATUS_WAIVED,
+            ], true)) {
+                return $this->fail('无效的账单状态', 422);
+            }
+            $data['status'] = $status;
         }
         $item->fill($data);
-        $item->save();
+        // 金额/滞纳金变化后按已缴金额重算状态；显式改状态时拒绝与已缴金额矛盾的值
+        $total = bcadd((string) $item->amount, (string) $item->late_fee, 2);
+        $paid = (string) $item->paid_amount;
+        if (array_key_exists('status', $data)) {
+            if ($item->status === FeeBill::STATUS_PAID && bccomp($paid, $total, 2) < 0) {
+                return $this->fail('已缴状态与已缴金额不一致', 422);
+            }
+            if ($item->status === FeeBill::STATUS_PARTIAL && (bccomp($paid, '0.00', 2) <= 0 || bccomp($paid, $total, 2) >= 0)) {
+                return $this->fail('部分缴状态与已缴金额不一致', 422);
+            }
+            if ($item->status === FeeBill::STATUS_UNPAID && bccomp($paid, '0.00', 2) > 0) {
+                return $this->fail('未缴状态与已缴金额不一致', 422);
+            }
+        } elseif (!in_array($item->status, [FeeBill::STATUS_WAIVED, FeeBill::STATUS_OVERDUE], true)) {
+            $item->status = bccomp($paid, '0.00', 2) <= 0
+                ? FeeBill::STATUS_UNPAID
+                : FeeBill::statusAfterPayment($paid, (string) $item->amount, (string) $item->late_fee);
+            if ((int) $item->status !== FeeBill::STATUS_PAID) {
+                $item->paid_at = null;
+            } elseif (!$item->paid_at) {
+                $item->paid_at = date('Y-m-d H:i:s');
+            }
+        }
+        try {
+            $item->save();
+        } catch (QueryException $e) {
+            if ((int) ($e->errorInfo[1] ?? 0) === 1062) {
+                return $this->fail('该房产/费用项/周期已存在账单', 422);
+            }
+            throw $e;
+        }
 
         return $this->success([], '更新成功');
     }
@@ -281,20 +337,29 @@ class FeeBillController extends BaseController
                 : self::calcBillAmount($feeType, $room);
 
             $billId = SnowflakeService::generate();
-            FeeBill::create([
-                'id'          => $billId,
-                'room_id'     => $room->id,
-                'owner_id'    => (int) (RoomOwner::where('room_id', $room->id)->value('owner_id') ?? 0),
-                'fee_type_id' => $feeTypeId,
-                'bill_number' => 'FB' . date('YmdHis') . substr((string) $billId, -8),
-                'amount'      => $amount,
-                'paid_amount' => 0,
-                'late_fee'    => 0,
-                'start_date'  => $startDate,
-                'end_date'    => $endDate,
-                'due_date'    => $dueDate,
-                'status'      => 0,
-            ]);
+            try {
+                FeeBill::create([
+                    'id'          => $billId,
+                    'room_id'     => $room->id,
+                    'owner_id'    => (int) (RoomOwner::where('room_id', $room->id)->value('owner_id') ?? 0),
+                    'fee_type_id' => $feeTypeId,
+                    'bill_number' => 'FB' . date('YmdHis') . substr((string) $billId, -8),
+                    'amount'      => $amount,
+                    'paid_amount' => 0,
+                    'late_fee'    => 0,
+                    'start_date'  => $startDate,
+                    'end_date'    => $endDate,
+                    'due_date'    => $dueDate,
+                    'status'      => FeeBill::STATUS_UNPAID,
+                ]);
+            } catch (QueryException $e) {
+                // 并发下以 UNIQUE(room_id, fee_type_id, start_date) 索引为权威去重（后续基建任务添加）
+                if ((string) $e->getCode() === '23000' || (int) ($e->errorInfo[1] ?? 0) === 1062) {
+                    $skipped++;
+                    continue;
+                }
+                throw $e;
+            }
             $created++;
         }
 

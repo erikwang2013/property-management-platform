@@ -117,7 +117,7 @@ class ReportController extends BaseController
     private function getArrearsRanking(?int $communityId, int $limit): array
     {
         // 未结清账单按欠费金额倒序（账单金额 - 已缴 - 违约金）
-        $bills = FeeBill::whereIn('status', [0, 3])
+        $bills = FeeBill::whereIn('status', [FeeBill::STATUS_UNPAID, FeeBill::STATUS_PARTIAL, FeeBill::STATUS_OVERDUE])
             ->when($communityId, fn($q) => $q->whereHas('room', fn($r) => $r->where('community_id', $communityId)))
             ->selectRaw('owner_id, room_id, SUM(amount - paid_amount + late_fee) as arrears')
             ->groupBy('owner_id', 'room_id')

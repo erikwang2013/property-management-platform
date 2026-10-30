@@ -9,10 +9,13 @@ namespace app\api\v1\controller;
 use hg\apidoc\annotation as Apidoc;
 
 use app\common\BaseController;
+use app\common\LockService;
 use app\common\PasswordRule;
 use app\common\SnowflakeService;
 use app\model\Owner;
 use app\model\Room;
+use support\Log;
+use support\Redis;
 use support\Request;
 use support\Response;
 use Erikwang2013\Jwt\JWTFactory;
@@ -132,18 +135,27 @@ class AuthController extends BaseController
             return $this->fail('验证码错误', 422);
         }
 
-        if ($this->findOwnerByPhone($phone) !== null) {
-            return $this->fail('该手机号已注册', 422);
+        // 手机号盲索引没有唯一约束，注册用 Redis 锁串行化查重+插入，避免并发重复注册
+        $phoneHash = Owner::phoneHash($phone);
+        $lock = LockService::acquire('owner_phone:' . $phoneHash, 10);
+        if ($lock === null) {
+            return $this->fail('该手机号正在处理，请稍后再试', 429);
         }
-
-        $ownerId = SnowflakeService::generate();
-        Owner::create([
-            'id' => $ownerId,
-            'name' => $name,
-            'phone' => $phone,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'status' => 1,
-        ]);
+        try {
+            if ($this->findOwnerByPhone($phone) !== null) {
+                return $this->fail('该手机号已注册', 422);
+            }
+            Owner::create([
+                'id' => SnowflakeService::generate(),
+                'name' => $name,
+                'phone' => $phone,
+                'phone_hash' => $phoneHash,
+                'password' => password_hash($password, PASSWORD_BCRYPT),
+                'status' => 1,
+            ]);
+        } finally {
+            LockService::release('owner_phone:' . $phoneHash, $lock);
+        }
 
         return $this->success([], '注册成功');
     }
@@ -161,11 +173,47 @@ class AuthController extends BaseController
 
         try {
             $jwt = JWTFactory::createFromConfig(config('plugin.erikwang2013.jwt.jwt', []));
-            // 刷新令牌默认被 decode() 拒绝，显式放行；此处不轮换（客户端只存 refresh_token 不更新，
-            // 轮换会让它拿着已拉黑的旧 token 二次刷新），轮换需客户端同步改造
+            // 登出时拉黑的 refresh_token 不得再换发；Redis 故障沿用 ServiceAuth 的 fail-open
+            try {
+                if (Redis::get('jwt_blacklist:' . md5($refreshToken))) {
+                    return $this->fail('刷新令牌已失效', 401);
+                }
+            } catch (\Throwable $e) {
+                Log::error('auth_refresh_blacklist_failed', ['error' => $e->getMessage()]);
+            }
+
+            // 刷新令牌默认被 decode() 拒绝，显式放行；轮换后客户端必须用新 refresh_token 覆盖本地旧值
             $payload = $jwt->decode($refreshToken, true);
-            $accessToken = $jwt->encode(['sub' => $payload['sub'], 'phone' => $payload['phone']]);
-            return $this->success(['access_token' => $accessToken]);
+
+            // 只接受 refresh 类型：access token 无 token_type，不能用来换发新令牌
+            if (($payload['token_type'] ?? '') !== 'refresh') {
+                return $this->fail('刷新令牌无效或已过期', 401);
+            }
+
+            // 业主被删/禁用后旧刷新令牌立即失效
+            $owner = Owner::find((int) ($payload['sub'] ?? 0));
+            if (!$owner || (int) $owner->status !== 1) {
+                return $this->fail('账号不存在或已被禁用', 401);
+            }
+
+            // 原子占用旧刷新令牌：并发刷新只有一个请求能成功，另一个 401
+            $oldTtl = max((int) ($payload['exp'] ?? 0) - time(), 0);
+            if ($oldTtl > 0) {
+                try {
+                    if (!Redis::set('jwt_blacklist:' . md5($refreshToken), '1', ['NX', 'EX' => $oldTtl])) {
+                        return $this->fail('刷新令牌已使用', 401);
+                    }
+                } catch (\Throwable $e) {
+                    Log::error('auth_refresh_blacklist_failed', ['error' => $e->getMessage()]);
+                }
+            }
+
+            $claims = ['sub' => $payload['sub'], 'phone' => $payload['phone']];
+            // encode() 的 expire 传 0 时按 token_type 取配置：access 走 default_expire、refresh 走 refresh_expire
+            $accessToken = $jwt->encode($claims);
+            $newRefresh = $jwt->encode($claims + ['token_type' => 'refresh']);
+
+            return $this->success(['access_token' => $accessToken, 'refresh_token' => $newRefresh]);
         } catch (\Exception $e) {
             return $this->fail('Token已过期，请重新登录', 401);
         }
@@ -174,27 +222,11 @@ class AuthController extends BaseController
     /**
      * 按手机号查业主。
      *
-     * `owner.phone` 是 encryptable 加密列（PHPEncrypter：AES-256-CBC + 随机 IV + 序列化信封），
-     * 同一明文每次密文都不同，密文等值查询（where('phone', $phone)）永远匹配不到。
-     * 插件的等值查询能力只有 UniqueEncrypted / ExistsEncrypted 两个规则，且它们强制要求
-     * 确定性加密（ECB），本项目未启用，因此插件能力范围内只剩「解密后比对」。
-     *
-     * ponytail: 全表解密比对，O(业主数)/次登录；业主量上万后加确定性 phone_hash 列
-     * （HMAC-SHA256(明文)，非加密）并回填，注册/导入一并写入，查询与唯一性校验改走该列。
+     * phone 是随机 IV 加密列，密文等值查询永远匹配不到，走盲索引 phone_hash（SHA-256，非加密）等值查询。
      */
     private function findOwnerByPhone(string $phone): ?Owner
     {
-        $ownerId = null;
-        // 只取 id+phone 两列并游标遍历：避免把每个业主的 email/id_card/紧急联系人等加密列解密一遍，
-        // 也避免整表 hydrate 进内存
-        foreach (Owner::query()->select(['id', 'phone'])->cursor() as $row) {
-            if ((string) $row->phone === $phone) {
-                $ownerId = (int) $row->id;
-                break;
-            }
-        }
-
-        return $ownerId !== null ? Owner::find($ownerId) : null;
+        return Owner::query()->where('phone_hash', Owner::phoneHash($phone))->first();
     }
 
     /** 记录登录失败：连续 5 次失败锁定账号 15 分钟 */

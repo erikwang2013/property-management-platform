@@ -104,7 +104,7 @@ SQL
 mysql -u root -p management < docs/install.sql
 ```
 
-`docs/install.sql` 包含全部 34 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS` 确保可重复执行。
+`docs/install.sql` 包含全部 34 张表 + RBAC 权限种子数据，采用 `CREATE TABLE IF NOT EXISTS`，可在**全新库**重复执行；它不会给已存在的表补新列/索引，存量库升级请使用 `docs/migrations/2026-10-30-audit-fix-schema.sql`（见下文「存量数据库升级」）。
 
 执行后验证：
 
@@ -142,7 +142,7 @@ curl http://localhost:8787/health
 | 配置项 | 说明 | 生产环境要求 |
 |--------|------|-------------|
 | `JWT_SECRET_KEY` | JWT 签名密钥 | 64 位以上随机字符串 |
-| `HASHIDS_SALT` | ID 加密盐值 | 随机字符串，与 service 保持一致 |
+| `HASHIDS_SALT` | ID 加密盐值 | 随机字符串，admin 与 service 相互独立 |
 | `SNOWFLAKE_DATACENTER_ID` | 数据中心 ID (0-31) | 多机房部署时需区分 |
 | `SNOWFLAKE_WORKER_ID` | 工作节点 ID (0-31) | 同机房每台机器不同 |
 | `ENCRYPTION_KEY` | API 传输加密密钥 | 32 字节随机字符串 |
@@ -182,7 +182,7 @@ curl http://localhost:8788/health
 
 ```bash
 bash scripts/deploy.sh
-# 幂等：git pull → 补齐双端 .env 缺失密钥 → 双端 compose up → 建库校验 → 监控冒烟
+# 幂等：git pull → 补齐双端 .env 缺失密钥 → 启动 mysql/redis → 结构迁移 → 启动 app → 回填 phone_hash → 启动 nginx → 建库校验 → 监控冒烟
 # 已有密钥一律保留，只追加缺失键
 ```
 
@@ -212,6 +212,24 @@ docker compose up -d
 > 首次启动时 MySQL 数据卷为空，`docs/install.sql`（34 张表 + RBAC 种子）经 compose initdb 挂载自动导入；卷已有数据时不重复导入。
 >
 > ⚠️ Docker 部署后请勿再走 Web 安装向导（`/install`）改数据库配置——向导会重写 `.env` 的 `DB_*`，破坏容器内的 `DB_HOST=mysql` 连接。
+
+### 存量数据库升级
+
+已有数据卷（非首次部署）升级时，按顺序执行以下两步，均幂等：
+
+```bash
+cd admin
+PW=$(grep -E '^MYSQL_ROOT_PASSWORD=' .env | cut -d= -f2-)
+DB=$(grep -E '^DB_DATABASE=' .env | cut -d= -f2-); DB=${DB:-management}
+# 1) 结构迁移（新增列/索引，仅缺失时执行）
+docker compose exec -T -e "MYSQL_PWD=$PW" mysql mysql -uroot "$DB" < ../docs/migrations/2026-10-30-audit-fix-schema.sql
+# 2) 业主手机号盲索引回填（输出 scanned/updated/skipped）
+docker compose exec -T -e APP_BASE_PATH=/app app php < ../scripts/backfill_owner_phone_hash.php
+```
+
+service 端在 `service/` 目录重复同样两步。`bash scripts/deploy.sh` 已内置这两步，执行顺序为 mysql/redis → 结构迁移 → app → 回填 → nginx；首次空库无需手工操作，`install.sql` 已含新列与索引。
+
+迁移内容：新增 `management_owner.phone_hash`（盲索引）、`management_payment_order.credited_amount` 与 `management_payment_order.refund_request_id`，并新增唯一键 `uk_room_fee_period(room_id, fee_type_id, start_date)`。若库中已存在重复的非空 `(room_id, fee_type_id, start_date)` 账单周期行，需先按迁移脚本中的查询人工去重；否则该唯一索引会被跳过（之后可重跑迁移补建）。
 
 ### 服务端口规划
 
@@ -270,11 +288,14 @@ curl -X POST http://localhost:8787/api/v1/auth/login \
 
 ### 4. 运行测试
 
-> 后端测试源未随本仓库分发；`tests/` 为空时 CI 自动跳过 PHPUnit 与覆盖率门禁。`docs/tests/` 为 2026-08-27 历史测试快照。
-
-Flutter 测试：
+> 后端单元测试随仓库分发：admin 43 例/103 断言，service 22 例/42 断言；CI 运行 PHPUnit（覆盖率门槛 admin 1.7%、service 3%）与 PHPStan。`docs/tests/` 为 2026-08-27 历史测试快照。
 
 ```bash
+# 后端
+cd admin && php vendor/bin/phpunit
+cd service && php vendor/bin/phpunit
+
+# Flutter（11 例：admin 1 + owner 10）
 cd apps/flutter && flutter test
 cd admin/apps/flutter && flutter test
 ```
@@ -303,7 +324,7 @@ docker-php-ext-install pcntl
 
 ### Q: 加密 ID 在两端不一致
 
-确保 admin 和 service 的 `HASHIDS_SALT` 值完全相同。
+admin 和 service 的 `HASHIDS_SALT` 有意相互独立，各自加解密自己的 ID；不要把两端改成相同值。
 
 ### Q: Docker 容器间网络不通
 
@@ -319,7 +340,7 @@ mysql -u root -p management < docs/install.sql
 
 ### Q: 如何配置 HTTPS
 
-生产环境建议使用 Nginx 反向代理终止 TLS。参考配置见 `admin/docs/nginx-security.conf`。
+生产环境建议使用 Nginx 反向代理终止 TLS。Docker 完整配置见 `admin/deploy/nginx/default.conf` 与 `service/deploy/nginx/default.conf`（挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`/`app:8788`）；`admin/docs/nginx-security.conf` 与 `service/docs/nginx-security.conf` 仅是宿主机 Nginx 的安全响应头/片段参考（headers-more、server 片段），不能直接作为容器配置使用。
 
 参考配置已包含品牌错误页接线（错误页由项目宠物「小筑」出镜，全部资源内联，后端宕机时同样可显示）：
 

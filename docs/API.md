@@ -8,6 +8,7 @@
 - 业务端 API 运行在 `http://localhost:8788`
 - 统一响应格式: `{"code": 0, "message": "success", "data": {...}}`
 - 所有 ID 字段使用 hashids 编码传输
+- 列表接口分页参数 `page_size` 上限为 100（超出按 100 处理）
 - API 版本体现在接口路由中（当前 `/api/v1/*`），不通过请求头传递
 - 语言通过请求头 `Accept-Language` 控制（`zh-CN` / `en-US`，默认 `zh-CN`）
 
@@ -86,7 +87,7 @@
 ```
 
 #### POST /api/v1/auth/refresh
-刷新 Token。
+刷新 Token。仅接受 `token_type=refresh` 的刷新令牌；access token 不能用于刷新。每次刷新会轮换 refresh token，旧 refresh token 立即失效（加入 Redis 黑名单）。
 
 请求参数:
 | 参数 | 类型 | 说明 |
@@ -97,7 +98,7 @@
 ```json
 {
   "code": 0,
-  "data": { "access_token": "eyJ..." }
+  "data": { "access_token": "eyJ...", "refresh_token": "eyJ..." }
 }
 ```
 
@@ -169,7 +170,7 @@ OpenAPI 文档。
 |------|------|------|
 | PUT | /admin/profile | 修改个人信息 |
 | PUT | /admin/profile/password | 修改密码 |
-| POST | /admin/profile/logout | 退出登录 |
+| POST | /admin/profile/logout | 退出登录（可选传 `refresh_token`，一并吊销） |
 
 #### 导出
 
@@ -276,6 +277,8 @@ OpenAPI 文档。
 | DELETE | /admin/fee-bill/{hashid} | 删除 |
 | POST | /admin/fee-bill/batch/generate | 批量生成账单 |
 
+账单状态：`0` 未缴、`1` 部分缴、`2` 已缴、`3` 逾期、`4` 豁免。
+
 #### 缴费记录
 
 | 方法 | 路径 | 说明 |
@@ -366,10 +369,18 @@ OpenAPI 文档。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /admin/payment-order | 订单列表 |
-| GET | /admin/payment-order/{hashid} | 订单详情 |
-| POST | /admin/payment-order/{hashid}/refund | 退款 |
-| GET | /admin/payment/statistics | 支付统计 |
+| GET | /admin/payment-order | 订单列表 (?status=&channel=) |
+| GET | /admin/payment-order/{hashid} | 订单详情（含账单信息） |
+| POST | /admin/payment-order/create | 创建支付订单（{ bill_id, user_id, channel: wechat\|alipay, subject }），返回 order_number / pay_params / expire_at |
+| POST | /admin/payment-order/reconcile | 对账（{ days=7 }，1–30 天），补齐漏单并重新入队未退溢缴款 |
+| POST | /admin/payment-order/{hashid}/refund | 退款（{ amount, request_id }）；`request_id` 为幂等键，必填且不超过 64 字符 |
+| GET | /admin/payment-order/statistics | 支付统计 |
+
+退款支持部分退款，响应中的 `refund_amount` 为累计退款金额。订单响应含 `credited_amount`（实际入账金额）与 `overpaid_amount`（待退溢缴金额）；库表另有 `refund_request_id`（最近一次退款幂等键）。
+
+支付回调：`POST /payment/wechat/callback`、`POST /payment/alipay/callback`（渠道验签 + 幂等）。
+
+结算规则：在线支付入账金额以账单当前未缴金额为上限，超出部分进入自动退款队列 `payment_overpay_refund`；账单存在未过期的在线支付订单时，线下收款会被拒绝。
 
 ---
 
@@ -413,7 +424,7 @@ OpenAPI 文档。
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | phone | string | 手机号 |
-| password | string | 密码（至少6位） |
+| password | string | 密码（8-32 位，含大小写字母、数字和特殊字符 `@$!%*?&`） |
 | name | string | 姓名 |
 | captcha_key | string | 验证码 key |
 | clicks | array | 点击坐标 |
@@ -421,7 +432,7 @@ OpenAPI 文档。
 | id_card_last4 | string | （可选）身份证后4位 |
 
 #### POST /api/v1/auth/refresh
-刷新 Token。
+刷新 Token。仅接受 refresh 类型令牌；刷新后旧 refresh token 立即失效（轮换），access token 不能用于刷新。
 
 ---
 
@@ -457,10 +468,10 @@ OpenAPI 文档。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | /service/v1/fees/bills | 账单列表 (?status=0未缴/1部分缴/2已缴/3逾期) |
+| GET | /service/v1/fees/bills | 账单列表 (?status=0未缴/1部分缴/2已缴/3逾期/4豁免) |
 | GET | /service/v1/fees/bill/{hashid} | 账单详情（含费用类型、支付记录） |
 | GET | /service/v1/fees/payments | 缴费记录 |
-| POST | /service/v1/fees/pay | 在线缴费（{ bill_id, payment_method, password }） |
+| POST | /service/v1/fees/pay | 在线缴费暂未接入支付网关（固定返回 503，请走管理端支付订单或线下缴费） |
 | GET | /service/v1/fees/statistics | 费用统计 (?year=2026) |
 
 #### 公告
@@ -485,7 +496,7 @@ OpenAPI 文档。
 | GET | /service/v1/profile | 个人信息 |
 | PUT | /service/v1/profile | 修改（{ name, email, gender, birthday }） |
 | PUT | /service/v1/profile/password | 改密码（{ old_password, new_password }） |
-| POST | /service/v1/profile/logout | 退出登录 |
+| POST | /service/v1/profile/logout | 退出登录（可选传 `refresh_token`，一并吊销） |
 
 ---
 

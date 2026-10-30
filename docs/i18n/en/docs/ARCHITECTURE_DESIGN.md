@@ -106,6 +106,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ### Storage Layer (encryptable)
 - Model `$casts` mechanism auto-encrypts/decrypts
 - Sensitive fields: phone, email, id_card, emergency_contact, emergency_phone
+- Phone lookup: `management_owner.phone_hash` (SHA-256 blind index); existing rows need `scripts/backfill_owner_phone_hash.php`
 - Independent key `ENCRYPTABLE_KEY`
 - Writes auto-encrypt to ciphertext; reads auto-decrypt to plaintext
 
@@ -121,6 +122,8 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 - Algorithm: HS256
 - access_token: 2-hour validity
 - refresh_token: 14-day validity
+- Refresh rotation: only refresh-type tokens are accepted; after refresh the old refresh token is invalidated immediately (Redis blacklist); an access token cannot be used to refresh
+- Logout: an optional `refresh_token` can be revoked alongside the access token
 - Concurrency limit: max 3 valid tokens per user; when exceeded, the oldest token goes to the blacklist
 - Account lockout: 5 consecutive login failures locks for 15 minutes
 
@@ -134,11 +137,11 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 ## 7. Security Defense in Depth (19 Layers)
 
 ```
-第1层  点击验证码      → 登录/注册强制人机验证
+第1层  点击验证码      → 登录强制人机验证（业主端含注册）
 第2层  密码二次确认    → 敏感操作（删除/缴费/退款）必须输入密码
 第3层  poster随机验证  → 高频敏感操作随机弹出验证码
 第4层  security-php    → 请求周期内自动安全扫描
-第5层  SecurityFilter  → XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截
+第5层  SecurityFilter  → XSS/SQL注入/路径遍历/命令注入/CSRF 攻击拦截（递归扫描嵌套 JSON）
 第6层  传输安全        → HTTPS + AES-256-CBC
 第7层  JWT 认证        → HS256，2h过期 + refresh token
 第8层  并发控制        → 同一用户最多3个Token，超出黑名单
@@ -152,7 +155,7 @@ Cors → SecurityFilter(方法检查→405) → RateLimit(限流)
 第16层 展示脱敏        → 手机号/邮箱/身份证脱敏
 第17层 审计追溯        → OperationLog 全量记录（含来源端 source 自动检测）
 第18层 HTTP 头防护     → CSP + X-Permitted-Cross-Domain-Policies
-第19层 出口保护        → PDF 版权水印（不可移除）+ Excel 敏感数据脱敏
+第19层 出口保护        → PDF 版权水印（不可移除）+ Excel 敏感数据脱敏与公式注入清洗
 ```
 
 ## 8. Rate Limiting Strategy
@@ -163,7 +166,7 @@ Based on the Redis Sorted Set sliding window algorithm, executed atomically via 
 |------|------|
 | Default | 60/min/IP/route |
 | POST /api/v1/auth/login | 10/min |
-| POST /api/v1/auth/register | 5/min |
+| POST /api/v1/auth/register (owner registration on the service side only) | 5/min |
 
 Over-limit returns 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` response headers.
 
@@ -212,6 +215,9 @@ Over-limit returns 429 + `X-RateLimit-Limit/Remaining/Reset/Retry-After` respons
 | service | Dockerfile build | PHP 8.3 + OPcache |
 | mysql | mysql:8.0 | Data volume persistence |
 | redis | redis:7-alpine | Cache/rate limiting/Session |
+| prometheus / grafana / redis-exporter | Official images | Monitoring and metrics collection |
+
+> Each stack has 7 compose services. Full Nginx configs live in `admin/deploy/nginx/default.conf` and `service/deploy/nginx/default.conf`, mounted at `/etc/nginx/conf.d/default.conf` and proxying to `app:8787` / `app:8788`; `admin/docs/nginx-security.conf` and `service/docs/nginx-security.conf` are host-Nginx security header/fragment references only and cannot be used directly as container configs.
 
 ## 11. Internationalization Design (i18n)
 
@@ -247,7 +253,7 @@ apps/flutter/lib/i18n/
 └── messages.dart       # AppTranslations extends GetX Translations
 ```
 
-Uses GetX `Translations` with 38 translation keys, accessed via the `.tr` extension:
+Uses GetX `Translations` with 79 translation keys (one set each for zh_CN/en), accessed via the `.tr` extension:
 ```dart
 Text('login_btn'.tr)   // 中文: "登 录", 英文: "Login"
 Text('phone_hint'.tr)  // "请输入手机号" / "Enter phone number"
@@ -296,9 +302,11 @@ REFACTOR: 清理代码，保持测试绿
 
 ### Running Tests
 
-> Backend test sources are not shipped with this tree; CI skips PHPUnit and the coverage gate when `tests/` is empty. Historical snapshots live in `docs/tests/`.
+> Backend unit tests ship with the tree: admin 43 tests / 103 assertions, service 22 tests / 42 assertions; Flutter has 11 tests (admin 1 + owner 10). CI runs PHPUnit (coverage floors 1.7% admin, 3% service) and Flutter tests, and both stacks pass PHPStan. Historical snapshots live in `docs/tests/`.
 
 ```bash
+cd admin && php vendor/bin/phpunit
+cd service && php vendor/bin/phpunit
 cd apps/flutter && flutter test
 cd admin/apps/flutter && flutter test
 ```
@@ -319,11 +327,11 @@ apps/flutter/lib/
 │   ├── auth_service.dart        # 登录/登出/Token 持久化
 │   └── storage_service.dart     # shared_preferences 封装
 ├── i18n/
-│   └── messages.dart            # GetX Translations（38键，zh_CN/en）
+│   └── messages.dart            # GetX Translations（79键，zh_CN/en）
 ├── pages/
 │   ├── login/                   # PC 风格登录页（居中 Card + 表单验证）
 │   ├── home/                    # 仪表盘（3个 StatCard + 公告列表）
-│   ├── fee/                     # 账单列表 / 详情 / 缴费弹窗
+│   ├── fee/                     # Bill list / details (online payment not connected; pay via admin order)
 │   └── profile/                 # 个人信息 / 修改密码 / 退出
 └── widgets/
     └── stat_card.dart           # 统计卡片组件（图标 + 标题 + 数值）
@@ -337,6 +345,11 @@ Mobile is built with Flutter cross-platform, sharing GetX state management, Dio 
 
 ### Payment Flow
 Create payment order → third-party payment → async callback → update bill status → record payment log
+
+- Credit cap: online payments credit at most the bill's current unpaid amount (`credited_amount`); any excess is recorded as overpayment and queued for automatic refund (`payment_overpay_refund`)
+- Reconcile: `POST /admin/payment-order/reconcile` scans paid orders and re-enqueues unrefunded overpayments
+- Refund: `POST /admin/payment-order/{hashid}/refund` requires an idempotency key `request_id` (max 64 chars), supports partial refunds, returns the cumulative refund amount, and stores `refund_request_id`
+- Offline collection: rejected while an unexpired online payment order exists for the bill, preventing double collection
 
 ## 15. API Documentation
 

@@ -23,7 +23,7 @@ void resetMockRoutes() {
   mockRoutes
     ..clear()
     ..addAll({
-      '/api/captcha/generate': (_) => {
+      '/api/v1/captcha/generate': (_) => {
             'data': {
               'key': 'test-key',
               'image': kCaptchaPng,
@@ -34,7 +34,7 @@ void resetMockRoutes() {
               },
             },
           },
-      '/api/auth/login': (_) => {
+      '/api/v1/auth/login': (_) => {
             'data': {
               'access_token': 'test-token',
               'refresh_token': 'test-refresh',

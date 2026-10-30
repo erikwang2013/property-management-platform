@@ -158,6 +158,18 @@ class ProfileController extends BaseController
             // token 无效也视为登出成功
         }
 
+        // 可选：一并拉黑刷新令牌，防止登出后继续换取访问令牌
+        $refreshToken = $request->input('refresh_token', '');
+        if (is_string($refreshToken) && $refreshToken !== '') {
+            try {
+                $payload = self::getJWT()->decode($refreshToken, true);
+                $ttl     = max((int) ($payload['exp'] ?? 0) - time(), 0);
+                Redis::setex('jwt_blacklist:' . md5($refreshToken), $ttl, '1');
+            } catch (\Throwable) {
+                // 刷新令牌无效不影响登出
+            }
+        }
+
         // 清除用户会话
         try {
             $ownerId = $this->getOwnerId($request);

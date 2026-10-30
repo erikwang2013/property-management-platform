@@ -4,7 +4,7 @@
 
 ## 1. 纵深防御全景
 
-service 业务端采用与 admin 管理端一致的 7 层纵深防御模型。
+service 业务端采用与 admin 管理端一致的 19 层纵深防御模型，其中核心中间件链按 7 层执行。
 
 中间件执行链（`config/middleware.php`）：
 
@@ -26,7 +26,7 @@ service 业务端采用与 admin 管理端一致的 7 层纵深防御模型。
 
 ## 2. 攻击检测引擎
 
-与 admin 端共享相同的 SecurityFilter 实现，覆盖以下攻击向量：
+与 admin 端共享相同的 SecurityFilter 实现，并递归展开嵌套 JSON 后逐层检测，覆盖以下攻击向量：
 
 - **HTTP 方法限制**：仅允许 GET/POST/PUT/DELETE/OPTIONS/HEAD，其他返回 405
 - **XSS**：脚本标签、事件属性、JS 伪协议、Data URI、模板注入（5 种模式）
@@ -99,6 +99,8 @@ Redis 不可用时 fail-open，放行所有请求。
 
 **并发会话限制**：同一业主最多 3 个有效 Token，超出时最旧 Token 加入黑名单。
 
+**刷新轮换**：`POST /service/v1/auth/refresh` 仅接受 `token_type=refresh` 的令牌；刷新后旧 refresh token 立即失效，access token 不能当作 refresh token 使用。登出可在请求体传入 `refresh_token`，一并吊销。
+
 ### 6.2 密码复杂度
 
 8-32 位，必须包含大小写字母、数字和特殊字符。使用 bcrypt 哈希存储。
@@ -115,6 +117,8 @@ Redis 不可用时 fail-open，放行所有请求。
 | 存储 | Encryptable cast（字段级加解密） | `ENCRYPTABLE_KEY` |
 | 展示 | Hashids ID 混淆 + 导出脱敏 | `HASHIDS_SALT` |
 
+手机号检索使用 SHA-256 盲索引 `phone_hash`，不扫描加密列；存量业主需执行 `scripts/backfill_owner_phone_hash.php` 回填。Excel 导出清洗 `= + @` 等公式注入前缀，列表接口 `page_size` 上限 100。
+
 密钥全部通过 `.env` 注入，各层独立密钥，一层泄露不影响其他层。
 
 ---
@@ -125,10 +129,9 @@ Redis 不可用时 fail-open，放行所有请求。
 |------|:----:|
 | Docker 非 root 用户 | ✅ |
 | Redis requirepass | ✅ |
-| ES xpack.security | ✅ |
 | MySQL 专用用户 | ✅ |
 | Dependabot 自动更新 | ✅ |
-| Nginx 安全配置 | ✅ `docs/nginx-security.conf` |
+| Nginx 安全配置 | ✅ `deploy/nginx/default.conf`（完整容器配置）；`docs/nginx-security.conf` 仅宿主机参考 |
 
 ---
 

@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../config/api_config.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/pet_mark.dart';
@@ -113,7 +114,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
     if (ok != true) return;
-    try { await _api.post('/admin/profile/logout'); } catch (_) {}
+    try {
+      await _api.post(ApiConfig.profileLogout, data: {
+        'refresh_token': await AuthService.getRefreshToken(),
+      });
+    } catch (_) {}
     await AuthService.clearToken();
     Get.offAllNamed('/login');
   }

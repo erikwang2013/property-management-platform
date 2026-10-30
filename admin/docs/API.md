@@ -188,7 +188,7 @@ POST /api/v1/auth/login
 | 字段 | 类型 | 必填 | 验证规则 | 说明 |
 |------|------|------|---------|------|
 | username | string | 是 | min:3, max:50 | 用户名 |
-| password | string | 是 | min:6, max:32 | 密码 |
+| password | string | 是 | 8-32 位 + 大小写 + 数字 + 特殊字符 | 密码 |
 | captcha_key | string | 是 | | 验证码 key |
 | clicks | array{object} | 是 | min:2 | 点击坐标数组 |
 
@@ -226,58 +226,7 @@ POST /api/v1/auth/login
 - 403: 账号已被禁用
 - 429: 账号已被锁定，请15分钟后再试（连续5次登录失败触发）
 
-### 3.6 注册
-
-```
-POST /api/v1/auth/register
-```
-
-- **认证**: 无需
-- **限流**: 5 次/分钟（按 IP + 路径）
-
-**请求体**:
-```json
-{
-  "username": "newuser",
-  "password": "Newuser@123",
-  "real_name": "新用户",
-  "captcha_key": "abc123def456",
-  "clicks": [
-    { "x": 120, "y": 85 },
-    { "x": 310, "y": 42 }
-  ]
-}
-```
-
-| 字段 | 类型 | 必填 | 验证规则 | 说明 |
-|------|------|------|---------|------|
-| username | string | 是 | min:3, max:50 | 用户名（唯一） |
-| password | string | 是 | min:6, max:32 | 密码（bcrypt 哈希存储） |
-| real_name | string | 是 | max:50 | 真实姓名 |
-| captcha_key | string | 是 | | 验证码 key |
-| clicks | array{object} | 是 | min:2 | 点击坐标数组 |
-
-**响应示例**:
-```json
-{
-  "code": 0,
-  "message": "注册成功",
-  "data": {
-    "access_token": "eyJhbGciOiJIUzI1NiIs...",
-    "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
-    "expires_in": 7200,
-    "user": {
-      "id": "e5f6g7h8",
-      "username": "newuser",
-      "real_name": "新用户"
-    }
-  }
-}
-```
-
-注册成功后直接返回 JWT 令牌，用户状态默认启用（status=1）。
-
-### 3.7 刷新令牌
+### 3.6 刷新令牌
 
 ```
 POST /api/v1/auth/refresh
@@ -295,7 +244,7 @@ POST /api/v1/auth/refresh
 
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| refresh_token | string | 是 | 登录/注册时获取的 refresh_token |
+| refresh_token | string | 是 | 登录时获取的 refresh_token（仅接受 `token_type=refresh`；access token 不能用于刷新） |
 
 **响应示例**:
 ```json
@@ -310,13 +259,13 @@ POST /api/v1/auth/refresh
 }
 ```
 
-刷新成功会同时返回新的 access_token 和 refresh_token，旧令牌自动失效。刷新时会更新用户最后登录时间和 IP。
+刷新成功会同时返回新的 access_token 和 refresh_token，旧 refresh token 立即失效（加入 Redis 黑名单，轮换使用）。刷新时会更新用户最后登录时间和 IP。
 
 **可能的错误**:
 - 422: 缺少刷新令牌
 - 401: 刷新令牌无效或已过期
 
-### 3.8 Prometheus 监控指标
+### 3.7 Prometheus 监控指标
 
 ```
 GET /metrics
@@ -526,7 +475,7 @@ POST /admin/user
 | 字段 | 类型 | 必填 | 验证规则 | 说明 |
 |------|------|------|---------|------|
 | username | string | 是 | min:3, max:50 | 用户名（唯一） |
-| password | string | 是 | min:6, max:32 | 密码（bcrypt 存储） |
+| password | string | 是 | 8-32 位 + 大小写 + 数字 + 特殊字符 | 密码（bcrypt 存储） |
 | real_name | string | 是 | max:50 | 真实姓名 |
 | phone | string | 否 | | 手机号（Encryptable 加密存储） |
 | email | string | 否 | | 邮箱（Encryptable 加密存储） |
@@ -1334,7 +1283,7 @@ PUT /admin/profile/password
 | 字段 | 类型 | 必填 | 验证规则 | 说明 |
 |------|------|------|---------|------|
 | old_password | string | 是 | | 当前密码 |
-| new_password | string | 是 | min:6, max:32 | 新密码 |
+| new_password | string | 是 | 8-32 位 + 大小写 + 数字 + 特殊字符 | 新密码 |
 
 **响应示例**:
 ```json
@@ -1358,7 +1307,18 @@ POST /admin/profile/logout
 
 - **认证**: JWT
 
-**请求体**: 无（无 requestBody，从 Authorization 头读取 token）
+**请求体**（可选）:
+```json
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| refresh_token | string | 否 | 一并吊销该刷新令牌 |
+
+不传请求体时仅吊销 Authorization 头中的 access token。
 
 **响应示例**:
 ```json
@@ -1369,7 +1329,7 @@ POST /admin/profile/logout
 }
 ```
 
-登出逻辑：解码 JWT 获取剩余有效期 (exp - now)，将该 token 的 md5 哈希写入 Redis 黑名单 `jwt_blacklist:{md5}`，TTL = 剩余有效期。黑名单中的 token 在 `AdminAuth` 中间件中被拦截，返回 401。
+登出逻辑：解码 JWT 获取剩余有效期 (exp - now)，将该 token 的 md5 哈希写入 Redis 黑名单 `jwt_blacklist:{md5}`，TTL = 剩余有效期；若请求体传入 `refresh_token`，同时吊销该 refresh token。黑名单中的 token 在 `AdminAuth` 中间件中被拦截，返回 401。
 
 无 token 时返回 401。token 已过期/无效时（解码抛出异常）仍视为登出成功。
 
@@ -1566,7 +1526,6 @@ POST /admin/upload
 限流详情:
 - 默认全局限制: 60 次/分钟 / IP+路径
 - 登录端点 `/api/v1/auth/login`: 10 次/分钟
-- 注册端点 `/api/v1/auth/register`: 5 次/分钟
 - 使用 Redis 原子化滑动窗口算法（Lua ZSET），避免 TOCTOU 竞态
 - Redis 不可用时 fail open（放行），不阻塞请求
 
@@ -1650,19 +1609,20 @@ POST /admin/upload
 
 ### Docker Compose
 
-项目根目录提供 `docker-compose.yml`，编排 5 个服务（Nginx、webman app、MySQL、Redis、Prometheus/Grafana）。PHP 通过 `Dockerfile` 构建（基于 `php:8.3-cli`，启用 OPcache）。
+本目录提供 `docker-compose.yml`，编排 7 个服务（Nginx、webman app、MySQL、Redis、Prometheus、Grafana、redis-exporter；service 端同样 7 个，端口已偏移）。PHP 通过 `Dockerfile` 构建（基于 `php:8.3-cli`，启用 OPcache）。
 
 ```bash
 cp .env.docker .env
-docker-compose up -d
+docker compose up -d
 ```
 
 ### CI/CD
 
 `.github/workflows/ci.yml` 定义了 GitHub Actions 持续集成流水线：
 - `php -l` 语法检查
-- PHPUnit 单元测试
-- `flutter analyze` 静态分析
+- PHPUnit 单元测试（admin 43 例/103 断言，覆盖率门槛 1.7%；service 22 例/42 断言，门槛 3%）
+- PHPStan 静态分析
+- `flutter analyze` 静态分析 + `flutter test`（admin 1 例 + owner 10 例）
 
 ### 数据库备份
 
@@ -1670,4 +1630,4 @@ docker-compose up -d
 
 ### Nginx 安全配置
 
-生产环境部署请参考 `docs/nginx-security.conf` 进行反向代理安全加固配置。
+Docker 部署的完整 Nginx 配置为 `deploy/nginx/default.conf`（挂载为 `/etc/nginx/conf.d/default.conf`，反代 `app:8787`，`X-Forwarded-For` 覆盖为 `$remote_addr`，健康检查 `/health`）。`docs/nginx-security.conf` 仅是宿主机 Nginx 的安全响应头/片段参考，不能直接作为容器配置。
