@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.10.1 (2026-10-31)
+
+### 修复
+- **CI 密钥扫描误报**：`admin/docs/API.md` 的示例 JWT 改为 `<access_token>` / `<refresh_token>` 占位符；`admin/tests/WechatNotifyTest.php` 的固定 AES 测试密钥改为运行时 `random_bytes(32)`。两处均为文档/单元测试假值，不是真实凭据；本版本无业务逻辑变更。
+
 ## v1.10.0 (2026-10-31)
 
 > **注意（行为变更）**：① 业主端 `POST /service/v1/fees/pay` 不再自助记账，固定返回 503（未接入支付网关）；业主缴费走管理端支付订单或线下/管理端收款。② 管理端公开注册 `POST /api/v1/auth/register` 已删除；仅保留业主端注册。③ 退款接口强制 `request_id`（≤64 的幂等键），并支持部分退款与溢缴自动退。④ 账单状态统一为 0=未缴 / 1=部分缴 / 2=已缴 / 3=逾期 / 4=豁免；旧库状态由迁移按金额一次性归一化。⑤ 新增 `phone_hash` / `credited_amount` / `refund_request_id` 列与账单周期唯一索引，存量库升级需先跑 `docs/migrations/2026-10-30-audit-fix-schema.sql`，再跑 `scripts/backfill_owner_phone_hash.php`；`scripts/deploy.sh` 已自动完成。

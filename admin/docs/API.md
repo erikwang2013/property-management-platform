@@ -108,7 +108,7 @@ POST /api/v1/captcha/generate
   "code": 0,
   "message": "success",
   "data": {
-    "key": "abc123def456",
+    "key": "<captcha_key>",
     "image": "iVBORw0KGgoAAAANSUhEUgAA...",
     "extra": {
       "targets": [
@@ -139,7 +139,7 @@ POST /api/v1/captcha/verify
 **请求体**:
 ```json
 {
-  "key": "abc123def456",
+  "key": "<captcha_key>",
   "clicks": [
     { "x": 120, "y": 85 },
     { "x": 310, "y": 42 }
@@ -176,8 +176,8 @@ POST /api/v1/auth/login
 ```json
 {
   "username": "admin",
-  "password": "Admin@123456",
-  "captcha_key": "abc123def456",
+  "password": "<password>",
+  "captcha_key": "<captcha_key>",
   "clicks": [
     { "x": 120, "y": 85 },
     { "x": 310, "y": 42 }
@@ -198,8 +198,8 @@ POST /api/v1/auth/login
   "code": 0,
   "message": "登录成功",
   "data": {
-    "access_token": "eyJhbGciOiJIUzI1NiIs...",
-    "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
+    "access_token": "<access_token>",
+    "refresh_token": "<refresh_token>",
     "expires_in": 7200,
     "user": {
       "id": "a1b2c3d4",
@@ -238,7 +238,7 @@ POST /api/v1/auth/refresh
 **请求体**:
 ```json
 {
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs..."
+  "refresh_token": "<refresh_token>"
 }
 ```
 
@@ -252,8 +252,8 @@ POST /api/v1/auth/refresh
   "code": 0,
   "message": "success",
   "data": {
-    "access_token": "eyJhbGciOiJIUzI1NiIs...",
-    "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
+    "access_token": "<access_token>",
+    "refresh_token": "<refresh_token>",
     "expires_in": 7200
   }
 }
@@ -1310,7 +1310,7 @@ POST /admin/profile/logout
 **请求体**（可选）:
 ```json
 {
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs..."
+  "refresh_token": "<refresh_token>"
 }
 ```
 

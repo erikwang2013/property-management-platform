@@ -19,10 +19,15 @@ use RuntimeException;
  */
 class WechatNotifyTest extends TestCase
 {
-    private const KEY = '0123456789abcdef0123456789abcdef'; // 32 字节 API v3 密钥
+    private static string $key;                              // 32 字节 API v3 密钥（运行时随机，避免被密钥扫描误报）
     private const NONCE = 'abcdefghijkl';                    // 12 字节
     private const AAD = 'transaction';
     private const PLAINTEXT = '{"out_trade_no":"202610300001","transaction_id":"4200001","trade_state":"SUCCESS","amount":{"total":1050}}';
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$key = random_bytes(32);
+    }
 
     /** 按微信规范加密：AES-256-GCM，密文末尾附加 16 字节 tag，再整体 base64 */
     private static function encrypt(string $plaintext, string $key, string $nonce, string $aad): string
@@ -44,24 +49,24 @@ class WechatNotifyTest extends TestCase
 
     public function test_decrypts_resource_ciphertext(): void
     {
-        $resource = self::resource(self::encrypt(self::PLAINTEXT, self::KEY, self::NONCE, self::AAD));
-        $this->assertSame(self::PLAINTEXT, WechatPayChannel::decryptResource($resource, self::KEY));
+        $resource = self::resource(self::encrypt(self::PLAINTEXT, self::$key, self::NONCE, self::AAD));
+        $this->assertSame(self::PLAINTEXT, WechatPayChannel::decryptResource($resource, self::$key));
     }
 
     public function test_tampered_tag_throws(): void
     {
-        $cipher = base64_decode(self::encrypt(self::PLAINTEXT, self::KEY, self::NONCE, self::AAD), true);
+        $cipher = base64_decode(self::encrypt(self::PLAINTEXT, self::$key, self::NONCE, self::AAD), true);
         $cipher[strlen($cipher) - 1] = chr(ord($cipher[strlen($cipher) - 1]) ^ 0xFF);
 
         $this->expectException(RuntimeException::class);
-        WechatPayChannel::decryptResource(self::resource(base64_encode($cipher)), self::KEY);
+        WechatPayChannel::decryptResource(self::resource(base64_encode($cipher)), self::$key);
     }
 
     public function test_wrong_key_throws(): void
     {
-        $resource = self::resource(self::encrypt(self::PLAINTEXT, self::KEY, self::NONCE, self::AAD));
+        $resource = self::resource(self::encrypt(self::PLAINTEXT, self::$key, self::NONCE, self::AAD));
 
         $this->expectException(RuntimeException::class);
-        WechatPayChannel::decryptResource($resource, 'fedcba9876543210fedcba9876543210');
+        WechatPayChannel::decryptResource($resource, random_bytes(32));
     }
 }
